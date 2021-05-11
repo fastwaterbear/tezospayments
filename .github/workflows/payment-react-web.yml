@@ -57,11 +57,12 @@ jobs:
         working-directory: 'src/payment-react-web'
         run: npm run lint # -- --max-warnings -1
 
-      - name: Deploy to DigitalOcean
+      - name: Deploy
         if: github.ref == 'refs/heads/master'
         uses: peaceiris/actions-gh-pages@068dc23d9710f1ba62e86896f84735d869951305 # v3.8.0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: dist/payment-react-web
+          deploy_key: ${{ secrets.PAYMENT_APP_DEPLOY_KEY }}
           publish_dir: 'src/payment-react-web/build'
           exclude_assets: '**/*.LICENSE,**/*.LICENSE.txt'
+          external_repository: fastwaterbear/tezos-payments-dist-payment
+          publish_branch: master
