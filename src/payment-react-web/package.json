@@ -1,0 +1,45 @@
+{
+  "name": "@tezos-payments/payment-react-web",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@tezos-payments/common": "file:../common",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "web-vitals": "^1.1.2"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.12.0",
+    "@testing-library/react": "^11.2.6",
+    "@testing-library/user-event": "^13.1.8",
+    "@types/jest": "^26.0.23",
+    "@types/node": "^15.0.2",
+    "@types/react": "^17.0.5",
+    "@types/react-dom": "^17.0.4",
+    "react-scripts": "4.0.3",
+    "sass": "^1.32.12",
+    "source-map-explorer": "^2.5.2",
+    "typescript": "^4.2.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
+  },
+  "browserslist": {
+    "production": [
+      ">0.35%",
+      "not dead",
+      "not op_mini all",
+      "not ie <= 11"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

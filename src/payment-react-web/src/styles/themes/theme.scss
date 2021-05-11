@@ -1,0 +1,29 @@
+@use 'sass:list';
+@use 'sass:string';
+
+$system-themes: dark, light;
+$default-theme: light;
+
+@function is-system-theme($theme) {
+    @return list.index($system-themes, $theme) !=null;
+}
+
+@mixin apply($theme) {
+    @if ($theme==$default-theme) {
+        :root {
+            @content;
+        }
+    }
+
+    :root[data-theme="#{$theme}"] {
+        @content;
+    }
+
+    @if (is-system-theme($theme)) {
+        @media (prefers-color-scheme: $theme) {
+            :root {
+                @content;
+            }
+        }
+    }
+}
