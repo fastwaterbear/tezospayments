@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "streetsidesoftware.code-spell-checker",
+    "streetsidesoftware.code-spell-checker-russian",
+    "dbaeumer.vscode-eslint"
+  ]
+}
