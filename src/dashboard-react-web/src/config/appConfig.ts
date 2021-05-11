@@ -1,4 +1,4 @@
-import type { DeepReadonly } from '../models/core';
+import type { DeepReadonly } from '@tezos-payments/common/dist/models/core';
 
 export type AppConfig = DeepReadonly<{
     app: {
