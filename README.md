@@ -1,1 +1,1 @@
-# Tezos Payments WebApp
+# Tezos Payments

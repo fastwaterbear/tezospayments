@@ -1,5 +1,5 @@
 {
-  "name": "tezos-payments-webapp",
+  "name": "@tezos-payments/dashboard-react-web",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
