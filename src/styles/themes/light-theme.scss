@@ -1,0 +1,20 @@
+@use './theme.scss';
+
+@include theme.apply(light) {
+    --global-primary-color: #fff;
+    --global-primary-light-color: #fff;
+    --global-primary-dark-color: #ccc;
+
+    --global-secondary-color: #6065F3;
+    --global-secondary-light-color: #97ffff;
+    --global-secondary-dark-color: #079bc9;
+
+    --global-surface-color: var(--global-primary-light-color);
+
+    --global-on-primary-color: #313142;
+    --global-on-secondary-color: #fff;
+    --global-on-surface-color: var(--global-on-primary-color);
+
+    --global-shadow-top-color: rgba(0, 0, 0, 0.15);
+    --global-shadow-bottom-color: rgba(0, 0, 0, 0.2);
+}
