@@ -2,6 +2,8 @@
   "recommendations": [
     "streetsidesoftware.code-spell-checker",
     "streetsidesoftware.code-spell-checker-russian",
-    "dbaeumer.vscode-eslint"
+    "dbaeumer.vscode-eslint",
+    "mrmlnc.vscode-scss",
+    "sibiraj-s.vscode-scss-formatter"
   ]
 }
