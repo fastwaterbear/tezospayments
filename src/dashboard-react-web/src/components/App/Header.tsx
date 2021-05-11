@@ -6,8 +6,8 @@ import { config } from '../../config';
 import './Header.scss';
 
 export const Header = () => {
-    return <header className="header">
-        <Link className="header__title" to={config.routers.main}>{config.app.name}</Link>;
+  return <header className="header">
+    <Link className="header__title" to={config.routers.main}>{config.app.name}</Link>;
     </header>;
 };
 

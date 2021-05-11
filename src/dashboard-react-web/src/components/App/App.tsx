@@ -8,11 +8,11 @@ import { HeaderPure } from './Header';
 import './App.scss';
 
 export const App = () => {
-    return <React.Fragment>
-        <HeaderPure />
-        <Switch>
-            <Route path={config.routers.main} exact={true} component={MainPure} />
-        </Switch>
-        {/* <FooterPure /> */}
-    </React.Fragment>;
+  return <React.Fragment>
+    <HeaderPure />
+    <Switch>
+      <Route path={config.routers.main} exact={true} component={MainPure} />
+    </Switch>
+    {/* <FooterPure /> */}
+  </React.Fragment>;
 };

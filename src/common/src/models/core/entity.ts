@@ -1,3 +1,3 @@
 export interface Entity<TId = string> {
-    readonly id: TId;
+  readonly id: TId;
 }
