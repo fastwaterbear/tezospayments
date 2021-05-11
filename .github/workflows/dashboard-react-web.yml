@@ -1,0 +1,67 @@
+name: apps/dashboard-react-web
+on:
+  push:
+    paths:
+      - 'src/common/**'
+      - 'src/dashboard-react-web/**'
+      - '.github/workflows/dashboard-react-web.yml'
+  pull_request:
+    paths:
+      - 'src/common/**'
+      - 'src/dashboard-react-web/**'
+      - '.github/workflows/dashboard-react-web.yml'
+
+jobs:
+  build:
+    name: Build And Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@master
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '15'
+
+      - name: Print environment info
+        run: |
+          node --version
+          npm --version
+
+      - name: Install npm packages of the @tezos-payments/common package
+        working-directory: 'src/common'
+        env:
+          CI: true
+        run: npm ci
+
+      - name: Build the @tezos-payments/common package
+        working-directory: 'src/common'
+        run: npm run build
+
+      - name: Install npm packages of the Dashboard app
+        working-directory: 'src/dashboard-react-web'
+        env:
+          CI: true
+        run: npm ci
+
+      - name: Build the Dashboard app
+        working-directory: 'src/dashboard-react-web'
+        run: npm run build
+
+      - name: Lint the @tezos-payments/common
+        working-directory: 'src/common'
+        run: npm run lint # -- --max-warnings -1
+
+      - name: Lint the Dashboard app
+        working-directory: 'src/dashboard-react-web'
+        run: npm run lint # -- --max-warnings -1
+
+      - name: Deploy to DigitalOcean
+        if: github.ref == 'refs/heads/master'
+        uses: peaceiris/actions-gh-pages@068dc23d9710f1ba62e86896f84735d869951305 # v3.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: dist/dashboard-react-web
+          publish_dir: 'src/dashboard-react-web/build'
+          exclude_assets: '**/*.LICENSE,**/*.LICENSE.txt'
