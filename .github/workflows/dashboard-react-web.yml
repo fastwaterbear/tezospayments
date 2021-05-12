@@ -61,8 +61,7 @@ jobs:
         if: github.ref == 'refs/heads/master'
         uses: peaceiris/actions-gh-pages@068dc23d9710f1ba62e86896f84735d869951305 # v3.8.0
         with:
-          deploy_key: ${{ secrets.DASHBOARD_APP_DEPLOY_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: 'src/dashboard-react-web/build'
           exclude_assets: '**/*.LICENSE,**/*.LICENSE.txt'
-          external_repository: fastwaterbear/tezos-payments-dist-dashboard
-          publish_branch: master
+          publish_branch: dist/dashboard-react-web
