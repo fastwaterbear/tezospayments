@@ -7,6 +7,6 @@ export type AppConfig = DeepReadonly<{
     title: string;
   },
   routers: {
-    main: string;
+    overview: string;
   }
 }>;

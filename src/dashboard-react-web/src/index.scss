@@ -1,4 +1,12 @@
+@use './styles/themes';
+@use './styles/layout-variables.scss';
+
 @import-normalize;
+
+html {
+  background-color: var(--global-background-color);
+  color: var(--global-on-background-color);
+}
 
 * {
   box-sizing: border-box;
@@ -6,12 +14,21 @@
 
 body {
   margin: 0;
-  font-family: "Roboto", "Ubuntu", -apple-system, BlinkMacSystemFont, "Segoe UI", "Oxygen", "Cantarell", "Fira Sans",
-    "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: "Ubuntu", -apple-system, BlinkMacSystemFont, "Segoe UI", "Oxygen", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+a {
+  color: var(--global-primary-light-color);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--global-primary-dark-color);
+  }
 }

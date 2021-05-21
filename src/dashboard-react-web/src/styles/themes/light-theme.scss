@@ -1,19 +1,21 @@
 @use './theme.scss';
 
 @include theme.apply(light) {
-    --global-primary-color: #fff;
-    --global-primary-light-color: #fff;
-    --global-primary-dark-color: #ccc;
+    --global-primary-color: #0d61ff;
+    --global-primary-light-color: #6d8eff;
+    --global-primary-dark-color: #0038cb;
 
-    --global-secondary-color: #6065F3;
-    --global-secondary-light-color: #97ffff;
-    --global-secondary-dark-color: #079bc9;
+    --global-secondary-color: #f7f7ff;
+    --global-secondary-light-color: #ffffff;
+    --global-secondary-dark-color: #c4c4cc;
 
-    --global-surface-color: var(--global-primary-light-color);
+    --global-surface-color: #fff;
+    --global-background-color: #fff;
 
-    --global-on-primary-color: #313142;
-    --global-on-secondary-color: #fff;
-    --global-on-surface-color: var(--global-on-primary-color);
+    --global-on-primary-color: #fff;
+    --global-on-secondary-color: #3c3c4c;
+    --global-on-surface-color: #3c3c4c;
+    --global-on-background-color: #3c3c4c;
 
     --global-shadow-top-color: rgba(0, 0, 0, 0.15);
     --global-shadow-bottom-color: rgba(0, 0, 0, 0.2);

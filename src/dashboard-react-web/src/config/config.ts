@@ -7,6 +7,6 @@ export const config: AppConfig = {
     title: 'Tezos Payments'
   },
   routers: {
-    main: '/'
+    overview: '/'
   },
 };
