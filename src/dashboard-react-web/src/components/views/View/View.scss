@@ -2,9 +2,9 @@
 
 .view {
     margin: 0 auto;
-    padding: layout-variables.$element-spacing-small var(--element-spacing);
+    padding: layout-variables.$element-spacing-small var(--grid-layout-gutter);
 }
 
 .view__title {
-    margin: 0 0 var(--element-spacing) 0;
+    margin: 0 0 var(--grid-layout-gutter) 0;
 }

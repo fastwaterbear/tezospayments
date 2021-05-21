@@ -7,13 +7,11 @@ $border-radius-large: 0.5rem;
 :root {
     --grid-layout-gutter: #{$element-spacing-medium};
     --grid-layout-margin: #{$element-spacing-medium};
-    --element-spacing: #{$element-spacing-medium};
 }
 
 @media (max-width: 1000px) {
     :root {
         --grid-layout-gutter: #{$element-spacing-small};
         --grid-layout-margin: #{$element-spacing-small};
-        --element-spacing: #{$element-spacing-small};
     }
 }
