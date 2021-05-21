@@ -13,5 +13,8 @@
     "build": "tsc -p .",
     "watch": "npm run build -- -w",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
+  },
+  "dependencies": {
+    "clsx": "^1.1.1"
   }
 }
