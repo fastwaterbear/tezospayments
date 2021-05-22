@@ -27,7 +27,7 @@ const defaultProps: DefaultCardProps = {
 export const Card = (props: CardProps & DefaultCardProps) => {
     const className = combineClassNames(
         'card',
-        props.clickable ? 'card-clickable' : undefined,
+        { 'card-clickable': props.clickable },
         props.className
     );
 

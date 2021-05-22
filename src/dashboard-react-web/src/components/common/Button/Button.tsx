@@ -9,8 +9,8 @@ import {
 } from './ButtonProps';
 import './Button.scss';
 
-const NativeButton = (props: NativeButtonProps) => {
-    const className = combineClassNames('button', props.className);
+const PrimaryButton = (props: NativeButtonProps) => {
+    const className = combineClassNames('button', 'button_primary', props.className);
 
     return <button {...props} type={props.htmlType} className={className}>{props.children}</button>;
 };
@@ -31,6 +31,6 @@ export const Button = (props: ButtonProps) => isLinkButtonProps(props)
     ? <LinkButton {...props} />
     : isNavLinkButtonProps(props)
         ? <NavLinkButton {...props} />
-        : <NativeButton {...props} />;
+        : <PrimaryButton {...props} />;
 
 export const ButtonPure = React.memo(Button);

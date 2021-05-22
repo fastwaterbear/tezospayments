@@ -1,4 +1,24 @@
+@use '../../../styles/layout-variables.scss';
+
 $-button-link-font-weight: 500;
+
+.button_primary {
+    height: 36px;
+    align-items: center;
+    justify-content: center;
+    color: var(--global-on-primary-color);
+    border: none;
+    background-color: var(--global-primary-color);
+    border-radius: layout-variables.$border-radius-small;
+    padding: 10px layout-variables.$element-spacing-small;
+    font-weight: 700;
+    text-transform: uppercase;
+
+    &:hover {
+        cursor: pointer;
+        background-color: var(--global-primary-dark-color);
+    }
+}
 
 .button_link {
     font-weight: $-button-link-font-weight;
