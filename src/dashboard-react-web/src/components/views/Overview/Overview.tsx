@@ -1,22 +1,26 @@
 import React from 'react';
 
 import { ButtonPure, Card, CardPure } from '../../common';
+import { useCurrentLanguageResources } from '../../hooks';
 import { View } from '../View';
 import './Overview.scss';
 
 export const Overview = () => {
+  const langResources = useCurrentLanguageResources();
+  const overviewLangResources = langResources.views.overview;
+
   return <View title="Overview" className="overview">
-    <View.Title>Overview</View.Title>
+    <View.Title>{overviewLangResources.title}</View.Title>
     <CardPure>
-      <Card.Header>Balances</Card.Header>
+      <Card.Header>{overviewLangResources.balances.title}</Card.Header>
     </CardPure>
     <CardPure>
-      <Card.Header>Incoming per Month</Card.Header>
+      <Card.Header>{overviewLangResources.incoming.title}</Card.Header>
     </CardPure>
     <CardPure>
-      <Card.Header>Outgoing per Month</Card.Header>
+      <Card.Header>{overviewLangResources.outgoing.title}</Card.Header>
     </CardPure>
-    <ButtonPure>Create Service</ButtonPure>
+    <ButtonPure>{langResources.views.createService.title}</ButtonPure>
   </View>;
 };
 
