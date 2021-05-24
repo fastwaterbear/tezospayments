@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 import { RootState } from '../store';
-import { WalletService } from './walletService';
 
 export type ConnectionState = 'disconnected' | 'pending' | 'connected';
 
@@ -15,9 +15,6 @@ const initialState: WalletState = {
 };
 
 const namespace = 'wallet';
-
-export const connectToWallet = createAsyncThunk(`${namespace}/connectToWallet`, () => WalletService.instance.connect());
-export const disconnectFromWallet = createAsyncThunk(`${namespace}/disconnectFromWallet`, () => WalletService.instance.disconnect());
 
 export const walletSlice = createSlice({
   name: namespace,

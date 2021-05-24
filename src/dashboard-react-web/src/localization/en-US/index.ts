@@ -1,11 +1,12 @@
-import { overview, createService } from './views';
+import { overview, createService, connectWallet } from './views';
 
 export const enUS = {
   id: 'en-US',
   resources: {
     views: {
       overview,
-      createService
+      createService,
+      connectWallet
     }
   }
 } as const;

@@ -1,4 +1,5 @@
 import { ColorMode, DAppClient, NetworkType } from '@airgap/beacon-sdk';
+
 import packageJson from '../../../package.json';
 import { store } from '../store';
 import { setIsConnectedToWallet } from './walletSlice';
