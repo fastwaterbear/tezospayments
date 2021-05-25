@@ -2,16 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { config } from '../../config';
-import { useAppSelector } from '../../redux/hooks';
-import { selectWalletState } from '../../redux/wallet/walletSlice';
+import { Account } from '../../models/blockchain';
+import { getCurrentAccount } from '../../store/accounts/selectors';
+import { useAppSelector } from '../hooks';
 import './Header.scss';
 
 export const Header = () => {
-  const { connectionState } = useAppSelector(selectWalletState);
+  const currentAccount = useAppSelector(getCurrentAccount);
 
   return <header className="header">
     <Link className="header__title" to={config.routers.overview}>{config.app.name}</Link>
-    {connectionState}
+    {currentAccount && Account.getShortAddress(currentAccount)}
   </header>;
 };
 
