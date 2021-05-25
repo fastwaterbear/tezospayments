@@ -23,7 +23,6 @@ const store = configureStore({
       }
     }),
 });
-export type AppDispatch = typeof store.dispatch;
 
 ReactDOM.render(
   <React.StrictMode>
