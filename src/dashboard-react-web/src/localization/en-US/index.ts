@@ -1,4 +1,4 @@
-import { overview, createService, connectWallet } from './views';
+import { overview, createService, connect } from './views';
 
 export const enUS = {
   id: 'en-US',
@@ -6,7 +6,7 @@ export const enUS = {
     views: {
       overview,
       createService,
-      connectWallet
+      connect
     }
   }
 } as const;

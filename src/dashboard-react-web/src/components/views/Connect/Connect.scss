@@ -1,0 +1,16 @@
+@use "../../../styles/layout-variables.scss";
+
+.connect {
+  display: flex;
+  height: calc(100vh - #{layout-variables.$header-height});
+  justify-content: center;
+  align-items: center;
+}
+
+.connect-info-container {
+  text-align: center;
+}
+
+.connect-info-container__message {
+  margin-bottom: 16px;
+}
