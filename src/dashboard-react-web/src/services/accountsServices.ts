@@ -13,13 +13,19 @@ export class AccountsService {
     return this._client;
   }
 
-  async connect() {
+  async connect(): Promise<string> {
     const permissions = await this.client.requestPermissions({ network: { type: NetworkType.EDONET } });
 
     return permissions.address;
   }
 
-  disconnect() {
+  disconnect(): Promise<void> {
     return this.client.clearActiveAccount();
+  }
+
+  async getActiveAccount(): Promise<string | undefined> {
+    const activeAccount = await this.client.getActiveAccount();
+
+    return activeAccount?.address;
   }
 }

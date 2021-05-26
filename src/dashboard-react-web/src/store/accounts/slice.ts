@@ -15,8 +15,20 @@ const initialState: AccountsState = {
   connectedAccounts: optimization.emptyArray
 };
 
+const namespace = 'accounts';
+
+export const loadActiveAccount = createAsyncThunk<Account | null, void, AppThunkAPI>(
+  `${namespace}/loadActiveAccount`,
+  async (_, { extra: app }) => {
+    const address = await app.services.accountsService.getActiveAccount();
+
+    return address ? { address } : null;
+  }
+);
+
+
 export const connectAccount = createAsyncThunk<Account, void, AppThunkAPI>(
-  'accounts/connect',
+  `${namespace}/connect`,
   async (_, { extra: app }) => {
     const address = await app.services.accountsService.connect();
 
@@ -27,15 +39,24 @@ export const connectAccount = createAsyncThunk<Account, void, AppThunkAPI>(
 );
 
 export const accountsSlice = createSlice({
-  name: 'accounts',
+  name: namespace,
   initialState,
   reducers: {
   },
   extraReducers: builder => {
     builder.addCase(connectAccount.fulfilled, (state, action) => {
       state.currentAccountAddress = action.payload.address;
-      if (!state.connectedAccounts.some(account => account.address === action.payload.address))
+      if (!state.connectedAccounts.some(a => a.address === action.payload.address))
         state.connectedAccounts.push(action.payload);
+    });
+
+    builder.addCase(loadActiveAccount.fulfilled, (state, action) => {
+      const account = action.payload;
+      if (account) {
+        state.currentAccountAddress = account.address;
+        if (!state.connectedAccounts.some(a => a.address === account.address))
+          state.connectedAccounts.push(account);
+      }
     });
   }
 });
