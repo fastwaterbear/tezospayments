@@ -26,7 +26,6 @@ export const loadActiveAccount = createAsyncThunk<Account | null, void, AppThunk
   }
 );
 
-
 export const connectAccount = createAsyncThunk<Account, void, AppThunkAPI>(
   `${namespace}/connect`,
   async (_, { extra: app }) => {
@@ -38,18 +37,19 @@ export const connectAccount = createAsyncThunk<Account, void, AppThunkAPI>(
   }
 );
 
+export const disconnectAccount = createAsyncThunk<void, void, AppThunkAPI>(
+  `${namespace}/disconnect`,
+  async (_, { extra: app }) => {
+    return await app.services.accountsService.disconnect();
+  }
+);
+
 export const accountsSlice = createSlice({
   name: namespace,
   initialState,
   reducers: {
   },
   extraReducers: builder => {
-    builder.addCase(connectAccount.fulfilled, (state, action) => {
-      state.currentAccountAddress = action.payload.address;
-      if (!state.connectedAccounts.some(a => a.address === action.payload.address))
-        state.connectedAccounts.push(action.payload);
-    });
-
     builder.addCase(loadActiveAccount.fulfilled, (state, action) => {
       const account = action.payload;
       if (account) {
@@ -57,6 +57,17 @@ export const accountsSlice = createSlice({
         if (!state.connectedAccounts.some(a => a.address === account.address))
           state.connectedAccounts.push(account);
       }
+    });
+
+    builder.addCase(connectAccount.fulfilled, (state, action) => {
+      state.currentAccountAddress = action.payload.address;
+      if (!state.connectedAccounts.some(a => a.address === action.payload.address))
+        state.connectedAccounts.push(action.payload);
+    });
+
+    builder.addCase(disconnectAccount.fulfilled, state => {
+      state.connectedAccounts = state.connectedAccounts.filter(a => a.address !== state.currentAccountAddress);
+      state.currentAccountAddress = state.connectedAccounts[0] ? state.connectedAccounts[0].address : null;
     });
   }
 });
