@@ -8,6 +8,7 @@ import { PrivateRouteContainer } from '../common';
 import { useAppDispatch } from '../hooks';
 import { OverviewPure, ConnectPure } from '../views';
 import { HeaderPure } from './Header';
+import 'antd/dist/antd.css';
 import './App.scss';
 
 export const App = () => {
