@@ -1,3 +1,4 @@
+import { ArrowRightOutlined, CopyOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Dropdown, Button, Menu } from 'antd';
 import React, { useCallback } from 'react';
 
@@ -19,7 +20,7 @@ export const AccountDropDown = () => {
   }
 
   const connectedAccounts = accounts.connectedAccounts.map(a =>
-    <Menu.Item key={a.address}>
+    <Menu.Item key={a.address} icon={<UserOutlined />}>
       {a.address}
     </Menu.Item>
   );
@@ -27,14 +28,14 @@ export const AccountDropDown = () => {
   const menu = <Menu>
     {connectedAccounts}
     <Menu.Divider />
-    <Menu.Item key={1}>
+    <Menu.Item key={1} icon={<CopyOutlined />}>
       Copy Address
     </Menu.Item>
-    <Menu.Item key={2}>
+    <Menu.Item key={2} icon={<ArrowRightOutlined />}>
       View on TzStats
     </Menu.Item>
     <Menu.Divider />
-    <Menu.Item key={3} onClick={handleDisconnectButtonClick}>
+    <Menu.Item key={3} icon={<LogoutOutlined />} onClick={handleDisconnectButtonClick}>
       Disconnect
     </Menu.Item>
   </Menu>;
