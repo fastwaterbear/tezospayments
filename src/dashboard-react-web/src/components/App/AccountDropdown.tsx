@@ -2,7 +2,7 @@ import { Dropdown, Button, Menu } from 'antd';
 import React, { useCallback } from 'react';
 
 import { Account } from '../../models/blockchain';
-import { getCurrentAccount } from '../../store/accounts/selectors';
+import { getCurrentAccount, selectAccountsState } from '../../store/accounts/selectors';
 import { disconnectAccount } from '../../store/accounts/slice';
 import { useAppDispatch, useAppSelector } from '../hooks';
 
@@ -12,24 +12,29 @@ export const AccountDropDown = () => {
     dispatch(disconnectAccount());
   }, [dispatch]);
 
+  const accounts = useAppSelector(selectAccountsState);
   const currentAccount = useAppSelector(getCurrentAccount);
   if (!currentAccount) {
     return null;
   }
 
-  const menu = <Menu>
-    <Menu.Item key={1}>
-      {currentAccount.address}
+  const connectedAccounts = accounts.connectedAccounts.map(a =>
+    <Menu.Item key={a.address}>
+      {a.address}
     </Menu.Item>
+  );
+
+  const menu = <Menu>
+    {connectedAccounts}
     <Menu.Divider />
-    <Menu.Item key={2}>
+    <Menu.Item key={1}>
       Copy Address
     </Menu.Item>
-    <Menu.Item key={3}>
+    <Menu.Item key={2}>
       View on TzStats
     </Menu.Item>
     <Menu.Divider />
-    <Menu.Item key={4} onClick={handleDisconnectButtonClick}>
+    <Menu.Item key={3} onClick={handleDisconnectButtonClick}>
       Disconnect
     </Menu.Item>
   </Menu>;
