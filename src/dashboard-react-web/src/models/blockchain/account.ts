@@ -6,6 +6,6 @@ export interface Account {
 
 export class Account extends StateModel {
   static getShortAddress(account: Account) {
-    return `${account.address.substr(0, 7)}...${account.address.substr(account.address.length - 4, 4)}`;
+    return `${account.address.substr(0, 9)}...${account.address.substr(account.address.length - 6, 6)}`;
   }
 }
