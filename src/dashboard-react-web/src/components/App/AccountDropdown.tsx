@@ -2,6 +2,7 @@ import { ArrowRightOutlined, CopyOutlined, LogoutOutlined, UserOutlined } from '
 import { Dropdown, Button, Menu } from 'antd';
 import React, { useCallback } from 'react';
 
+import { config } from '../../config';
 import { Account } from '../../models/blockchain';
 import { getCurrentAccount, selectAccountsState } from '../../store/accounts/selectors';
 import { disconnectAccount } from '../../store/accounts/slice';
@@ -11,14 +12,18 @@ export const AccountDropDown = () => {
   const accounts = useAppSelector(selectAccountsState);
   const currentAccount = useAppSelector(getCurrentAccount);
 
+  const handleCopyAddressClick = useCallback(() => {
+    navigator.clipboard.writeText(currentAccount?.address || '');
+  }, [currentAccount]);
+
+  const handleViewOnTzStatsClick = useCallback(() => {
+    window.open(`${config.links.tzStats}/${currentAccount?.address}`, '_blank');
+  }, [currentAccount]);
+
   const dispatch = useAppDispatch();
   const handleDisconnectButtonClick = useCallback(() => {
     dispatch(disconnectAccount());
   }, [dispatch]);
-
-  const handleCopyAddressClick = useCallback(() => {
-    navigator.clipboard.writeText(currentAccount?.address || '');
-  }, [currentAccount]);
 
   if (!currentAccount) {
     return null;
@@ -36,7 +41,7 @@ export const AccountDropDown = () => {
     <Menu.Item key={1} icon={<CopyOutlined />} onClick={handleCopyAddressClick}>
       Copy Address
     </Menu.Item>
-    <Menu.Item key={2} icon={<ArrowRightOutlined />}>
+    <Menu.Item key={2} icon={<ArrowRightOutlined />} onClick={handleViewOnTzStatsClick}>
       View on TzStats
     </Menu.Item>
     <Menu.Divider />

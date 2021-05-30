@@ -10,4 +10,7 @@ export const config: AppConfig = {
     overview: '/',
     connect: '/connect'
   },
+  links: {
+    tzStats: 'https://tzstats.com'
+  }
 };
