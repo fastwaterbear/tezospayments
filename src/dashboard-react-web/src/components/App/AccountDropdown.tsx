@@ -8,13 +8,18 @@ import { disconnectAccount } from '../../store/accounts/slice';
 import { useAppDispatch, useAppSelector } from '../hooks';
 
 export const AccountDropDown = () => {
+  const accounts = useAppSelector(selectAccountsState);
+  const currentAccount = useAppSelector(getCurrentAccount);
+
   const dispatch = useAppDispatch();
   const handleDisconnectButtonClick = useCallback(() => {
     dispatch(disconnectAccount());
   }, [dispatch]);
 
-  const accounts = useAppSelector(selectAccountsState);
-  const currentAccount = useAppSelector(getCurrentAccount);
+  const handleCopyAddressClick = useCallback(() => {
+    navigator.clipboard.writeText(currentAccount?.address || '');
+  }, [currentAccount]);
+
   if (!currentAccount) {
     return null;
   }
@@ -28,7 +33,7 @@ export const AccountDropDown = () => {
   const menu = <Menu>
     {connectedAccounts}
     <Menu.Divider />
-    <Menu.Item key={1} icon={<CopyOutlined />}>
+    <Menu.Item key={1} icon={<CopyOutlined />} onClick={handleCopyAddressClick}>
       Copy Address
     </Menu.Item>
     <Menu.Item key={2} icon={<ArrowRightOutlined />}>
@@ -38,7 +43,7 @@ export const AccountDropDown = () => {
     <Menu.Item key={3} icon={<LogoutOutlined />} onClick={handleDisconnectButtonClick}>
       Disconnect
     </Menu.Item>
-  </Menu>;
+  </Menu >;
 
   return <Dropdown overlay={menu} placement="bottomRight">
     <Button>{Account.getShortAddress(currentAccount)}</Button>
