@@ -7,9 +7,12 @@ import { config } from '../../config';
 import { Account } from '../../models/blockchain';
 import { getCurrentAccount, selectAccountsState } from '../../store/accounts/selectors';
 import { disconnectAccount } from '../../store/accounts/slice';
-import { useAppDispatch, useAppSelector } from '../hooks';
+import { useAppDispatch, useAppSelector, useCurrentLanguageResources } from '../hooks';
 
 export const AccountDropDown = () => {
+  const langResources = useCurrentLanguageResources();
+  const actionsLangResources = langResources.views.header.accountActions;
+
   const accounts = useAppSelector(selectAccountsState);
   const currentAccount = useAppSelector(getCurrentAccount);
 
@@ -47,17 +50,17 @@ export const AccountDropDown = () => {
     {connectedAccounts}
     <Menu.Divider />
     <Menu.Item key={1} icon={<CopyOutlined />} onClick={handleCopyAddressClick}>
-      Copy address
+      {actionsLangResources.copyAddress.title}
     </Menu.Item>
     <Menu.Item key={2} icon={<ArrowRightOutlined />} onClick={handleViewOnTzStatsClick}>
-      View on TzStats
+      {actionsLangResources.viewOnTzStats.title}
     </Menu.Item>
     <Menu.Item key={3} icon={<LoginOutlined />}>
-      Connect another account (coming soon)
+      {`${actionsLangResources.connectAnotherAccount.title} (${langResources.common.comingSoon.toLowerCase()})`}
     </Menu.Item>
     <Menu.Divider />
     <Menu.Item key={5} icon={<LogoutOutlined />} onClick={handleDisconnectButtonClick}>
-      Disconnect
+      {actionsLangResources.disconnect.title}
     </Menu.Item>
   </Menu >;
 

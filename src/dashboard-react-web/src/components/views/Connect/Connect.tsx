@@ -16,7 +16,7 @@ export const Connect = () => {
   }, [dispatch]);
 
   const langResources = useCurrentLanguageResources();
-  const accountLangResources = langResources.views.connect;
+  const connectLangResources = langResources.views.connect.actions.connect;
 
   const currentAccount = useAppSelector(getCurrentAccount);
   if (currentAccount) {
@@ -25,8 +25,8 @@ export const Connect = () => {
 
   return <View title="Connect" className="connect">
     <div className="connect-info-container">
-      <div className="connect-info-container__message">{accountLangResources.connectIntroMessage}</div>
-      <ButtonPure onClick={handleConnectButtonClick}>{accountLangResources.connectButtonTitle}</ButtonPure>
+      <div className="connect-info-container__message">{connectLangResources.description}</div>
+      <ButtonPure onClick={handleConnectButtonClick}>{connectLangResources.title}</ButtonPure>
     </div>
   </View >;
 };
