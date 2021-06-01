@@ -1,5 +1,5 @@
 import { blue } from '@ant-design/colors';
-import { ArrowRightOutlined, CopyOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, CopyOutlined, LogoutOutlined, LoginOutlined, UserOutlined } from '@ant-design/icons';
 import { Dropdown, Button, Menu } from 'antd';
 import React, { useCallback } from 'react';
 
@@ -52,8 +52,11 @@ export const AccountDropDown = () => {
     <Menu.Item key={2} icon={<ArrowRightOutlined />} onClick={handleViewOnTzStatsClick}>
       View on TzStats
     </Menu.Item>
+    <Menu.Item key={3} icon={<LoginOutlined />}>
+      Connect another account (coming soon)
+    </Menu.Item>
     <Menu.Divider />
-    <Menu.Item key={3} icon={<LogoutOutlined />} onClick={handleDisconnectButtonClick}>
+    <Menu.Item key={5} icon={<LogoutOutlined />} onClick={handleDisconnectButtonClick}>
       Disconnect
     </Menu.Item>
   </Menu >;
