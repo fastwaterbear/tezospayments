@@ -1,10 +1,10 @@
+import { Button } from 'antd';
 import React, { useCallback } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { config } from '../../../config';
 import { getCurrentAccount } from '../../../store/accounts/selectors';
 import { connectAccount } from '../../../store/accounts/slice';
-import { ButtonPure } from '../../common';
 import { useAppDispatch, useAppSelector, useCurrentLanguageResources } from '../../hooks';
 import { View } from '../View';
 import './Connect.scss';
@@ -26,7 +26,7 @@ export const Connect = () => {
   return <View title="Connect" className="connect">
     <div className="connect-info-container">
       <div className="connect-info-container__message">{connectLangResources.description}</div>
-      <ButtonPure onClick={handleConnectButtonClick}>{connectLangResources.title}</ButtonPure>
+      <Button type="primary" onClick={handleConnectButtonClick}>{connectLangResources.title}</Button>
     </div>
   </View >;
 };

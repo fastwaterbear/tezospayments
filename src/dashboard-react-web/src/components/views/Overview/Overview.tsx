@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ButtonPure, Card, CardPure } from '../../common';
+import { Card, CardPure } from '../../common';
 import { useCurrentLanguageResources } from '../../hooks';
 import { View } from '../View';
 import './Overview.scss';
@@ -20,7 +20,6 @@ export const Overview = () => {
     <CardPure>
       <Card.Header>{overviewLangResources.outgoing.title}</Card.Header>
     </CardPure>
-    <ButtonPure>{langResources.views.createService.title}</ButtonPure>
   </View>;
 };
 
