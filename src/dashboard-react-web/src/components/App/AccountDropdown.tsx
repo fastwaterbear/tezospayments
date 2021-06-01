@@ -1,3 +1,4 @@
+import { blue } from '@ant-design/colors';
 import { ArrowRightOutlined, CopyOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Dropdown, Button, Menu } from 'antd';
 import React, { useCallback } from 'react';
@@ -30,7 +31,14 @@ export const AccountDropDown = () => {
   }
 
   const connectedAccounts = accounts.connectedAccounts.map(a =>
-    <Menu.Item key={a.address} icon={<UserOutlined />}>
+    <Menu.Item
+      key={a.address}
+      icon={<UserOutlined />}
+      style={a.address !== currentAccount.address ? undefined : {
+        backgroundColor: blue[0],
+        color: blue.primary
+      }}
+    >
       {a.address}
     </Menu.Item>
   );
@@ -51,8 +59,8 @@ export const AccountDropDown = () => {
   </Menu >;
 
   return <Dropdown overlay={menu} placement="bottomRight">
-    <Button>{Account.getShortAddress(currentAccount)}</Button>
-  </Dropdown>;
+    <Button style={{ borderColor: blue.primary, color: blue.primary }}>{Account.getShortAddress(currentAccount)}</Button>
+  </Dropdown >;
 };
 
 export const AccountDropDownPure = React.memo(AccountDropDown);
