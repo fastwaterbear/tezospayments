@@ -39,7 +39,7 @@ export const AccountDropDown = () => {
     {connectedAccounts}
     <Menu.Divider />
     <Menu.Item key={1} icon={<CopyOutlined />} onClick={handleCopyAddressClick}>
-      Copy Address
+      Copy address
     </Menu.Item>
     <Menu.Item key={2} icon={<ArrowRightOutlined />} onClick={handleViewOnTzStatsClick}>
       View on TzStats
