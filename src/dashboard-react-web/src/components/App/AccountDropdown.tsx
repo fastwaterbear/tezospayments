@@ -2,12 +2,14 @@ import { blue } from '@ant-design/colors';
 import { ArrowRightOutlined, CopyOutlined, LogoutOutlined, LoginOutlined, UserOutlined } from '@ant-design/icons';
 import { Dropdown, Button, Menu } from 'antd';
 import React, { useCallback } from 'react';
+import './AccountDropdown.scss';
 
 import { config } from '../../config';
 import { Account } from '../../models/blockchain';
 import { getCurrentAccount, selectAccountsState } from '../../store/accounts/selectors';
 import { disconnectAccount } from '../../store/accounts/slice';
 import { useAppDispatch, useAppSelector, useCurrentLanguageResources } from '../hooks';
+import { combineClassNames } from '@tezos-payments/common/dist/utils';
 
 export const AccountDropDown = () => {
   const langResources = useCurrentLanguageResources();
@@ -37,6 +39,7 @@ export const AccountDropDown = () => {
     <Menu.Item
       key={a.address}
       icon={<UserOutlined />}
+      className={combineClassNames('account-menu-item', { 'account-menu-item_selected': a.address === currentAccount.address })}
       style={a.address !== currentAccount.address ? undefined : {
         backgroundColor: blue[0],
         color: blue.primary
@@ -65,7 +68,7 @@ export const AccountDropDown = () => {
   </Menu >;
 
   return <Dropdown overlay={menu} placement="bottomRight">
-    <Button style={{ borderColor: blue.primary, color: blue.primary }}>{Account.getShortAddress(currentAccount)}</Button>
+    <Button style={{ borderColor: blue.primary, color: blue.primary }} className="account-dropdown">{Account.getShortAddress(currentAccount)}</Button>
   </Dropdown >;
 };
 
