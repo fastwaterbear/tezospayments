@@ -7,6 +7,7 @@ import { Router } from 'react-router-dom';
 
 import { WebApp } from './app';
 import { App } from './components/App/App';
+import { AppConfig, config } from './config';
 import reportWebVitals from './reportWebVitals';
 import { appReducer } from './store';
 import './index.scss';
@@ -35,5 +36,8 @@ ReactDOM.render(
   document.getElementById('root')
 );
 webApp.start(store).catch(error => console.error(error));
+
+(window as unknown as { webApp: WebApp }).webApp = webApp;
+(window as unknown as { config: AppConfig }).config = config;
 
 reportWebVitals();

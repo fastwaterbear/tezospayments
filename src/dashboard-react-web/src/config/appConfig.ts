@@ -5,6 +5,9 @@ export type AppConfig = DeepReadonly<{
     publicUrl: string;
     name: string;
     title: string;
+    buildInfo: {
+      commitShortSha: string;
+    }
   },
   routers: {
     overview: string;
