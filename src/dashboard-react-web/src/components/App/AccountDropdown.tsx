@@ -4,12 +4,13 @@ import { Dropdown, Button, Menu } from 'antd';
 import React, { useCallback } from 'react';
 import './AccountDropdown.scss';
 
+import { combineClassNames } from '@tezos-payments/common/dist/utils';
+
 import { config } from '../../config';
 import { Account } from '../../models/blockchain';
 import { getCurrentAccount, selectAccountsState } from '../../store/accounts/selectors';
 import { disconnectAccount } from '../../store/accounts/slice';
 import { useAppDispatch, useAppSelector, useCurrentLanguageResources } from '../hooks';
-import { combineClassNames } from '@tezos-payments/common/dist/utils';
 
 export const AccountDropDown = () => {
   const langResources = useCurrentLanguageResources();
