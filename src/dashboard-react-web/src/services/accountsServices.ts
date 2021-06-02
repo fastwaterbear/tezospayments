@@ -1,4 +1,4 @@
-import { AbortedBeaconError, ColorMode, DAppClient, NetworkType } from '@airgap/beacon-sdk';
+import { ColorMode, DAppClient, NetworkType } from '@airgap/beacon-sdk';
 
 import { config } from '../config';
 
@@ -18,9 +18,8 @@ export class AccountsService {
       this.client.requestPermissions({ network: { type: NetworkType.EDONET } })
         .then(permissions => resolve(permissions.address))
         .catch(e => {
-          if (e instanceof AbortedBeaconError) {
-            this.client.clearActiveAccount();
-          }
+          console.error(e);
+          this.client.clearActiveAccount();
         });
     });
   }
