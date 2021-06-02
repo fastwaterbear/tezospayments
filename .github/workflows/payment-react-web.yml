@@ -24,6 +24,9 @@ jobs:
         with:
           node-version: '15'
 
+      - name: Define required environment vars
+        run: echo "REACT_APP_COMMIT_SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
       - name: Print environment info
         run: |
           node --version
