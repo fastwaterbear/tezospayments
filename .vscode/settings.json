@@ -31,6 +31,8 @@
     "tezos",
     "mutez",
     "entrypoint",
-    "entrypoints"
+    "entrypoints",
+    "airgap",
+    "EDONET"
   ]
 }
