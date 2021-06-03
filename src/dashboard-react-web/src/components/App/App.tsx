@@ -8,6 +8,7 @@ import { PrivateRouteContainer } from '../common';
 import { useAppDispatch } from '../hooks';
 import { OverviewPure, ConnectPure } from '../views';
 import { HeaderPure } from './Header';
+import { NavBarPure } from './NavBar';
 import 'antd/dist/antd.css';
 import './App.scss';
 
@@ -20,14 +21,17 @@ export const App = () => {
 
   return <React.Fragment>
     <HeaderPure />
-    <Switch>
-      <PrivateRouteContainer path={config.routers.overview} exact={true}>
-        <OverviewPure />
-      </PrivateRouteContainer>
-      <Route path={config.routers.connect}>
-        <ConnectPure />
-      </Route>
-    </Switch>
+    <div className="content">
+      <NavBarPure />
+      <Switch>
+        <PrivateRouteContainer path={config.routers.overview} exact={true}>
+          <OverviewPure />
+        </PrivateRouteContainer>
+        <Route path={config.routers.connect}>
+          <ConnectPure />
+        </Route>
+      </Switch>
+    </div>
     {/* <FooterPure /> */}
   </React.Fragment>;
 };

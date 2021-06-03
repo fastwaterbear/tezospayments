@@ -1,0 +1,9 @@
+.navbar {
+  height: 100%;
+  width: 208px;
+
+  & .ant-menu-item {
+    padding-left: var(--grid-layout-margin) !important;
+    line-height: normal; //NOTE: to correct alignment of icon and text
+  }
+}

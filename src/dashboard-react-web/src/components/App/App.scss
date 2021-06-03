@@ -1,0 +1,6 @@
+@use '../../styles/layout-variables.scss';
+
+.content {
+  display: flex;
+  height: calc(100vh - #{layout-variables.$header-height});
+}
