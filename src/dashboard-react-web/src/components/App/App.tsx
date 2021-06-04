@@ -19,19 +19,17 @@ export const App = () => {
     dispatch(loadActiveAccount());
   }, [dispatch]);
 
-  return <React.Fragment>
+  return <div className="main-container">
     <HeaderPure />
-    <div className="content">
-      <NavBarPure />
-      <Switch>
-        <PrivateRouteContainer path={config.routers.overview} exact={true}>
-          <OverviewPure />
-        </PrivateRouteContainer>
-        <Route path={config.routers.connect}>
-          <ConnectPure />
-        </Route>
-      </Switch>
-    </div>
+    <NavBarPure />
+    <Switch>
+      <PrivateRouteContainer path={config.routers.overview} exact={true}>
+        <OverviewPure />
+      </PrivateRouteContainer>
+      <Route path={config.routers.connect}>
+        <ConnectPure />
+      </Route>
+    </Switch>
     {/* <FooterPure /> */}
-  </React.Fragment>;
+  </div>;
 };

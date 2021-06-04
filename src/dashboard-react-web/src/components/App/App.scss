@@ -1,6 +1,22 @@
 @use '../../styles/layout-variables.scss';
 
-.content {
-  display: flex;
-  height: calc(100vh - #{layout-variables.$header-height});
+.main-container {
+  display: grid;
+  grid-template-columns: 208px auto;
+  grid-template-rows: layout-variables.$header-height calc(100vh - #{layout-variables.$header-height});
+  grid-template-areas:
+    "header header"
+    "aside main";
+}
+
+header {
+  grid-area: header;
+}
+
+aside {
+  grid-area: aside;
+}
+
+main {
+  grid-area: main;
 }
