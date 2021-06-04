@@ -6,15 +6,15 @@
   grid-template-rows: layout-variables.$header-height calc(100vh - #{layout-variables.$header-height});
   grid-template-areas:
     "header header"
-    "aside main";
+    "nav main";
 }
 
 header {
   grid-area: header;
 }
 
-aside {
-  grid-area: aside;
+nav {
+  grid-area: nav;
 }
 
 main {

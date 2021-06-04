@@ -9,7 +9,7 @@ const NavBar = () => {
   const langResources = useCurrentLanguageResources();
   const viewsLangResources = langResources.views;
 
-  return <aside>
+  return <nav>
     <Menu className="navbar" mode="inline">
       <Menu.Item key="1" icon={<DashboardOutlined />}>{viewsLangResources.overview.title}</Menu.Item>
       <Menu.Item key="2" icon={<UnorderedListOutlined />}>{viewsLangResources.operations.title}</Menu.Item>
@@ -17,7 +17,7 @@ const NavBar = () => {
       <Menu.Item key="4" icon={<ProfileOutlined />}>{viewsLangResources.settings.title}</Menu.Item>
       <Menu.Item key="5" icon={<InfoCircleOutlined />}>{viewsLangResources.about.title}</Menu.Item>
     </Menu>
-  </aside>;
+  </nav>;
 };
 
 export const NavBarPure = React.memo(NavBar);
