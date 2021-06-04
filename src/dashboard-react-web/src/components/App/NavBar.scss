@@ -1,8 +1,14 @@
+@use "../../styles/layout-variables.scss";
+
 .navbar {
   height: 100%;
 
   & .ant-menu-item {
     padding-left: var(--grid-layout-margin) !important;
     line-height: normal !important; //NOTE: to correct alignment of icon and text
+
+    &:first-child {
+      margin-top: layout-variables.$element-spacing-small;
+    }
   }
 }
