@@ -1,7 +1,6 @@
 @use "../../../styles/layout-variables.scss";
 
 .view {
-    margin: 0 auto;
     padding: layout-variables.$element-spacing-small var(--grid-layout-gutter);
 }
 

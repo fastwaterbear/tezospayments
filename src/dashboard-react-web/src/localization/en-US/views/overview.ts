@@ -4,7 +4,7 @@ export const overview = {
     title: 'Balances'
   },
   incoming: {
-    title: 'Incoming per Month'
+    title: 'Incoming'
   },
   outgoing: {
     title: 'Outgoing'

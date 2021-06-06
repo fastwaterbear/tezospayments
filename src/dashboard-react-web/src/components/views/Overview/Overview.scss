@@ -1,0 +1,14 @@
+@use '../../../styles/layout-variables.scss';
+
+.small-cards-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: layout-variables.$element-spacing-medium;
+}
+
+.large-cards-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: layout-variables.$element-spacing-medium;
+  margin-top: layout-variables.$element-spacing-medium;
+}
