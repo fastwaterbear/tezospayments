@@ -1,8 +1,14 @@
 @use "../../styles/layout-variables.scss";
+@use "../../styles/ant-colors.scss";
 
 .navbar {
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid ant-colors.$gray-4;
+}
 
+.navbar__menu {
   & .ant-menu-item {
     padding-left: var(--grid-layout-margin) !important;
     line-height: normal !important; //NOTE: to correct alignment of icon and text
@@ -10,5 +16,16 @@
     &:first-child {
       margin-top: layout-variables.$element-spacing-small;
     }
+  }
+}
+
+.navbar__bottom-buttons {
+  text-align: center;
+  width: 100%;
+  padding: 0 var(--grid-layout-margin);
+
+  button {
+    width: 100%;
+    margin-bottom: layout-variables.$element-spacing-small;
   }
 }

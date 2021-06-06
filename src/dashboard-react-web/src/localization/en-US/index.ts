@@ -1,5 +1,5 @@
 import { common } from './common';
-import { overview, createService, connect, header, about, operations, services, settings, } from './views';
+import { overview, createService, connect, header, about, operations, services, settings, acceptPayments } from './views';
 
 export const enUS = {
   id: 'en-US',
@@ -14,6 +14,7 @@ export const enUS = {
       operations,
       services,
       settings,
+      acceptPayments
     },
   }
 } as const;

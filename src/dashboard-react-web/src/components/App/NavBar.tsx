@@ -1,5 +1,5 @@
 import { SettingOutlined, DashboardOutlined, UnorderedListOutlined, ProfileOutlined, InfoCircleOutlined } from '@ant-design/icons';
-import { Menu } from 'antd';
+import { Menu, Button } from 'antd';
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -12,8 +12,8 @@ const NavBar = () => {
   const langResources = useCurrentLanguageResources();
   const viewsLangResources = langResources.views;
 
-  return <nav>
-    <Menu className="navbar" mode="inline" selectedKeys={[location.pathname]}>
+  return <nav className="navbar">
+    <Menu className="navbar__menu" mode="inline" selectedKeys={[location.pathname]}>
       <Menu.Item key={config.routers.overview} icon={<DashboardOutlined />}>
         <Link to={config.routers.overview}>{viewsLangResources.overview.title}</Link>
       </Menu.Item>
@@ -22,6 +22,11 @@ const NavBar = () => {
       <Menu.Item key="4" icon={<SettingOutlined />}>{viewsLangResources.settings.title}</Menu.Item >
       <Menu.Item key="5" icon={<InfoCircleOutlined />}>{viewsLangResources.about.title}</Menu.Item>
     </Menu>
+
+    <div className="navbar__bottom-buttons">
+      <Button>{viewsLangResources.createService.title}</Button>
+      <Button type="primary">{viewsLangResources.acceptPayments.title}</Button>
+    </div>
   </nav>;
 };
 

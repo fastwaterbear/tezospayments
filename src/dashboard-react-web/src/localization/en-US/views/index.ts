@@ -6,3 +6,4 @@ export { about } from './about';
 export { operations } from './operations';
 export { services } from './services';
 export { settings } from './settings';
+export { acceptPayments } from './acceptPayments';
