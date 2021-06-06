@@ -33,7 +33,7 @@ export const Overview = () => {
         <Skeleton />
       </Card>
 
-      <Card title="Volume" extra={<a href="#">All Month</a>} style={{ height: 408 }}>
+      <Card title="Volume" extra={<a href="#">Last 2 Years</a>} style={{ height: 408 }}>
         <Skeleton />
       </Card>
     </div>
