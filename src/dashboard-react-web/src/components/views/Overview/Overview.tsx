@@ -18,22 +18,21 @@ export const Overview = () => {
         <Skeleton />
       </Card>
 
-      <Card size="small" title={`${overviewLangResources.incoming.title} (${commonLangResources.comingSoon})`} extra={<a href="#">All Month</a>} style={{ height: 205 }}>
+      <Card size="small" title={`${overviewLangResources.incoming.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">All Month</a>} style={{ height: 205 }}>
         <Skeleton />
       </Card>
 
-      <Card size="small" title={`${overviewLangResources.outgoing.title} (${commonLangResources.comingSoon})`} extra={<a href="#">All Month</a>} style={{ height: 205 }}>
+      <Card size="small" title={`${overviewLangResources.outgoing.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">All Month</a>} style={{ height: 205 }}>
         <Skeleton />
       </Card>
-
     </div>
 
     <div className="large-cards-container">
-      <Card title="Operation count" extra={<a href="#">6 Months</a>} style={{ height: 408 }}>
+      <Card title="Operation count" extra={<a href="#void">6 Months</a>} style={{ height: 408 }}>
         <Skeleton />
       </Card>
 
-      <Card title="Volume" extra={<a href="#">Last 2 Years</a>} style={{ height: 408 }}>
+      <Card title="Volume" extra={<a href="#void">Last 2 Years</a>} style={{ height: 408 }}>
         <Skeleton />
       </Card>
     </div>
