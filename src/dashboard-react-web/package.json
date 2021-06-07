@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@airgap/beacon-sdk": "^2.2.7",
+    "@ant-design/charts": "^1.1.10",
     "@reduxjs/toolkit": "^1.5.1",
     "@tezos-payments/common": "file:../common",
     "antd": "^4.16.0",

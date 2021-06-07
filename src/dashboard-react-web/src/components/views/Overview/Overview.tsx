@@ -3,6 +3,8 @@ import React from 'react';
 
 import { useCurrentLanguageResources } from '../../hooks';
 import { View } from '../View';
+import { OperationCountChartPure } from './OperationCountChart';
+import { VolumeChartPure } from './VolumeChart';
 import './Overview.scss';
 
 export const Overview = () => {
@@ -28,12 +30,12 @@ export const Overview = () => {
     </div>
 
     <div className="large-cards-container">
-      <Card title="Operation count" extra={<a href="#void">6 Months</a>} style={{ height: 408 }}>
-        <Skeleton />
+      <Card title={`Operation count (${commonLangResources.comingSoon})`} extra={<a href="#void">6 Months</a>} style={{ height: 408 }}>
+        <OperationCountChartPure />
       </Card>
 
-      <Card title="Volume" extra={<a href="#void">Last 2 Years</a>} style={{ height: 408 }}>
-        <Skeleton />
+      <Card title={`Volume (${commonLangResources.comingSoon})`} extra={<a href="#void">Last 2 Years</a>} style={{ height: 408 }}>
+        <VolumeChartPure />
       </Card>
     </div>
   </View>;
