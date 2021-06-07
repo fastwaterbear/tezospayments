@@ -12,3 +12,7 @@
   grid-gap: layout-variables.$element-spacing-medium;
   margin-top: layout-variables.$element-spacing-medium;
 }
+
+.chart-card {
+  min-width: 0;
+}

@@ -1,4 +1,5 @@
 import { Column } from '@ant-design/charts';
+import { ColumnConfig } from '@ant-design/charts/es/column';
 import React from 'react';
 
 export const OperationCountChart = () => {
@@ -29,10 +30,11 @@ export const OperationCountChart = () => {
     },
   ];
 
-  const config = {
+  const config: ColumnConfig = {
     data,
     xField: 'month',
     yField: 'operationCount',
+    height: 400,
     meta: {
       operationCount: { alias: 'Operation count' },
     },

@@ -42,6 +42,7 @@ export const VolumeChart = () => {
     data,
     xField: 'quarter',
     yField: 'sum',
+    height: 400,
     smooth: true,
     meta: {
       sum: { alias: 'Sum' },

@@ -8,5 +8,11 @@ export const overview = {
   },
   outgoing: {
     title: 'Outgoing'
+  },
+  operationCount: {
+    title: 'Operation count'
+  },
+  volume: {
+    title: 'Volume'
   }
 };

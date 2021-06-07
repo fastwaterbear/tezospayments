@@ -30,15 +30,15 @@ export const Overview = () => {
     </div>
 
     <div className="large-cards-container">
-      <Card title={`Operation count (${commonLangResources.comingSoon})`} extra={<a href="#void">6 Months</a>} style={{ height: 408 }}>
+      <Card className="chart-card" title={`${overviewLangResources.operationCount.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">6 Months</a>}>
         <OperationCountChartPure />
       </Card>
 
-      <Card title={`Volume (${commonLangResources.comingSoon})`} extra={<a href="#void">Last 2 Years</a>} style={{ height: 408 }}>
+      <Card className="chart-card" title={`${overviewLangResources.volume.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">Last 2 Years</a>}>
         <VolumeChartPure />
       </Card>
     </div>
-  </View>;
+  </View >;
 };
 
 export const OverviewPure = React.memo(Overview);
