@@ -1,9 +1,14 @@
 @use '../../styles/layout-variables.scss';
 
+#root {
+  height: 100%;
+}
+
 .main-container {
   display: grid;
+  height: 100%;
   grid-template-columns: 208px auto;
-  grid-template-rows: layout-variables.$header-height calc(100vh - #{layout-variables.$header-height});
+  grid-template-rows: layout-variables.$header-height calc(100% - #{layout-variables.$header-height});
   grid-template-areas:
     "header header"
     "nav main";
