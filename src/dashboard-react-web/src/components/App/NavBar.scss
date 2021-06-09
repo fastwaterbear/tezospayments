@@ -9,7 +9,7 @@
 }
 
 .navbar__menu {
-  border-right-width: 0;
+  border-right-width: 0 !important;
   & .ant-menu-item {
     padding-left: var(--grid-layout-margin) !important;
     line-height: normal !important; //NOTE: to correct alignment of icon and text
