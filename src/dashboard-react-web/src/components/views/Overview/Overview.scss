@@ -1,9 +1,7 @@
-@use '../../../styles/layout-variables.scss';
-
 .cards-container {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-gap: layout-variables.$element-spacing-medium;
+  grid-template-columns: repeat(6, 1fr);
+  grid-gap: var(--grid-layout-gutter);
 }
 
 .cards-container__small-card {
