@@ -32,10 +32,9 @@ const TokenListItem = (props: TokenListItemProps) => {
         <span className="token-list-item__ticker">{props.ticker}</span>
         <span className="token-list-item__name">{props.name}</span>
       </div>
-      <span className={valueClassNames}>{props.value}</span>
+      <span className={valueClassNames}>{`${props.highlightSign && props.value > 0 ? '+' : ''}${props.value.toLocaleString()}`}</span>
     </div>
   </li>;
 };
-
 
 TokenList.Item = TokenListItem;
