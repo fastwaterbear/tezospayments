@@ -25,6 +25,12 @@ const TokenListItem = (props: TokenListItemProps) => {
     { 'token-list-item__value_negative': props.highlightSign && props.value < 0 }
   );
 
+  const sign = props.value > 0 && props.highlightSign
+    ? '+'
+    : props.value < 0
+      ? '−'
+      : '';
+
   return <li className="token-list-item">
     <img className="token-list-item__icon" src={props.iconSrc} alt={props.name} />
     <div>
@@ -32,7 +38,7 @@ const TokenListItem = (props: TokenListItemProps) => {
         <span className="token-list-item__ticker">{props.ticker}</span>
         <span className="token-list-item__name">{props.name}</span>
       </div>
-      <span className={valueClassNames}>{`${props.highlightSign && props.value > 0 ? '+' : ''}${props.value.toLocaleString()}`}</span>
+      <span className={valueClassNames}>{`${sign}${Math.abs(props.value).toLocaleString()}`}</span>
     </div>
   </li>;
 };
