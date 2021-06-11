@@ -1,16 +1,25 @@
 @use '../../../styles/layout-variables.scss';
 
-.small-cards-container {
+.small-cards-container,
+.large-cards-container {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
   grid-gap: layout-variables.$element-spacing-medium;
 }
 
+.small-cards-container {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
 .large-cards-container {
-  display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-gap: layout-variables.$element-spacing-medium;
   margin-top: layout-variables.$element-spacing-medium;
+}
+
+@media (max-width: 1000px) {
+  .small-cards-container,
+  .large-cards-container {
+    grid-template-columns: 1fr;
+  }
 }
 
 .chart-card {
