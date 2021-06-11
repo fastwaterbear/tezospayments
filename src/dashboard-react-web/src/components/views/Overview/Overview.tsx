@@ -18,26 +18,26 @@ export const Overview = () => {
   return <View title={overviewLangResources.title} className="overview">
     <View.Title>{overviewLangResources.title}</View.Title>
 
-    <div className="small-cards-container">
-      <Card size="small" title={overviewLangResources.balances.title} style={{ height: 220 }}>
+    <div className="cards-container">
+      <Card className="cards-container__small-card" size="small" title={overviewLangResources.balances.title} style={{ height: 220 }}>
         <BalancesPure />
       </Card>
 
-      <Card size="small" title={`${overviewLangResources.incoming.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">All Month</a>} style={{ height: 220 }}>
+      {/*eslint-disable-next-line max-len*/}
+      <Card className="cards-container__small-card" size="small" title={`${overviewLangResources.incoming.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">All Month</a>} style={{ height: 220 }}>
         <Incoming />
       </Card>
 
-      <Card size="small" title={`${overviewLangResources.outgoing.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">All Month</a>} style={{ height: 220 }}>
+      {/*eslint-disable-next-line max-len*/}
+      <Card className="cards-container__small-card" size="small" title={`${overviewLangResources.outgoing.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">All Month</a>} style={{ height: 220 }}>
         <Outgoing />
       </Card>
-    </div>
 
-    <div className="large-cards-container">
-      <Card className="chart-card" title={`${overviewLangResources.operationCount.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">6 Months</a>}>
+      <Card className="cards-container__large-card" title={`${overviewLangResources.operationCount.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">6 Months</a>}>
         <OperationCountChartPure />
       </Card>
 
-      <Card className="chart-card" title={`${overviewLangResources.volume.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">Last 2 Years</a>}>
+      <Card className="cards-container__large-card" title={`${overviewLangResources.volume.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">Last 2 Years</a>}>
         <VolumeChartPure />
       </Card>
     </div>

@@ -1,27 +1,27 @@
 @use '../../../styles/layout-variables.scss';
 
-.small-cards-container,
-.large-cards-container {
+.cards-container {
   display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-gap: layout-variables.$element-spacing-medium;
 }
 
-.small-cards-container {
-  grid-template-columns: 1fr 1fr 1fr;
+.cards-container__small-card {
+  grid-column-start: span 2;
 }
 
-.large-cards-container {
-  grid-template-columns: 1fr 1fr;
-  margin-top: layout-variables.$element-spacing-medium;
+.cards-container__large-card {
+  grid-column-start: span 3;
+  min-width: 0;
 }
 
 @media (max-width: 1000px) {
-  .small-cards-container,
-  .large-cards-container {
+  .cards-container {
     grid-template-columns: 1fr;
   }
-}
 
-.chart-card {
-  min-width: 0;
+  .cards-container__small-card,
+  .cards-container__large-card {
+    grid-column-start: unset;
+  }
 }
