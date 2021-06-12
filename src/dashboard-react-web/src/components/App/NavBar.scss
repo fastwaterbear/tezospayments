@@ -1,21 +1,8 @@
 @use "../../styles/layout-variables.scss";
 @use "../../styles/ant-colors.scss";
 
-.navbar-container {
-  height: 100%;
-
-  & > div {
-    height: 100%;
-  }
-
-  .ant-affix {
-    height: 100% !important;
-  }
-}
-
 .navbar {
   display: flex;
-  height: 100%;
   flex-direction: column;
   justify-content: space-between;
   border-right: 1px solid ant-colors.$gray-4;
