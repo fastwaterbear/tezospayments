@@ -7,7 +7,7 @@
 .main-container {
   display: grid;
   height: 100%;
-  grid-template-columns: 208px auto;
+  grid-template-columns: layout-variables.$navbar-width auto;
   grid-template-rows: layout-variables.$header-height calc(100% - #{layout-variables.$header-height});
   grid-template-areas:
     "header header"

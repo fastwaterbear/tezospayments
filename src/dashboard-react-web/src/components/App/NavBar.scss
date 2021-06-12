@@ -2,6 +2,10 @@
 @use "../../styles/ant-colors.scss";
 
 .navbar {
+  position: fixed;
+  top: layout-variables.$header-height;
+  bottom: 0;
+  width: layout-variables.$navbar-width;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
