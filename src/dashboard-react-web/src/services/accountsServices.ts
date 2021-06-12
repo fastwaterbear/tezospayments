@@ -1,4 +1,5 @@
 import { ColorMode, DAppClient, NetworkType } from '@airgap/beacon-sdk';
+import { TezosToolkit } from '@taquito/taquito';
 
 import { config } from '../config';
 
@@ -32,5 +33,12 @@ export class AccountsService {
     const activeAccount = await this.client.getActiveAccount();
 
     return activeAccount?.address;
+  }
+
+  async getTezosBalance(address: string): Promise<number> {
+    const tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet');
+    const balance = await tezos.tz.getBalance(address);
+
+    return +balance / 1000000;
   }
 }
