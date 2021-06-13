@@ -14,7 +14,7 @@ export const TokenList = (props: TokenListProps) => {
 interface TokenListItemProps {
   name: string;
   ticker: string;
-  iconSrc: string;
+  iconSrc?: string;
   value: number;
   highlightSign?: boolean;
 }

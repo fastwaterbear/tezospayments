@@ -4,7 +4,7 @@ import { Token } from '../../models/blockchain';
 import { AppState } from '../index';
 
 export const selectServicesState = (state: AppState) => state.servicesState;
-export const selectAllAcceptedTokens = createSelector(
+export const getAllAcceptedTokens = createSelector(
   selectServicesState,
   servicesState => {
     const result = new Set<Token>();
@@ -14,7 +14,7 @@ export const selectAllAcceptedTokens = createSelector(
   }
 );
 
-export const selectAcceptTezos = createSelector(
+export const getAcceptTezos = createSelector(
   selectServicesState,
   servicesState => {
     return servicesState.services.some(s => s.acceptTezos);
