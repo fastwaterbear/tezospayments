@@ -1,10 +1,12 @@
 import { History, createBrowserHistory } from 'history';
 
-import { AccountsService } from '../services/accountsServices';
+import { AccountsService } from '../services/accountsService';
+import { ServicesService } from '../services/servicesService';
 import { AppStore } from '../store';
 
 interface AppServices {
   readonly accountsService: AccountsService;
+  readonly servicesService: ServicesService;
 }
 
 export class WebApp {
@@ -34,7 +36,8 @@ export class WebApp {
 
   private createServices(): AppServices {
     return {
-      accountsService: new AccountsService()
+      accountsService: new AccountsService(),
+      servicesService: new ServicesService()
     };
   }
 }
