@@ -26,6 +26,9 @@ export const servicesSlice = createSlice({
   name: namespace,
   initialState,
   reducers: {
+    clearServices: state => {
+      state.services = optimization.emptyArray;
+    }
   },
   extraReducers: builder => {
     builder.addCase(loadServices.fulfilled, (state, action) => {
@@ -33,3 +36,5 @@ export const servicesSlice = createSlice({
     });
   }
 });
+
+export const { clearServices } = servicesSlice.actions;

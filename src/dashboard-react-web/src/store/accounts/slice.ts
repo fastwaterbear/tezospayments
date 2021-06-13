@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { optimization } from '@tezos-payments/common/dist/utils';
 
 import type { Account } from '../../models/blockchain';
+import { clearServices, loadServices } from '../services/slice';
 import { AppThunkAPI } from '../thunk';
 
 export interface AccountsState {
@@ -19,8 +20,12 @@ const namespace = 'accounts';
 
 export const loadActiveAccount = createAsyncThunk<Account | null, void, AppThunkAPI>(
   `${namespace}/loadActiveAccount`,
-  async (_, { extra: app }) => {
+  async (_, { extra: app, dispatch }) => {
     const address = await app.services.accountsService.getActiveAccount();
+
+    if (address) {
+      dispatch(loadServices());
+    }
 
     return address ? { address } : null;
   }
@@ -28,8 +33,12 @@ export const loadActiveAccount = createAsyncThunk<Account | null, void, AppThunk
 
 export const connectAccount = createAsyncThunk<Account, void, AppThunkAPI>(
   `${namespace}/connect`,
-  async (_, { extra: app }) => {
+  async (_, { extra: app, dispatch }) => {
     const address = await app.services.accountsService.connect();
+
+    if (address) {
+      dispatch(loadServices());
+    }
 
     return {
       address
@@ -39,8 +48,11 @@ export const connectAccount = createAsyncThunk<Account, void, AppThunkAPI>(
 
 export const disconnectAccount = createAsyncThunk<void, void, AppThunkAPI>(
   `${namespace}/disconnect`,
-  async (_, { extra: app }) => {
-    return await app.services.accountsService.disconnect();
+  async (_, { extra: app, dispatch }) => {
+    const result = await app.services.accountsService.disconnect();
+    dispatch(clearServices());
+
+    return result;
   }
 );
 
