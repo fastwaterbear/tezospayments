@@ -1,6 +1,10 @@
 import { Column } from '@ant-design/charts';
 import { ColumnConfig } from '@ant-design/charts/es/column';
+import { Skeleton } from 'antd';
 import React from 'react';
+
+import { selectServicesState } from '../../../store/services/selectors';
+import { useAppSelector } from '../../hooks';
 
 export const OperationCountChart = () => {
   const data = [
@@ -39,6 +43,12 @@ export const OperationCountChart = () => {
       operationCount: { alias: 'Operation count' },
     },
   };
+
+  const services = useAppSelector(selectServicesState);
+
+  if (!services.initialized) {
+    return <Skeleton active paragraph={{ rows: 12 }} />;
+  }
 
   return <Column {...config} />;
 };

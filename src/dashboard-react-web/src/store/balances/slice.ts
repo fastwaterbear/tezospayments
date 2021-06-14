@@ -4,10 +4,12 @@ import { AppThunkAPI } from '../thunk';
 
 export interface BalancesState {
   readonly tezos: number;
+  readonly initialized: boolean;
 }
 
 const initialState: BalancesState = {
-  tezos: 0
+  tezos: 0,
+  initialized: false
 };
 
 const namespace = 'balances';
@@ -25,11 +27,13 @@ export const balancesSlice = createSlice({
   reducers: {
     clearBalances: state => {
       state.tezos = 0;
+      state.initialized = false;
     }
   },
   extraReducers: builder => {
     builder.addCase(loadBalances.fulfilled, (state, action) => {
       state.tezos = action.payload;
+      state.initialized = true;
     });
   }
 });

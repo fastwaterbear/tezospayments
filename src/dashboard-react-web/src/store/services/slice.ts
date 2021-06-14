@@ -8,10 +8,12 @@ import { AppThunkAPI } from '../thunk';
 
 export interface ServicesState {
   readonly services: readonly Service[];
+  readonly initialized: boolean;
 }
 
 const initialState: ServicesState = {
-  services: optimization.emptyArray
+  services: optimization.emptyArray,
+  initialized: false
 };
 
 const namespace = 'services';
@@ -44,9 +46,11 @@ export const servicesSlice = createSlice({
   extraReducers: builder => {
     builder.addCase(loadServices.fulfilled, (state, action) => {
       state.services = action.payload;
+      state.initialized = true;
     });
     builder.addCase(clearServices.fulfilled, state => {
       state.services = optimization.emptyArray;
+      state.initialized = false;
     });
   }
 });

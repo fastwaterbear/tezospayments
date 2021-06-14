@@ -1,6 +1,10 @@
 import { Line } from '@ant-design/charts';
 import { LineConfig } from '@ant-design/charts/es/line';
+import { Skeleton } from 'antd';
 import React from 'react';
+
+import { selectServicesState } from '../../../store/services/selectors';
+import { useAppSelector } from '../../hooks';
 
 export const VolumeChart = () => {
   const data = [
@@ -48,6 +52,12 @@ export const VolumeChart = () => {
       sum: { alias: 'Sum' },
     },
   };
+
+  const services = useAppSelector(selectServicesState);
+
+  if (!services.initialized) {
+    return <Skeleton active paragraph={{ rows: 12 }} />;
+  }
 
   return <Line {...config} />;
 };

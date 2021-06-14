@@ -1,13 +1,20 @@
+import { Skeleton } from 'antd';
 import React from 'react';
 
 import { tezosMeta } from '../../../models/blockchain';
-import { getAcceptTezos, getAllAcceptedTokens } from '../../../store/services/selectors';
+import { getAcceptTezos, getAllAcceptedTokens, selectServicesState } from '../../../store/services/selectors';
 import { TokenList } from '../../common';
 import { useAppSelector } from '../../hooks';
 
 export const Outgoing = () => {
   const acceptTezos = useAppSelector(getAcceptTezos);
+  const services = useAppSelector(selectServicesState);
   const tokens = useAppSelector(getAllAcceptedTokens);
+
+  if (!services.initialized) {
+    return <Skeleton active />;
+  }
+
   const items = [];
 
   if (acceptTezos) {
