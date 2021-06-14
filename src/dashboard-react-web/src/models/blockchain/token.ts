@@ -4,22 +4,31 @@ export enum Network {
   Edo2net = 'NetXSgo1ZT2DRUG',
 }
 
-export interface Token {
-  network: Network;
-  type: 'fa1.2' | 'fa2';
-  contractAddress: string;
-  fa2TokenId?: number;
-  metadata?: TokenMetadata;
+export interface TokenBase {
+  readonly network: Network;
+  readonly contractAddress: string;
+  readonly metadata?: TokenMetadata;
 }
 
+export interface TokenFA12 extends TokenBase {
+  readonly type: 'fa1.2';
+}
+
+export interface TokenFA2 extends TokenBase {
+  readonly type: 'fa2';
+  readonly fa2TokenId: number;
+}
+
+export type Token = TokenFA12 | TokenFA2;
+
 export type TokenMetadata = {
-  decimals: number;
-  symbol: string;
-  name: string;
-  thumbnailUri: string;
+  readonly decimals: number;
+  readonly symbol: string;
+  readonly name: string;
+  readonly thumbnailUri: string;
 };
 
-export const TOKEN_WHITELIST: Token[] = [
+export const tokenWhitelist: readonly Token[] = [
   {
     network: Network.Main,
     type: 'fa1.2',
@@ -45,7 +54,7 @@ export const TOKEN_WHITELIST: Token[] = [
   }
 ];
 
-export const TEZOS_META: TokenMetadata = {
+export const tezosMeta: TokenMetadata = {
   symbol: 'XTZ',
   name: 'Tezos',
   decimals: 6,

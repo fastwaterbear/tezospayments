@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TEZOS_META } from '../../../models/blockchain';
+import { tezosMeta } from '../../../models/blockchain';
 import { getAcceptTezos, getAllAcceptedTokens } from '../../../store/services/selectors';
 import { TokenList } from '../../common';
 import { useAppSelector } from '../../hooks';
@@ -11,7 +11,7 @@ export const Outgoing = () => {
   const items = [];
 
   if (acceptTezos) {
-    items.push(<TokenList.Item key={TEZOS_META.symbol} ticker={TEZOS_META.symbol} name={TEZOS_META.name} value={-52.4} iconSrc={TEZOS_META.thumbnailUri} highlightSign />);
+    items.push(<TokenList.Item key={tezosMeta.symbol} ticker={tezosMeta.symbol} name={tezosMeta.name} value={-52.4} iconSrc={tezosMeta.thumbnailUri} highlightSign />);
   }
 
   tokens.forEach(t => {

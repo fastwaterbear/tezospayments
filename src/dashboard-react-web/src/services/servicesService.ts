@@ -1,4 +1,4 @@
-import { Service, TOKEN_WHITELIST } from '../models/blockchain';
+import { Service, tokenWhitelist } from '../models/blockchain';
 
 export class ServicesService {
   getServices(): Promise<Service[]> {
@@ -6,7 +6,7 @@ export class ServicesService {
       const testServices = [{
         name: 'TestService',
         acceptTezos: true,
-        tokens: [...TOKEN_WHITELIST]
+        tokens: [...tokenWhitelist]
       }] as Service[];
 
       resolve(testServices);
