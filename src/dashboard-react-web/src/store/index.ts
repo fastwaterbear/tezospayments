@@ -1,12 +1,14 @@
 import { combineReducers, EnhancedStore } from '@reduxjs/toolkit';
 
 import { accountsSlice } from './accounts/slice';
+import { balancesSlice } from './balances/slice';
 import { servicesSlice } from './services/slice';
 import { AppThunkDispatch } from './thunk';
 
 export const appReducer = combineReducers({
   accountsState: accountsSlice.reducer,
-  servicesState: servicesSlice.reducer
+  servicesState: servicesSlice.reducer,
+  balancesState: balancesSlice.reducer,
 });
 
 export type AppStore = EnhancedStore<AppState>;

@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { optimization } from '@tezos-payments/common/dist/utils';
 
 import type { Service } from '../../models/blockchain';
+import { clearBalances, loadBalances } from '../balances/slice';
 import { AppThunkAPI } from '../thunk';
 
 export interface ServicesState {
@@ -15,10 +16,23 @@ const initialState: ServicesState = {
 
 const namespace = 'services';
 
-export const loadServices = createAsyncThunk<Service[], void, AppThunkAPI>(
+export const loadServices = createAsyncThunk<Service[], string, AppThunkAPI>(
   `${namespace}/loadServices`,
-  async (_, { extra: app }) => {
-    return await app.services.servicesService.getServices();
+  async (address, { extra: app, dispatch }) => {
+    const result = await app.services.servicesService.getServices();
+
+    if (result.length) {
+      dispatch(loadBalances(address));
+    }
+
+    return result;
+  }
+);
+
+export const clearServices = createAsyncThunk<void, void, AppThunkAPI>(
+  `${namespace}/clearServices`,
+  async (_, { dispatch }) => {
+    dispatch(clearBalances());
   }
 );
 
@@ -26,15 +40,13 @@ export const servicesSlice = createSlice({
   name: namespace,
   initialState,
   reducers: {
-    clearServices: state => {
-      state.services = optimization.emptyArray;
-    }
   },
   extraReducers: builder => {
     builder.addCase(loadServices.fulfilled, (state, action) => {
       state.services = action.payload;
     });
+    builder.addCase(clearServices.fulfilled, state => {
+      state.services = optimization.emptyArray;
+    });
   }
 });
-
-export const { clearServices } = servicesSlice.actions;
