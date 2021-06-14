@@ -11,11 +11,12 @@ export const Outgoing = () => {
   const items = [];
 
   if (acceptTezos) {
-    items.push(<TokenList.Item ticker={TEZOS_META.symbol} name={TEZOS_META.name} value={-52.4} iconSrc={TEZOS_META.thumbnailUri} highlightSign />);
+    items.push(<TokenList.Item key={TEZOS_META.symbol} ticker={TEZOS_META.symbol} name={TEZOS_META.name} value={-52.4} iconSrc={TEZOS_META.thumbnailUri} highlightSign />);
   }
 
   tokens.forEach(t => {
-    items.push(<TokenList.Item ticker={t.metadata?.symbol || 'unknown'} name={t.metadata?.name || 'unknown'} value={-462518} iconSrc={t.metadata?.thumbnailUri} highlightSign />);
+    // eslint-disable-next-line max-len
+    items.push(<TokenList.Item key={t.metadata?.symbol} ticker={t.metadata?.symbol || 'unknown'} name={t.metadata?.name || 'unknown'} value={-462518} iconSrc={t.metadata?.thumbnailUri} highlightSign />);
   });
 
   return <TokenList>

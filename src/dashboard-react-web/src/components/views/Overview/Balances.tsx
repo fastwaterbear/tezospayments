@@ -11,11 +11,11 @@ export const Balances = () => {
   const items = [];
 
   if (acceptTezos) {
-    items.push(<TokenList.Item ticker={TEZOS_META.symbol} name={TEZOS_META.name} value={45.94} iconSrc={TEZOS_META.thumbnailUri} />);
+    items.push(<TokenList.Item key={TEZOS_META.symbol} ticker={TEZOS_META.symbol} name={TEZOS_META.name} value={45.94} iconSrc={TEZOS_META.thumbnailUri} />);
   }
 
   tokens.forEach(t => {
-    items.push(<TokenList.Item ticker={t.metadata?.symbol || 'unknown'} name={t.metadata?.name|| 'unknown'} value={45.94} iconSrc={t.metadata?.thumbnailUri} />);
+    items.push(<TokenList.Item key={t.metadata?.symbol || 'unknown'} ticker={t.metadata?.symbol || 'unknown'} name={t.metadata?.name || 'unknown'} value={45.94} iconSrc={t.metadata?.thumbnailUri} />);
   });
 
   return <TokenList>
