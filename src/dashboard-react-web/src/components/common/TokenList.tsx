@@ -1,3 +1,5 @@
+import { Tooltip } from 'antd';
+
 import { combineClassNames } from '@tezos-payments/common/dist/utils';
 import './TokenList.scss';
 
@@ -16,6 +18,7 @@ interface TokenListItemProps {
   ticker: string;
   iconSrc?: string;
   value: number;
+  decimals: number;
   highlightSign?: boolean;
 }
 
@@ -31,6 +34,13 @@ const TokenListItem = (props: TokenListItemProps) => {
       ? '−'
       : '';
 
+  const displayedDecimals = 6;
+  const value = Math.abs(props.value);
+  const allDecimalsShown = displayedDecimals < props.decimals;
+  const valueSpan = <span className={valueClassNames}>
+    {`${sign}${value.toLocaleString(undefined, { minimumFractionDigits: displayedDecimals })}${allDecimalsShown ? '...' : ''}`}
+  </span>;
+
   return <li className="token-list-item">
     <img className="token-list-item__icon" src={props.iconSrc} alt={props.name} />
     <div>
@@ -38,7 +48,12 @@ const TokenListItem = (props: TokenListItemProps) => {
         <span className="token-list-item__ticker">{props.ticker}</span>
         <span className="token-list-item__name">{props.name}</span>
       </div>
-      <span className={valueClassNames}>{`${sign}${Math.abs(props.value).toLocaleString()}`}</span>
+      {allDecimalsShown
+        ? <Tooltip title={value.toLocaleString(undefined, { minimumFractionDigits: props.decimals })}>
+          {valueSpan}
+        </Tooltip>
+        : valueSpan
+      }
     </div>
   </li>;
 };

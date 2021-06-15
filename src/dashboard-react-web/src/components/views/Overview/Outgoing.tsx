@@ -18,12 +18,25 @@ export const Outgoing = () => {
   const items = [];
 
   if (acceptTezos) {
-    items.push(<TokenList.Item key={tezosMeta.symbol} ticker={tezosMeta.symbol} name={tezosMeta.name} value={-52.4} iconSrc={tezosMeta.thumbnailUri} highlightSign />);
+    items.push(<TokenList.Item
+      key={tezosMeta.symbol}
+      ticker={tezosMeta.symbol}
+      name={tezosMeta.name}
+      decimals={tezosMeta.decimals}
+      value={-52.4}
+      iconSrc={tezosMeta.thumbnailUri}
+      highlightSign />);
   }
 
   tokens.forEach(t => {
-    // eslint-disable-next-line max-len
-    items.push(<TokenList.Item key={t.metadata?.symbol} ticker={t.metadata?.symbol || 'unknown'} name={t.metadata?.name || 'unknown'} value={-462518} iconSrc={t.metadata?.thumbnailUri} highlightSign />);
+    items.push(<TokenList.Item
+      key={t.metadata?.symbol}
+      ticker={t.metadata?.symbol || 'unknown'}
+      name={t.metadata?.name || 'unknown'}
+      decimals={t.metadata ? t.metadata.decimals : 2}
+      value={-462518.0000006}
+      iconSrc={t.metadata?.thumbnailUri}
+      highlightSign />);
   });
 
   return <TokenList>
