@@ -35,7 +35,7 @@ export const Balances = () => {
       ticker={t.metadata?.symbol || 'unknown'}
       name={t.metadata?.name || 'unknown'}
       decimals={t.metadata ? t.metadata.decimals : 2}
-      value={462518}
+      value={balances.tokens[t.contractAddress] || 0}
       iconSrc={t.metadata?.thumbnailUri} />);
   });
 
