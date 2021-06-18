@@ -1,5 +1,6 @@
 import { ColorMode, DAppClient, NetworkType } from '@airgap/beacon-sdk';
 import { TezosToolkit } from '@taquito/taquito';
+import BigNumber from 'bignumber.js';
 
 import { config } from '../config';
 import { Token } from '../models/blockchain';
@@ -21,6 +22,7 @@ export class AccountsService {
   private get tezos(): TezosToolkit {
     if (!this._tezos) {
       const tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet');
+      tezos.setProvider({ signer: new ReadOnlySigner() });
       this._tezos = tezos;
     }
 
@@ -59,28 +61,26 @@ export class AccountsService {
 
     switch (token.type) {
       case 'fa1.2':
-        // result = await this.getTokenFA12Balance(address, token);
-        result = 356.5735238;
+        result = await this.getTokenFA12Balance(address, token);
         break;
       case 'fa2':
-        //result = await this.getTokenFA2Balance(address, token);
-        result = 532345.3234324235423;
+        result = await this.getTokenFA2Balance(address, token);
         break;
       default:
         throw new Error('Not Supported');
     }
 
-    return result;
+    return result.toNumber();
   }
 
-  private async getTokenFA12Balance(address: string, token: TokenFA12): Promise<number> {
+  private async getTokenFA12Balance(address: string, token: TokenFA12): Promise<BigNumber> {
     const contract = await this.tezos.contract.at(token.contractAddress);
     const result = await contract.views.getBalance?.(address).read();
 
     return result || 0;
   }
 
-  private async getTokenFA2Balance(address: string, token: TokenFA2): Promise<number> {
+  private async getTokenFA2Balance(address: string, token: TokenFA2): Promise<BigNumber> {
     const contract = await this.tezos.contract.at(token.contractAddress);
     const response = await contract.views?.['balance_of']?.([{ owner: address, token_id: token.fa2TokenId }])
       .read();
@@ -91,3 +91,25 @@ export class AccountsService {
   }
 }
 
+export class ReadOnlySigner {
+  async publicKeyHash() {
+    return 'tz1UqarjGfmwrd1BBHsXDtvdHx8VQgqKXrcK';
+  }
+
+  async publicKey() {
+    return 'edpkuAjgFnspKtJDxECF4cHeNjjWk7rxKTsWPSCFkX67sVsvxXyzYK';
+  }
+
+  async secretKey(): Promise<string> {
+    throw new Error('Secret key cannot be exposed');
+  }
+
+  async sign(): Promise<{
+    bytes: string;
+    sig: string;
+    prefixSig: string;
+    sbytes: string;
+  }> {
+    throw new Error('Cannot sign');
+  }
+}

@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { optimization } from '@tezos-payments/common/dist/utils';
 
-import type { Service } from '../../models/blockchain';
+import { Network, Service } from '../../models/blockchain';
 import { clearBalances, loadBalances } from '../balances/slice';
 import { AppThunkAPI } from '../thunk';
 
@@ -21,7 +21,7 @@ const namespace = 'services';
 export const loadServices = createAsyncThunk<Service[], string, AppThunkAPI>(
   `${namespace}/loadServices`,
   async (address, { extra: app, dispatch }) => {
-    const result = await app.services.servicesService.getServices();
+    const result = await app.services.servicesService.getServices(Network.Edo2net);
 
     if (result.length) {
       dispatch(loadBalances(address));

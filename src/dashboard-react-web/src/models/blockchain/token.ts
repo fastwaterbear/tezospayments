@@ -51,6 +51,18 @@ export const tokenWhitelist: readonly Token[] = [
       name: 'Stably USD',
       thumbnailUri: 'https://quipuswap.com/tokens/stably.png',
     },
+  },
+  {
+    network: Network.Edo2net,
+    type: 'fa2',
+    contractAddress: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2',
+    fa2TokenId: 0,
+    metadata: {
+      decimals: 0,
+      symbol: 'MBRG',
+      name: 'MAX BURGER',
+      thumbnailUri: 'https://quipuswap.com/tokens/stably.png',
+    },
   }
 ];
 

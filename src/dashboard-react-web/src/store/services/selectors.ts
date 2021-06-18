@@ -10,7 +10,7 @@ export const getAllAcceptedTokens = createSelector(
     const result = new Set<Token>();
     servicesState.services.forEach(s => s.tokens.forEach(t => result.add(t)));
 
-    return result;
+    return [...result];
   }
 );
 
