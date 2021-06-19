@@ -7,6 +7,7 @@ import { loadActiveAccount } from '../../store/accounts/slice';
 import { PrivateRouteContainer } from '../common';
 import { useAppDispatch } from '../hooks';
 import { OverviewPure, ConnectPure } from '../views';
+import { OperationsPure } from '../views/Operations';
 import { HeaderPure } from './Header';
 import { NavBarPure } from './NavBar';
 import 'antd/dist/antd.css';
@@ -23,8 +24,11 @@ export const App = () => {
     <HeaderPure />
     <NavBarPure />
     <Switch>
-      <PrivateRouteContainer path={config.routers.overview} exact={true}>
+      <PrivateRouteContainer exact path={config.routers.overview} >
         <OverviewPure />
+      </PrivateRouteContainer>
+      <PrivateRouteContainer exact path={config.routers.operations}>
+        <OperationsPure />
       </PrivateRouteContainer>
       <Route path={config.routers.connect}>
         <ConnectPure />

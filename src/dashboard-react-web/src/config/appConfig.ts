@@ -11,6 +11,7 @@ export type AppConfig = DeepReadonly<{
   },
   routers: {
     overview: string;
+    operations: string;
     connect: string;
   },
   links: {
