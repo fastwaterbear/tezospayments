@@ -17,7 +17,7 @@ const NavBar = () => {
       <Menu.Item key={config.routers.overview} icon={<DashboardOutlined />}>
         <Link to={config.routers.overview}>{viewsLangResources.overview.title}</Link>
       </Menu.Item>
-      <Menu.Item key="2" icon={<UnorderedListOutlined />}>
+      <Menu.Item key={config.routers.operations} icon={<UnorderedListOutlined />}>
         <Link to={config.routers.operations}>{viewsLangResources.operations.title}</Link>
       </Menu.Item>
       <Menu.Item key="3" icon={<ProfileOutlined />}>{viewsLangResources.services.title}</Menu.Item>
