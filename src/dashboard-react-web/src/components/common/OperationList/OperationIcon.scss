@@ -1,0 +1,20 @@
+@use '../../../styles/ant-colors.scss';
+
+.operation-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.operation-icon__income {
+  background-color: ant-colors.$green-2;
+  color: ant-colors.$green-7;
+}
+
+.operation-icon__expense {
+  background-color: ant-colors.$gray-4;
+  color: ant-colors.$gray-13;
+}

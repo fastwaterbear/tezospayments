@@ -4,6 +4,7 @@ import { combineClassNames } from '@tezos-payments/common/dist/utils';
 
 import { OperationStatus, OperationType } from '../../../models/blockchain/operation';
 import './OperationList.scss';
+import { OperationIconPure } from './OperationIcon';
 
 interface OperationListProps {
   children: React.ReactNode;
@@ -43,7 +44,9 @@ const OperationListItem = (props: OperationListItemProps) => {
   );
 
   return <div className="operation-list-row">
-    <img className="operation-list-item__icon" alt="icon" />
+    <div className="operation-list-item__icon">
+      <OperationIconPure type={props.type} status={props.status} />
+    </div>
     <div className="operation-list-item__main-info">
       <span className="operation-list-item__date">{props.date.toLocaleString()}</span>
       {/*eslint-disable-next-line jsx-a11y/anchor-is-valid*/}
