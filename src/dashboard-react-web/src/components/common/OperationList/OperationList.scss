@@ -1,0 +1,51 @@
+@use '../../../styles/ant-colors.scss';
+
+.operation-list {
+  display: table;
+  width: 100%;
+}
+
+.operation-list-row {
+  display: table-row;
+}
+
+.operation-list-item__icon,
+.operation-list-item__main-info,
+.operation-list-item__transfer-info,
+.operation-list-item__amount {
+  display: table-cell;
+  padding: 8px 0;
+}
+
+.operation-list-item__data {
+  display: block;
+}
+
+.operation-list-item__icon,
+.operation-list-item__transfer-info,
+.operation-list-item__amount {
+  vertical-align: middle;
+}
+
+.operation-list-item__amount {
+  text-align: right;
+  font-size: 20px;
+}
+
+.operation-list-item__amount_positive {
+  color: ant-colors.$green-6;
+}
+
+.operation-list-item__amount_negative {
+  color: ant-colors.$red-6;
+}
+
+.operation-list-item__date {
+  font-size: 16px;
+}
+
+.operation-list-item__date,
+.operation-list-item__operation-hash,
+.operation-list-item__data {
+  display: block;
+}
