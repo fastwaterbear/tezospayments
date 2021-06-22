@@ -1,0 +1,6 @@
+@use '../styles/layout-variables.scss';
+
+.pay-button {
+  width: 256px;
+  margin-bottom: layout-variables.$element-spacing-medium;
+}

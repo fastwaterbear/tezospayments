@@ -1,0 +1,25 @@
+@use "../../styles/layout-variables.scss";
+
+.view {
+  display: flex;
+  width: 100%;
+  max-width: layout-variables.$max-width;
+  margin: 0 auto;
+  padding: var(--grid-layout-margin);
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.view__side {
+  width: 50%;
+}
+
+.view__side_left {
+  margin-right: var(--grid-layout-gutter);
+}
+
+.view__side_right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

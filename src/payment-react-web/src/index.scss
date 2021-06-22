@@ -4,14 +4,36 @@
   box-sizing: border-box;
 }
 
+html,
+body,
+#root {
+  height: 100%;
+}
+
 body {
   margin: 0;
-  font-family: "Roboto", "Ubuntu", -apple-system, BlinkMacSystemFont, "Segoe UI", "Oxygen", "Cantarell", "Fira Sans",
+  font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", "Ubuntu", "Oxygen", "Cantarell", "Fira Sans",
     "Droid Sans", "Helvetica Neue", sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.34;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+#root {
+  display: grid;
+  align-items: center;
 }

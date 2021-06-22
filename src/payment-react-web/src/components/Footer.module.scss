@@ -1,0 +1,20 @@
+@use '../styles/layout-variables.scss';
+@use '../styles/colors.scss';
+
+footer {
+  text-align: center;
+}
+
+.label {
+  font-size: 1rem;
+  margin-bottom: layout-variables.$element-spacing-small * 4;
+}
+
+.warning {
+  color: colors.$character-secondary;
+  font-size: 12px;
+}
+
+.warning__highlight-message {
+  color: colors.$character-primary;
+}

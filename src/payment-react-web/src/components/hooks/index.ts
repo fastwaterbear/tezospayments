@@ -1,0 +1,1 @@
+export { useViewTitle } from './useViewTitle';
