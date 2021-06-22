@@ -1,26 +1,42 @@
 @use '../../../styles/ant-colors.scss';
 
+$-icon-container-size: 40px;
+$-icon-size: 20px;
+$-status-icon-size: 21px;
+
 .operation-icon {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: $-icon-container-size;
+  height: $-icon-container-size;
   border-radius: 50%;
-  font-size: 20px;
+  font-size: $-icon-size;
 }
 
-.operation-icon__income {
+.operation-icon_income {
   background-color: ant-colors.$green-2;
   color: ant-colors.$green-7;
 }
 
-.operation-icon__expense {
+.operation-icon_expense {
   background-color: ant-colors.$gray-4;
   color: ant-colors.$gray-13;
 }
 
-.operation-icon__cancelled {
+.operation-icon_cancelled {
   background-color: ant-colors.$red-1;
   color: ant-colors.$red-4;
+}
+
+.operation-icon__status {
+  position: absolute;
+  font-size: $-status-icon-size;
+  top: $-icon-container-size - $-status-icon-size/1.4;
+  left: $-icon-container-size - $-status-icon-size/1.4;
+}
+
+.operation-icon__status_cancelled {
+  color: ant-colors.$red-6 !important;
 }

@@ -1,4 +1,4 @@
-import { ArrowRightOutlined, ArrowLeftOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, ArrowLeftOutlined, ClockCircleTwoTone, ExclamationCircleFilled } from '@ant-design/icons';
 import React from 'react';
 
 import { combineClassNames } from '@tezos-payments/common/dist/utils';
@@ -18,13 +18,15 @@ export const OperationIcon = (props: OperationIconProps) => {
   const className = combineClassNames(
     props.className,
     'operation-icon',
-    { 'operation-icon__income': isIncome },
-    { 'operation-icon__expense': !isIncome },
-    { 'operation-icon__cancelled': props.status === OperationStatus.Cancelled }
+    { 'operation-icon_income': isIncome },
+    { 'operation-icon_expense': !isIncome },
+    { 'operation-icon_cancelled': props.status === OperationStatus.Cancelled }
   );
 
   return <div className={className}>
     {isIncome ? <ArrowRightOutlined /> : <ArrowLeftOutlined />}
+    {props.status === OperationStatus.Pending && <ClockCircleTwoTone className="operation-icon__status operation-icon__status_pending" />}
+    {props.status === OperationStatus.Cancelled && <ExclamationCircleFilled className="operation-icon__status operation-icon__status_cancelled" />}
   </div >;
 };
 
