@@ -20,6 +20,7 @@ export const OperationIcon = (props: OperationIconProps) => {
     'operation-icon',
     { 'operation-icon__income': isIncome },
     { 'operation-icon__expense': !isIncome },
+    { 'operation-icon__cancelled': props.status === OperationStatus.Cancelled }
   );
 
   return <div className={className}>

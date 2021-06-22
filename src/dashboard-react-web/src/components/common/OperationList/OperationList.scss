@@ -32,11 +32,15 @@
   font-size: 20px;
 }
 
-.operation-list-item__amount_positive {
+.operation-list-item__amount_income {
   color: ant-colors.$green-6;
 }
 
-.operation-list-item__amount_negative {
+.operation-list-item__amount_expense {
+  color: ant-colors.$gray-13;
+}
+
+.operation-list-item__amount_cancelled {
   color: ant-colors.$red-6;
 }
 

@@ -7,6 +7,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  font-size: 20px;
 }
 
 .operation-icon__income {
@@ -17,4 +18,9 @@
 .operation-icon__expense {
   background-color: ant-colors.$gray-4;
   color: ant-colors.$gray-13;
+}
+
+.operation-icon__cancelled {
+  background-color: ant-colors.$red-1;
+  color: ant-colors.$red-4;
 }

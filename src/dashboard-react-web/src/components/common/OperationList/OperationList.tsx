@@ -39,8 +39,9 @@ const OperationListItem = (props: OperationListItemProps) => {
 
   const sign = isIncome ? '+' : '−';
   const amountClassNames = combineClassNames('operation-list-item__amount',
-    { 'operation-list-item__amount_positive': isIncome },
-    { 'operation-list-item__amount_negative': !isIncome }
+    { 'operation-list-item__amount_income': isIncome },
+    { 'operation-list-item__amount_expense': !isIncome },
+    { 'operation-list-item__amount_cancelled': props.status === OperationStatus.Cancelled }
   );
 
   return <div className="operation-list-row">
