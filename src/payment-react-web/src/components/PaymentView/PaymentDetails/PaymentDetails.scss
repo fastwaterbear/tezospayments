@@ -1,0 +1,10 @@
+@use '../../../styles/layout-variables.scss';
+@use '../../../styles/colors.scss';
+
+.payment-details__title {
+  margin-bottom: layout-variables.$element-spacing-small;
+}
+
+.payment-details__fields {
+  margin-bottom: layout-variables.$element-spacing-small * 5;
+}

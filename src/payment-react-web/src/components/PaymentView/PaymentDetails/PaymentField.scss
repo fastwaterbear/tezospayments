@@ -1,0 +1,7 @@
+@use '../../../styles/layout-variables.scss';
+@use '../../../styles/colors.scss';
+
+.payment-field__label {
+  color: colors.$character-secondary;
+  width: layout-variables.$element-spacing-medium * 4;
+}

@@ -1,0 +1,27 @@
+@use '../../styles/layout-variables.scss';
+@use '../../styles/colors.scss';
+
+.copy-button {
+  margin: 0 layout-variables.$element-spacing-small / 2;
+  padding: 0;
+  border: none;
+  background: none;
+
+  &:hover {
+    cursor: pointer;
+
+    .copy-button__icon {
+      color: colors.$blue-5;
+    }
+  }
+
+  &:active {
+    .copy-button__icon {
+      color: colors.$blue-8;
+    }
+  }
+}
+
+.copy-button__icon {
+  font-size: 18px;
+}
