@@ -1,14 +1,28 @@
 import { createSelector } from 'reselect';
 
-import { Token } from '../../models/blockchain';
+import { Token, tokenWhitelistMap } from '@tezos-payments/common/dist/models/blockchain';
+
 import { AppState } from '../index';
+
+// TODO
+export const selectTokensState = (_state: AppState) => tokenWhitelistMap;
 
 export const selectServicesState = (state: AppState) => state.servicesState;
 export const getAllAcceptedTokens = createSelector(
   selectServicesState,
-  servicesState => {
+  selectTokensState,
+  (servicesState, tokensState) => {
     const result = new Set<Token>();
-    servicesState.services.forEach(s => s.tokens.forEach(t => result.add(t)));
+
+    servicesState.services.forEach(s => s.allowedTokens.assets
+      .forEach(assetAddress => {
+        const token = tokensState.get(assetAddress);
+        if (!token)
+          return;
+
+        result.add(token);
+      })
+    );
 
     return [...result];
   }
@@ -17,6 +31,6 @@ export const getAllAcceptedTokens = createSelector(
 export const getAcceptTezos = createSelector(
   selectServicesState,
   servicesState => {
-    return servicesState.services.some(s => s.acceptTezos);
+    return servicesState.services.some(s => s.allowedTokens.tez);
   }
 );

@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
+import { Network, Service } from '@tezos-payments/common/dist/models/blockchain';
 import { optimization } from '@tezos-payments/common/dist/utils';
 
-import { Network, Service } from '../../models/blockchain';
 import { clearBalances, loadBalances } from '../balances/slice';
 import { AppThunkAPI } from '../thunk';
 
@@ -45,7 +45,7 @@ export const servicesSlice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(loadServices.fulfilled, (state, action) => {
-      state.services = action.payload;
+      (state.services as Service[]) = action.payload;
       state.initialized = true;
     });
     builder.addCase(clearServices.fulfilled, state => {
