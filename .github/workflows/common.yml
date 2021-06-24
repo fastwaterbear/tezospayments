@@ -1,4 +1,4 @@
-name: package/common
+name: packages/common
 on:
   push:
     paths:
