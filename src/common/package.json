@@ -2,19 +2,27 @@
   "name": "@tezos-payments/common",
   "version": "0.1.0",
   "private": true,
+  "dependencies": {
+    "clsx": "^1.1.1"
+  },
   "devDependencies": {
+    "@babel/core": "^7.14.6",
+    "@babel/preset-env": "^7.14.7",
+    "@babel/preset-typescript": "^7.14.5",
+    "@types/jest": "^26.0.23",
     "@typescript-eslint/eslint-plugin": "^4.23.0",
     "@typescript-eslint/parser": "^4.23.0",
+    "babel-jest": "^27.0.5",
     "eslint": "^7.26.0",
     "eslint-plugin-import": "^2.22.1",
+    "jest": "^27.0.5",
     "typescript": "^4.2.4"
   },
   "scripts": {
     "build": "tsc -p .",
+    "test": "jest --coverage",
     "watch": "npm run build -- -w",
+    "test-watch": "jest --watchAll",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
-  },
-  "dependencies": {
-    "clsx": "^1.1.1"
   }
 }
