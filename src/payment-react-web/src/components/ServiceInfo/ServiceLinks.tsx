@@ -1,6 +1,6 @@
 import { combineClassNames } from '@tezos-payments/common/dist/utils';
 
-import { ExternalLink } from '../common';
+import { ServiceLink } from './ServiceLink';
 import './ServiceLinks.scss';
 
 interface ServiceLinksProps {
@@ -10,9 +10,6 @@ interface ServiceLinksProps {
 
 export const ServiceLinks = (props: ServiceLinksProps) => {
   return <div className={combineClassNames('service-links', props.className)}>
-    {props.links.map(link => <ExternalLink
-      className="service-link"
-      href={link}>{link}</ExternalLink>)
-    }
+    {props.links.map(link => <ServiceLink link={link} key={link} />).filter(Boolean)}
   </div>;
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Service, Network } from '@tezos-payments/common/dist/models/blockchain';
+import { Service, networks } from '@tezos-payments/common/dist/models/blockchain';
 
 import { FooterPure } from '../Footer';
 import { PayButtonPure } from '../PayButton';
@@ -12,7 +12,7 @@ import { TotalAmount } from './TotalAmount';
 export const PaymentView = () => {
   return <View className="payment-view">
     <View.Side isRight={false}>
-      <PaymentDetails orderId={testOrder} />
+      <PaymentDetails publicData={testPublicData} />
       <ServiceInfoPure service={testService} />
     </View.Side>
     <View.Side isRight={true}>
@@ -25,19 +25,24 @@ export const PaymentView = () => {
 
 export const PaymentViewPure = React.memo(PaymentView);
 
-const testOrder = 'bcd07c712e744e708d9a9a3183b31233';
+const testPublicData = {
+  orderId: 'bcd07c712e744e708d9a9a3183b31233'
+};
 const testAmount = 23262.2382;
 const testService: Service = {
   name: 'Test Service of Fast Water Bear',
   links: [
+    'https://fastwaterbear.com',
     'https://github.com/fastwaterbear',
-    'https://t.me/fastwaterbear'
+    'https://t.me/fastwaterbear',
+    'tezospayment@fastwaterbear.com',
+    'xxx://test.com'
   ],
   iconUri: 'https://avatars.githubusercontent.com/u/82229602',
   version: 1,
   metadata: '7b226e616d65223a22546573742053657276696365206f6620466173742057617465722042656172227d',
   contractAddress: 'KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x',
-  network: Network.Edo2net,
+  network: networks.edo2net,
   allowedTokens: {
     tez: true,
     assets: []

@@ -1,0 +1,11 @@
+@use '../../styles/layout-variables.scss';
+
+$-icon-size: 24px;
+
+.service-link__icon {
+  font-size: $-icon-size;
+  width: $-icon-size;
+  height: $-icon-size;
+  margin-right: layout-variables.$element-spacing-small / 2;
+  vertical-align: top;
+}
