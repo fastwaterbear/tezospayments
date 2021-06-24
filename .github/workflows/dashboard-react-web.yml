@@ -12,7 +12,7 @@ on:
       - '.github/workflows/dashboard-react-web.yml'
 
 jobs:
-  build:
+  build-lint-deploy:
     name: Build, Lint and Deploy
     runs-on: ubuntu-latest
     steps:
@@ -51,10 +51,6 @@ jobs:
       - name: Build the Dashboard app
         working-directory: 'src/dashboard-react-web'
         run: npm run build
-
-      - name: Lint the @tezos-payments/common
-        working-directory: 'src/common'
-        run: npm run lint # -- --max-warnings -1
 
       - name: Lint the Dashboard app
         working-directory: 'src/dashboard-react-web'
