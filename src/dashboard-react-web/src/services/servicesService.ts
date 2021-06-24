@@ -1,4 +1,4 @@
-import { Network, Service, tokenWhitelist } from '@tezos-payments/common/dist/models/blockchain';
+import { networks, Network, Service, tokenWhitelist } from '@tezos-payments/common/dist/models/blockchain';
 import { wait } from '@tezos-payments/common/dist/utils';
 
 export class ServicesService {
@@ -15,7 +15,7 @@ export class ServicesService {
           version: 1,
           metadata: '7b226e616d65223a22546573742053657276696365206f6620466173742057617465722042656172227d',
           contractAddress: 'KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x',
-          network: Network.Edo2net,
+          network: networks.edo2net,
           allowedTokens: {
             tez: true,
             assets: tokenWhitelist.filter(t => t.network === network).map(t => t.contractAddress)

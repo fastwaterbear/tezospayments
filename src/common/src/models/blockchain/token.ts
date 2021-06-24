@@ -1,4 +1,4 @@
-import { Network } from './network';
+import { Network, networks } from './network';
 
 interface TokenBase {
   readonly network: Network;
@@ -34,7 +34,7 @@ export const tezosMeta: TokenMetadata = {
 
 export const tokenWhitelist: readonly Token[] = [
   {
-    network: Network.Main,
+    network: networks.main,
     type: 'fa1.2',
     contractAddress: 'KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV',
     metadata: {
@@ -45,7 +45,7 @@ export const tokenWhitelist: readonly Token[] = [
     },
   },
   {
-    network: Network.Main,
+    network: networks.main,
     type: 'fa2',
     contractAddress: 'KT1REEb5VxWRjcHm5GzDMwErMmNFftsE5Gpf',
     fa2TokenId: 0,
@@ -57,7 +57,7 @@ export const tokenWhitelist: readonly Token[] = [
     },
   },
   {
-    network: Network.Edo2net,
+    network: networks.edo2net,
     type: 'fa2',
     contractAddress: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2',
     fa2TokenId: 0,

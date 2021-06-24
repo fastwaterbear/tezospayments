@@ -1,5 +1,31 @@
-export enum Network {
-  Main = 'NetXdQprcVkpaWU',
-  Florence = 'NetXxkAx4woPLyu',
-  Edo2net = 'NetXSgo1ZT2DRUG',
+const networksInternal = {
+  main: {
+    id: 'NetXdQprcVkpaWU',
+    name: 'main',
+  },
+  florence: {
+    id: 'NetXxkAx4woPLyu',
+    name: 'florence',
+  },
+  edo2net: {
+    id: 'NetXSgo1ZT2DRUG',
+    name: 'edo2net',
+  }
+} as const;
+
+interface NetworkInternal {
+  readonly id: string;
+  readonly name: string;
 }
+
+type Networks = {
+  readonly [P in keyof typeof networksInternal]: (typeof networksInternal)[P] extends NetworkInternal & {
+    readonly name: P;
+  }
+  ? (typeof networksInternal)[P]
+  : never
+};
+
+export type Network = Networks[keyof Networks];
+
+export const networks: Networks = networksInternal;
