@@ -1,7 +1,8 @@
+import { Skeleton } from 'antd';
 import React from 'react';
 
 import { OperationStatus, OperationType, PaymentType } from '../../../models/blockchain/operation';
-import { getSortedOperations } from '../../../store/operations/selectors';
+import { getSortedOperations, selectOperationsState } from '../../../store/operations/selectors';
 import { OperationList } from '../../common/OperationList';
 import { useAppSelector, useCurrentLanguageResources } from '../../hooks';
 import { View } from '../View';
@@ -10,6 +11,7 @@ export const Operations = () => {
   const langResources = useCurrentLanguageResources();
   const operationsLangResources = langResources.views.operations;
 
+  const isInitialized = useAppSelector(selectOperationsState).initialized;
   const operations = useAppSelector(getSortedOperations);
 
   const operationProps: Array<React.ComponentProps<typeof OperationList.Item>> = operations.map(o => ({
@@ -26,10 +28,10 @@ export const Operations = () => {
 
   return <View title={operationsLangResources.title}>
     <View.Title>{operationsLangResources.title}</View.Title>
-
-    <OperationList>
+    {!isInitialized && <Skeleton active />}
+    {isInitialized && <OperationList>
       {operationProps.map(o => <OperationList.Item key={o.hash} {...o} />)}
-    </OperationList>
+    </OperationList>}
   </View>;
 };
 
