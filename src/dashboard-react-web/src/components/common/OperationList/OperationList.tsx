@@ -4,6 +4,7 @@ import { combineClassNames } from '@tezos-payments/common/dist/utils';
 
 import { OperationStatus, OperationType } from '../../../models/blockchain/operation';
 import './OperationList.scss';
+import { useCurrentLanguageResources } from '../../hooks';
 import { OperationIconPure } from './OperationIcon';
 
 interface OperationListProps {
@@ -29,13 +30,17 @@ interface OperationListItemProps {
 }
 
 const OperationListItem = (props: OperationListItemProps) => {
+  const langResources = useCurrentLanguageResources();
+  const operationsLangResources = langResources.views.operations.operationList;
+
   const isIncome = props.type === OperationType.DonationIncome || props.type === OperationType.PaymentIncome;
   //TODO: fix service detection
   const from = isIncome ? getShortHash(props.accountAddress) : 'Service 1';
   const to = isIncome ? 'Service 1' : getShortHash(props.accountAddress);
 
   const hash = getShortHash(props.operationHash);
-  const data = `${props.type === OperationType.DonationExpense || props.type === OperationType.DonationIncome ? 'Donation' : 'Payment'} Data: ${props.data}`;
+  const isDonation = props.type === OperationType.DonationExpense || props.type === OperationType.DonationIncome;
+  const data = `${isDonation ? operationsLangResources.donationData : operationsLangResources.paymentData} ${props.data}`;
 
   const sign = isIncome ? '+' : '−';
   const amountClassNames = combineClassNames('operation-list-item__amount',

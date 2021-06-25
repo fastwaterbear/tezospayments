@@ -5,6 +5,7 @@ import { combineClassNames } from '@tezos-payments/common/dist/utils';
 
 import { OperationStatus, OperationType } from '../../../models/blockchain/operation';
 import './OperationIcon.scss';
+import { useCurrentLanguageResources } from '../../hooks';
 
 interface OperationIconProps {
   className?: string;
@@ -13,6 +14,9 @@ interface OperationIconProps {
 }
 
 export const OperationIcon = (props: OperationIconProps) => {
+  const langResources = useCurrentLanguageResources();
+  const operationsLangResources = langResources.views.operations.operationList;
+
   const isIncome = props.type === OperationType.DonationIncome || props.type === OperationType.PaymentIncome;
 
   const className = combineClassNames(
@@ -24,9 +28,9 @@ export const OperationIcon = (props: OperationIconProps) => {
   );
 
   return <div className={className}>
-    {isIncome ? <ArrowRightOutlined title={'Income'} /> : <ArrowLeftOutlined title={'Expense'} />}
-    {props.status === OperationStatus.Pending && <ClockCircleTwoTone className="operation-icon__status operation-icon__status_pending" title={'Pending'} />}
-    {props.status === OperationStatus.Cancelled && <ExclamationCircleFilled className="operation-icon__status operation-icon__status_cancelled" title={'Cancelled'} />}
+    {isIncome ? <ArrowRightOutlined title={operationsLangResources.income} /> : <ArrowLeftOutlined title={operationsLangResources.expense} />}
+    {props.status === OperationStatus.Pending && <ClockCircleTwoTone className="operation-icon__status operation-icon__status_pending" title={operationsLangResources.pending} />}
+    {props.status === OperationStatus.Cancelled && <ExclamationCircleFilled className="operation-icon__status operation-icon__status_cancelled" title={operationsLangResources.cancelled} />}
   </div >;
 };
 
