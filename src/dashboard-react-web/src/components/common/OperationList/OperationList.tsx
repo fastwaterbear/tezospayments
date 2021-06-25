@@ -21,7 +21,7 @@ interface OperationListItemProps {
   type: OperationType;
   status: OperationStatus;
   date: Date;
-  operationHash: string;
+  hash: string;
   serviceAddress: string;
   accountAddress: string;
   data: string;
@@ -38,7 +38,7 @@ const OperationListItem = (props: OperationListItemProps) => {
   const from = isIncome ? getShortHash(props.accountAddress) : 'Service 1';
   const to = isIncome ? 'Service 1' : getShortHash(props.accountAddress);
 
-  const hash = getShortHash(props.operationHash);
+  const hash = getShortHash(props.hash);
   const isDonation = props.type === OperationType.DonationExpense || props.type === OperationType.DonationIncome;
   const data = `${isDonation ? operationsLangResources.donationData : operationsLangResources.paymentData} ${props.data}`;
 

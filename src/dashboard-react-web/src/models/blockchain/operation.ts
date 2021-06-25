@@ -37,6 +37,7 @@ interface SendPaymentParameter extends OperationParameterBase {
 
 export interface Operation {
   id: number;
+  hash: string;
   // eslint-disable-next-line max-len
   type: 'endorsement' | 'ballot' | 'proposal' | 'activation' | 'double_baking' | 'double_endorsing' | 'nonce_revelation' | 'delegation' | 'origination' | 'transaction' | 'reveal' | 'migration' | 'revelation_penalty' | 'baking';
   status: 'applied' | 'failed' | 'backtracked' | 'skipped';

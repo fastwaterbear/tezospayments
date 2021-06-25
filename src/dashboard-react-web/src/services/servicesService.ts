@@ -40,6 +40,7 @@ export class ServicesService {
       wait(1000).then(() => {
         const operations: Operation[] = [{
           id: 4872633,
+          hash: 'oogXJwVGugoupXzBes9kkrBA6aK3rXskH7eXJecz8LAxCfjbNeP',
           type: 'transaction',
           amount: 10000000,
           status: 'applied',
