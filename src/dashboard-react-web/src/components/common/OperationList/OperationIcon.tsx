@@ -24,9 +24,9 @@ export const OperationIcon = (props: OperationIconProps) => {
   );
 
   return <div className={className}>
-    {isIncome ? <ArrowRightOutlined /> : <ArrowLeftOutlined />}
-    {props.status === OperationStatus.Pending && <ClockCircleTwoTone className="operation-icon__status operation-icon__status_pending" />}
-    {props.status === OperationStatus.Cancelled && <ExclamationCircleFilled className="operation-icon__status operation-icon__status_cancelled" />}
+    {isIncome ? <ArrowRightOutlined title={'Income'} /> : <ArrowLeftOutlined title={'Expense'} />}
+    {props.status === OperationStatus.Pending && <ClockCircleTwoTone className="operation-icon__status operation-icon__status_pending" title={'Pending'} />}
+    {props.status === OperationStatus.Cancelled && <ExclamationCircleFilled className="operation-icon__status operation-icon__status_cancelled" title={'Cancelled'} />}
   </div >;
 };
 
