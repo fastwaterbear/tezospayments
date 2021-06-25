@@ -26,12 +26,9 @@ export const loadBalances = createAsyncThunk<Pick<BalancesState, 'tezos' | 'toke
 
     const acceptedTokens = getAllAcceptedTokens(getState());
     const tokens: { [key: string]: number } = {};
-    const balancesPromises: Array<Promise<number>> = [];
-    acceptedTokens.forEach(async t => {
-      balancesPromises.push(app.services.accountsService.getTokenBalance(address, t));
-    });
-
+    const balancesPromises = acceptedTokens.map(t => app.services.accountsService.getTokenBalance(address, t));
     const balances = await Promise.all(balancesPromises);
+
     balances.forEach((b, i) => {
       const address = acceptedTokens[i]?.contractAddress;
       if (address) {

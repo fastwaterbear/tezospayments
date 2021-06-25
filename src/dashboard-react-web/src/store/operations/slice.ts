@@ -23,15 +23,10 @@ export const loadOperations = createAsyncThunk<Operation[], string[], AppThunkAP
   async (contracts, { extra: app }) => {
     const operations: Operation[] = [];
 
-    const operationsPromises: Array<Promise<Operation[]>> = [];
-    contracts.forEach(async c => {
-      operationsPromises.push(app.services.servicesService.getOperations(NetworkType.EDONET, c));
-    });
-
+    const operationsPromises = contracts.map(c => app.services.servicesService.getOperations(NetworkType.EDONET, c));
     const operationsArray = await Promise.all(operationsPromises);
-    operationsArray.forEach(o => {
-      operations.push(...o);
-    });
+
+    operationsArray.forEach(o => operations.push(...o));
 
     return operations;
   }
