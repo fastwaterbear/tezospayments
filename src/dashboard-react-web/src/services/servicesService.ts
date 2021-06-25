@@ -1,5 +1,10 @@
+import { NetworkType } from '@airgap/beacon-sdk';
+
 import { networks, Network, Service, tokenWhitelist } from '@tezos-payments/common/dist/models/blockchain';
 import { wait } from '@tezos-payments/common/dist/utils';
+
+import { Operation } from '../models/blockchain';
+import { PaymentType } from '../models/blockchain/operation';
 
 export class ServicesService {
   getServices(network: Network): Promise<Service[]> {
@@ -26,6 +31,38 @@ export class ServicesService {
         }];
 
         resolve(testServices);
+      });
+    });
+  }
+
+  getOperations(_network: NetworkType, _contractAddress: string): Promise<Operation[]> {
+    return new Promise(resolve => {
+      wait(1000).then(() => {
+        const operations: Operation[] = [{
+          id: 4872633,
+          type: 'transaction',
+          amount: 10000000,
+          status: 'applied',
+          timestamp: '2021-06-22T08:48:37Z',
+          sender: {
+            address: 'tz1Pdp87Bbaeu1TaggMLVdhBM6fkv8wHrFjt'
+          },
+          target: {
+            address: 'KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x'
+          },
+          parameter: {
+            entrypoint: 'send_payment',
+            value: {
+              payload: {
+                public: '7b224f726465724964223a2231227d',
+                operation_type: PaymentType.Payment,
+                asset_value: null
+              }
+            }
+          }
+        }];
+
+        resolve(operations);
       });
     });
   }

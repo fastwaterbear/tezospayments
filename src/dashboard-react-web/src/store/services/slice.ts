@@ -4,6 +4,7 @@ import { networks, Service } from '@tezos-payments/common/dist/models/blockchain
 import { optimization } from '@tezos-payments/common/dist/utils';
 
 import { clearBalances, loadBalances } from '../balances/slice';
+import { loadOperations } from '../operations/slice';
 import { AppThunkAPI } from '../thunk';
 
 export interface ServicesState {
@@ -21,13 +22,14 @@ const namespace = 'services';
 export const loadServices = createAsyncThunk<Service[], string, AppThunkAPI>(
   `${namespace}/loadServices`,
   async (address, { extra: app, dispatch }) => {
-    const result = await app.services.servicesService.getServices(networks.edo2net);
+    const services = await app.services.servicesService.getServices(networks.edo2net);
 
-    if (result.length) {
+    if (services.length) {
       dispatch(loadBalances(address));
+      dispatch(loadOperations(services.map(s => s.contractAddress)));
     }
 
-    return result;
+    return services;
   }
 );
 
