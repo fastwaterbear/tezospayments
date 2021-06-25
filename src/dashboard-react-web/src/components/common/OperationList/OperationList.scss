@@ -63,3 +63,47 @@
 .operation-list-item__data {
   display: block;
 }
+
+@media (max-width: 800px) {
+  .operation-list {
+    display: block;
+  }
+
+  .operation-list-row {
+    display: grid;
+    margin-bottom: 16px;
+    padding: 8px;
+    grid-template-columns: 60px auto;
+    grid-template-areas:
+      "icon main"
+      ". transfer"
+      ". amount";
+  }
+
+  .operation-list-item__icon,
+  .operation-list-item__main-info,
+  .operation-list-item__transfer-info,
+  .operation-list-item__amount {
+    display: block;
+    padding: 0;
+  }
+
+  .operation-list-item__icon {
+    grid-area: icon;
+    align-self: center;
+  }
+
+  .operation-list-item__main-info {
+    grid-area: main;
+  }
+
+  .operation-list-item__transfer-info {
+    grid-area: transfer;
+  }
+
+  .operation-list-item__amount {
+    grid-area: amount;
+    text-align: unset;
+    font-size: 16px;
+  }
+}
