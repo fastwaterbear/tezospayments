@@ -9,11 +9,13 @@ import { AppThunkAPI } from '../thunk';
 export interface AccountsState {
   readonly currentAccountAddress: string | null;
   readonly connectedAccounts: readonly Account[];
+  readonly initialized: boolean;
 }
 
 const initialState: AccountsState = {
   currentAccountAddress: null,
-  connectedAccounts: optimization.emptyArray
+  connectedAccounts: optimization.emptyArray,
+  initialized: false
 };
 
 const namespace = 'accounts';
@@ -69,6 +71,7 @@ export const accountsSlice = createSlice({
         if (!state.connectedAccounts.some(a => a.address === account.address))
           state.connectedAccounts.push(account);
       }
+      state.initialized = true;
     });
 
     builder.addCase(connectAccount.fulfilled, (state, action) => {
