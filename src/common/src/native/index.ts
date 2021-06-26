@@ -1,11 +1,5 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-import { URL } from 'url';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { URL as NodeURL } from 'url';
 
-if (!URL) {
-  // @ts-ignore
-  URL = window.URL;
-}
-
-export {
-  URL
-};
+export type URL = NodeURL;
+export const URL = NodeURL || (globalThis as any).URL;
