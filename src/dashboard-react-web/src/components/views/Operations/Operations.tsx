@@ -30,10 +30,11 @@ export const Operations = () => {
 
   return <View title={operationsLangResources.title}>
     <View.Title>{operationsLangResources.title}</View.Title>
-    {!isInitialized && <Skeleton active />}
-    {isInitialized && <OperationList>
-      {operationProps.map(o => <OperationList.Item key={o.hash} {...o} />)}
-    </OperationList>}
+    {!isInitialized
+      ? <Skeleton active />
+      : <OperationList>
+        {operationProps.map(o => <OperationList.Item key={o.hash} {...o} />)}
+      </OperationList>}
   </View>;
 };
 
