@@ -1,7 +1,6 @@
 import { BigNumber } from 'bignumber.js';
 import React from 'react';
 
-import { tezosMeta } from '@tezos-payments/common/dist/models/blockchain';
 import { ServiceOperationDirection, ServiceOperationType, ServiceOperationStatus } from '@tezos-payments/common/dist/models/service';
 import { combineClassNames } from '@tezos-payments/common/dist/utils';
 
