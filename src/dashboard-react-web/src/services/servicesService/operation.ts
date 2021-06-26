@@ -1,4 +1,3 @@
-import { BigNumber } from '@tezos-payments/common/dist/models/core';
 import { ServiceOperationType } from '@tezos-payments/common/dist/models/service';
 
 interface OperationAccount {
@@ -30,7 +29,7 @@ export interface Operation {
   readonly timestamp: string;
   readonly sender: OperationAccount;
   readonly target: OperationAccount;
-  readonly amount: BigNumber;
+  readonly amount: BigInt;
   readonly parameter: SendPaymentParameter;
 }
 

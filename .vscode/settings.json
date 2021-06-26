@@ -39,6 +39,8 @@
     "entrypoint",
     "entrypoints",
     "airgap",
-    "EDONET"
+    "edonet",
+    "serializable",
+    "bignumber"
   ]
 }

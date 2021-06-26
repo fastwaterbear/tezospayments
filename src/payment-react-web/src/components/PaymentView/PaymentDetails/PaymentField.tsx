@@ -1,4 +1,3 @@
-
 import { CopyButtonPure } from '../../common';
 import './PaymentField.scss';
 

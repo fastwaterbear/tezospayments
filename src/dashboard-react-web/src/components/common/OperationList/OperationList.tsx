@@ -1,11 +1,13 @@
+import { BigNumber } from 'bignumber.js';
 import React from 'react';
 
-import { BigNumber } from '@tezos-payments/common/dist/models/core';
+import { tezosMeta } from '@tezos-payments/common/dist/models/blockchain';
 import { ServiceOperationDirection, ServiceOperationType, ServiceOperationStatus } from '@tezos-payments/common/dist/models/service';
 import { combineClassNames } from '@tezos-payments/common/dist/utils';
 
 import { useCurrentLanguageResources } from '../../hooks';
 import { OperationIconPure } from './OperationIcon';
+
 import './OperationList.scss';
 
 interface OperationListProps {
@@ -65,7 +67,8 @@ const OperationListItem = (props: OperationListItemProps) => {
       {/*eslint-disable-next-line jsx-a11y/anchor-is-valid*/}
       <a href="#">{from}</a> → <a href="#">{to}</a>
     </div>
-    <div className={amountClassNames}>{sign}{props.value} {props.ticker}</div>
+    {/* TODO: use "decimals" from the token data */}
+    <div className={amountClassNames}>{sign}{props.value.toFormat(tezosMeta.decimals)} {props.ticker}</div>
   </div>;
 };
 

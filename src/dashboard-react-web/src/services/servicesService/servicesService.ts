@@ -1,6 +1,7 @@
 import { NetworkType } from '@airgap/beacon-sdk';
+import { BigNumber } from 'bignumber.js';
 
-import { networks, Network, tokenWhitelist } from '@tezos-payments/common/dist/models/blockchain';
+import { networks, Network, tokenWhitelist, tezosMeta } from '@tezos-payments/common/dist/models/blockchain';
 import {
   Service, ServiceOperationType, ServiceOperation, ServiceOperationDirection, ServiceOperationStatus
 } from '@tezos-payments/common/dist/models/service';
@@ -51,7 +52,7 @@ export class ServicesService {
       type: operation.parameter.value.payload.operation_type,
       direction: ServiceOperationDirection.Incoming,
       status: operation.status === 'applied' ? ServiceOperationStatus.Success : ServiceOperationStatus.Cancelled,
-      amount: operation.amount,
+      amount: new BigNumber(operation.amount.toString()).div(10 ** tezosMeta.decimals),
       payload: {
         public: {
           // TODO

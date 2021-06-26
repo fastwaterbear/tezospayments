@@ -1,4 +1,6 @@
-import { BigNumber, StateModel } from '../core';
+import { BigNumber } from 'bignumber.js';
+
+import { StateModel } from '../core';
 
 interface PublicPaymentData {
   readonly public: { readonly [fieldName: string]: unknown; };

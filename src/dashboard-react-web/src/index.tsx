@@ -1,4 +1,5 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, isPlain } from '@reduxjs/toolkit';
+import { BigNumber } from 'bignumber.js';
 import { enableMapSet } from 'immer';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -21,6 +22,11 @@ const store = configureStore({
     getDefaultMiddleware({
       thunk: {
         extraArgument: webApp,
+      },
+      serializableCheck: {
+        isSerializable: (value: unknown) => isPlain(value)
+          || BigNumber.isBigNumber(value)
+          || value instanceof Date
       }
     }),
 });
