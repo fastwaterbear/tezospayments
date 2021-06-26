@@ -1,5 +1,3 @@
-import { ServiceOperationType } from '@tezos-payments/common/dist/models/service';
-
 interface OperationAccount {
   readonly address: string;
 }
@@ -11,10 +9,10 @@ interface OperationParameterBase {
 interface SendPaymentParameter extends OperationParameterBase {
   readonly entrypoint: 'send_payment',
   readonly value: {
+    readonly operation_type: string;
+    readonly asset_value: null;
     readonly payload: {
       readonly public: string;
-      readonly operation_type: ServiceOperationType;
-      readonly asset_value: null;
     }
   }
 }

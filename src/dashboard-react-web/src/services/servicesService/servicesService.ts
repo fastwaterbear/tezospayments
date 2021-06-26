@@ -49,7 +49,7 @@ export class ServicesService {
   private mapOperationToServiceOperation(operation: Operation): ServiceOperation {
     return {
       hash: operation.hash,
-      type: operation.parameter.value.payload.operation_type,
+      type: +operation.parameter.value.operation_type || 0,
       direction: ServiceOperationDirection.Incoming,
       status: operation.status === 'applied' ? ServiceOperationStatus.Success : ServiceOperationStatus.Cancelled,
       amount: new BigNumber(operation.amount.toString()).div(10 ** tezosMeta.decimals),
