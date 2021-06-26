@@ -67,8 +67,7 @@ const OperationListItem = (props: OperationListItemProps) => {
       {/*eslint-disable-next-line jsx-a11y/anchor-is-valid*/}
       <a href="#">{from}</a> → <a href="#">{to}</a>
     </div>
-    {/* TODO: use "decimals" from the token data */}
-    <div className={amountClassNames}>{sign}{props.value.toFormat(tezosMeta.decimals)} {props.ticker}</div>
+    <div className={amountClassNames}>{sign}{props.value.toFormat()} {props.ticker}</div>
   </div>;
 };
 
