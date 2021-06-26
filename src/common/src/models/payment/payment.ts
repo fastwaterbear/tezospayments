@@ -1,5 +1,7 @@
 import { BigNumber } from 'bignumber.js';
 
+import { PaymentParser } from '../../helpers/paymentParser';
+import { URL } from '../../native';
 import { StateModel } from '../core';
 
 interface PublicPaymentData {
@@ -19,13 +21,15 @@ export interface Payment {
   readonly amount: BigNumber;
   readonly data: PaymentData;
   readonly asset?: string;
-  readonly successUrl: string;
-  readonly cancelUrl: string;
+  readonly successUrl: URL;
+  readonly cancelUrl: URL;
   readonly created: Date;
   readonly expired?: Date;
 }
 
 export class Payment extends StateModel {
+  static readonly defaultParser: PaymentParser = new PaymentParser();
+
   static inTez(payment: Payment) {
     return !!payment.asset;
   }
@@ -36,5 +40,9 @@ export class Payment extends StateModel {
 
   static privateDataExists(payment: Payment): payment is Payment & { readonly data: PrivatePaymentData } {
     return !!(payment.data as PrivatePaymentData).private;
+  }
+
+  static parse(paymentBase64: string, parser = Payment.defaultParser): Payment | null {
+    return parser.parse(paymentBase64);
   }
 }
