@@ -4,6 +4,7 @@ import React from 'react';
 import { ServiceOperationDirection, ServiceOperationType, ServiceOperationStatus } from '@tezos-payments/common/dist/models/service';
 import { combineClassNames } from '@tezos-payments/common/dist/utils';
 
+import { config } from '../../../config';
 import { useCurrentLanguageResources } from '../../hooks';
 import { OperationIconPure } from './OperationIcon';
 
@@ -38,8 +39,8 @@ const OperationListItem = (props: OperationListItemProps) => {
 
   const isIncoming = props.direction === ServiceOperationDirection.Incoming;
   //TODO: fix service detection
-  const from = isIncoming ? getShortHash(props.accountAddress) : 'Service 1';
-  const to = isIncoming ? 'Service 1' : getShortHash(props.accountAddress);
+  const from = isIncoming ? props.accountAddress : props.serviceAddress;
+  const to = isIncoming ? props.serviceAddress : props.accountAddress;
 
   const hash = getShortHash(props.hash);
   const isDonation = props.type === ServiceOperationType.Donation;
@@ -58,13 +59,13 @@ const OperationListItem = (props: OperationListItemProps) => {
     </div>
     <div className="operation-list-item__main-info">
       <span className="operation-list-item__date">{props.date.toLocaleString()}</span>
-      {/*eslint-disable-next-line jsx-a11y/anchor-is-valid*/}
-      <a href="#" className="operation-list-item__operation-hash">{hash}</a>
+      <a href={`${config.links.tzStats}/${props.hash}`} target="_blank" rel="noreferrer" className="operation-list-item__operation-hash">{hash}</a>
       <span className="operation-list-item__data">{data}</span>
     </div>
     <div className="operation-list-item__transfer-info">
-      {/*eslint-disable-next-line jsx-a11y/anchor-is-valid*/}
-      <a href="#">{from}</a> → <a href="#">{to}</a>
+      <a href={`${config.links.tzStats}/${from}`} target="_blank" rel="noreferrer">{from === props.serviceAddress ? 'Service 1' : getShortHash(from)}</a>
+      &nbsp;→&nbsp;
+      <a href={`${config.links.tzStats}/${to}`} target="_blank" rel="noreferrer">{to === props.serviceAddress ? 'Service 1' : getShortHash(to)}</a>
     </div>
     <div className={amountClassNames}>{sign}{props.value.toFormat()} {props.ticker}</div>
   </div>;
