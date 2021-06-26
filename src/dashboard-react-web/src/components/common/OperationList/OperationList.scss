@@ -23,21 +23,29 @@
 }
 
 .operation-list-item__data {
+  padding-top: 8px;
   display: block;
 }
 
 .operation-list-item__icon,
 .operation-list-item__transfer-info,
 .operation-list-item__amount {
-  vertical-align: middle;
+  vertical-align: top;
 }
 
 .operation-list-item__icon {
   padding-right: 0;
   width: 60px;
+  vertical-align: top;
+  padding-top: 19px;
+}
+
+.operation-list-item__transfer-info {
+  padding-top: 28px;
 }
 
 .operation-list-item__amount {
+  padding-top: 24px;
   text-align: right;
   font-size: 20px;
 }
@@ -90,7 +98,7 @@
 
   .operation-list-item__icon {
     grid-area: icon;
-    align-self: center;
+    padding-top: 4px;
   }
 
   .operation-list-item__main-info {
