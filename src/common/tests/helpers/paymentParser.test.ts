@@ -1,13 +1,19 @@
 /* eslint-disable max-len */
 import { BigNumber } from 'bignumber.js';
 
-import { PaymentParser } from '../../src/helpers/paymentParser';
+import { NonIncludedPaymentFields, PaymentParser } from '../../src/helpers';
 import { Payment } from '../../src/models/payment';
 import { URL } from '../../src/native';
 
 describe('Payment Parser', () => {
   const validCreatedDate = new Date('2021-06-26T00:37:03.930Z');
   const validExpiredDate = new Date('2021-06-26T00:57:03.930Z');
+  const nonIncludedFields: NonIncludedPaymentFields = {
+    targetAddress: 'some address',
+    urls: [
+      { type: 'base64', url: 'KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x' }
+    ]
+  };
 
   let paymentParser: PaymentParser;
 
@@ -30,7 +36,8 @@ describe('Payment Parser', () => {
         successUrl: new URL('https://fastwaterbear.com/payment/success'),
         cancelUrl: new URL('https://fastwaterbear.com/payment/cancel'),
         created: validCreatedDate,
-        expired: undefined
+        expired: undefined,
+        ...nonIncludedFields
       }
     ],
     [
@@ -47,7 +54,8 @@ describe('Payment Parser', () => {
         successUrl: new URL('https://fastwaterbear.com/payment/success'),
         cancelUrl: new URL('https://fastwaterbear.com/payment/cancel'),
         created: validCreatedDate,
-        expired: undefined
+        expired: undefined,
+        ...nonIncludedFields
       }
     ],
     [
@@ -64,13 +72,14 @@ describe('Payment Parser', () => {
         successUrl: new URL('https://fastwaterbear.com/payment/success'),
         cancelUrl: new URL('https://fastwaterbear.com/payment/cancel'),
         created: validCreatedDate,
-        expired: validExpiredDate
+        expired: validExpiredDate,
+        ...nonIncludedFields
       }
     ]
   ];
 
   test.each(validRawPaymentTestCases)('parsing the valid payment: %p', (_, rawPayment, expectedPayment) => {
-    expect(paymentParser.parse(rawPayment)).toEqual(expectedPayment);
+    expect(paymentParser.parse(rawPayment, nonIncludedFields)).toEqual(expectedPayment);
   });
 
   const invalidRawPaymentTestCases: ReadonlyArray<[message: string | null, rawPayment: string, invalidPayment: unknown]> = [
@@ -168,6 +177,6 @@ describe('Payment Parser', () => {
   ];
 
   test.each(invalidRawPaymentTestCases)('parsing the invalid payment: %p', (_, rawPayment) => {
-    expect(paymentParser.parse(rawPayment)).toBeNull();
+    expect(paymentParser.parse(rawPayment, nonIncludedFields)).toBeNull();
   });
 });

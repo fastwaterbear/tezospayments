@@ -18,6 +18,8 @@ type ValidRawPayment = RawPaymentBase;
 
 type PaymentFieldInfoType = 'object' | 'string' | 'undefined' | 'null';
 
+export type NonIncludedPaymentFields = Pick<Payment, 'targetAddress' | 'urls'>;
+
 export class PaymentParser {
   private _minPaymentFieldsCount: number | undefined;
   private paymentFieldTypes: ReadonlyMap<
@@ -49,38 +51,32 @@ export class PaymentParser {
     return this.paymentFieldTypes.size;
   }
 
-  parse(paymentBase64: string): Payment | null {
-    const paymentString = Buffer.from(paymentBase64, 'base64').toString('utf8');
-
-    let rawPayment: RawPayment;
+  parse(paymentBase64: string, nonIncludedFields: NonIncludedPaymentFields): Payment | null {
     try {
-      rawPayment = JSON.parse(paymentString);
+      const paymentString = Buffer.from(paymentBase64, 'base64').toString('utf8');
+      const rawPayment: RawPayment = JSON.parse(paymentString);
+
+      return this.mapRawPaymentToPayment(rawPayment, nonIncludedFields);
     }
     catch {
       return null;
     }
-
-    return this.mapRawPaymentToPayment(rawPayment);
   }
 
-  private mapRawPaymentToPayment(rawPayment: RawPayment): Payment | null {
-    try {
-      if (!this.validateRawPayment(rawPayment))
-        return null;
-
-      return {
+  private mapRawPaymentToPayment(rawPayment: RawPayment, nonIncludedFields: NonIncludedPaymentFields): Payment | null {
+    return this.validateRawPayment(rawPayment)
+      ? {
         amount: new BigNumber(rawPayment.amount),
         data: rawPayment.data,
         asset: rawPayment.asset,
         successUrl: new URL(rawPayment.successUrl),
         cancelUrl: new URL(rawPayment.cancelUrl),
         created: new Date(rawPayment.created),
-        expired: rawPayment.expired ? new Date(rawPayment.expired) : undefined
-      };
-    }
-    catch {
-      return null;
-    }
+        expired: rawPayment.expired ? new Date(rawPayment.expired) : undefined,
+        targetAddress: nonIncludedFields.targetAddress,
+        urls: nonIncludedFields.urls
+      }
+      : null;
   }
 
   private validateRawPayment(rawPayment: RawPayment): rawPayment is ValidRawPayment {

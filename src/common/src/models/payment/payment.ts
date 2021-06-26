@@ -1,6 +1,6 @@
 import { BigNumber } from 'bignumber.js';
 
-import { PaymentParser } from '../../helpers/paymentParser';
+import { PaymentParser, NonIncludedPaymentFields } from '../../helpers';
 import { URL } from '../../native';
 import { StateModel } from '../core';
 
@@ -17,7 +17,11 @@ type PaymentData =
   | PrivatePaymentData
   | PublicPaymentData & PrivatePaymentData;
 
+type PaymentUrl =
+  | { type: 'base64', url: string };
+
 export interface Payment {
+  readonly targetAddress: string;
   readonly amount: BigNumber;
   readonly data: PaymentData;
   readonly asset?: string;
@@ -25,6 +29,7 @@ export interface Payment {
   readonly cancelUrl: URL;
   readonly created: Date;
   readonly expired?: Date;
+  readonly urls: readonly PaymentUrl[];
 }
 
 export class Payment extends StateModel {
@@ -42,7 +47,7 @@ export class Payment extends StateModel {
     return !!(payment.data as PrivatePaymentData).private;
   }
 
-  static parse(paymentBase64: string, parser = Payment.defaultParser): Payment | null {
-    return parser.parse(paymentBase64);
+  static parse(paymentBase64: string, nonIncludedFields: NonIncludedPaymentFields, parser = Payment.defaultParser): Payment | null {
+    return parser.parse(paymentBase64, nonIncludedFields);
   }
 }
