@@ -1,13 +1,13 @@
 import { NetworkType } from '@airgap/beacon-sdk';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
+import { ServiceOperation } from '@tezos-payments/common/dist/models/service';
 import { optimization } from '@tezos-payments/common/dist/utils';
 
-import { Operation } from '../../models/blockchain';
 import { AppThunkAPI } from '../thunk';
 
 export interface OperationsState {
-  readonly operations: Operation[];
+  readonly operations: readonly ServiceOperation[];
   readonly initialized: boolean;
 }
 
@@ -18,15 +18,11 @@ const initialState: OperationsState = {
 
 const namespace = 'operations';
 
-export const loadOperations = createAsyncThunk<Operation[], string[], AppThunkAPI>(
+export const loadOperations = createAsyncThunk<ServiceOperation[], string[], AppThunkAPI>(
   `${namespace}/loadOperations`,
   async (contracts, { extra: app }) => {
-    const operations: Operation[] = [];
-
     const operationsPromises = contracts.map(c => app.services.servicesService.getOperations(NetworkType.EDONET, c));
-    const operationsArray = await Promise.all(operationsPromises);
-
-    operationsArray.forEach(o => operations.push(...o));
+    const operations = (await Promise.all(operationsPromises)).flat();
 
     return operations;
   }

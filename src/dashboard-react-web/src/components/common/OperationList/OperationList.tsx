@@ -1,11 +1,12 @@
 import React from 'react';
 
+import { BigNumber } from '@tezos-payments/common/dist/models/core';
+import { ServiceOperationDirection, ServiceOperationType, ServiceOperationStatus } from '@tezos-payments/common/dist/models/service';
 import { combineClassNames } from '@tezos-payments/common/dist/utils';
 
-import { OperationStatus, OperationType } from '../../../models/blockchain/operation';
-import './OperationList.scss';
 import { useCurrentLanguageResources } from '../../hooks';
 import { OperationIconPure } from './OperationIcon';
+import './OperationList.scss';
 
 interface OperationListProps {
   children: React.ReactNode;
@@ -18,14 +19,15 @@ export const OperationList = (props: OperationListProps) => {
 };
 
 interface OperationListItemProps {
-  type: OperationType;
-  status: OperationStatus;
+  type: ServiceOperationType;
+  direction: ServiceOperationDirection;
+  status: ServiceOperationStatus;
   date: Date;
   hash: string;
   serviceAddress: string;
   accountAddress: string;
   data: string;
-  value: number;
+  value: BigNumber;
   ticker: string;
 }
 
@@ -33,25 +35,25 @@ const OperationListItem = (props: OperationListItemProps) => {
   const langResources = useCurrentLanguageResources();
   const operationsLangResources = langResources.views.operations.operationList;
 
-  const isIncome = props.type === OperationType.DonationIncome || props.type === OperationType.PaymentIncome;
+  const isIncoming = props.direction === ServiceOperationDirection.Incoming;
   //TODO: fix service detection
-  const from = isIncome ? getShortHash(props.accountAddress) : 'Service 1';
-  const to = isIncome ? 'Service 1' : getShortHash(props.accountAddress);
+  const from = isIncoming ? getShortHash(props.accountAddress) : 'Service 1';
+  const to = isIncoming ? 'Service 1' : getShortHash(props.accountAddress);
 
   const hash = getShortHash(props.hash);
-  const isDonation = props.type === OperationType.DonationExpense || props.type === OperationType.DonationIncome;
+  const isDonation = props.type === ServiceOperationType.Donation;
   const data = `${isDonation ? operationsLangResources.donationData : operationsLangResources.paymentData} ${props.data}`;
 
-  const sign = isIncome ? '+' : '−';
+  const sign = isIncoming ? '+' : '−';
   const amountClassNames = combineClassNames('operation-list-item__amount',
-    { 'operation-list-item__amount_income': isIncome },
-    { 'operation-list-item__amount_expense': !isIncome },
-    { 'operation-list-item__amount_cancelled': props.status === OperationStatus.Cancelled }
+    { 'operation-list-item__amount_income': isIncoming },
+    { 'operation-list-item__amount_expense': !isIncoming },
+    { 'operation-list-item__amount_cancelled': props.status === ServiceOperationStatus.Cancelled }
   );
 
   return <div className="operation-list-row">
     <div className="operation-list-item__icon">
-      <OperationIconPure type={props.type} status={props.status} />
+      <OperationIconPure direction={props.direction} status={props.status} />
     </div>
     <div className="operation-list-item__main-info">
       <span className="operation-list-item__date">{props.date.toLocaleString()}</span>

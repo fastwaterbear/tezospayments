@@ -1,4 +1,5 @@
-import { Network } from './network';
+import { Network } from '../blockchain/network';
+import { ServiceOperationType } from './serviceOperationType';
 
 export interface Service {
   readonly name: string;
@@ -14,6 +15,7 @@ export interface Service {
     readonly tez: boolean;
     readonly assets: readonly string[];
   }
+  readonly allowedOperationType: ServiceOperationType;
 
   readonly owner: string;
   readonly paused: boolean;

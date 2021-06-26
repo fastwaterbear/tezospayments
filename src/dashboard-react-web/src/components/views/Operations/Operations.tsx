@@ -1,7 +1,8 @@
 import { Skeleton } from 'antd';
 import React from 'react';
 
-import { OperationStatus, OperationType, PaymentType } from '../../../models/blockchain/operation';
+import { ServiceOperation, ServiceOperationDirection } from '@tezos-payments/common/dist/models/service';
+
 import { getSortedOperations, selectOperationsState } from '../../../store/operations/selectors';
 import { OperationList } from '../../common/OperationList';
 import { useAppSelector, useCurrentLanguageResources } from '../../hooks';
@@ -17,13 +18,14 @@ export const Operations = () => {
   const operationProps: Array<React.ComponentProps<typeof OperationList.Item>> = operations.map(o => ({
     date: o.date,
     hash: o.hash,
-    data: o.parameter.value.payload.public,
-    accountAddress: o.sender.address,
-    serviceAddress: o.target.address,
+    data: ServiceOperation.publicPayloadExists(o) ? o.payload.public.encodedValue : '',
+    accountAddress: o.sender,
+    serviceAddress: o.target,
     ticker: 'XTZ',
     value: o.amount,
-    status: o.status === 'applied' ? OperationStatus.Success : OperationStatus.Cancelled,
-    type: o.parameter.value.payload.operation_type === PaymentType.Payment ? OperationType.PaymentIncome : OperationType.DonationIncome
+    status: o.status,
+    type: o.type,
+    direction: ServiceOperationDirection.Incoming
   }));
 
   return <View title={operationsLangResources.title}>

@@ -1,3 +1,5 @@
+export { BigNumber } from './bigNumber';
+
 export type { DeepReadonly } from './deepReadonly';
 export type { DeepPartial } from './deepPartial';
 export type { DeepRequired } from './deepRequired';
