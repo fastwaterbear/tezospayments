@@ -39,8 +39,8 @@ export class ServicesService {
     });
   }
 
-  async getOperations(_network: NetworkType, contractAddress: string): Promise<ServiceOperation[]> {
-    const response = await fetch(`https://api.edo2net.tzkt.io/v1/accounts/${contractAddress}/operations?type=transaction&parameters.as=*%22entrypoint%22:%22send_payment%22*`);
+  async getOperations(network: NetworkType, contractAddress: string): Promise<ServiceOperation[]> {
+    const response = await fetch(`https://${this.getTzktUrl(network)}/v1/accounts/${contractAddress}/operations?type=transaction&parameters.as=*%22entrypoint%22:%22send_payment%22*`);
     const operations: Operation[] = await response.json();
 
     return operations.map(operation => this.mapOperationToServiceOperation(operation));
@@ -62,5 +62,15 @@ export class ServicesService {
       sender: operation.sender.address,
       target: operation.target.address,
     };
+  }
+
+  private getTzktUrl(network: NetworkType) {
+    switch (network) {
+      case NetworkType.EDONET:
+        return 'api.edo2net.tzkt.io';
+
+      default:
+        throw new Error('Not Supported network type');
+    }
   }
 }
