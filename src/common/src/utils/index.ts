@@ -1,5 +1,6 @@
 import combineClassNames from 'clsx';
 
+import * as converters from './converters';
 import * as guards from './guards';
 import { memoize } from './memoize';
 import optimization from './optimization';
@@ -16,4 +17,5 @@ export {
   optimization,
   guards,
   text,
+  converters
 };

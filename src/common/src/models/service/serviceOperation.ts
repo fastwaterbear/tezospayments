@@ -1,12 +1,14 @@
 import { BigNumber } from 'bignumber.js';
 
+import { converters } from '../../utils';
 import { StateModel } from '../core';
 import { ServiceOperationDirection } from './serviceOperationDirection';
 import { ServiceOperationStatus } from './serviceOperationStatus';
 import { ServiceOperationType } from './serviceOperationType';
 
 interface ServiceOperationPayloadData {
-  readonly value: { readonly [fieldName: string]: unknown; } | undefined;
+  readonly value: { readonly [fieldName: string]: unknown; } | null;
+  readonly valueString: string;
   readonly encodedValue: string;
 }
 
@@ -51,5 +53,18 @@ export class ServiceOperation extends StateModel {
     data: ServiceOperationPayloadData
   ): data is ServiceOperationPayloadData & { readonly value: NonNullable<ServiceOperationPayloadData['value']> } {
     return !!data.value;
+  }
+
+  static parseServiceOperationPayload(encodedValue: string): ServiceOperationPayloadData {
+    const valueString = converters.bytesToString(encodedValue);
+
+    let value: ServiceOperationPayloadData['value'] = null;
+    try { value = JSON.parse(valueString); } catch { /**/ }
+
+    return {
+      value,
+      valueString,
+      encodedValue,
+    };
   }
 }

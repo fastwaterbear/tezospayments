@@ -54,11 +54,7 @@ export class ServicesService {
       status: operation.status === 'applied' ? ServiceOperationStatus.Success : ServiceOperationStatus.Cancelled,
       amount: new BigNumber(operation.amount.toString()).div(10 ** tezosMeta.decimals),
       payload: {
-        public: {
-          // TODO
-          value: undefined,
-          encodedValue: operation.parameter.value.payload.public
-        }
+        public: ServiceOperation.parseServiceOperationPayload(operation.parameter.value.payload.public),
       },
       asset: undefined,
       timestamp: operation.timestamp,

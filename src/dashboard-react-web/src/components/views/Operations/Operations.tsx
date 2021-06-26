@@ -18,7 +18,7 @@ export const Operations = () => {
   const operationProps: Array<React.ComponentProps<typeof OperationList.Item>> = operations.map(o => ({
     date: o.date,
     hash: o.hash,
-    data: ServiceOperation.publicPayloadExists(o) ? o.payload.public.encodedValue : '',
+    data: ServiceOperation.publicPayloadExists(o) ? o.payload.public.valueString : '',
     accountAddress: o.sender,
     serviceAddress: o.target,
     ticker: 'XTZ',
