@@ -1,4 +1,5 @@
 @use '../../../styles/ant-colors.scss';
+@use '../../../styles/fonts.scss';
 
 .operation-list {
   display: table;
@@ -23,7 +24,7 @@
 }
 
 .operation-list-item__data {
-  padding-top: 8px;
+  padding-top: 6px;
   display: block;
 }
 
@@ -41,6 +42,7 @@
 }
 
 .operation-list-item__transfer-info {
+  font-family: fonts.$monospace-font-family;
   padding-top: 28px;
 }
 
@@ -70,6 +72,10 @@
 .operation-list-item__operation-hash,
 .operation-list-item__data {
   display: block;
+}
+
+.operation-list-item__operation-hash {
+  font-family: fonts.$monospace-font-family;
 }
 
 @media (max-width: 800px) {

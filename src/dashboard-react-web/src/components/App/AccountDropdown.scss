@@ -1,10 +1,12 @@
+@use '../../styles/fonts.scss';
+
 .account-dropdown {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: fonts.$monospace-font-family;
   font-weight: 500 !important;
 }
 
 .account-menu-item {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: fonts.$monospace-font-family;
   font-weight: 400 !important;
 }
 
