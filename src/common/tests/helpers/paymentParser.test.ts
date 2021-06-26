@@ -9,9 +9,9 @@ describe('Payment Parser', () => {
   const validCreatedDate = new Date('2021-06-26T00:37:03.930Z');
   const validExpiredDate = new Date('2021-06-26T00:57:03.930Z');
   const nonIncludedFields: NonIncludedPaymentFields = {
-    targetAddress: 'some address',
+    targetAddress: 'KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x',
     urls: [
-      { type: 'base64', url: 'KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x' }
+      { type: 'base64', url: new URL('https://payment.tezospayments.com/KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x/payment/#...') }
     ]
   };
 

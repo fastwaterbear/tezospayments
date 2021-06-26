@@ -18,7 +18,7 @@ type PaymentData =
   | PublicPaymentData & PrivatePaymentData;
 
 type PaymentUrl =
-  | { type: 'base64', url: string };
+  | { type: 'base64', url: URL };
 
 export interface Payment {
   readonly targetAddress: string;
@@ -34,6 +34,11 @@ export interface Payment {
 
 export class Payment extends StateModel {
   static readonly defaultParser: PaymentParser = new PaymentParser();
+
+  static validate(_payment: Payment) {
+    // TODO: implement
+    return true;
+  }
 
   static inTez(payment: Payment) {
     return !!payment.asset;
