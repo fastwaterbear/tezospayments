@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Service, networks } from '@tezos-payments/common/dist/models/blockchain';
+import { networks } from '@tezos-payments/common/dist/models/blockchain';
+import { Service, ServiceOperationType } from '@tezos-payments/common/dist/models/service';
 
 import { FooterPure } from '../Footer';
 import { PayButtonPure } from '../PayButton';
@@ -47,6 +48,7 @@ const testService: Service = {
     tez: true,
     assets: []
   },
+  allowedOperationType: ServiceOperationType.All,
   owner: 'tz1aANkwuYKxB1XCyhB3CjMDDBQuPmNcBcCc',
   deleted: false,
   paused: false,

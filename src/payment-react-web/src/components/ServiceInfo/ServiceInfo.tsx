@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Service } from '@tezos-payments/common/dist/models/blockchain';
+import { Service } from '@tezos-payments/common/dist/models/service';
 
 import { CopyButtonPure, ExternalLink } from '../common';
 import { ServiceIcon } from './ServiceIcon';
