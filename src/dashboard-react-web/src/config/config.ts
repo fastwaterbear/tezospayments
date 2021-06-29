@@ -12,6 +12,7 @@ export const config: AppConfig = {
   routers: {
     overview: '/',
     operations: '/operations',
+    services: '/services',
     connect: '/connect'
   },
   links: {

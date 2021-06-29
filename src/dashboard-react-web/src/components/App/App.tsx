@@ -10,6 +10,7 @@ import { PrivateRouteContainer } from '../common';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { OverviewPure, ConnectPure } from '../views';
 import { OperationsPure } from '../views/Operations';
+import { ServicesPure } from '../views/Services';
 import { HeaderPure } from './Header';
 import { NavBarPure } from './NavBar';
 
@@ -35,6 +36,9 @@ export const App = () => {
         </PrivateRouteContainer>
         <PrivateRouteContainer exact path={config.routers.operations}>
           <OperationsPure />
+        </PrivateRouteContainer>
+        <PrivateRouteContainer exact path={config.routers.services}>
+          <ServicesPure />
         </PrivateRouteContainer>
         <Route path={config.routers.connect}>
           <ConnectPure />
