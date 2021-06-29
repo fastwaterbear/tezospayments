@@ -8,13 +8,14 @@ import './NewServiceCard.scss';
 
 export const NewServiceCard = () => {
   const langResources = useCurrentLanguageResources();
+  const commonLangResources = langResources.common;
   const servicesLangResources = langResources.views.services;
 
   return <Card bodyStyle={{ padding: 0 }} className="new-service-card-container">
     <div className="new-service-card" title={servicesLangResources.createNewService}>
       <div className="new-service-card__info">
-        <PlusOutlined />
-        <span>New</span>
+        <PlusOutlined className="new-service-card__icon" />
+        <span>{commonLangResources.new}</span>
       </div>
     </div>
   </Card>;
