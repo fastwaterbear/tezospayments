@@ -2,8 +2,8 @@ import { CheckCircleOutlined, CloseCircleOutlined, CopyOutlined } from '@ant-des
 import { Button, Card, Tag } from 'antd';
 import React, { useCallback } from 'react';
 
-import { config } from '../../../config';
-import { useCurrentLanguageResources } from '../../hooks';
+import { config } from '../../../../config';
+import { useCurrentLanguageResources } from '../../../hooks';
 
 import './ServiceCard.scss';
 

@@ -3,7 +3,7 @@ import React from 'react';
 import { getSortedServices } from '../../../store/services/selectors';
 import { useAppSelector, useCurrentLanguageResources } from '../../hooks';
 import { View } from '../View';
-import { ServiceCard } from './ServiceCard';
+import { NewServiceCardPure, ServiceCardPure } from './Cards';
 import './Services.scss';
 
 export const Services = () => {
@@ -11,7 +11,7 @@ export const Services = () => {
   const servicesLangResources = langResources.views.services;
 
   const services = useAppSelector(getSortedServices);
-  const servicesCards = services.map(s => <ServiceCard
+  const servicesCards = services.map(s => <ServiceCardPure
     key={s.contractAddress}
     contractAddress={s.contractAddress}
     isActive={!s.paused}
@@ -23,6 +23,7 @@ export const Services = () => {
     <View.Title>{servicesLangResources.title}</View.Title>
     <div className="services-container">
       {servicesCards}
+      <NewServiceCardPure />
     </div>
   </View >;
 };

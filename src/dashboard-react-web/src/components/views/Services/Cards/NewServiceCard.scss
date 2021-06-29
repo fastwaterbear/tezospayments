@@ -1,0 +1,27 @@
+@use './common.scss';
+@use '../../../../styles/ant-colors.scss';
+
+.new-service-card-container {
+  cursor: pointer;
+  &:hover {
+    border-color: ant-colors.$gray-5;
+
+    .new-service-card__info {
+      color: ant-colors.$gray-7;
+    }
+  }
+}
+
+.new-service-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: common.$card-height;
+  width: common.$card-width;
+  padding: common.$card-padding;
+}
+
+.new-service-card__info {
+  font-size: 24px;
+  color: ant-colors.$gray-6;
+}

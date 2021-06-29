@@ -4,4 +4,5 @@ export const services = {
     active: 'Active',
     paused: 'Paused'
   },
+  createNewService: 'Create New Service'
 };

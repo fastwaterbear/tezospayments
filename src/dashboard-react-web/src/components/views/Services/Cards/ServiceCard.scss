@@ -1,4 +1,5 @@
-@use '../../../styles/ant-colors.scss';
+@use '../../../../styles/ant-colors.scss';
+@use './common.scss';
 
 $-logo-size: 64px;
 
@@ -6,9 +7,9 @@ $-logo-size: 64px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 214px;
-  width: 380px;
-  padding: 16px;
+  height: common.$card-height;
+  width: common.$card-width;
+  padding: common.$card-padding;
 }
 
 .service-card__info-container {
