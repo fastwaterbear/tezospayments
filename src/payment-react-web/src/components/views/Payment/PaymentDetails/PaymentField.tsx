@@ -1,4 +1,4 @@
-import { CopyButtonPure } from '../../common';
+import { CopyButtonPure } from '../../../common';
 import './PaymentField.scss';
 
 interface PaymentFieldProps {

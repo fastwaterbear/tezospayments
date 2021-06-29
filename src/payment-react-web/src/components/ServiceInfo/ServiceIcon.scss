@@ -1,7 +1,21 @@
+@use '../../styles/colors.scss';
+
 $icon-size: 80px;
 
 .service-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: $icon-size;
   height: $icon-size;
   user-select: none;
+}
+
+.service-icon_type-text {
+  font-size: $icon-size / 2.5;
+  font-weight: 700;
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(#fff -125%, colors.$blue-6);
+  white-space: nowrap;
 }

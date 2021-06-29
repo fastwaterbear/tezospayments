@@ -44,8 +44,15 @@ export class Payment extends StateModel {
     return !!payment.asset;
   }
 
-  static publicDataExists(payment: Payment): payment is Payment & { readonly data: PublicPaymentData } {
-    return !!(payment.data as PublicPaymentData).public;
+  static publicDataExists(payment: Payment): payment is Payment & { readonly data: PublicPaymentData };
+  static publicDataExists(paymentData: Payment['data']): paymentData is Payment['data'] & PublicPaymentData;
+  static publicDataExists(
+    paymentOrPaymentDataOrPaymentData: Payment | Payment['data']
+  ): paymentOrPaymentDataOrPaymentData is (Payment & { readonly data: PublicPaymentData }) | (Payment['data'] & PublicPaymentData) {
+    return !!(Payment.isPayment(paymentOrPaymentDataOrPaymentData)
+      ? (paymentOrPaymentDataOrPaymentData.data as PublicPaymentData).public
+      : (paymentOrPaymentDataOrPaymentData as PublicPaymentData).public
+    );
   }
 
   static privateDataExists(payment: Payment): payment is Payment & { readonly data: PrivatePaymentData } {
@@ -54,5 +61,9 @@ export class Payment extends StateModel {
 
   static parse(paymentBase64: string, nonIncludedFields: NonIncludedPaymentFields, parser = Payment.defaultParser): Payment | null {
     return parser.parse(paymentBase64, nonIncludedFields);
+  }
+
+  private static isPayment(paymentOrPaymentDataOrPaymentData: Payment | Payment['data']): paymentOrPaymentDataOrPaymentData is Payment {
+    return !!(paymentOrPaymentDataOrPaymentData as Payment).amount;
   }
 }

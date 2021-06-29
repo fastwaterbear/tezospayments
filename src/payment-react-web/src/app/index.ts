@@ -1,4 +1,4 @@
-import { LocalPaymentService } from '../services';
+import { LocalPaymentService } from '../services/localPaymentService';
 
 export const app = {
   localPaymentService: new LocalPaymentService()

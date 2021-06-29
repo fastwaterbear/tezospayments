@@ -2,8 +2,8 @@ import React from 'react';
 
 import { combineClassNames } from '@tezos-payments/common/dist/utils';
 
-import { config } from '../../config';
-import { useViewTitle } from '../hooks';
+import { config } from '../../../config';
+import { useViewTitle } from '../../hooks';
 import { ViewSide } from './ViewSide';
 import './View.scss';
 
