@@ -1,4 +1,5 @@
 @use '../../../../styles/ant-colors.scss';
+@use '../../../../styles/fonts.scss';
 @use './common.scss';
 
 $-logo-size: 64px;
@@ -54,6 +55,7 @@ $-logo-size: 64px;
 
 .service-card__link {
   color: ant-colors.$blue-6 !important;
+  font-family: fonts.$monospace-font-family;
 }
 
 .service-card_copy-icon {
