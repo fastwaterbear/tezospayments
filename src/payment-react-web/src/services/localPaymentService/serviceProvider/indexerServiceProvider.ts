@@ -1,6 +1,6 @@
 import { Network } from '@tezos-payments/common/dist/models/blockchain';
 import { Service } from '@tezos-payments/common/dist/models/service';
-import { converters, guards } from '@tezos-payments/common/dist/utils';
+import { converters, guards, optimization } from '@tezos-payments/common/dist/utils';
 
 import { ServiceResult } from '../../serviceResult';
 import { LocalPaymentServiceError } from '../errors';
@@ -27,7 +27,7 @@ export abstract class IndexerServiceProvider implements ServiceProvider {
 
   protected abstract getServiceInternal(serviceAddress: string): Promise<ServiceResult<ServiceDto, LocalPaymentServiceError>>;
 
-  private mapServiceDtoToService(serviceDto: ServiceDto, serviceAddress: string,): Service | null {
+  private mapServiceDtoToService(serviceDto: ServiceDto, serviceAddress: string): Service | null {
     const metadataJson = converters.bytesToObject(serviceDto.metadata);
 
     // TODO: use the service validation
@@ -38,7 +38,7 @@ export abstract class IndexerServiceProvider implements ServiceProvider {
     )
       ? {
         name: metadataJson.name,
-        links: metadataJson.links || [],
+        links: metadataJson.links || optimization.emptyArray,
         description: metadataJson.description,
         iconUri: metadataJson.iconUri,
         version: +serviceDto.version,
@@ -68,7 +68,7 @@ export interface ServiceDto {
   readonly metadata: string;
   readonly allowed_tokens: {
     readonly tez: boolean;
-    readonly assets: readonly string[],
+    readonly assets: readonly string[];
   };
   readonly allowed_operation_type: string,
 }
