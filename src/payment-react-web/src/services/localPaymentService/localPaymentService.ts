@@ -6,7 +6,7 @@ import { memoize } from '@tezos-payments/common/dist/utils';
 import { PaymentInfo } from '../../models/payment/paymentInfo';
 import { ServiceResult } from '../serviceResult';
 import { errors, LocalPaymentServiceError } from './errors';
-import { ServiceProvider, TzStatsServiceProvider } from './serviceProvider';
+import { ServiceProvider, TzKTServiceProvider } from './serviceProvider';
 
 type Segments = readonly [
   targetAddress: string,
@@ -14,7 +14,7 @@ type Segments = readonly [
 ];
 
 export class LocalPaymentService {
-  readonly serviceProvider: ServiceProvider = new TzStatsServiceProvider(networks.edo2net);
+  readonly serviceProvider: ServiceProvider = new TzKTServiceProvider(networks.edo2net);
 
   async getCurrentPaymentInfo(): Promise<ServiceResult<PaymentInfo, LocalPaymentServiceError>> {
     const paymentResult = this.getCurrentPayment();
