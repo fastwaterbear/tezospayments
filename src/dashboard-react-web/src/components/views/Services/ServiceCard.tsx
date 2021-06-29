@@ -1,6 +1,6 @@
 import { CheckCircleOutlined, CloseCircleOutlined, CopyOutlined } from '@ant-design/icons';
 import { Button, Card, Tag } from 'antd';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { config } from '../../../config';
 import { useCurrentLanguageResources } from '../../hooks';
@@ -18,6 +18,10 @@ export const ServiceCard = (props: ServiceCardProps) => {
   const langResources = useCurrentLanguageResources();
   const commonLangResources = langResources.common;
   const servicesLangResources = langResources.views.services;
+
+  const handleCopyAddressClick = useCallback(() => {
+    navigator.clipboard.writeText(props.contractAddress);
+  }, [props.contractAddress]);
 
   return <Card size="small" bodyStyle={{ padding: 0 }}>
     <div className="service-card">
@@ -37,7 +41,7 @@ export const ServiceCard = (props: ServiceCardProps) => {
           <a href={`${config.links.tzStats}/${props.contractAddress}`} target="_blank" rel="noreferrer" className="service-card__link">
             {props.contractAddress}
           </a>
-          <CopyOutlined className="service-card_copy-icon" title={commonLangResources.copy} />
+          <CopyOutlined className="service-card_copy-icon" title={commonLangResources.copy} onClick={handleCopyAddressClick} />
         </div>
       </div>
       <div className="service-card__button-container">
