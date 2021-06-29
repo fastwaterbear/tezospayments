@@ -34,3 +34,10 @@ export const getAcceptTezos = createSelector(
     return servicesState.services.some(s => s.allowedTokens.tez);
   }
 );
+
+export const getSortedServices = createSelector(
+  selectServicesState,
+  servicesState => {
+    return [...servicesState.services].sort((a, b) => a.name.localeCompare(b.name));
+  }
+);

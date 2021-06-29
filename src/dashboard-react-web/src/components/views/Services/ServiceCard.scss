@@ -1,0 +1,71 @@
+@use '../../../styles/ant-colors.scss';
+
+$-logo-size: 64px;
+
+.service-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 214px;
+  width: 380px;
+  padding: 16px;
+}
+
+.service-card__info-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.service-card__main-info {
+  display: flex;
+  flex-direction: row;
+  height: $-logo-size;
+  margin-bottom: 14px;
+}
+
+.service-card__logo {
+  height: $-logo-size;
+  width: $-logo-size;
+  border-radius: 50%;
+  margin: 0 8px 14px 0;
+}
+
+.service-card__name-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.service-card__name {
+  font-weight: 500;
+  font-size: 24px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  margin-bottom: 2px;
+}
+
+.service-card__tag-active_active {
+  background-color: ant-colors.$green-1 !important;
+  color: ant-colors.$green-6 !important;
+  border-color: ant-colors.$green-6 !important;
+}
+
+.service-card__link {
+  color: ant-colors.$blue-6 !important;
+}
+
+.service-card_copy-icon {
+  color: ant-colors.$blue-6 !important;
+  margin-left: 8px;
+}
+
+.service-card__button-container {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+}
+
+.service-card__button {
+  width: 135px;
+}
