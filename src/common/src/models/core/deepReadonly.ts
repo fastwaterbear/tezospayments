@@ -1,6 +1,6 @@
-export type DeepReadonly<T> = T extends ReadonlyArray<infer U1> ? ReadonlyArray<DeepReadonly<U1>> : (
-  T extends ReadonlyMap<infer K, infer U2> ? ReadonlyMap<K, DeepReadonly<U2>> : (
-    T extends ReadonlySet<infer U3> ? ReadonlySet<DeepReadonly<U3>> : (
+export type DeepReadonly<T> = (
+  T extends ReadonlyMap<infer K, infer U3> ? ReadonlyMap<K, DeepReadonly<U3>> : (
+    T extends ReadonlySet<infer U4> ? ReadonlySet<DeepReadonly<U4>> : (
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       T extends (...args: any) => any
       ? T
