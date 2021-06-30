@@ -1,3 +1,12 @@
+@use '../../../../styles/ant-colors.scss';
+
 $card-height: 214px;
 $card-width: 380px;
 $card-padding: 16px;
+
+@mixin clickable-card {
+  cursor: pointer;
+  &:hover {
+    border-color: ant-colors.$gray-5;
+  }
+}

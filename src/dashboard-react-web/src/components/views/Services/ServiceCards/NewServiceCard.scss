@@ -2,10 +2,9 @@
 @use '../../../../styles/ant-colors.scss';
 
 .new-service-card-container {
-  cursor: pointer;
-  &:hover {
-    border-color: ant-colors.$gray-5;
+  @include common.clickable-card;
 
+  &:hover {
     .new-service-card__info {
       color: ant-colors.$gray-7;
     }

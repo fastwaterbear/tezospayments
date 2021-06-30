@@ -4,6 +4,10 @@
 
 $-logo-size: 64px;
 
+.service-card-container {
+  @include common.clickable-card;
+}
+
 .service-card {
   display: flex;
   flex-direction: column;

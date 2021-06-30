@@ -30,7 +30,7 @@ export const ServiceCard = (props: ServiceCardProps) => {
     props.logoUrl ? 'service-card__logo_image' : 'service-card__logo_text',
   );
 
-  return <Card size="small" bodyStyle={{ padding: 0 }}>
+  return <Card size="small" bodyStyle={{ padding: 0 }} className="service-card-container">
     <div className="service-card">
       <div className="service-card__info-container">
         <div className="service-card__main-info">
