@@ -4,8 +4,8 @@ import React from 'react';
 import { ServiceOperationDirection, ServiceOperationType, ServiceOperationStatus } from '@tezos-payments/common/dist/models/service';
 import { combineClassNames } from '@tezos-payments/common/dist/utils';
 
-import { config } from '../../../config';
 import { useCurrentLanguageResources } from '../../hooks';
+import { ExplorerLink } from '../ExplorerLink';
 import { OperationIconPure } from './OperationIcon';
 
 import './OperationList.scss';
@@ -59,13 +59,13 @@ const OperationListItem = (props: OperationListItemProps) => {
     </div>
     <div className="operation-list-item__main-info">
       <span className="operation-list-item__date">{props.date.toLocaleString()}</span>
-      <a href={`${config.links.tzStats}/${props.hash}`} target="_blank" rel="noreferrer" className="operation-list-item__operation-hash">{hash}</a>
+      <ExplorerLink hash={props.hash} className="operation-list-item__operation-hash">{hash}</ExplorerLink>
       <span className="operation-list-item__data">{data}</span>
     </div>
     <div className="operation-list-item__transfer-info">
-      <a href={`${config.links.tzStats}/${from}`} target="_blank" rel="noreferrer">{from === props.serviceAddress ? 'Service 1' : getShortHash(from)}</a>
+      <ExplorerLink hash={from}>{from === props.serviceAddress ? 'Service 1' : getShortHash(from)}</ExplorerLink>
       &nbsp;→&nbsp;
-      <a href={`${config.links.tzStats}/${to}`} target="_blank" rel="noreferrer">{to === props.serviceAddress ? 'Service 1' : getShortHash(to)}</a>
+      <ExplorerLink hash={to}>{to === props.serviceAddress ? 'Service 1' : getShortHash(to)}</ExplorerLink>
     </div>
     <div className={amountClassNames}>{sign}{props.value.toFormat()} {props.ticker}</div>
   </div>;

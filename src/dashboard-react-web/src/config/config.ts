@@ -16,6 +16,6 @@ export const config: AppConfig = {
     connect: '/connect'
   },
   links: {
-    tzStats: 'https://tzstats.com'
+    tzStats: 'https://edo.tzstats.com'
   }
 };

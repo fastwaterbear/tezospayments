@@ -4,7 +4,7 @@ import React, { useCallback } from 'react';
 
 import { combineClassNames, text } from '@tezos-payments/common/dist/utils';
 
-import { config } from '../../../../config';
+import { ExplorerLink } from '../../../common';
 import { useCurrentLanguageResources } from '../../../hooks';
 
 import './ServiceCard.scss';
@@ -47,9 +47,9 @@ export const ServiceCard = (props: ServiceCardProps) => {
           </div>
         </div>
         <div className="service-card__link-container">
-          <a href={`${config.links.tzStats}/${props.contractAddress}`} target="_blank" rel="noreferrer" className="service-card__link">
+          <ExplorerLink hash={props.contractAddress} className="service-card__link">
             {props.contractAddress}
-          </a>
+          </ExplorerLink>
           <CopyOutlined className="service-card_copy-icon" title={commonLangResources.copy} onClick={handleCopyAddressClick} />
         </div>
       </div>
