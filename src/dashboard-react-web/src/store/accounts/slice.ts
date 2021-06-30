@@ -33,7 +33,7 @@ export const loadActiveAccount = createAsyncThunk<Account | null, void, AppThunk
   }
 );
 
-export const connectAccount = createAsyncThunk<Account, void, AppThunkAPI>(
+export const connectAccount = createAsyncThunk<Account | null, void, AppThunkAPI>(
   `${namespace}/connect`,
   async (_, { extra: app, dispatch }) => {
     const address = await app.services.accountsService.connect();
@@ -42,9 +42,7 @@ export const connectAccount = createAsyncThunk<Account, void, AppThunkAPI>(
       dispatch(loadServices(address));
     }
 
-    return {
-      address
-    };
+    return address ? { address } : null;
   }
 );
 
@@ -75,9 +73,12 @@ export const accountsSlice = createSlice({
     });
 
     builder.addCase(connectAccount.fulfilled, (state, action) => {
-      state.currentAccountAddress = action.payload.address;
-      if (!state.connectedAccounts.some(a => a.address === action.payload.address))
-        state.connectedAccounts.push(action.payload);
+      const account = action.payload;
+      if (account) {
+        state.currentAccountAddress = account.address;
+        if (!state.connectedAccounts.some(a => a.address === account.address))
+          state.connectedAccounts.push(account);
+      }
     });
 
     builder.addCase(disconnectAccount.fulfilled, state => {

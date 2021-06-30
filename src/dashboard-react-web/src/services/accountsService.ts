@@ -29,15 +29,14 @@ export class AccountsService {
     return this._tezos;
   }
 
-  async connect(): Promise<string> {
-    return new Promise<string>(resolve => {
-      this.client.requestPermissions({ network: { type: NetworkType.EDONET } })
-        .then(permissions => resolve(permissions.address))
-        .catch(e => {
-          console.error(e);
-          this.client.clearActiveAccount();
-        });
-    });
+  async connect(): Promise<string | null> {
+    return this.client.requestPermissions({ network: { type: NetworkType.EDONET } })
+      .then(permissions => permissions.address)
+      .catch(e => {
+        console.error(e);
+        this.client.clearActiveAccount();
+        return null;
+      });
   }
 
   disconnect(): Promise<void> {
