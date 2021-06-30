@@ -10,5 +10,10 @@ export const config: AppConfig = {
       commitShortSha: process.env.REACT_APP_COMMIT_SHORT_SHA || ''
     }
   },
-  tezosOfficialSiteUrl: 'https://tezos.com/'
+  tezos: {
+    officialSiteUrl: 'https://tezos.com/',
+    rpcNodes: {
+      edo2net: ['https://edonet.smartpy.io/']
+    }
+  }
 };

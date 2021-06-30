@@ -14,7 +14,8 @@ import { TotalAmount } from './TotalAmount';
 interface PaymentProps {
   payment: PaymentModel;
   service: Service;
-  onPaymentStatusUpdated: (paymentStatus: PaymentStatus, message?: string) => void;
+  currentPaymentStatus: PaymentStatus;
+  onPaymentStatusUpdated: <T>(paymentStatus: PaymentStatus, data?: T) => void;
 }
 
 export const Payment = (props: PaymentProps) => {
@@ -25,7 +26,11 @@ export const Payment = (props: PaymentProps) => {
     </View.Side>
     <View.Side isRight={true}>
       <TotalAmount value={props.payment.amount} />
-      <PayButtonPure text="Pay" onPaymentStatusUpdated={props.onPaymentStatusUpdated} />
+      <PayButtonPure payment={props.payment}
+        text="Pay"
+        currentPaymentStatus={props.currentPaymentStatus}
+        onPaymentStatusUpdated={props.onPaymentStatusUpdated}
+      />
       <FooterPure />
     </View.Side>
   </View>;

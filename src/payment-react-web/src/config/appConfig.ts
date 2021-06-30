@@ -10,5 +10,10 @@ export type AppConfig = DeepReadonly<{
       commitShortSha: string;
     }
   },
-  tezosOfficialSiteUrl: string;
+  tezos: {
+    officialSiteUrl: string;
+    rpcNodes: {
+      edo2net: [string, ...string[]]
+    }
+  }
 }>;
