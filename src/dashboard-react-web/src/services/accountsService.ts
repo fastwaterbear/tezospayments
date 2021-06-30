@@ -21,7 +21,7 @@ export class AccountsService {
 
   private get tezos(): TezosToolkit {
     if (!this._tezos) {
-      const tezos = new TezosToolkit('https://api.tez.ie/rpc/edonet');
+      const tezos = new TezosToolkit('https://edonet.smartpy.io/');
       tezos.setProvider({ signer: new ReadOnlySigner() });
       this._tezos = tezos;
     }
