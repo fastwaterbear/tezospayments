@@ -4,7 +4,7 @@ import React from 'react';
 import { getSortedServices, selectServicesState } from '../../../store/services/selectors';
 import { useAppSelector, useCurrentLanguageResources } from '../../hooks';
 import { View } from '../View';
-import { NewServiceCardPure, ServiceCardPure } from './Cards';
+import { NewServiceCardPure, ServiceCardPure } from './ServiceCards';
 import './Services.scss';
 
 export const Services = () => {

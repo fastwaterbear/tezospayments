@@ -2,6 +2,8 @@ import { CheckCircleOutlined, CloseCircleOutlined, CopyOutlined } from '@ant-des
 import { Button, Card, Tag } from 'antd';
 import React, { useCallback } from 'react';
 
+import { combineClassNames, text } from '@tezos-payments/common/dist/utils';
+
 import { config } from '../../../../config';
 import { useCurrentLanguageResources } from '../../../hooks';
 
@@ -23,11 +25,18 @@ export const ServiceCard = (props: ServiceCardProps) => {
     navigator.clipboard.writeText(props.contractAddress);
   }, [props.contractAddress]);
 
+  const logoClassName = combineClassNames(
+    'service-card__logo',
+    props.logoUrl ? 'service-card__logo_image' : 'service-card__logo_text',
+  );
+
   return <Card size="small" bodyStyle={{ padding: 0 }}>
     <div className="service-card">
       <div className="service-card__info-container">
         <div className="service-card__main-info">
-          <img className="service-card__logo" alt="logo" src={props.logoUrl} />
+          {props.logoUrl
+            ? <img className={logoClassName} alt="logo" src={props.logoUrl} />
+            : <span className={logoClassName}>{text.getAvatarText(props.name)}</span>}
           <div className="service-card__name-container">
             <span className="service-card__name" title={props.name}>{props.name}</span>
             <div className="service-card__tags-container">

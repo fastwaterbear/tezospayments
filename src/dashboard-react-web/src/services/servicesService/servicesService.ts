@@ -32,6 +32,24 @@ export class ServicesService {
           owner: 'tz1aANkwuYKxB1XCyhB3CjMDDBQuPmNcBcCc',
           deleted: false,
           paused: false,
+        }, {
+          name: 'Maxima-net Service',
+          links: [
+            'https://github.com/fastwaterbear',
+            'https://t.me/fastwaterbear'
+          ],
+          version: 1,
+          metadata: '7b226e616d65223a22546573742053657276696365206f6620466173742057617465722042656172227d',
+          contractAddress: 'KT1J5rMCDMG2iHfA4EhpKdFyQVQAVY8wHf6x',
+          network: networks.edo2net,
+          allowedTokens: {
+            tez: true,
+            assets: tokenWhitelist.filter(t => t.network === network).map(t => t.contractAddress)
+          },
+          allowedOperationType: ServiceOperationType.All,
+          owner: 'tz1aANkwuYKxB1XCyhB3CjMDDBQuPmNcBcCc',
+          deleted: false,
+          paused: false,
         }];
 
         resolve(testServices);
