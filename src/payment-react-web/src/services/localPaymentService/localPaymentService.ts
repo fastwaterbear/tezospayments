@@ -1,4 +1,4 @@
-import { ColorMode, NetworkType, RequestPermissionInput } from '@airgap/beacon-sdk';
+import { ColorMode, NetworkType, RequestPermissionInput, AbortedBeaconError } from '@airgap/beacon-sdk';
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit, TransactionWalletOperation, Wallet } from '@taquito/taquito';
 
@@ -10,6 +10,8 @@ import { converters, memoize } from '@tezos-payments/common/dist/utils';
 import { config } from '../../config';
 import { TezosPaymentsServiceContract } from '../../models/contracts';
 import { PaymentInfo } from '../../models/payment/paymentInfo';
+import { AppStore } from '../../store';
+import { confirmPayment } from '../../store/currentPayment';
 import { ServiceResult } from '../serviceResult';
 import { errors, LocalPaymentServiceError } from './errors';
 import { BetterCallDevServiceProvider, ServiceProvider } from './serviceProvider';
@@ -24,7 +26,7 @@ export class LocalPaymentService {
   readonly tezosWallet = new BeaconWallet({ name: config.app.name, colorMode: ColorMode.LIGHT });
   readonly serviceProvider: ServiceProvider = new BetterCallDevServiceProvider(networks.edo2net);
 
-  constructor() {
+  constructor(readonly store: AppStore) {
     this.tezosToolkit.setWalletProvider(this.tezosWallet);
   }
 
@@ -73,19 +75,21 @@ export class LocalPaymentService {
     return this.serviceProvider.getService(segmentsResult[0]);
   }
 
-  async pay(payment: Payment): Promise<ServiceResult<TransactionWalletOperation>> {
+  async pay(payment: Payment): Promise<ServiceResult<boolean>> {
     try {
       if (!Payment.publicDataExists(payment))
         return { isServiceError: true, error: errors.invalidPayment };
 
       await this.tezosWallet.client.clearActiveAccount();
-      await this.requestPermissions({ network: { type: NetworkType.EDONET } });
+      const canceled = await this.requestPermissions({ network: { type: NetworkType.EDONET } });
+      if (canceled)
+        return false;
 
       const contract: TezosPaymentsServiceContract<Wallet> = await this.tezosToolkit.wallet.at(payment.targetAddress);
       if (!contract.methods.send_payment)
         return { isServiceError: true, error: errors.invalidContract };
 
-      return contract.methods.send_payment(
+      const result = await contract.methods.send_payment(
         undefined,
         ServiceOperationType.Payment,
         'public',
@@ -94,8 +98,15 @@ export class LocalPaymentService {
         .send({
           amount: payment.amount
         });
+
+      await this.waitConfirmation(result);
+
+      return true;
     }
     catch (error: unknown) {
+      if (error instanceof AbortedBeaconError)
+        return false;
+
       return { isServiceError: true, error: (error as Error).message };
     }
   }
@@ -106,10 +117,10 @@ export class LocalPaymentService {
     return Promise.race(
       [
         this.tezosWallet.requestPermissions(request),
-        new Promise<void>((_, reject) => {
+        new Promise<boolean>(resolve => {
           popupObserver = this.getBeaconAlertWrapperObserver(closedByUser => {
             if (closedByUser)
-              reject(new Error(errors.actionAborterByUser));
+              resolve(true);
             else
               popupObserver?.disconnect();
           });
@@ -129,6 +140,29 @@ export class LocalPaymentService {
 
     return segments;
   });
+
+  private waitConfirmation(operation: TransactionWalletOperation, confirmations?: number) {
+    // TODO: use a service event instead of dispatching
+    this.store.dispatch(confirmPayment({
+      hash: operation.opHash,
+      blockHash: undefined,
+      confirmationCount: 0
+    }));
+
+    return new Promise<void>((resolve, reject) => {
+      operation.confirmationObservable(confirmations)
+        .subscribe(
+          // TODO: use a service event instead of dispatching
+          confirmation => this.store.dispatch(confirmPayment({
+            hash: operation.opHash,
+            blockHash: confirmation.block.hash,
+            confirmationCount: confirmation.currentConfirmation
+          })),
+          reject,
+          resolve
+        );
+    });
+  }
 
   private getBeaconAlertWrapperObserver(onBeaconAlertWrapperClosed: (closedByUser: boolean) => void) {
     return new MutationObserver(mutations => {

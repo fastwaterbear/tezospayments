@@ -1,7 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type SuccessfulServiceResult<TData> = TData extends Record<string, any>
-  ? TData & { readonly isServiceError?: void }
-  : TData;
+export type SuccessfulServiceResult<TData> = TData & { readonly isServiceError?: void };
 
 export interface FailedServiceResult<TError extends Error | string = string> {
   readonly isServiceError: true;

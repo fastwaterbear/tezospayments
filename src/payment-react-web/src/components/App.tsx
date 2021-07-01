@@ -1,60 +1,40 @@
 import { Spin } from 'antd';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
-import { app } from '../app';
 import { PaymentStatus } from '../models/payment';
-import { PaymentInfo } from '../models/payment/paymentInfo';
+import { loadCurrentPayment } from '../store/currentPayment';
+import { useAppDispatch, useAppSelector } from './hooks';
 import { ConfirmationPure, ErrorPure, PaymentPure, SuccessPure } from './views';
 
 import './App.scss';
 
 export const App = () => {
-  const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>();
-  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>(PaymentStatus.Unknown);
-  const [operationHash, setOperationHash] = useState<string>();
-  const [error, setError] = useState<string>();
-
+  const payment = useAppSelector(state => state.currentPaymentState?.payment);
+  const service = useAppSelector(state => state.currentPaymentState?.service);
+  const operationHash = useAppSelector(state => state.currentPaymentState?.operation?.hash);
+  const paymentStatus = useAppSelector(state => state.currentPaymentState && state.currentPaymentState.status);
+  const error = useAppSelector(state => state.applicationError);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const parseCurrentPayment = async () => {
-      const paymentInfoResult = await app.localPaymentService.getCurrentPaymentInfo();
-      if (!paymentInfoResult.isServiceError) {
-        setPaymentInfo(paymentInfoResult);
-        setPaymentStatus(PaymentStatus.Opened);
-      } else {
-        setError(paymentInfoResult.error);
-        setPaymentStatus(PaymentStatus.Error);
-      }
-    };
+    dispatch(loadCurrentPayment());
+  }, [dispatch]);
 
-    parseCurrentPayment();
-  }, []);
-
-  const handlePaymentStatusUpdated = useCallback((paymentStatus: PaymentStatus, data?: unknown) => {
-    setPaymentStatus(paymentStatus);
-    if (typeof data === 'string' && data && (paymentStatus === PaymentStatus.NetworkProcessing))
-      setOperationHash(data);
-    else if (paymentStatus !== PaymentStatus.Succeeded) {
-      setOperationHash(undefined);
-    }
-  }, []);
-
-  return (paymentInfo && paymentStatus !== PaymentStatus.Unknown)
-    ? <React.Fragment>
-      {paymentStatus !== PaymentStatus.Succeeded && paymentStatus !== PaymentStatus.NetworkProcessing && <PaymentPure payment={paymentInfo.payment}
-        service={paymentInfo.service}
-        currentPaymentStatus={paymentStatus}
-        onPaymentStatusUpdated={handlePaymentStatusUpdated}
-      />}
-      {operationHash && paymentStatus === PaymentStatus.NetworkProcessing && <ConfirmationPure operationHash={operationHash}
-        network={paymentInfo.service.network}
-      />}
-      {operationHash && paymentStatus === PaymentStatus.Succeeded && <SuccessPure operationHash={operationHash}
-        network={paymentInfo.service.network}
-      />}
-    </React.Fragment>
-    : <React.Fragment>
-      {paymentStatus === PaymentStatus.Unknown && <Spin size="large" />}
-      {paymentStatus === PaymentStatus.Error && <ErrorPure description={error} />}
-    </React.Fragment>;
+  return error
+    ? <ErrorPure error={error} />
+    : (payment && service && paymentStatus !== null)
+      ? <React.Fragment>
+        {paymentStatus !== PaymentStatus.Succeeded && paymentStatus !== PaymentStatus.NetworkProcessing && <PaymentPure payment={payment}
+          service={service}
+        />}
+        {operationHash && paymentStatus === PaymentStatus.NetworkProcessing && <ConfirmationPure operationHash={operationHash}
+          network={service.network}
+        />}
+        {operationHash && paymentStatus === PaymentStatus.Succeeded && <SuccessPure operationHash={operationHash}
+          network={service.network}
+        />}
+      </React.Fragment>
+      : <React.Fragment>
+        {paymentStatus === PaymentStatus.Initial && <Spin size="large" />}
+      </React.Fragment>;
 };
