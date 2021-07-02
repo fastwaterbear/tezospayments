@@ -55,7 +55,7 @@ export const BlockchainLink = (props: BlockchainLinkProps & DefaultBlockchainLin
     <ExternalLink {...props} className={shortLinkClassName}>
       {getShortHash(props.children)}
     </ExternalLink>
-    {props.showCopyButton && <CopyButtonPure />}
+    {props.showCopyButton && <CopyButtonPure copyText={props.children} />}
   </div>;
 };
 BlockchainLink.defaultProps = defaultProps;

@@ -18,7 +18,7 @@ export const PaymentField = (props: PaymentFieldProps) => {
     <td className="payment-field__label">{props.fieldName}</td>
     <td>
       <span className="payment-field__value">{props.fieldValue}</span>
-      {props.copyButtonEnabled && <CopyButtonPure />}
+      {props.copyButtonEnabled && <CopyButtonPure copyText={props.fieldValue.toString()} />}
     </td>
   </tr>;
 };
