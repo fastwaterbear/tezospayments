@@ -1,5 +1,6 @@
 @use '../styles/layout-variables.scss';
 @use '../styles/colors.scss';
+@use '../styles/mixins.scss';
 
 footer {
   text-align: center;
@@ -8,6 +9,10 @@ footer {
 .label {
   font-size: 1rem;
   margin-bottom: layout-variables.$element-spacing-small * 4;
+
+  @include mixins.compact-view() {
+    margin-bottom: layout-variables.$element-spacing-small;
+  }
 }
 
 .warning {

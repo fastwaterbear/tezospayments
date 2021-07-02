@@ -9,3 +9,7 @@ $-icon-size: 24px;
   margin-right: layout-variables.$element-spacing-small / 2;
   vertical-align: top;
 }
+
+.service-link__link {
+  word-break: break-all;
+}

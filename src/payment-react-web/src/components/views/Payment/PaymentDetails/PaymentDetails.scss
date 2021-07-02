@@ -1,10 +1,15 @@
 @use '../../../../styles/layout-variables.scss';
 @use '../../../../styles/colors.scss';
+@use '../../../../styles/mixins.scss';
+
+.payment-details {
+  margin-bottom: layout-variables.$element-spacing-small * 5;
+
+  @include mixins.compact-view() {
+    margin-bottom: layout-variables.$element-spacing-medium;
+  }
+}
 
 .payment-details__title {
   margin-bottom: layout-variables.$element-spacing-small;
-}
-
-.payment-details__fields {
-  margin-bottom: layout-variables.$element-spacing-small * 5;
 }

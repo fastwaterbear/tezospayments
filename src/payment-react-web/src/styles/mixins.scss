@@ -1,0 +1,12 @@
+@use './layout-variables.scss';
+
+@mixin compact-view($breakpoint: layout-variables.$default-compact-view-breakpoint) {
+  @media (max-width: $breakpoint) {
+    @content;
+  }
+}
+
+@mixin break-word() {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}

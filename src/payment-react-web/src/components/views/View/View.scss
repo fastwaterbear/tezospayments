@@ -1,4 +1,5 @@
 @use "../../../styles/layout-variables.scss";
+@use "../../../styles/mixins.scss";
 
 .view {
   display: flex;
@@ -8,14 +9,35 @@
   padding: var(--grid-layout-margin);
   align-items: flex-start;
   justify-content: space-between;
+
+  @include mixins.compact-view() {
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+  }
 }
 
 .view__side {
+  display: flex;
+  flex-direction: column;
   width: 50%;
+
+  @include mixins.compact-view() {
+    width: 90%;
+  }
+
+  @include mixins.compact-view(670px) {
+    width: 100%;
+  }
 }
 
 .view__side_left {
   margin-right: var(--grid-layout-gutter);
+
+  @include mixins.compact-view() {
+    margin-right: 0;
+    margin-bottom: 2 * layout-variables.$element-spacing-medium;
+  }
 }
 
 .view__side_right {

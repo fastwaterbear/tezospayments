@@ -1,5 +1,16 @@
 @use '../../../../styles/layout-variables.scss';
 @use '../../../../styles/colors.scss';
+@use '../../../../styles/mixins.scss';
+
+$-compact-view-breakpoint: 500px;
+
+.payment-field {
+  display: flex;
+
+  @include mixins.compact-view($-compact-view-breakpoint) {
+    flex-direction: column;
+  }
+}
 
 .payment-field__label {
   color: colors.$character-secondary;
