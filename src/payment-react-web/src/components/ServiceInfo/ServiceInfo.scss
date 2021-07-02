@@ -3,8 +3,6 @@
 @use '../../styles/mixins.scss';
 @use './ServiceIcon.scss' as service-icon;
 
-$-compact-view-breakpoint: 500px;
-
 .service-info {
   display: grid;
   grid:
@@ -42,18 +40,4 @@ $-compact-view-breakpoint: 500px;
 
 .service-link {
   margin-bottom: layout-variables.$element-spacing-small;
-}
-
-.contract-address__link_length-full {
-  @include mixins.compact-view($-compact-view-breakpoint) {
-    display: none;
-  }
-}
-
-.contract-address__link_length-short {
-  display: none;
-
-  @include mixins.compact-view($-compact-view-breakpoint) {
-    display: inline;
-  }
 }

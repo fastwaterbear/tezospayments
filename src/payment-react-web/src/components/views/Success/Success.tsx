@@ -3,7 +3,7 @@ import React from 'react';
 
 import { Network } from '@tezos-payments/common/dist/models/blockchain';
 
-import { ExternalLink } from '../../common';
+import { BlockchainLinkPure } from '../../common';
 
 interface SuccessProps {
   network: Network;
@@ -17,7 +17,7 @@ export const Success = (props: SuccessProps) => {
   return <Result
     status="success"
     title="Operation Successful"
-    subTitle={<ExternalLink href={operationUrl}>{props.operationHash}</ExternalLink>}
+    subTitle={<BlockchainLinkPure href={operationUrl}>{props.operationHash}</BlockchainLinkPure>}
   />;
 };
 

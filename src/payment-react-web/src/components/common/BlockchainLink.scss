@@ -1,0 +1,21 @@
+@use '../../styles/mixins.scss';
+
+$-compact-view-breakpoint: 500px;
+
+.blockchain-link {
+  font-size: 1rem;
+}
+
+.blockchain-link__link_length-full {
+  @include mixins.compact-view($-compact-view-breakpoint) {
+    display: none;
+  }
+}
+
+.blockchain-link__link_length-short {
+  display: none;
+
+  @include mixins.compact-view($-compact-view-breakpoint) {
+    display: inline;
+  }
+}

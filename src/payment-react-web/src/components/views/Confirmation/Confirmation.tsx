@@ -3,7 +3,7 @@ import React from 'react';
 
 import { Network } from '@tezos-payments/common/dist/models/blockchain';
 
-import { ExternalLink } from '../../common';
+import { BlockchainLinkPure } from '../../common';
 
 interface ConfirmationProps {
   network: Network;
@@ -17,7 +17,7 @@ export const Confirmation = (props: ConfirmationProps) => {
   return <Result
     title="Confirmation"
     icon={<Spin size="large" />}
-    subTitle={<ExternalLink href={operationUrl}>{props.operationHash}</ExternalLink>}
+    subTitle={<BlockchainLinkPure href={operationUrl}>{props.operationHash}</BlockchainLinkPure>}
   />;
 };
 
