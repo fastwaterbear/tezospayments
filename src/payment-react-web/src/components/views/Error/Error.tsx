@@ -1,4 +1,3 @@
-import { unwrapResult } from '@reduxjs/toolkit';
 import { Button, Result } from 'antd';
 import React, { useCallback } from 'react';
 
@@ -19,8 +18,10 @@ export const Error = (props: ErrorProps) => {
   const dispatch = useAppDispatch();
   const handleButtonClick = useCallback(() => {
     dispatch(loadCurrentPayment())
-      .then(unwrapResult)
-      .then(() => dispatch(clearError()));
+      .then(payload => {
+        if (!payload.type.endsWith('rejected'))
+          dispatch(clearError());
+      });
   }, [dispatch]);
 
   return <Result status="error" title="Error" subTitle={description} extra={

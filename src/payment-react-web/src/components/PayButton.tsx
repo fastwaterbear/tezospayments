@@ -14,17 +14,6 @@ export const PayButton = (props: PayButtonProps) => {
   const currentPaymentStatus = useAppSelector(state => state.currentPaymentState && state.currentPaymentState.status);
   const dispatch = useAppDispatch();
 
-  // const onPaymentError = useCallback(
-  //   (errorMessage: string) => {
-  //     notification.error({
-  //       message: errorMessage,
-  //       placement: 'bottomRight'
-  //     });
-  //     onPaymentStatusUpdated(PaymentStatus.Error);
-  //   },
-  //   [onPaymentStatusUpdated]
-  // );
-
   const handleButtonClick = useCallback(
     () => dispatch(pay()),
     [dispatch]
