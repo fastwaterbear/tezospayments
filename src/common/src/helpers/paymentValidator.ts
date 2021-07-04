@@ -42,7 +42,7 @@ export class PaymentValidator {
     return failedValidationResults;
   }
 
-  private validateTargetAddress(targetAddress: string): FailedValidationResults {
+  protected validateTargetAddress(targetAddress: string): FailedValidationResults {
     if (typeof targetAddress !== 'string')
       return [PaymentValidator.errors.invalidTargetAddress];
 
@@ -53,7 +53,7 @@ export class PaymentValidator {
       return [PaymentValidator.errors.targetAddressIsNotNetworkAddress];
   }
 
-  private validateAmount(amount: BigNumber): FailedValidationResults {
+  protected validateAmount(amount: BigNumber): FailedValidationResults {
     if (!BigNumber.isBigNumber(amount) || amount.isNaN() || !amount.isFinite())
       return [PaymentValidator.errors.invalidAmount];
 
