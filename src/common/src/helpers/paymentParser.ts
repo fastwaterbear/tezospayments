@@ -4,7 +4,7 @@ import type { Payment } from '../models/payment';
 import { URL } from '../native';
 
 type RawPaymentBase = {
-  amount: BigNumber;
+  amount: string;
   data: Payment['data'];
   asset?: string;
   successUrl: string;
