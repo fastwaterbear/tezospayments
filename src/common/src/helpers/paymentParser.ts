@@ -13,8 +13,8 @@ type RawPaymentBase = {
   expired?: Date;
 };
 
-type RawPayment = Partial<RawPaymentBase>;
-type ValidRawPayment = RawPaymentBase;
+export type RawPayment = Partial<RawPaymentBase>;
+export type ValidRawPayment = RawPaymentBase;
 
 type PaymentFieldInfoType = 'object' | 'string' | 'undefined' | 'null';
 
