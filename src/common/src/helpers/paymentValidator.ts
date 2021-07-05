@@ -5,7 +5,9 @@ import type { FailedValidationResults } from '../models/validation';
 import { guards } from '../utils';
 
 const tezosAddressLength = 36;
-const tezosAddressPrefixes: readonly string[] = ['KT', 'tz1', 'tz2', 'tz3'];
+const tezosContractAddressPrefixes = ['KT'] as const;
+const tezosImplicitAddressPrefixes = ['tz1', 'tz2', 'tz3'] as const;
+const tezosAddressPrefixes = [...tezosContractAddressPrefixes, ...tezosImplicitAddressPrefixes] as const;
 
 export class PaymentValidator {
   static readonly errors = {
@@ -20,13 +22,17 @@ export class PaymentValidator {
     invalidPrivateData: 'Payment private data is invalid',
     publicDataShouldBeFlat: 'Public data should be flat',
     privateDataShouldBeFlat: 'Private data should be flat',
-  };
+    invalidAsset: 'Asset address is invalid',
+    assetIsNotContractAddress: 'Asset address isn\'t a contract address',
+    assetHasInvalidLength: 'Asset address has invalid address',
+  } as const;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   protected readonly validationMethods: ReadonlyArray<(payment: Payment) => FailedValidationResults> = [
     payment => this.validateTargetAddress(payment.targetAddress),
     payment => this.validateAmount(payment.amount),
     payment => this.validateData(payment.data),
+    payment => this.validateAsset(payment.asset),
   ];
 
   validate(payment: Payment, bail = false): FailedValidationResults {
@@ -89,6 +95,20 @@ export class PaymentValidator {
       if (!this.isFlatObject(privateData))
         return [PaymentValidator.errors.privateDataShouldBeFlat];
     }
+  }
+
+  protected validateAsset(asset?: string): FailedValidationResults {
+    if (asset === undefined)
+      return;
+
+    if (typeof asset !== 'string')
+      return [PaymentValidator.errors.invalidAsset];
+
+    if (asset.length !== tezosAddressLength)
+      return [PaymentValidator.errors.assetHasInvalidLength];
+
+    if (!tezosContractAddressPrefixes.some(prefix => asset.startsWith(prefix)))
+      return [PaymentValidator.errors.assetIsNotContractAddress];
   }
 
   private isFlatObject(obj: Record<string, unknown>) {
