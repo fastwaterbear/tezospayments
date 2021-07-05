@@ -4,13 +4,15 @@
   "private": true,
   "dependencies": {
     "bignumber.js": "^9.0.1",
-    "clsx": "^1.1.1"
+    "clsx": "^1.1.1",
+    "lodash.isplainobject": "^4.0.6"
   },
   "devDependencies": {
     "@babel/core": "^7.14.6",
     "@babel/preset-env": "^7.14.7",
     "@babel/preset-typescript": "^7.14.5",
     "@types/jest": "^26.0.23",
+    "@types/lodash.isplainobject": "^4.0.6",
     "@typescript-eslint/eslint-plugin": "^4.23.0",
     "@typescript-eslint/parser": "^4.23.0",
     "babel-jest": "^27.0.5",

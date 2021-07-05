@@ -14,17 +14,23 @@ export class PaymentValidator {
     amountIsNegative: 'Amount is less than zero',
     invalidTargetAddress: 'Target address is invalid',
     targetAddressIsNotNetworkAddress: 'Target address isn\'t a network address',
-    targetAddressHasInvalidLength: 'Target address has invalid address'
+    targetAddressHasInvalidLength: 'Target address has invalid address',
+    invalidData: 'Payment data is invalid',
+    invalidPublicData: 'Payment public data is invalid',
+    invalidPrivateData: 'Payment private data is invalid',
+    publicDataShouldBeFlat: 'Public data should be flat',
+    privateDataShouldBeFlat: 'Private data should be flat',
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   protected readonly validationMethods: ReadonlyArray<(payment: Payment) => FailedValidationResults> = [
     payment => this.validateTargetAddress(payment.targetAddress),
     payment => this.validateAmount(payment.amount),
+    payment => this.validateData(payment.data),
   ];
 
   validate(payment: Payment, bail = false): FailedValidationResults {
-    if (!payment || typeof payment !== 'object' || guards.isArray(payment))
+    if (!guards.isPlainObject(payment))
       return [PaymentValidator.errors.invalidPaymentObject];
 
     const failedValidationResults: FailedValidationResults = bail ? [] : undefined;
@@ -59,5 +65,39 @@ export class PaymentValidator {
 
     if (amount.isNegative())
       return [PaymentValidator.errors.amountIsNegative];
+  }
+
+  protected validateData(data: Payment['data']): FailedValidationResults {
+    if (!guards.isPlainObject(data) || Object.keys(data).some(key => key !== 'public' && key !== 'private'))
+      return [PaymentValidator.errors.invalidData];
+
+    const publicData = (data as Exclude<Payment['data'], { private: unknown }>).public;
+    const privateData = (data as Exclude<Payment['data'], { public: unknown }>).private;
+    if (!(publicData || privateData))
+      return [PaymentValidator.errors.invalidData];
+
+    if (publicData !== undefined) {
+      if (!guards.isPlainObject(publicData))
+        return [PaymentValidator.errors.invalidPublicData];
+      if (!this.isFlatObject(publicData))
+        return [PaymentValidator.errors.publicDataShouldBeFlat];
+    }
+
+    if (privateData !== undefined) {
+      if (!guards.isPlainObject(privateData))
+        return [PaymentValidator.errors.invalidPrivateData];
+      if (!this.isFlatObject(privateData))
+        return [PaymentValidator.errors.privateDataShouldBeFlat];
+    }
+  }
+
+  private isFlatObject(obj: Record<string, unknown>) {
+    for (const propertyName of Object.getOwnPropertyNames(obj)) {
+      const property = obj[propertyName];
+      if (typeof property === 'object' || typeof property === 'function')
+        return false;
+    }
+
+    return true;
   }
 }
