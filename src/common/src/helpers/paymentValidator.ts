@@ -2,6 +2,7 @@ import { BigNumber } from 'bignumber.js';
 
 import type { Payment } from '../models/payment';
 import type { FailedValidationResults } from '../models/validation';
+import { URL } from '../native';
 import { guards } from '../utils';
 
 const tezosAddressLength = 36;
@@ -16,7 +17,7 @@ export class PaymentValidator {
     amountIsNegative: 'Amount is less than zero',
     invalidTargetAddress: 'Target address is invalid',
     targetAddressIsNotNetworkAddress: 'Target address isn\'t a network address',
-    targetAddressHasInvalidLength: 'Target address has invalid address',
+    targetAddressHasInvalidLength: 'Target address has an invalid address',
     invalidData: 'Payment data is invalid',
     invalidPublicData: 'Payment public data is invalid',
     invalidPrivateData: 'Payment private data is invalid',
@@ -24,7 +25,11 @@ export class PaymentValidator {
     privateDataShouldBeFlat: 'Private data should be flat',
     invalidAsset: 'Asset address is invalid',
     assetIsNotContractAddress: 'Asset address isn\'t a contract address',
-    assetHasInvalidLength: 'Asset address has invalid address',
+    assetHasInvalidLength: 'Asset address has an invalid address',
+    invalidSuccessUrl: 'Success URL is invalid',
+    successUrlHasInvalidProtocol: 'Success URL has an invalid protocol',
+    invalidCancelUrl: 'Cancel URL is invalid',
+    cancelUrlHasInvalidProtocol: 'Cancel URL has an invalid protocol',
   } as const;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -33,6 +38,8 @@ export class PaymentValidator {
     payment => this.validateAmount(payment.amount),
     payment => this.validateData(payment.data),
     payment => this.validateAsset(payment.asset),
+    payment => this.validateSuccessUrl(payment.successUrl),
+    payment => this.validateCancelUrl(payment.cancelUrl),
   ];
 
   validate(payment: Payment, bail = false): FailedValidationResults {
@@ -109,6 +116,30 @@ export class PaymentValidator {
 
     if (!tezosContractAddressPrefixes.some(prefix => asset.startsWith(prefix)))
       return [PaymentValidator.errors.assetIsNotContractAddress];
+  }
+
+  protected validateSuccessUrl(successUrl: URL): FailedValidationResults {
+    return this.validateUrl(
+      successUrl,
+      PaymentValidator.errors.invalidSuccessUrl,
+      PaymentValidator.errors.successUrlHasInvalidProtocol
+    );
+  }
+
+  protected validateCancelUrl(cancelUrl: URL): FailedValidationResults {
+    return this.validateUrl(
+      cancelUrl,
+      PaymentValidator.errors.invalidCancelUrl,
+      PaymentValidator.errors.cancelUrlHasInvalidProtocol
+    );
+  }
+
+  protected validateUrl(url: URL, invalidUrlError: string, invalidProtocolError: string): FailedValidationResults {
+    if (!(url instanceof URL))
+      return [invalidUrlError];
+
+    if (url.protocol.indexOf('javascript') > -1)
+      return [invalidProtocolError];
   }
 
   private isFlatObject(obj: Record<string, unknown>) {
