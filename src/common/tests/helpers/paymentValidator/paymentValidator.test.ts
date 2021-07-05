@@ -10,12 +10,17 @@ import invalidPaymentObjectTestCases from './invalidPaymentObjectTestCases';
 import invalidSuccessUrlTestCases from './invalidSuccessUrlTestCases';
 import invalidTargetAddressTestCases from './invalidTargetAddressTestCases';
 import { NegativeTestCases } from './testCase';
+import validPaymentTestCases from './validPaymentTestCases';
 
 describe('Payment Validator', () => {
   let paymentValidator: PaymentValidator;
 
   beforeEach(() => {
     paymentValidator = new PaymentValidator();
+  });
+
+  test.each(validPaymentTestCases)('payment validation when a payment is valid [%p]', payment => {
+    expect(paymentValidator.validate(payment)).toBeUndefined();
   });
 
   const invalidPaymentTestCases: NegativeTestCases = invalidPaymentObjectTestCases

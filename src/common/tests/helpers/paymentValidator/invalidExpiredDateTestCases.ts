@@ -30,7 +30,7 @@ export default [
   [
     {
       ...validPaymentBase,
-      expired: '2021-07-05T00:12:11.3237Z'
+      expired: '2021-07-05T20:18:11.332Z'
     },
     [PaymentValidator.errors.invalidExpiredDate]
   ],

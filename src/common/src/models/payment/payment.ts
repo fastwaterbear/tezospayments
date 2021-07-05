@@ -1,6 +1,6 @@
 import { BigNumber } from 'bignumber.js';
 
-import { PaymentParser, NonIncludedPaymentFields } from '../../helpers';
+import { PaymentParser, NonIncludedPaymentFields, PaymentValidator } from '../../helpers';
 import { URL } from '../../native';
 import { StateModel } from '../core';
 
@@ -34,10 +34,10 @@ export interface Payment {
 
 export class Payment extends StateModel {
   static readonly defaultParser: PaymentParser = new PaymentParser();
+  static readonly defaultValidator: PaymentValidator = new PaymentValidator();
 
-  static validate(_payment: Payment) {
-    // TODO: implement
-    return true;
+  static validate(payment: Payment) {
+    return this.defaultValidator.validate(payment);
   }
 
   static inTez(payment: Payment) {

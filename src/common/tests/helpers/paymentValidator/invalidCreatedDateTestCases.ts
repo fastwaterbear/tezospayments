@@ -34,7 +34,7 @@ export default [
   [
     {
       ...validPaymentBase,
-      created: '2021-07-05T00:12:11.3237Z'
+      created: '2021-07-05T00:12:11.327Z'
     },
     [PaymentValidator.errors.invalidCreatedDate]
   ]
