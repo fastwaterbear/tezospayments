@@ -1,10 +1,10 @@
 import { PaymentValidator } from '../../../src/helpers';
 import { Payment } from '../../../src/models/payment';
 import invalidAmountTestCases from './invalidAmountTestCases';
-import invalidAssetTestCase from './invalidAssetTestCase';
+import invalidAssetTestCases from './invalidAssetTestCases';
 import invalidDataTestCases from './invalidDataTestCases';
-import invalidPaymentObjectTestCase from './invalidPaymentObjectTestCase';
-import invalidTargetAddressTestCase from './invalidTargetAddressTestCase';
+import invalidPaymentObjectTestCases from './invalidPaymentObjectTestCases';
+import invalidTargetAddressTestCases from './invalidTargetAddressTestCases';
 import { NegativeTestCases } from './testCase';
 
 describe('Payment Validator', () => {
@@ -14,11 +14,11 @@ describe('Payment Validator', () => {
     paymentValidator = new PaymentValidator();
   });
 
-  const invalidPaymentTestCases: NegativeTestCases = invalidPaymentObjectTestCase
+  const invalidPaymentTestCases: NegativeTestCases = invalidPaymentObjectTestCases
     .concat(invalidAmountTestCases)
-    .concat(invalidTargetAddressTestCase)
+    .concat(invalidTargetAddressTestCases)
     .concat(invalidDataTestCases)
-    .concat(invalidAssetTestCase);
+    .concat(invalidAssetTestCases);
 
   test.each(invalidPaymentTestCases)(
     'payment validation when a payment is invalid. Fail on the first error [%p]',
