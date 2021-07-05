@@ -3,7 +3,9 @@ import { Payment } from '../../../src/models/payment';
 import invalidAmountTestCases from './invalidAmountTestCases';
 import invalidAssetTestCases from './invalidAssetTestCases';
 import invalidCancelUrlTestCases from './invalidCancelUrlTestCases';
+import invalidCreatedDateTestCases from './invalidCreatedDateTestCases';
 import invalidDataTestCases from './invalidDataTestCases';
+import invalidExpiredDateTestCases from './invalidExpiredDateTestCases';
 import invalidPaymentObjectTestCases from './invalidPaymentObjectTestCases';
 import invalidSuccessUrlTestCases from './invalidSuccessUrlTestCases';
 import invalidTargetAddressTestCases from './invalidTargetAddressTestCases';
@@ -22,7 +24,9 @@ describe('Payment Validator', () => {
     .concat(invalidDataTestCases)
     .concat(invalidAssetTestCases)
     .concat(invalidSuccessUrlTestCases)
-    .concat(invalidCancelUrlTestCases);
+    .concat(invalidCancelUrlTestCases)
+    .concat(invalidCreatedDateTestCases)
+    .concat(invalidExpiredDateTestCases);
 
   test.each(invalidPaymentTestCases)(
     'payment validation when a payment is invalid. Fail on the first error [%p]',

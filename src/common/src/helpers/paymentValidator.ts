@@ -30,7 +30,11 @@ export class PaymentValidator {
     successUrlHasInvalidProtocol: 'Success URL has an invalid protocol',
     invalidCancelUrl: 'Cancel URL is invalid',
     cancelUrlHasInvalidProtocol: 'Cancel URL has an invalid protocol',
+    invalidCreatedDate: 'Created date is invalid',
+    invalidExpiredDate: 'Expired date is invalid',
+    paymentLifetimeIsShort: 'Payment lifetime is short'
   } as const;
+  static readonly minimumPaymentLifetime = 600000; // 10 * 60 * 1000;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   protected readonly validationMethods: ReadonlyArray<(payment: Payment) => FailedValidationResults> = [
@@ -40,6 +44,8 @@ export class PaymentValidator {
     payment => this.validateAsset(payment.asset),
     payment => this.validateSuccessUrl(payment.successUrl),
     payment => this.validateCancelUrl(payment.cancelUrl),
+    payment => this.validateCreatedDate(payment.created),
+    payment => this.validateExpiredDate(payment.expired, payment.created),
   ];
 
   validate(payment: Payment, bail = false): FailedValidationResults {
@@ -140,6 +146,23 @@ export class PaymentValidator {
 
     if (url.protocol.indexOf('javascript') > -1)
       return [invalidProtocolError];
+  }
+
+  protected validateCreatedDate(date: Date): FailedValidationResults {
+    if (!(date instanceof Date))
+      return [PaymentValidator.errors.invalidCreatedDate];
+  }
+
+  protected validateExpiredDate(expiredDate: Date | undefined, createdDate: Date): FailedValidationResults {
+    if (expiredDate === undefined)
+      return;
+
+    if (!(expiredDate instanceof Date))
+      return [PaymentValidator.errors.invalidExpiredDate];
+
+    if (expiredDate.getTime() - createdDate.getTime() < PaymentValidator.minimumPaymentLifetime) {
+      return [PaymentValidator.errors.paymentLifetimeIsShort];
+    }
   }
 
   private isFlatObject(obj: Record<string, unknown>) {
