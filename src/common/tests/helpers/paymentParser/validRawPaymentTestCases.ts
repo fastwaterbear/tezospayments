@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { BigNumber } from 'bignumber.js';
 
-import type { NonIncludedPaymentFields, RawPayment } from '../../../src/helpers/paymentParser';
+import type { NonIncludedPaymentFields, RawPayment } from '../../../src/helpers/paymentParser/paymentParser';
 import type { Payment } from '../../../src/models/payment';
 import { URL } from '../../../src/native';
 

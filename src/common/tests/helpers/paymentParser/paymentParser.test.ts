@@ -1,12 +1,12 @@
-import { BigNumber } from 'bignumber.js';
-
 import { NonIncludedPaymentFields, PaymentParser } from '../../../src/helpers';
+import { PaymentType } from '../../../src/models/payment/paymentBase';
 import { URL } from '../../../src/native';
 import invalidRawPaymentTestCases from './invalidRawPaymentTestCases';
 import validRawPaymentTestCases from './validRawPaymentTestCases';
 
 describe('Payment Parser', () => {
   const nonIncludedFields: NonIncludedPaymentFields = {
+    type: PaymentType.Payment,
     targetAddress: 'KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x',
     urls: [
       { type: 'base64', url: new URL('https://payment.tezospayments.com/KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x/payment/#...') }

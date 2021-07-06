@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import type { RawPayment } from '../../../src/helpers/paymentParser';
+import type { RawPayment } from '../../../src/helpers/paymentParser/paymentParser';
 
 const createdDate = new Date('2021-06-26T00:37:03.930Z');
 const expiredDate = new Date('2021-06-26T00:57:03.930Z');

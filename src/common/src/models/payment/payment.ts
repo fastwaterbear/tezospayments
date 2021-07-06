@@ -1,38 +1,15 @@
-import { BigNumber } from 'bignumber.js';
-
 import { PaymentParser, NonIncludedPaymentFields, PaymentValidator } from '../../helpers';
 import { URL } from '../../native';
-import { StateModel } from '../core';
+import { PaymentBase, PaymentType, PrivatePaymentData, PublicPaymentData } from './paymentBase';
 
-interface PublicPaymentData {
-  readonly public: { readonly [fieldName: string]: unknown; };
-}
-
-interface PrivatePaymentData {
-  readonly private: { readonly [fieldName: string]: unknown; };
-}
-
-type PaymentData =
-  | PublicPaymentData
-  | PrivatePaymentData
-  | PublicPaymentData & PrivatePaymentData;
-
-type PaymentUrl =
-  | { type: 'base64', url: URL };
-
-export interface Payment {
-  readonly targetAddress: string;
-  readonly amount: BigNumber;
-  readonly data: PaymentData;
-  readonly asset?: string;
+export interface Payment extends PaymentBase {
+  readonly type: PaymentType.Payment;
   readonly successUrl: URL;
   readonly cancelUrl: URL;
-  readonly created: Date;
   readonly expired?: Date;
-  readonly urls: readonly PaymentUrl[];
 }
 
-export class Payment extends StateModel {
+export class Payment extends PaymentBase {
   static readonly defaultParser: PaymentParser = new PaymentParser();
   static readonly defaultValidator: PaymentValidator = new PaymentValidator();
 
@@ -40,30 +17,19 @@ export class Payment extends StateModel {
     return this.defaultValidator.validate(payment);
   }
 
-  static inTez(payment: Payment) {
-    return !!payment.asset;
-  }
-
   static publicDataExists(payment: Payment): payment is Payment & { readonly data: PublicPaymentData };
   static publicDataExists(paymentData: Payment['data']): paymentData is Payment['data'] & PublicPaymentData;
   static publicDataExists(
     paymentOrPaymentDataOrPaymentData: Payment | Payment['data']
   ): paymentOrPaymentDataOrPaymentData is (Payment & { readonly data: PublicPaymentData }) | (Payment['data'] & PublicPaymentData) {
-    return !!(Payment.isPayment(paymentOrPaymentDataOrPaymentData)
-      ? (paymentOrPaymentDataOrPaymentData.data as PublicPaymentData).public
-      : (paymentOrPaymentDataOrPaymentData as PublicPaymentData).public
-    );
+    return super.publicDataExistsInternal(paymentOrPaymentDataOrPaymentData);
   }
 
   static privateDataExists(payment: Payment): payment is Payment & { readonly data: PrivatePaymentData } {
-    return !!(payment.data as PrivatePaymentData).private;
+    return super.privateDataExists(payment);
   }
 
   static parse(paymentBase64: string, nonIncludedFields: NonIncludedPaymentFields, parser = Payment.defaultParser): Payment | null {
     return parser.parse(paymentBase64, nonIncludedFields);
-  }
-
-  private static isPayment(paymentOrPaymentDataOrPaymentData: Payment | Payment['data']): paymentOrPaymentDataOrPaymentData is Payment {
-    return !!(paymentOrPaymentDataOrPaymentData as Payment).amount;
   }
 }
