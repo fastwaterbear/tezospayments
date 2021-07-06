@@ -20,9 +20,9 @@ export class Payment extends PaymentBase {
   static publicDataExists(payment: Payment): payment is Payment & { readonly data: PublicPaymentData };
   static publicDataExists(paymentData: Payment['data']): paymentData is Payment['data'] & PublicPaymentData;
   static publicDataExists(
-    paymentOrPaymentDataOrPaymentData: Payment | Payment['data']
-  ): paymentOrPaymentDataOrPaymentData is (Payment & { readonly data: PublicPaymentData }) | (Payment['data'] & PublicPaymentData) {
-    return super.publicDataExistsInternal(paymentOrPaymentDataOrPaymentData);
+    paymentOrPaymentData: Payment | Payment['data']
+  ): paymentOrPaymentData is (Payment & { readonly data: PublicPaymentData }) | (Payment['data'] & PublicPaymentData) {
+    return super.publicDataExistsInternal(paymentOrPaymentData);
   }
 
   static privateDataExists(payment: Payment): payment is Payment & { readonly data: PrivatePaymentData } {

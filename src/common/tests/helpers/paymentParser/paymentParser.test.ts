@@ -1,5 +1,5 @@
 import { NonIncludedPaymentFields, PaymentParser } from '../../../src/helpers';
-import { PaymentType } from '../../../src/models/payment/paymentBase';
+import { PaymentType } from '../../../src/models/payment';
 import { URL } from '../../../src/native';
 import invalidRawPaymentTestCases from './invalidRawPaymentTestCases';
 import validRawPaymentTestCases from './validRawPaymentTestCases';

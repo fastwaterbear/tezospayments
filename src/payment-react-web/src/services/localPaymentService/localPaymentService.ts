@@ -3,7 +3,7 @@ import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit, TransactionWalletOperation, Wallet } from '@taquito/taquito';
 
 import { networks } from '@tezos-payments/common/dist/models/blockchain';
-import { Payment } from '@tezos-payments/common/dist/models/payment';
+import { Payment, PaymentType } from '@tezos-payments/common/dist/models/payment';
 import { Service, ServiceOperationType } from '@tezos-payments/common/dist/models/service';
 import { converters, memoize } from '@tezos-payments/common/dist/utils';
 
@@ -57,6 +57,7 @@ export class LocalPaymentService {
       return segmentsResult;
 
     const payment = Payment.parse(paymentBase64, {
+      type: PaymentType.Payment,
       targetAddress: segmentsResult[0],
       urls: [{ type: 'base64', url: new URL(window.location.href) }]
     });
