@@ -1,7 +1,7 @@
 import { BigNumber } from 'bignumber.js';
 
 import { tezosInfo } from '../../models/blockchain';
-import type { PaymentBase } from '../../models/payment/paymentBase';
+import { Payment } from '../../models/payment';
 import type { FailedValidationResults } from '../../models/validation';
 import { URL } from '../../native';
 import { guards } from '../../utils';
@@ -35,33 +35,6 @@ export const validateAmount = (
     return [errors.amountIsNegative];
 };
 
-export const validateData = (
-  data: PaymentBase['data'],
-  errors: Errors<'invalidData' | 'invalidPublicData' | 'publicDataShouldBeFlat' | 'invalidPrivateData' | 'privateDataShouldBeFlat'>
-): FailedValidationResults => {
-  if (!guards.isPlainObject(data) || Object.keys(data).some(key => key !== 'public' && key !== 'private'))
-    return [errors.invalidData];
-
-  const publicData = (data as Exclude<PaymentBase['data'], { private: unknown }>).public;
-  const privateData = (data as Exclude<PaymentBase['data'], { public: unknown }>).private;
-  if (!(publicData || privateData))
-    return [errors.invalidData];
-
-  if (publicData !== undefined) {
-    if (!guards.isPlainObject(publicData))
-      return [errors.invalidPublicData];
-    if (!isFlatObject(publicData))
-      return [errors.publicDataShouldBeFlat];
-  }
-
-  if (privateData !== undefined) {
-    if (!guards.isPlainObject(privateData))
-      return [errors.invalidPrivateData];
-    if (!isFlatObject(privateData))
-      return [errors.privateDataShouldBeFlat];
-  }
-};
-
 export const validateAsset = (
   asset: string | undefined,
   errors: Errors<'invalidAsset' | 'assetHasInvalidLength' | 'assetIsNotContractAddress'>
@@ -79,6 +52,14 @@ export const validateAsset = (
     return [errors.assetIsNotContractAddress];
 };
 
+export const validateCreatedDate = (
+  date: Date,
+  errors: Errors<'invalidCreatedDate'>
+): FailedValidationResults => {
+  if (!(date instanceof Date))
+    return [errors.invalidCreatedDate];
+};
+
 export const validateUrl = (
   url: URL,
   errors: Errors<'invalidUrl' | 'invalidProtocol'>
@@ -88,14 +69,6 @@ export const validateUrl = (
 
   if (url.protocol.indexOf('javascript') > -1)
     return [errors.invalidProtocol];
-};
-
-export const validateCreatedDate = (
-  date: Date,
-  errors: Errors<'invalidCreatedDate'>
-): FailedValidationResults => {
-  if (!(date instanceof Date))
-    return [errors.invalidCreatedDate];
 };
 
 export const validateExpiredDate = (
@@ -112,6 +85,33 @@ export const validateExpiredDate = (
 
   if (expiredDate.getTime() - createdDate.getTime() < minimumPaymentLifetime) {
     return [errors.paymentLifetimeIsShort];
+  }
+};
+
+export const validateData = (
+  data: Payment['data'],
+  errors: Errors<'invalidData' | 'invalidPublicData' | 'publicDataShouldBeFlat' | 'invalidPrivateData' | 'privateDataShouldBeFlat'>
+): FailedValidationResults => {
+  if (!guards.isPlainObject(data) || Object.keys(data).some(key => key !== 'public' && key !== 'private'))
+    return [errors.invalidData];
+
+  const publicData = (data as Exclude<Payment['data'], { private: unknown }>).public;
+  const privateData = (data as Exclude<Payment['data'], { public: unknown }>).private;
+  if (!(publicData || privateData))
+    return [errors.invalidData];
+
+  if (publicData !== undefined) {
+    if (!guards.isPlainObject(publicData))
+      return [errors.invalidPublicData];
+    if (!isFlatObject(publicData))
+      return [errors.publicDataShouldBeFlat];
+  }
+
+  if (privateData !== undefined) {
+    if (!guards.isPlainObject(privateData))
+      return [errors.invalidPrivateData];
+    if (!isFlatObject(privateData))
+      return [errors.privateDataShouldBeFlat];
   }
 };
 

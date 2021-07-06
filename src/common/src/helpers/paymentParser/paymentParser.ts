@@ -3,7 +3,7 @@ import { BigNumber } from 'bignumber.js';
 import type { Payment } from '../../models/payment';
 import { PaymentType } from '../../models/payment/paymentBase';
 import { URL } from '../../native';
-import { PaymentFieldInfoType, PaymentParserBase } from './paymentBaseParser';
+import { PaymentFieldInfoType, PaymentParserBase } from './paymentParserBase';
 
 type RawPaymentBase = {
   amount: string;
