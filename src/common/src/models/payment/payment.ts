@@ -1,6 +1,6 @@
 import { PaymentParser, NonIncludedPaymentFields, PaymentValidator } from '../../helpers';
 import { URL } from '../../native';
-import { PaymentBase, PaymentType, PrivatePaymentData, PublicPaymentData } from './paymentBase';
+import { PaymentBase, PaymentType } from './paymentBase';
 
 export interface Payment extends PaymentBase {
   readonly type: PaymentType.Payment;
