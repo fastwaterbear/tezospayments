@@ -17,18 +17,6 @@ export class Payment extends PaymentBase {
     return this.defaultValidator.validate(payment);
   }
 
-  static publicDataExists(payment: Payment): payment is Payment & { readonly data: PublicPaymentData };
-  static publicDataExists(paymentData: Payment['data']): paymentData is Payment['data'] & PublicPaymentData;
-  static publicDataExists(
-    paymentOrPaymentData: Payment | Payment['data']
-  ): paymentOrPaymentData is (Payment & { readonly data: PublicPaymentData }) | (Payment['data'] & PublicPaymentData) {
-    return super.publicDataExistsInternal(paymentOrPaymentData);
-  }
-
-  static privateDataExists(payment: Payment): payment is Payment & { readonly data: PrivatePaymentData } {
-    return super.privateDataExists(payment);
-  }
-
   static parse(paymentBase64: string, nonIncludedFields: NonIncludedPaymentFields, parser = Payment.defaultParser): Payment | null {
     return parser.parse(paymentBase64, nonIncludedFields);
   }

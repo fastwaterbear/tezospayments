@@ -1,6 +1,6 @@
 import { PaymentBase } from '../../models/payment/paymentBase';
 
-type PaymentFieldInfoType = 'object' | 'string' | 'undefined' | 'null';
+export type PaymentFieldInfoType = 'object' | 'string' | 'undefined' | 'null';
 
 export abstract class PaymentParserBase<
   TPayment extends PaymentBase,

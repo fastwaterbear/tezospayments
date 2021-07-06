@@ -3,7 +3,7 @@ import { BigNumber } from 'bignumber.js';
 import type { Payment } from '../../models/payment';
 import { PaymentType } from '../../models/payment/paymentBase';
 import { URL } from '../../native';
-import { PaymentParserBase } from './paymentBaseParser';
+import { PaymentFieldInfoType, PaymentParserBase } from './paymentBaseParser';
 
 type RawPaymentBase = {
   amount: string;
@@ -17,9 +17,6 @@ type RawPaymentBase = {
 
 export type RawPayment = Partial<RawPaymentBase>;
 export type ValidRawPayment = RawPaymentBase;
-
-type PaymentFieldInfoType = 'object' | 'string' | 'undefined' | 'null';
-
 export type NonIncludedPaymentFields = Pick<Payment, 'type' | 'targetAddress' | 'urls'>;
 
 export class PaymentParser extends PaymentParserBase<Payment, RawPayment, ValidRawPayment, NonIncludedPaymentFields> {
