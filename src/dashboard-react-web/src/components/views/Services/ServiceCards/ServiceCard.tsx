@@ -28,15 +28,12 @@ export const ServiceCard = (props: ServiceCardProps) => {
     navigator.clipboard.writeText(props.contractAddress);
   }, [props.contractAddress]);
 
-  const handleOpenClick = useCallback(() => {
-    history.push(`${config.routers.services}/${props.contractAddress}`);
-  }, [history, props.contractAddress]);
-
   const handleCardClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLElement).tagName === 'DIV') {
-      handleOpenClick();
+    const tagName = (e.target as HTMLElement).tagName.toLowerCase();
+    if (tagName !== 'svg' && tagName !== 'a' && tagName !== 'path') {
+      history.push(`${config.routers.services}/${props.contractAddress}`);
     }
-  }, [handleOpenClick]);
+  }, [history, props.contractAddress]);
 
   const logoClassName = combineClassNames(
     'service-card__logo',
@@ -67,7 +64,7 @@ export const ServiceCard = (props: ServiceCardProps) => {
         </div>
       </div>
       <div className="service-card__button-container">
-        <Button className="service-card__button" type="primary" onClick={handleOpenClick}>{commonLangResources.open}</Button>
+        <Button className="service-card__button" type="primary">{commonLangResources.open}</Button>
       </div>
     </div>
   </Card>;
