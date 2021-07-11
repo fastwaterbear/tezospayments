@@ -4,5 +4,9 @@ export const services = {
     active: 'Active',
     paused: 'Paused'
   },
-  createNewService: 'Create New Service'
+  createNewService: 'Create New Service',
+  operations: {
+    paymentsEnabled: 'Payments Enabled',
+    donationsEnabled: 'Donations Enabled',
+  }
 };

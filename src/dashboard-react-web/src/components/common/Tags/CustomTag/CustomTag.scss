@@ -1,0 +1,7 @@
+@use '../../../../styles/ant-colors.scss';
+
+.tag-custom {
+  background-color: ant-colors.$geek-blue-1 !important;
+  color: ant-colors.$geek-blue-6 !important;
+  border-color: ant-colors.$geek-blue-3 !important;
+}
