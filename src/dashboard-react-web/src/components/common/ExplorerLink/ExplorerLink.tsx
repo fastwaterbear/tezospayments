@@ -21,12 +21,12 @@ export const ExplorerLink = (props: ExplorerLinkProps) => {
     navigator.clipboard.writeText(props.hash);
   }, [props.hash]);
 
-  return <>
+  return <div>
     <a href={`${config.links.tzStats}/${props.hash}`} target="_blank" rel="noreferrer" className={props.className}>
       {props.children}
     </a>
     {props.showCopyButton && <CopyOutlined className="explorer-link__copy-icon" title={commonLangResources.copy} onClick={handleCopyAddressClick} />}
-  </>;
+  </div>;
 };
 
 export const ExplorerLinkPure = React.memo(ExplorerLink);

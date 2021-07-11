@@ -1,4 +1,5 @@
-import { Skeleton } from 'antd';
+import { EditFilled } from '@ant-design/icons';
+import { Button, Skeleton } from 'antd';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -35,19 +36,24 @@ export const Service = () => {
   return <View title={title} className="service-container">
     {!isInitialized || !service
       ? <Skeleton active />
-      : <div className="service">
-        <div className="service__header">
+      : <div className="service-header">
+        <div className="service-header__logo-container">
           {service.iconUri
             ? <img className={logoClassName} alt="logo" src={service.iconUri} />
             : <span className={logoClassName}>{text.getAvatarText(service.name)}</span>}
-          <h1>{title}</h1>
-          <ExplorerLinkPure hash={service.contractAddress} className="service__link" showCopyButton>
-            {service.contractAddress}
-          </ExplorerLinkPure>
-          <ActiveTagPure isActive={!service.paused} />
-          {arePaymentsAllowed && <CustomTagPure text={servicesLangResources.operations.paymentsEnabled} />}
-          {areDonationsAllowed && <CustomTagPure text={servicesLangResources.operations.donationsEnabled} />}
+          <div className="service-header__main-info">
+            <h1>{title}</h1>
+            <ExplorerLinkPure hash={service.contractAddress} className="service__link" showCopyButton>
+              {service.contractAddress}
+            </ExplorerLinkPure>
+            <div className="service-header__tags-container">
+              <ActiveTagPure isActive={!service.paused} />
+              {arePaymentsAllowed && <CustomTagPure text={servicesLangResources.operations.paymentsEnabled} />}
+              {areDonationsAllowed && <CustomTagPure text={servicesLangResources.operations.donationsEnabled} />}
+            </div>
+          </div>
         </div>
+        <Button className="service-button" icon={<EditFilled />} type="primary">Edit Service</Button>
       </div>}
   </View>;
 };

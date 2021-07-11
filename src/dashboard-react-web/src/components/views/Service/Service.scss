@@ -9,10 +9,41 @@ $-logo-size: 92px;
   max-width: 830px;
 }
 
+.service-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.service-header__logo-container {
+  display: flex;
+
+  h1 {
+    margin: 0;
+    line-height: 28px;
+  }
+}
+
+.service-header__main-info {
+  height: $-logo-size;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .service__logo {
   height: $-logo-size;
   width: $-logo-size;
-  margin: 0 8px 14px 0;
+  margin: 0 16px 0 0;
+}
+
+.service-header__tags-container {
+  display: flex;
+  gap: 16px;
+
+  .tag-active,
+  .tag-custom {
+    margin-right: 0;
+  }
 }
 
 .service__logo_text {
@@ -24,4 +55,13 @@ $-logo-size: 92px;
   color: ant-colors.$volcano-6;
   font-size: 20px;
   font-weight: 500;
+}
+
+.service__link {
+  color: ant-colors.$blue-6;
+  font-family: fonts.$monospace-font-family;
+}
+
+.service-button {
+  width: 144px;
 }

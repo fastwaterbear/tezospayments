@@ -46,7 +46,7 @@ export class ServicesService {
             tez: true,
             assets: tokenWhitelist.filter(t => t.network === network).map(t => t.contractAddress)
           },
-          allowedOperationType: ServiceOperationType.All,
+          allowedOperationType: ServiceOperationType.Payment,
           owner: 'tz1aANkwuYKxB1XCyhB3CjMDDBQuPmNcBcCc',
           deleted: false,
           paused: true,

@@ -15,8 +15,8 @@ export const ActiveTag = (props: ActiveTagProps) => {
   const servicesLangResources = langResources.views.services;
 
   return props.isActive
-    ? <Tag icon={<CheckCircleOutlined />} className="tag-active_active">{servicesLangResources.status.active}</Tag>
-    : <Tag icon={<CloseCircleOutlined />} className="tag-active_not-active">{servicesLangResources.status.paused}</Tag>;
+    ? <Tag icon={<CheckCircleOutlined />} className="tag-active tag-active_active">{servicesLangResources.status.active}</Tag>
+    : <Tag icon={<CloseCircleOutlined />} className="tag-active tag-active_not-active">{servicesLangResources.status.paused}</Tag>;
 };
 
 export const ActiveTagPure = React.memo(ActiveTag);
