@@ -1,12 +1,12 @@
-import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import { Button, Card, Tag } from 'antd';
+import { Button, Card } from 'antd';
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { combineClassNames, text } from '@tezos-payments/common/dist/utils';
 
 import { config } from '../../../../config';
-import { ExplorerLink } from '../../../common';
+import { ExplorerLinkPure } from '../../../common';
+import { ActiveTagPure } from '../../../common/Tags';
 import { useCurrentLanguageResources } from '../../../hooks';
 
 import './ServiceCard.scss';
@@ -22,7 +22,6 @@ export const ServiceCard = (props: ServiceCardProps) => {
   const history = useHistory();
   const langResources = useCurrentLanguageResources();
   const commonLangResources = langResources.common;
-  const servicesLangResources = langResources.views.services;
 
   const handleCardClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     const tagName = (e.target as HTMLElement).tagName.toLowerCase();
@@ -46,16 +45,14 @@ export const ServiceCard = (props: ServiceCardProps) => {
           <div className="service-card__name-container">
             <span className="service-card__name" title={props.name}>{props.name}</span>
             <div className="service-card__tags-container">
-              {props.isActive
-                ? <Tag icon={<CheckCircleOutlined />} className="service-card__tag-active_active">{servicesLangResources.status.active}</Tag>
-                : <Tag icon={<CloseCircleOutlined />} className="service-card__tag-active_not-active">{servicesLangResources.status.paused}</Tag>}
+              <ActiveTagPure isActive={props.isActive} />
             </div>
           </div>
         </div>
         <div className="service-card__link-container">
-          <ExplorerLink hash={props.contractAddress} className="service-card__link" showCopyButton>
+          <ExplorerLinkPure hash={props.contractAddress} className="service-card__link" showCopyButton>
             {props.contractAddress}
-          </ExplorerLink>
+          </ExplorerLinkPure>
         </div>
       </div>
       <div className="service-card__button-container">

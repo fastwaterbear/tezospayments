@@ -1,0 +1,7 @@
+@use '../../../../styles/ant-colors.scss';
+
+.tag-active_active {
+  background-color: ant-colors.$green-1 !important;
+  color: ant-colors.$green-6 !important;
+  border-color: ant-colors.$green-6 !important;
+}

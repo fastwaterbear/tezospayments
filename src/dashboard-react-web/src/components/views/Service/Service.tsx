@@ -5,7 +5,8 @@ import { useParams } from 'react-router-dom';
 import { combineClassNames, text } from '@tezos-payments/common/dist/utils';
 
 import { selectServicesState } from '../../../store/services/selectors';
-import { ExplorerLink } from '../../common';
+import { ExplorerLinkPure } from '../../common';
+import { ActiveTagPure } from '../../common/Tags';
 import { useAppSelector } from '../../hooks';
 import { View } from '../View';
 
@@ -34,9 +35,10 @@ export const Service = () => {
             ? <img className={logoClassName} alt="logo" src={service.iconUri} />
             : <span className={logoClassName}>{text.getAvatarText(service.name)}</span>}
           <h1>{title}</h1>
-          <ExplorerLink hash={service.contractAddress} className="service__link" showCopyButton>
+          <ExplorerLinkPure hash={service.contractAddress} className="service__link" showCopyButton>
             {service.contractAddress}
-          </ExplorerLink>
+          </ExplorerLinkPure>
+          <ActiveTagPure isActive={!service.paused} />
         </div>
       </div>}
   </View>;

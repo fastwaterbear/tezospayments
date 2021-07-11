@@ -49,7 +49,7 @@ export class ServicesService {
           allowedOperationType: ServiceOperationType.All,
           owner: 'tz1aANkwuYKxB1XCyhB3CjMDDBQuPmNcBcCc',
           deleted: false,
-          paused: false,
+          paused: true,
         }];
 
         resolve(testServices);
