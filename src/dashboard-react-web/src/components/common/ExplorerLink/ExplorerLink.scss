@@ -1,0 +1,10 @@
+@use '../../../styles/ant-colors.scss';
+
+.explorer-link__copy-icon {
+  color: ant-colors.$blue-6 !important;
+  margin-left: 8px;
+
+  &:hover {
+    color: ant-colors.$blue-5 !important;
+  }
+}

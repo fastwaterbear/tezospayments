@@ -72,15 +72,6 @@ $-logo-size: 64px;
   font-family: fonts.$monospace-font-family;
 }
 
-.service-card_copy-icon {
-  color: ant-colors.$blue-6 !important;
-  margin-left: 8px;
-
-  &:hover {
-    color: ant-colors.$blue-5 !important;
-  }
-}
-
 .service-card__button-container {
   display: flex;
   align-items: flex-end;

@@ -1,4 +1,4 @@
-import { CheckCircleOutlined, CloseCircleOutlined, CopyOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { Button, Card, Tag } from 'antd';
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -23,10 +23,6 @@ export const ServiceCard = (props: ServiceCardProps) => {
   const langResources = useCurrentLanguageResources();
   const commonLangResources = langResources.common;
   const servicesLangResources = langResources.views.services;
-
-  const handleCopyAddressClick = useCallback(() => {
-    navigator.clipboard.writeText(props.contractAddress);
-  }, [props.contractAddress]);
 
   const handleCardClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     const tagName = (e.target as HTMLElement).tagName.toLowerCase();
@@ -57,10 +53,9 @@ export const ServiceCard = (props: ServiceCardProps) => {
           </div>
         </div>
         <div className="service-card__link-container">
-          <ExplorerLink hash={props.contractAddress} className="service-card__link">
+          <ExplorerLink hash={props.contractAddress} className="service-card__link" showCopyButton>
             {props.contractAddress}
           </ExplorerLink>
-          <CopyOutlined className="service-card_copy-icon" title={commonLangResources.copy} onClick={handleCopyAddressClick} />
         </div>
       </div>
       <div className="service-card__button-container">

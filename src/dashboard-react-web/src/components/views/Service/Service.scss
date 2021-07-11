@@ -1,0 +1,27 @@
+@use '../../../styles/ant-colors.scss';
+@use '../../../styles/fonts.scss';
+
+$-logo-size: 92px;
+
+.service-container {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 830px;
+}
+
+.service__logo {
+  height: $-logo-size;
+  width: $-logo-size;
+  margin: 0 8px 14px 0;
+}
+
+.service__logo_text {
+  display: flex;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  background-color: ant-colors.$volcano-2;
+  color: ant-colors.$volcano-6;
+  font-size: 20px;
+  font-weight: 500;
+}

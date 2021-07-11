@@ -5,7 +5,7 @@ import { ServiceOperationDirection, ServiceOperationType, ServiceOperationStatus
 import { combineClassNames } from '@tezos-payments/common/dist/utils';
 
 import { useCurrentLanguageResources } from '../../hooks';
-import { ExplorerLink } from '../ExplorerLink';
+import { ExplorerLink } from '../ExplorerLink/ExplorerLink';
 import { OperationIconPure } from './OperationIcon';
 
 import './OperationList.scss';
