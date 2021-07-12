@@ -19,6 +19,7 @@ export class ServicesService {
             'https://github.com/fastwaterbear',
             'https://t.me/fastwaterbear'
           ],
+          description: 'This is a test service of Fast Water Bear which provides basics information and scenarios to debug and investigate',
           iconUri: 'https://avatars.githubusercontent.com/u/82229602',
           version: 1,
           metadata: '7b226e616d65223a22546573742053657276696365206f6620466173742057617465722042656172227d',
@@ -34,6 +35,8 @@ export class ServicesService {
           paused: false,
         }, {
           name: 'Maxima-net Service',
+          // eslint-disable-next-line
+          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam scelerisque leo ut dignissim posuere. Phasellus condimentum dui id felis posuere, eu tincidunt ipsum euismod. Aliquam erat volutpat. Vivamus vitae diam finibus metus finibus vestibulum. Quisque at facilisis nibh. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce tincidunt urna a ex consectetur, quis malesuada nunc scelerisque. Nulla ultricies dolor vel velit pulvinar scelerisque. Pellentesque vehicula sodales erat laoreet iaculis. Vivamus egestas ligula at aliquam condimentum. Aliquam erat volutpat. Sed a gravida justo. Ut porttitor velit sit amet tellus blandit faucibus. Sed lobortis tristique enim non iaculis. Donec ac sapien eu nunc posuere semper quis mollis mi. Phasellus at libero ac neque finibus finibus id eu mauris.',
           links: [
             'https://github.com/fastwaterbear',
             'https://t.me/fastwaterbear'

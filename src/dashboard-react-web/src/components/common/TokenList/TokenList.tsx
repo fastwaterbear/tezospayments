@@ -17,29 +17,30 @@ interface TokenListItemProps {
   name: string;
   ticker: string;
   iconSrc?: string;
-  value: number;
+  value?: number;
   decimals: number;
   highlightSign?: boolean;
 }
 
 const TokenListItem = (props: TokenListItemProps) => {
   const valueClassNames = combineClassNames('token-list-item__value',
-    { 'token-list-item__value_positive': props.highlightSign && props.value > 0 },
-    { 'token-list-item__value_negative': props.highlightSign && props.value < 0 }
+    { 'token-list-item__value_positive': props.highlightSign && props.value && props.value > 0 },
+    { 'token-list-item__value_negative': props.highlightSign && props.value && props.value < 0 }
   );
 
-  const sign = props.value > 0 && props.highlightSign
-    ? '+'
-    : props.value < 0
-      ? '−'
-      : '';
+  const sign = !props.value ? ''
+    : props.value > 0 && props.highlightSign
+      ? '+'
+      : props.value < 0
+        ? '−'
+        : '';
 
   const displayedDecimals = 6;
-  const value = Math.abs(props.value);
+  const value = props.value && Math.abs(props.value);
   const allDecimalsShown = displayedDecimals < props.decimals;
-  const valueSpan = <span className={valueClassNames}>
+  const valueSpan = value !== undefined && value !== null ? <span className={valueClassNames}>
     {`${sign}${value.toLocaleString(undefined, { minimumFractionDigits: displayedDecimals })}${allDecimalsShown ? '...' : ''}`}
-  </span>;
+  </span> : null;
 
   return <li className="token-list-item">
     <img className="token-list-item__icon" src={props.iconSrc} alt={props.name} />
@@ -48,7 +49,7 @@ const TokenListItem = (props: TokenListItemProps) => {
         <span className="token-list-item__ticker">{props.ticker}</span>
         <span className="token-list-item__name">{props.name}</span>
       </div>
-      {allDecimalsShown
+      {allDecimalsShown && value !== undefined && value !== null
         ? <Tooltip title={value.toLocaleString(undefined, { minimumFractionDigits: props.decimals })}>
           {valueSpan}
         </Tooltip>
