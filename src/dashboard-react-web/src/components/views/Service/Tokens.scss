@@ -1,0 +1,9 @@
+.service-token-list-item {
+  height: 32px;
+  margin-top: 16px;
+
+  .token-list-item__ticker,
+  .token-list-item__name {
+    color: var(--global-on-background-color);
+  }
+}

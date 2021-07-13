@@ -3,15 +3,15 @@ import { Button, Skeleton } from 'antd';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { tezosMeta, Token } from '@tezos-payments/common/dist/models/blockchain';
 import { ServiceOperationType } from '@tezos-payments/common/dist/models/service';
 import { combineClassNames, text } from '@tezos-payments/common/dist/utils';
 
-import { selectServicesState, selectTokensState } from '../../../store/services/selectors';
-import { ExplorerLinkPure, TokenList } from '../../common';
+import { selectServicesState } from '../../../store/services/selectors';
+import { ExplorerLinkPure } from '../../common';
 import { ActiveTagPure, CustomTagPure } from '../../common/Tags';
 import { useAppSelector, useCurrentLanguageResources } from '../../hooks';
 import { View } from '../View';
+import { Tokens } from './Tokens';
 
 import './Service.scss';
 
@@ -33,15 +33,6 @@ export const Service = () => {
 
   const arePaymentsAllowed = service?.allowedOperationType === ServiceOperationType.Payment || service?.allowedOperationType === ServiceOperationType.All;
   const areDonationsAllowed = service?.allowedOperationType === ServiceOperationType.Donation || service?.allowedOperationType === ServiceOperationType.All;
-
-  const tokens = useAppSelector(selectTokensState);
-  const allowedTokens: Token[] = [];
-  service?.allowedTokens.assets.forEach(a => {
-    const token = tokens.get(a);
-    if (token) {
-      allowedTokens.push(token);
-    }
-  });
 
   return <View title={title} className="service-container">
     {!isInitialized || !service
@@ -71,15 +62,7 @@ export const Service = () => {
           <div className="service-view-zone__lists-container">
             <div className="service-view-zone__list-container">
               <span className="service-view-zone__list-header">{servicesLangResources.allowedCurrencies}</span>
-              <TokenList>
-                <TokenList.Item
-                  key={tezosMeta.symbol}
-                  ticker={tezosMeta.symbol}
-                  name={tezosMeta.name}
-                  decimals={tezosMeta.decimals}
-                  iconSrc={tezosMeta.thumbnailUri}
-                  highlightSign />
-              </TokenList>
+              <Tokens service={service} />
             </div>
             <div className="service-view-zone__list-container">
               <span className="service-view-zone__list-header">{servicesLangResources.links}</span>

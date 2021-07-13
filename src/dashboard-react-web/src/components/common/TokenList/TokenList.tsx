@@ -20,6 +20,7 @@ interface TokenListItemProps {
   value?: number;
   decimals: number;
   highlightSign?: boolean;
+  className?: string;
 }
 
 const TokenListItem = (props: TokenListItemProps) => {
@@ -42,7 +43,7 @@ const TokenListItem = (props: TokenListItemProps) => {
     {`${sign}${value.toLocaleString(undefined, { minimumFractionDigits: displayedDecimals })}${allDecimalsShown ? '...' : ''}`}
   </span> : null;
 
-  return <li className="token-list-item">
+  return <li className={combineClassNames('token-list-item', props.className)}>
     <img className="token-list-item__icon" src={props.iconSrc} alt={props.name} />
     <div>
       <div className="token-list-item__name-container">

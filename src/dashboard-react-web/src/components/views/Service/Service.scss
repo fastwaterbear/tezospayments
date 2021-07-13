@@ -75,6 +75,7 @@ $-logo-size: 92px;
   display: flex;
   width: 100%;
   flex-direction: row;
+  margin-bottom: 16px;
 }
 
 .service-view-zone__button-container {
@@ -90,5 +91,7 @@ $-logo-size: 92px;
 }
 
 .service-view-zone__list-header {
+  display: block;
   font-size: 16px;
+  margin-bottom: 16px;
 }
