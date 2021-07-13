@@ -8,6 +8,8 @@ import { ExplorerLinkPure } from '../../common';
 import { ActiveTagPure, CustomTagPure } from '../../common/Tags';
 import { useCurrentLanguageResources } from '../../hooks';
 
+import './Header.scss';
+
 interface HeaderProps {
   service: Service;
 }

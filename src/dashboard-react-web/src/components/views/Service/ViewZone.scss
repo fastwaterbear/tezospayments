@@ -1,0 +1,32 @@
+@use '../../../styles/ant-colors.scss';
+@use '../../../styles/fonts.scss';
+
+.service-view-zone__description {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.service-view-zone__lists-container {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  margin-bottom: 16px;
+}
+
+.service-view-zone__button-container {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.service-view-zone__list-container {
+  flex: 1 1 50%;
+}
+
+.service-view-zone__list-header {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 16px;
+}
