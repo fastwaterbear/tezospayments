@@ -1,9 +1,11 @@
+import React from 'react';
+
 import { tezosMeta, Token } from '@tezos-payments/common/dist/models/blockchain';
 import { Service } from '@tezos-payments/common/dist/models/service';
 
-import { selectTokensState } from '../../../store/services/selectors';
-import { TokenList } from '../../common';
-import { useAppSelector } from '../../hooks';
+import { selectTokensState } from '../../../../store/services/selectors';
+import { TokenList } from '../../../common';
+import { useAppSelector } from '../../../hooks';
 
 import './Tokens.scss';
 
@@ -48,3 +50,5 @@ export const Tokens = ({ service }: TokensProps) => {
     {tokenItems}
   </TokenList>;
 };
+
+export const TokensPure = React.memo(Tokens);

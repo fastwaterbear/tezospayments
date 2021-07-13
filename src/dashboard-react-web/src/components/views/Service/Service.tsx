@@ -5,8 +5,8 @@ import { useParams } from 'react-router-dom';
 import { selectServicesState } from '../../../store/services/selectors';
 import { useAppSelector } from '../../hooks';
 import { View } from '../View';
-import { Header } from './Header';
-import { ViewZone } from './ViewZone';
+import { HeaderPure } from './Header';
+import { ViewZonePure } from './ViewZone';
 
 import './Service.scss';
 
@@ -23,8 +23,8 @@ export const Service = () => {
     {!isInitialized || !service
       ? <Skeleton active />
       : <>
-        <Header service={service} />
-        <ViewZone service={service} />
+        <HeaderPure service={service} />
+        <ViewZonePure service={service} />
       </>}
   </View>;
 };

@@ -1,9 +1,10 @@
 import { Button } from 'antd';
+import React from 'react';
 
 import { Service } from '@tezos-payments/common/dist/models/service';
 
-import { useCurrentLanguageResources } from '../../hooks';
-import { Tokens } from './Tokens';
+import { useCurrentLanguageResources } from '../../../hooks';
+import { TokensPure } from '../Tokens';
 
 import './ViewZone.scss';
 
@@ -20,7 +21,7 @@ export const ViewZone = ({ service }: ViewZoneProps) => {
     <div className="service-view-zone__lists-container">
       <div className="service-view-zone__list-container">
         <span className="service-view-zone__list-header">{servicesLangResources.allowedCurrencies}</span>
-        <Tokens service={service} />
+        <TokensPure service={service} />
       </div>
       <div className="service-view-zone__list-container">
         <span className="service-view-zone__list-header">{servicesLangResources.links}</span>
@@ -32,3 +33,5 @@ export const ViewZone = ({ service }: ViewZoneProps) => {
     </div>
   </div>;
 };
+
+export const ViewZonePure = React.memo(ViewZone);

@@ -1,12 +1,13 @@
 import { EditFilled } from '@ant-design/icons';
 import { Button } from 'antd';
+import React from 'react';
 
 import { Service, ServiceOperationType } from '@tezos-payments/common/dist/models/service';
 import { combineClassNames, text } from '@tezos-payments/common/dist/utils';
 
-import { ExplorerLinkPure } from '../../common';
-import { ActiveTagPure, CustomTagPure } from '../../common/Tags';
-import { useCurrentLanguageResources } from '../../hooks';
+import { ExplorerLinkPure } from '../../../common';
+import { ActiveTagPure, CustomTagPure } from '../../../common/Tags';
+import { useCurrentLanguageResources } from '../../../hooks';
 
 import './Header.scss';
 
@@ -46,3 +47,5 @@ export const Header = ({ service }: HeaderProps) => {
     <Button className="service-button" icon={<EditFilled />} type="primary">{servicesLangResources.editService}</Button>
   </div>;
 };
+
+export const HeaderPure = React.memo(Header);
