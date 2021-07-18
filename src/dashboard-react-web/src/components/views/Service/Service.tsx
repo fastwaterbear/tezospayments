@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { selectServicesState } from '../../../store/services/selectors';
 import { useAppSelector } from '../../hooks';
 import { View } from '../View';
+import { DangerZone } from './DangerZone';
 import { HeaderPure } from './Header';
 import { ViewZonePure } from './ViewZone';
 
@@ -25,6 +26,7 @@ export const Service = () => {
       : <>
         <HeaderPure service={service} />
         <ViewZonePure service={service} />
+        <DangerZone />
       </>}
   </View>;
 };

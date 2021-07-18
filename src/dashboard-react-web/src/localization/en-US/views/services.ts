@@ -13,5 +13,12 @@ export const services = {
     donationsEnabled: 'Donations Enabled',
   },
   allowedCurrencies: 'Allowed Currencies',
-  links: 'Links'
+  links: 'Links',
+  dangerZone: {
+    title: 'Danger Zone',
+    pauseService: 'Pause Service',
+    pauseServiceDescription: 'Pause accepting payments and donations',
+    deleteService: 'Delete Service',
+    deleteServiceDescription: 'Delete this service. After deleting this service can’t accept payments and donations. You can restore the deleted service'
+  }
 };
