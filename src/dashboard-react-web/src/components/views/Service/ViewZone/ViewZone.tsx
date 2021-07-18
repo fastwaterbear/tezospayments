@@ -3,6 +3,7 @@ import React from 'react';
 
 import { Service } from '@tezos-payments/common/dist/models/service';
 
+import { ServiceLinks } from '../../../common/ServiceLinks';
 import { useCurrentLanguageResources } from '../../../hooks';
 import { TokensPure } from '../Tokens';
 
@@ -25,6 +26,7 @@ export const ViewZone = ({ service }: ViewZoneProps) => {
       </div>
       <div className="service-view-zone__list-container">
         <span className="service-view-zone__list-header">{servicesLangResources.links}</span>
+        <ServiceLinks className="service-info__links" links={service.links} />
       </div>
     </div>
     <div className="service-view-zone__button-container">
