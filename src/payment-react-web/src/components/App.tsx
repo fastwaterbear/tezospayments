@@ -6,7 +6,7 @@ import { PaymentType } from '@tezospayments/common/dist/models/payment';
 import { PaymentStatus } from '../models/payment';
 import { loadCurrentPayment } from '../store/currentPayment';
 import { useAppDispatch, useAppSelector } from './hooks';
-import { ConfirmationPure, ErrorPure, PaymentPure, SuccessPure } from './views';
+import { ConfirmationPure, DonationPure, ErrorPure, PaymentPure, SuccessPure } from './views';
 
 import './App.scss';
 
@@ -28,10 +28,8 @@ export const App = () => {
       ? <React.Fragment>
         {paymentStatus !== PaymentStatus.Succeeded && paymentStatus !== PaymentStatus.NetworkProcessing && (
           payment.type === PaymentType.Payment
-            ? <PaymentPure payment={payment}
-              service={service}
-            />
-            : null
+            ? <PaymentPure payment={payment} service={service} />
+            : <DonationPure donation={payment} service={service} />
         )}
         {operationHash && paymentStatus === PaymentStatus.NetworkProcessing && <ConfirmationPure operationHash={operationHash}
           network={service.network}
