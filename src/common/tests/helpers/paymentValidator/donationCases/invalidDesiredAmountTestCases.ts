@@ -5,45 +5,41 @@ import type { NegativeTestCases } from '../testCase';
 import validDonationTestCases from './validDonationTestCases';
 
 const validDonationBase = { ...validDonationTestCases[0] };
-delete validDonationBase.amount;
+delete validDonationBase.desiredAmount;
 
 export default [
   [
-    validDonationBase,
-    [DonationValidator.errors.invalidAmount]
-  ],
-  [
     {
       ...validDonationBase,
-      amount: 193
+      desiredAmount: 193
     },
     [DonationValidator.errors.invalidAmount]
   ],
   [
     {
       ...validDonationBase,
-      amount: '383.343'
+      desiredAmount: '383.343'
     },
     [DonationValidator.errors.invalidAmount]
   ],
   [
     {
       ...validDonationBase,
-      amount: new BigNumber(NaN)
+      desiredAmount: new BigNumber(NaN)
     },
     [DonationValidator.errors.invalidAmount]
   ],
   [
     {
       ...validDonationBase,
-      amount: new BigNumber(Infinity)
+      desiredAmount: new BigNumber(Infinity)
     },
     [DonationValidator.errors.invalidAmount]
   ],
   [
     {
       ...validDonationBase,
-      amount: new BigNumber(-1)
+      desiredAmount: new BigNumber(-1)
     },
     [DonationValidator.errors.amountIsNegative]
   ]

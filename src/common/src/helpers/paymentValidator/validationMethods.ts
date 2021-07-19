@@ -35,6 +35,13 @@ export const validateAmount = (
     return [errors.amountIsNegative];
 };
 
+export const validateDesiredAmount = (
+  desiredAmount: BigNumber | undefined,
+  errors: Errors<'invalidAmount' | 'amountIsNegative'>
+): FailedValidationResults => {
+  return desiredAmount === undefined ? undefined : validateAmount(desiredAmount, errors);
+};
+
 export const validateAsset = (
   asset: string | undefined,
   errors: Errors<'invalidAsset' | 'assetHasInvalidLength' | 'assetIsNotContractAddress'>

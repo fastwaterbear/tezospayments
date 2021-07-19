@@ -32,8 +32,14 @@ export abstract class PaymentParserBase<
 
   parse(paymentBase64: string, nonIncludedFields: TNonIncludedFields): TPayment | null {
     try {
-      const paymentString = Buffer.from(paymentBase64, 'base64').toString('utf8');
-      const rawPayment: TRawPayment = JSON.parse(paymentString);
+      let rawPayment: TRawPayment;
+
+      if (paymentBase64) {
+        const paymentString = Buffer.from(paymentBase64, 'base64').toString('utf8');
+        rawPayment = JSON.parse(paymentString);
+      }
+      else
+        rawPayment = {} as TRawPayment;
 
       return this.validateAndMapRawPaymentToPayment(rawPayment, nonIncludedFields);
     }

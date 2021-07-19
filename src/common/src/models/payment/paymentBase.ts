@@ -14,16 +14,5 @@ export type PaymentUrl =
 export interface PaymentBase {
   readonly type: PaymentType;
   readonly targetAddress: string;
-  readonly amount: BigNumber;
-  readonly asset?: string;
-  readonly created: Date;
-  readonly successUrl?: URL;
-  readonly cancelUrl?: URL;
   readonly urls: readonly PaymentUrl[];
-}
-
-export abstract class PaymentBase extends StateModel {
-  static inTez(payment: PaymentBase) {
-    return !!payment.asset;
-  }
 }

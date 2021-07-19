@@ -6,9 +6,8 @@ import { URL } from '../../native';
 import { PaymentFieldInfoType, PaymentParserBase } from './paymentParserBase';
 
 type RawDonationBase = {
-  amount: string;
-  created: Date;
-  asset?: string;
+  desiredAmount?: string;
+  desiredAsset?: string;
   successUrl?: string;
   cancelUrl?: string;
 };
@@ -21,11 +20,10 @@ export class DonationParser extends PaymentParserBase<Donation, RawDonation, Val
   private _paymentFieldTypes: ReadonlyMap<
     keyof RawDonation, PaymentFieldInfoType | readonly PaymentFieldInfoType[]
   > = new Map<keyof RawDonation, PaymentFieldInfoType | readonly PaymentFieldInfoType[]>()
-    .set('amount', 'string')
-    .set('asset', ['string', 'undefined', 'null'])
+    .set('desiredAmount', ['string', 'undefined', 'null'])
+    .set('desiredAsset', ['string', 'undefined', 'null'])
     .set('successUrl', ['string', 'undefined', 'null'])
-    .set('cancelUrl', ['string', 'undefined', 'null'])
-    .set('created', 'string');
+    .set('cancelUrl', ['string', 'undefined', 'null']);
 
   protected get paymentFieldTypes() {
     return this._paymentFieldTypes;
@@ -34,11 +32,10 @@ export class DonationParser extends PaymentParserBase<Donation, RawDonation, Val
   protected mapRawPaymentToPayment(rawDonation: ValidRawDonation, nonIncludedFields: NonIncludedDonationFields): Donation {
     return {
       type: PaymentType.Donation,
-      amount: new BigNumber(rawDonation.amount),
-      asset: rawDonation.asset,
+      desiredAmount: rawDonation.desiredAmount ? new BigNumber(rawDonation.desiredAmount) : undefined,
+      desiredAsset: rawDonation.desiredAsset,
       successUrl: rawDonation.successUrl ? new URL(rawDonation.successUrl) : undefined,
       cancelUrl: rawDonation.cancelUrl ? new URL(rawDonation.cancelUrl) : undefined,
-      created: new Date(rawDonation.created),
       targetAddress: nonIncludedFields.targetAddress,
       urls: nonIncludedFields.urls
     };

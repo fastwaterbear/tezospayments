@@ -1,7 +1,7 @@
 import { DonationValidator } from '../../../src/helpers';
 import { Donation } from '../../../src/models/payment';
 import {
-  invalidAmountTestCases, invalidAssetTestCases, invalidCancelUrlTestCases, invalidCreatedDateTestCases,
+  invalidDesiredAmountTestCases, invalidDesiredAssetTestCases, invalidCancelUrlTestCases,
   invalidDonationObjectTestCases, invalidSuccessUrlTestCases, invalidTargetAddressTestCases,
   invalidTypeTestCases, validDonationTestCases
 } from './donationCases';
@@ -20,12 +20,11 @@ describe('Donation Validator', () => {
 
   const invalidDonationTestCases: NegativeTestCases = invalidDonationObjectTestCases
     .concat(invalidTypeTestCases)
-    .concat(invalidAmountTestCases)
+    .concat(invalidDesiredAmountTestCases)
     .concat(invalidTargetAddressTestCases)
-    .concat(invalidAssetTestCases)
+    .concat(invalidDesiredAssetTestCases)
     .concat(invalidSuccessUrlTestCases)
-    .concat(invalidCancelUrlTestCases)
-    .concat(invalidCreatedDateTestCases);
+    .concat(invalidCancelUrlTestCases);
 
   test.each(invalidDonationTestCases)(
     'donation validation when a donation is invalid. Fail on the first error [%p]',

@@ -1,4 +1,8 @@
+import { BigNumber } from 'bignumber.js';
+
 import { PaymentParser, NonIncludedPaymentFields, PaymentValidator } from '../../helpers';
+import { URL } from '../../native';
+import { StateModel } from '../core';
 import { PaymentBase, PaymentType } from './paymentBase';
 
 interface PublicPaymentData {
@@ -16,11 +20,16 @@ type PaymentData =
 
 export interface Payment extends PaymentBase {
   readonly type: PaymentType.Payment;
+  readonly amount: BigNumber;
+  readonly asset?: string;
   readonly data: PaymentData;
+  readonly created: Date;
   readonly expired?: Date;
+  readonly successUrl?: URL;
+  readonly cancelUrl?: URL;
 }
 
-export class Payment extends PaymentBase {
+export class Payment extends StateModel {
   static readonly defaultParser: PaymentParser = new PaymentParser();
   static readonly defaultValidator: PaymentValidator = new PaymentValidator();
 
