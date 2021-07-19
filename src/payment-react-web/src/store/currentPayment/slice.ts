@@ -1,16 +1,16 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import type { Payment } from '@tezospayments/common/dist/models/payment';
+import { Donation, Payment, PaymentType } from '@tezospayments/common/dist/models/payment';
 import type { Service } from '@tezospayments/common/dist/models/service';
 
-import { PaymentInfo, PaymentStatus } from '../../models/payment';
+import { NetworkDonation, NetworkPayment, PaymentInfo, PaymentStatus } from '../../models/payment';
 import { UnknownApplicationError } from '../../models/system';
 import { AppThunkAPI } from '../thunk';
 
 interface CurrentPaymentState {
   readonly status: PaymentStatus;
-  readonly initialPayment: Payment;
-  readonly payment: Payment;
+  readonly payment: Payment | Donation;
+  readonly networkPayment: NetworkPayment | NetworkDonation | null;
   readonly service: Service;
   readonly operation?: OperationState;
 }
@@ -23,6 +23,11 @@ interface OperationState {
 
 const namespace = 'currentPayment';
 const initialState: CurrentPaymentState | null = null;
+const checkSendPaymentCondition = (
+  currentPaymentState: CurrentPaymentState | null
+): currentPaymentState is CurrentPaymentState & { readonly status: PaymentStatus.Initial } => {
+  return currentPaymentState?.status === PaymentStatus.Initial;
+};
 
 export const loadCurrentPayment = createAsyncThunk<PaymentInfo, void, AppThunkAPI>(
   `${namespace}/loadCurrentPay`,
@@ -35,13 +40,10 @@ export const loadCurrentPayment = createAsyncThunk<PaymentInfo, void, AppThunkAP
   },
 );
 
-export const pay = createAsyncThunk<boolean, { updatedPayment: Payment } | void, AppThunkAPI>(
+export const pay = createAsyncThunk<boolean, NetworkPayment, AppThunkAPI>(
   `${namespace}/pay`,
-  async (payload, { extra: app, getState, rejectWithValue }) => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const currentPaymentState = getState().currentPaymentState!;
-
-    const result = await app.localPaymentService.pay(payload?.updatedPayment || currentPaymentState.payment);
+  async (networkPayment, { extra: app, rejectWithValue }) => {
+    const result = await app.localPaymentService.pay(networkPayment);
 
     return !result.isServiceError
       ? result
@@ -51,12 +53,30 @@ export const pay = createAsyncThunk<boolean, { updatedPayment: Payment } | void,
     condition: (_payload, { getState }) => {
       const currentPaymentState = getState().currentPaymentState;
 
-      return currentPaymentState?.status === PaymentStatus.Initial;
+      return checkSendPaymentCondition(currentPaymentState) && currentPaymentState.payment.type === PaymentType.Payment;
     },
     dispatchConditionRejection: true
   }
 );
 
+export const donate = createAsyncThunk<boolean, NetworkDonation, AppThunkAPI>(
+  `${namespace}/donate`,
+  async (networkDonation, { extra: app, rejectWithValue }) => {
+    const result = await app.localPaymentService.donate(networkDonation);
+
+    return !result.isServiceError
+      ? result
+      : rejectWithValue({ message: result.error } as UnknownApplicationError);
+  },
+  {
+    condition: (_payload, { getState }) => {
+      const currentPaymentState = getState().currentPaymentState;
+
+      return checkSendPaymentCondition(currentPaymentState) && currentPaymentState.payment.type === PaymentType.Donation;
+    },
+    dispatchConditionRejection: true
+  }
+);
 
 export const currentPaymentSlice = createSlice({
   name: namespace,
@@ -66,8 +86,8 @@ export const currentPaymentSlice = createSlice({
       return state
         ? {
           status: PaymentStatus.NetworkProcessing,
-          initialPayment: state.initialPayment,
           payment: state.payment,
+          networkPayment: state.networkPayment,
           service: state.service,
           operation: action.payload,
         }
@@ -79,8 +99,8 @@ export const currentPaymentSlice = createSlice({
       .addCase(loadCurrentPayment.fulfilled, (_state, action) => {
         return {
           status: PaymentStatus.Initial,
-          initialPayment: action.payload.payment,
           payment: action.payload.payment,
+          networkPayment: null,
           service: action.payload.service
         };
       });
@@ -90,8 +110,8 @@ export const currentPaymentSlice = createSlice({
         return state
           ? {
             status: PaymentStatus.UserProcessing,
-            initialPayment: state.initialPayment,
-            payment: (action.meta.arg?.updatedPayment as unknown as (typeof state.payment | undefined)) ?? state.payment,
+            payment: state.payment,
+            networkPayment: action.meta.arg,
             service: state.service
           }
           : null;
@@ -100,8 +120,8 @@ export const currentPaymentSlice = createSlice({
         return state
           ? {
             status: action.payload ? PaymentStatus.Succeeded : PaymentStatus.Initial,
-            initialPayment: state.initialPayment,
             payment: state.payment,
+            networkPayment: state.networkPayment,
             service: state.service,
             operation: action.payload ? state.operation : undefined,
           }
@@ -111,8 +131,8 @@ export const currentPaymentSlice = createSlice({
         return state
           ? {
             status: PaymentStatus.Initial,
-            initialPayment: state.initialPayment,
             payment: state.payment,
+            networkPayment: state.networkPayment,
             service: state.service,
             operation: undefined
           }

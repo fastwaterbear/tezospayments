@@ -1,6 +1,8 @@
 import { Spin } from 'antd';
 import React, { useEffect } from 'react';
 
+import { PaymentType } from '@tezospayments/common/dist/models/payment';
+
 import { PaymentStatus } from '../models/payment';
 import { loadCurrentPayment } from '../store/currentPayment';
 import { useAppDispatch, useAppSelector } from './hooks';
@@ -24,9 +26,13 @@ export const App = () => {
     ? <ErrorPure error={error} />
     : (payment && service && paymentStatus !== null)
       ? <React.Fragment>
-        {paymentStatus !== PaymentStatus.Succeeded && paymentStatus !== PaymentStatus.NetworkProcessing && <PaymentPure payment={payment}
-          service={service}
-        />}
+        {paymentStatus !== PaymentStatus.Succeeded && paymentStatus !== PaymentStatus.NetworkProcessing && (
+          payment.type === PaymentType.Payment
+            ? <PaymentPure payment={payment}
+              service={service}
+            />
+            : null
+        )}
         {operationHash && paymentStatus === PaymentStatus.NetworkProcessing && <ConfirmationPure operationHash={operationHash}
           network={service.network}
         />}

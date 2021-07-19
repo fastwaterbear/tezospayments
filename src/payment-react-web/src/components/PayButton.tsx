@@ -1,22 +1,30 @@
 import { Button } from 'antd';
 import React, { useCallback } from 'react';
 
-import { PaymentStatus } from '../models/payment';
-import './PayButton.scss';
-import { pay } from '../store/currentPayment';
+import { PaymentType } from '@tezospayments/common/dist/models/payment';
+
+import { NetworkDonation, NetworkPayment, PaymentStatus } from '../models/payment';
+import { donate, pay } from '../store/currentPayment';
 import { useAppDispatch, useAppSelector } from './hooks';
+import './PayButton.scss';
 
 interface PayButtonProps {
+  networkPayment: NetworkPayment | NetworkDonation;
   text: string;
 }
 
-export const PayButton = (props: PayButtonProps) => {
+export const PayButton = ({ networkPayment, text }: PayButtonProps) => {
   const currentPaymentStatus = useAppSelector(state => state.currentPaymentState && state.currentPaymentState.status);
   const dispatch = useAppDispatch();
 
   const handleButtonClick = useCallback(
-    () => dispatch(pay()),
-    [dispatch]
+    () => {
+      if (networkPayment.type === PaymentType.Payment)
+        dispatch(pay(networkPayment));
+      else if (networkPayment.type === PaymentType.Donation)
+        dispatch(donate(networkPayment));
+    },
+    [dispatch, networkPayment]
   );
 
   return <Button
@@ -25,7 +33,7 @@ export const PayButton = (props: PayButtonProps) => {
     size="large"
     onClick={handleButtonClick}
     loading={currentPaymentStatus === PaymentStatus.UserProcessing || currentPaymentStatus === PaymentStatus.NetworkProcessing}>
-    {props.text}
+    {text}
   </Button>;
 };
 

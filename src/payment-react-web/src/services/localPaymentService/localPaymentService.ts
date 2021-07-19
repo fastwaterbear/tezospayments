@@ -3,12 +3,14 @@ import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit, TransactionWalletOperation, Wallet } from '@taquito/taquito';
 
 import { networks } from '@tezospayments/common/dist/models/blockchain';
-import { Payment, PaymentType } from '@tezospayments/common/dist/models/payment';
+import { Donation, Payment, PaymentType } from '@tezospayments/common/dist/models/payment';
+import { PaymentBase } from '@tezospayments/common/dist/models/payment/paymentBase';
 import { Service, ServiceOperationType } from '@tezospayments/common/dist/models/service';
 import { converters, memoize } from '@tezospayments/common/dist/utils';
 
 import { config } from '../../config';
 import { TezosPaymentsServiceContract } from '../../models/contracts';
+import { NetworkDonation, NetworkPayment } from '../../models/payment';
 import { PaymentInfo } from '../../models/payment/paymentInfo';
 import { AppStore } from '../../store';
 import { confirmPayment } from '../../store/currentPayment';
@@ -45,26 +47,25 @@ export class LocalPaymentService {
     };
   }
 
-  getCurrentPayment(): ServiceResult<Payment, LocalPaymentServiceError> {
+  getCurrentPayment(): ServiceResult<Payment | Donation, LocalPaymentServiceError> {
     const currentLocation = window.location;
-
-    const paymentBase64 = currentLocation.hash.slice(1);
-    if (!paymentBase64)
-      return { isServiceError: true, error: errors.invalidUrl };
 
     const segmentsResult = this.getSegments(currentLocation.pathname);
     if (segmentsResult.isServiceError)
       return segmentsResult;
 
-    const payment = Payment.parse(paymentBase64, {
-      type: PaymentType.Payment,
-      targetAddress: segmentsResult[0],
-      urls: [{ type: 'base64', url: new URL(window.location.href) }]
-    });
+    const isPaymentType = segmentsResult[1] === 'payment';
 
-    return payment && Payment.validate(payment)
-      ? payment
-      : { isServiceError: true, error: errors.invalidPayment };
+    const paymentOrDonationBase64 = currentLocation.hash.slice(1);
+    if (!paymentOrDonationBase64 && isPaymentType)
+      return { isServiceError: true, error: errors.invalidUrl };
+
+    const targetAddress = segmentsResult[0];
+    const urls = [{ type: 'base64', url: new URL(window.location.href) }] as const;
+
+    return isPaymentType
+      ? this.parsePayment(paymentOrDonationBase64, targetAddress, urls)
+      : this.parseDonation(paymentOrDonationBase64, targetAddress, urls);
   }
 
   async getCurrentService(): Promise<ServiceResult<Service, LocalPaymentServiceError>> {
@@ -76,9 +77,9 @@ export class LocalPaymentService {
     return this.serviceProvider.getService(segmentsResult[0]);
   }
 
-  async pay(payment: Payment): Promise<ServiceResult<boolean>> {
+  async pay(payment: NetworkPayment): Promise<ServiceResult<boolean>> {
     try {
-      if (!Payment.publicDataExists(payment))
+      if (!Payment.publicDataExists(payment.data))
         return { isServiceError: true, error: errors.invalidPayment };
 
       await this.tezosWallet.client.clearActiveAccount();
@@ -105,10 +106,18 @@ export class LocalPaymentService {
       return true;
     }
     catch (error: unknown) {
-      if (error instanceof AbortedBeaconError)
-        return false;
+      return (error instanceof AbortedBeaconError) ? false : { isServiceError: true, error: (error as Error).message };
+    }
+  }
 
-      return { isServiceError: true, error: (error as Error).message };
+  async donate(_donation: NetworkDonation): Promise<ServiceResult<boolean>> {
+    try {
+      // TODO
+
+      return true;
+    }
+    catch (error: unknown) {
+      return (error instanceof AbortedBeaconError) ? false : { isServiceError: true, error: (error as Error).message };
     }
   }
 
@@ -133,10 +142,35 @@ export class LocalPaymentService {
       });
   }
 
+  private parsePayment(paymentBase64: string, targetAddress: string, urls: PaymentBase['urls']): ServiceResult<Payment, LocalPaymentServiceError> {
+    const payment = Payment.parse(paymentBase64, {
+      type: PaymentType.Payment,
+      targetAddress,
+      urls
+    });
+
+    return payment && Payment.validate(payment) === undefined
+      ? payment
+      : { isServiceError: true, error: errors.invalidPayment };
+  }
+
+  private parseDonation(donationBase64: string, targetAddress: string, urls: PaymentBase['urls']): ServiceResult<Donation, LocalPaymentServiceError> {
+    const donation = Donation.parse(donationBase64, {
+      type: PaymentType.Donation
+      ,
+      targetAddress,
+      urls
+    });
+
+    return donation && Donation.validate(donation) === undefined
+      ? donation
+      : { isServiceError: true, error: errors.invalidDonation };
+  }
+
   private getSegments = memoize((pathname: string): ServiceResult<Segments, LocalPaymentServiceError> => {
     const segments = pathname.split('/').filter(Boolean) as readonly string[] as Segments;
 
-    if (segments.length !== 2)
+    if (segments.length !== 2 || (segments[1] !== 'payment' && segments[1] !== 'donation'))
       return { isServiceError: true, error: errors.invalidUrl };
 
     return segments;
