@@ -3,17 +3,18 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { selectServicesState } from '../../../store/services/selectors';
-import { useAppSelector } from '../../hooks';
+import { useAppSelector, useQuery } from '../../hooks';
 import { View } from '../View';
-import { DangerZone } from './DangerZone';
-import { HeaderPure } from './Header';
+import { DangerZonePure } from './DangerZone';
+import { HeaderPure, UpdateServiceHeaderPure } from './Header';
 import { ViewZonePure } from './ViewZone';
 
 import './Service.scss';
 
 export const Service = () => {
+  const query = useQuery();
+  const isEdit = !!query.get('edit');
   const { address } = useParams<{ address: string }>();
-
   //TODO: Use Map
   const { services, initialized: isInitialized } = useAppSelector(selectServicesState);
   const service = services.filter(s => s.contractAddress === address)[0];
@@ -23,11 +24,15 @@ export const Service = () => {
   return <View title={title} className="service-container">
     {!isInitialized || !service
       ? <Skeleton active />
-      : <>
-        <HeaderPure service={service} />
-        <ViewZonePure service={service} />
-        <DangerZone />
-      </>}
+      : isEdit
+        ? <>
+          <UpdateServiceHeaderPure />
+        </>
+        : <>
+          <HeaderPure service={service} />
+          <ViewZonePure service={service} />
+          <DangerZonePure />
+        </>}
   </View>;
 };
 
