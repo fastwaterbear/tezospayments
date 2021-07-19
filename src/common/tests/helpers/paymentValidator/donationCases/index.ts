@@ -7,3 +7,4 @@ export { default as invalidCreatedDateTestCases } from './invalidCreatedDateTest
 export { default as invalidDonationObjectTestCases } from './invalidDonationObjectTestCases';
 export { default as invalidSuccessUrlTestCases } from './invalidSuccessUrlTestCases';
 export { default as invalidTargetAddressTestCases } from './invalidTargetAddressTestCases';
+export { default as invalidTypeTestCases } from './invalidTypeTestCases';

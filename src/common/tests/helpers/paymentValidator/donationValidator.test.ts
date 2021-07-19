@@ -2,7 +2,8 @@ import { DonationValidator } from '../../../src/helpers';
 import { Donation } from '../../../src/models/payment';
 import {
   invalidAmountTestCases, invalidAssetTestCases, invalidCancelUrlTestCases, invalidCreatedDateTestCases,
-  invalidDonationObjectTestCases, invalidSuccessUrlTestCases, invalidTargetAddressTestCases, validDonationTestCases,
+  invalidDonationObjectTestCases, invalidSuccessUrlTestCases, invalidTargetAddressTestCases,
+  invalidTypeTestCases, validDonationTestCases
 } from './donationCases';
 import { NegativeTestCases } from './testCase';
 
@@ -18,6 +19,7 @@ describe('Donation Validator', () => {
   });
 
   const invalidDonationTestCases: NegativeTestCases = invalidDonationObjectTestCases
+    .concat(invalidTypeTestCases)
     .concat(invalidAmountTestCases)
     .concat(invalidTargetAddressTestCases)
     .concat(invalidAssetTestCases)

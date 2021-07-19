@@ -1,4 +1,5 @@
 import type { Donation } from '../../models/payment';
+import { PaymentType } from '../../models/payment/paymentBase';
 import type { PaymentValidationMethod } from './paymentValidationMethod';
 import { PaymentValidatorBase } from './paymentValidatorBase';
 import {
@@ -8,6 +9,7 @@ import {
 export class DonationValidator extends PaymentValidatorBase<Donation> {
   static readonly errors = {
     invalidDonationObject: 'Donation is undefined or not object',
+    invalidType: 'Donation type is invalid',
     invalidAmount: 'Amount is invalid',
     amountIsNegative: 'Amount is less than zero',
     invalidTargetAddress: 'Target address is invalid',
@@ -24,6 +26,7 @@ export class DonationValidator extends PaymentValidatorBase<Donation> {
   } as const;
 
   protected readonly validationMethods: ReadonlyArray<PaymentValidationMethod<Donation>> = [
+    donation => donation.type !== PaymentType.Donation ? [DonationValidator.errors.invalidType] : undefined,
     donation => validateTargetAddress(donation.targetAddress, DonationValidator.errors),
     donation => validateAmount(donation.amount, DonationValidator.errors),
     donation => validateAsset(donation.asset, DonationValidator.errors),

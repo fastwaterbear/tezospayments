@@ -9,3 +9,4 @@ export { default as invalidExpiredDateTestCases } from './invalidExpiredDateTest
 export { default as invalidPaymentObjectTestCases } from './invalidPaymentObjectTestCases';
 export { default as invalidSuccessUrlTestCases } from './invalidSuccessUrlTestCases';
 export { default as invalidTargetAddressTestCases } from './invalidTargetAddressTestCases';
+export { default as invalidTypeTestCases } from './invalidTypeTestCases';

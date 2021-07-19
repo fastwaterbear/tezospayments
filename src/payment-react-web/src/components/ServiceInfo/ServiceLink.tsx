@@ -3,7 +3,6 @@ import React from 'react';
 
 import { IconId, ServiceLinkHelper } from '@tezospayments/common/dist/helpers';
 
-
 import { TelegramIcon } from '../../assets/icons';
 import { ExternalLink } from '../common';
 import './ServiceLink.scss';
