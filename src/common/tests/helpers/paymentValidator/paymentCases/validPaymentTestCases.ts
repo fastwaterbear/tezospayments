@@ -1,10 +1,11 @@
 import { BigNumber } from 'bignumber.js';
 
-import type { Payment } from '../../../src/models/payment';
-import { URL } from '../../../src/native';
+import { Payment, PaymentType } from '../../../../src/models/payment';
+import { URL } from '../../../../src/native';
 
 export default [
   {
+    type: PaymentType.Payment,
     targetAddress: 'KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x',
     amount: new BigNumber(384.48302),
     data: {
@@ -18,6 +19,7 @@ export default [
     urls: []
   },
   {
+    type: PaymentType.Payment,
     targetAddress: 'KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x',
     amount: new BigNumber(20238382),
     data: {
@@ -32,6 +34,7 @@ export default [
     urls: []
   },
   {
+    type: PaymentType.Payment,
     targetAddress: 'KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x',
     amount: new BigNumber(67.49),
     data: {
@@ -49,6 +52,7 @@ export default [
     urls: []
   },
   {
+    type: PaymentType.Payment,
     targetAddress: 'KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x',
     amount: new BigNumber(23267.41173),
     data: {

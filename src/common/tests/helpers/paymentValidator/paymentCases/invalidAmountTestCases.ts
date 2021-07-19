@@ -1,7 +1,7 @@
 import { BigNumber } from 'bignumber.js';
 
-import { PaymentValidator } from '../../../src/helpers';
-import type { NegativeTestCases } from './testCase';
+import { PaymentValidator } from '../../../../src/helpers';
+import type { NegativeTestCases } from '../testCase';
 import validPaymentTestCases from './validPaymentTestCases';
 
 const validPaymentBase = { ...validPaymentTestCases[0] };

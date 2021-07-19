@@ -1,5 +1,5 @@
-import { PaymentValidator } from '../../../src/helpers';
-import type { NegativeTestCases } from './testCase';
+import { PaymentValidator } from '../../../../src/helpers';
+import type { NegativeTestCases } from '../testCase';
 
 export default [
   [

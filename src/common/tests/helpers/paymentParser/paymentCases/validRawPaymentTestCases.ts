@@ -1,9 +1,9 @@
 /* eslint-disable max-len */
 import { BigNumber } from 'bignumber.js';
 
-import type { NonIncludedPaymentFields, RawPayment } from '../../../src/helpers/paymentParser/paymentParser';
-import type { Payment } from '../../../src/models/payment';
-import { URL } from '../../../src/native';
+import type { NonIncludedPaymentFields, RawPayment } from '../../../../src/helpers/paymentParser/paymentParser';
+import type { Payment } from '../../../../src/models/payment';
+import { URL } from '../../../../src/native';
 
 const createdDate = new Date('2021-06-26T00:37:03.930Z');
 const expiredDate = new Date('2021-06-26T00:57:03.930Z');

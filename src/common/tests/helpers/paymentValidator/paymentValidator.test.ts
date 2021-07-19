@@ -1,16 +1,10 @@
 import { PaymentValidator } from '../../../src/helpers';
 import { Payment } from '../../../src/models/payment';
-import invalidAmountTestCases from './invalidAmountTestCases';
-import invalidAssetTestCases from './invalidAssetTestCases';
-import invalidCancelUrlTestCases from './invalidCancelUrlTestCases';
-import invalidCreatedDateTestCases from './invalidCreatedDateTestCases';
-import invalidDataTestCases from './invalidDataTestCases';
-import invalidExpiredDateTestCases from './invalidExpiredDateTestCases';
-import invalidPaymentObjectTestCases from './invalidPaymentObjectTestCases';
-import invalidSuccessUrlTestCases from './invalidSuccessUrlTestCases';
-import invalidTargetAddressTestCases from './invalidTargetAddressTestCases';
+import {
+  invalidAmountTestCases, invalidAssetTestCases, invalidCancelUrlTestCases, invalidCreatedDateTestCases, invalidDataTestCases,
+  invalidExpiredDateTestCases, invalidPaymentObjectTestCases, invalidSuccessUrlTestCases, invalidTargetAddressTestCases, validPaymentTestCases,
+} from './paymentCases';
 import { NegativeTestCases } from './testCase';
-import validPaymentTestCases from './validPaymentTestCases';
 
 describe('Payment Validator', () => {
   let paymentValidator: PaymentValidator;
