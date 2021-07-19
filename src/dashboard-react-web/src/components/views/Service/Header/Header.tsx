@@ -1,10 +1,12 @@
 import { EditFilled } from '@ant-design/icons';
 import { Button } from 'antd';
-import React from 'react';
+import React, { useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { Service, ServiceOperationType } from '@tezospayments/common/dist/models/service';
 import { combineClassNames, text } from '@tezospayments/common/dist/utils';
 
+import { config } from '../../../../config';
 import { ExplorerLinkPure } from '../../../common';
 import { ActiveTagPure, CustomTagPure } from '../../../common/Tags';
 import { useCurrentLanguageResources } from '../../../hooks';
@@ -16,6 +18,7 @@ interface HeaderProps {
 }
 
 export const Header = ({ service }: HeaderProps) => {
+  const history = useHistory();
   const langResources = useCurrentLanguageResources();
   const servicesLangResources = langResources.views.services;
 
@@ -26,6 +29,10 @@ export const Header = ({ service }: HeaderProps) => {
 
   const arePaymentsAllowed = service?.allowedOperationType === ServiceOperationType.Payment || service?.allowedOperationType === ServiceOperationType.All;
   const areDonationsAllowed = service?.allowedOperationType === ServiceOperationType.Donation || service?.allowedOperationType === ServiceOperationType.All;
+
+  const handleEditClick = useCallback(() => {
+    history.push(`${config.routers.services}/${service.contractAddress}?edit=true`);
+  }, [history, service.contractAddress]);
 
   return <div className="service-header">
     <div className="service-header__logo-container">
@@ -44,7 +51,7 @@ export const Header = ({ service }: HeaderProps) => {
         </div>
       </div>
     </div>
-    <Button className="service-button" icon={<EditFilled />} type="primary">{servicesLangResources.editService}</Button>
+    <Button className="service-button" icon={<EditFilled />} type="primary" onClick={handleEditClick}>{servicesLangResources.editing.editService}</Button>
   </div>;
 };
 
