@@ -1,7 +1,8 @@
+
 import React from 'react';
 
-import { tezosMeta, Token } from '@tezos-payments/common/dist/models/blockchain';
-import { Service } from '@tezos-payments/common/dist/models/service';
+import { tezosMeta, Token } from '@tezospayments/common/dist/models/blockchain';
+import { Service } from '@tezospayments/common/dist/models/service';
 
 import { selectTokensState } from '../../../../store/services/selectors';
 import { TokenList } from '../../../common';

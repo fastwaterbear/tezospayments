@@ -1,4 +1,4 @@
-import type { DeepReadonly } from '@tezos-payments/common/dist/models/core';
+import type { DeepReadonly } from '@tezospayments/common/dist/models/core';
 
 import type { enUS } from '../../../localization/en-US';
 

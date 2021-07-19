@@ -1,8 +1,8 @@
 import { BigNumber } from 'bignumber.js';
 import React from 'react';
 
-import { ServiceOperationDirection, ServiceOperationType, ServiceOperationStatus } from '@tezos-payments/common/dist/models/service';
-import { combineClassNames } from '@tezos-payments/common/dist/utils';
+import { ServiceOperationDirection, ServiceOperationType, ServiceOperationStatus } from '@tezospayments/common/dist/models/service';
+import { combineClassNames } from '@tezospayments/common/dist/utils';
 
 import { useCurrentLanguageResources } from '../../hooks';
 import { ExplorerLink } from '../ExplorerLink/ExplorerLink';

@@ -1,7 +1,8 @@
 import { Result } from 'antd';
 import React from 'react';
 
-import { Network } from '@tezos-payments/common/dist/models/blockchain';
+import { Network } from '@tezospayments/common/dist/models/blockchain';
+
 
 import { BlockchainLinkPure } from '../../common';
 

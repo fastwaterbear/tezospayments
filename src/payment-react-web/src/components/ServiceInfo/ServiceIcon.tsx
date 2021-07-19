@@ -1,4 +1,4 @@
-import { combineClassNames, text } from '@tezos-payments/common/dist/utils';
+import { combineClassNames, text } from '@tezospayments/common/dist/utils';
 import './ServiceIcon.scss';
 
 type ServiceIconProps = {

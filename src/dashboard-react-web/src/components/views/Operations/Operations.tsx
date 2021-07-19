@@ -1,7 +1,8 @@
 import { Skeleton } from 'antd';
 import React from 'react';
 
-import { ServiceOperation, ServiceOperationDirection } from '@tezos-payments/common/dist/models/service';
+import { ServiceOperation, ServiceOperationDirection } from '@tezospayments/common/dist/models/service';
+
 
 import { getSortedOperations, selectOperationsState } from '../../../store/operations/selectors';
 import { OperationList } from '../../common/OperationList';

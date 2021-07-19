@@ -1,4 +1,4 @@
-import { Service } from '@tezos-payments/common/dist/models/service';
+import { Service } from '@tezospayments/common/dist/models/service';
 
 import { ServiceResult } from '../../serviceResult';
 import { LocalPaymentServiceError } from '../errors';

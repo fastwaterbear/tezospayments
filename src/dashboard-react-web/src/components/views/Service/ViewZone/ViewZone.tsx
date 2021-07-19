@@ -1,7 +1,8 @@
 import { Button } from 'antd';
 import React from 'react';
 
-import { Service } from '@tezos-payments/common/dist/models/service';
+import { Service } from '@tezospayments/common/dist/models/service';
+
 
 import { ServiceLinks } from '../../../common/ServiceLinks';
 import { useCurrentLanguageResources } from '../../../hooks';

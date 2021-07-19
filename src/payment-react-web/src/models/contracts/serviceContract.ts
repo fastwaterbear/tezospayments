@@ -1,7 +1,8 @@
 import type { ContractAbstraction, ContractMethod, ContractProvider, Wallet } from '@taquito/taquito';
 import type { BigNumber } from 'bignumber.js';
 
-import type { ServiceOperationType } from '@tezos-payments/common/dist/models/service';
+import type { ServiceOperationType } from '@tezospayments/common/dist/models/service';
+
 
 export type TezosPaymentsServiceContract<T extends ContractProvider | Wallet = ContractProvider> = ContractAbstraction<T> & {
   methods: {

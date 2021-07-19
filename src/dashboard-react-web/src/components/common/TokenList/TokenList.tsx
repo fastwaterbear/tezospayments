@@ -1,6 +1,7 @@
 import { Tooltip } from 'antd';
 
-import { combineClassNames } from '@tezos-payments/common/dist/utils';
+import { combineClassNames } from '@tezospayments/common/dist/utils';
+
 import './TokenList.scss';
 
 interface TokenListProps {

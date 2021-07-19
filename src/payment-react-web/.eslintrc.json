@@ -105,7 +105,7 @@
                 ],
                 "pathGroups": [
                     {
-                        "pattern": "@tezos-payments/**",
+                        "pattern": "@tezospayments/**",
                         "group": "internal",
                         "position": "before"
                     },

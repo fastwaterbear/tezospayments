@@ -1,5 +1,5 @@
 {
-  "name": "@tezos-payments/common",
+  "name": "@tezospayments/common",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

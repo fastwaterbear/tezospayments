@@ -1,5 +1,5 @@
 {
-  "name": "@tezos-payments/dashboard-react-web",
+  "name": "@tezospayments/dashboard-react-web",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -7,7 +7,7 @@
     "@ant-design/charts": "^1.1.10",
     "@reduxjs/toolkit": "^1.5.1",
     "@taquito/taquito": "^9.1.1",
-    "@tezos-payments/common": "file:../common",
+    "@tezospayments/common": "file:../common",
     "antd": "^4.16.0",
     "bignumber.js": "^9.0.1",
     "history": "^4.10.1",

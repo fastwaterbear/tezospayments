@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { networks } from '@tezos-payments/common/dist/models/blockchain';
-import { Service } from '@tezos-payments/common/dist/models/service';
-import { optimization } from '@tezos-payments/common/dist/utils';
+import { networks } from '@tezospayments/common/dist/models/blockchain';
+import { Service } from '@tezospayments/common/dist/models/service';
+import { optimization } from '@tezospayments/common/dist/utils';
 
 import { clearBalances, loadBalances } from '../balances/slice';
 import { loadOperations } from '../operations/slice';

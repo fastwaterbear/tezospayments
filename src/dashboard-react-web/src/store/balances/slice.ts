@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { optimization } from '@tezos-payments/common/dist/utils';
+import { optimization } from '@tezospayments/common/dist/utils';
 
 import { getAllAcceptedTokens } from '../services/selectors';
 import { AppThunkAPI } from '../thunk';

@@ -2,10 +2,10 @@ import { ColorMode, NetworkType, RequestPermissionInput, AbortedBeaconError } fr
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit, TransactionWalletOperation, Wallet } from '@taquito/taquito';
 
-import { networks } from '@tezos-payments/common/dist/models/blockchain';
-import { Payment, PaymentType } from '@tezos-payments/common/dist/models/payment';
-import { Service, ServiceOperationType } from '@tezos-payments/common/dist/models/service';
-import { converters, memoize } from '@tezos-payments/common/dist/utils';
+import { networks } from '@tezospayments/common/dist/models/blockchain';
+import { Payment, PaymentType } from '@tezospayments/common/dist/models/payment';
+import { Service, ServiceOperationType } from '@tezospayments/common/dist/models/service';
+import { converters, memoize } from '@tezospayments/common/dist/utils';
 
 import { config } from '../../config';
 import { TezosPaymentsServiceContract } from '../../models/contracts';

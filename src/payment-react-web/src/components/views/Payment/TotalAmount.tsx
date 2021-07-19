@@ -1,6 +1,7 @@
 import { BigNumber } from 'bignumber.js';
 
-import { tezosMeta } from '@tezos-payments/common/dist/models/blockchain';
+import { tezosMeta } from '@tezospayments/common/dist/models/blockchain';
+
 
 import './TotalAmount.scss';
 

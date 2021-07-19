@@ -2,8 +2,8 @@ import { EditFilled } from '@ant-design/icons';
 import { Button } from 'antd';
 import React from 'react';
 
-import { Service, ServiceOperationType } from '@tezos-payments/common/dist/models/service';
-import { combineClassNames, text } from '@tezos-payments/common/dist/utils';
+import { Service, ServiceOperationType } from '@tezospayments/common/dist/models/service';
+import { combineClassNames, text } from '@tezospayments/common/dist/utils';
 
 import { ExplorerLinkPure } from '../../../common';
 import { ActiveTagPure, CustomTagPure } from '../../../common/Tags';

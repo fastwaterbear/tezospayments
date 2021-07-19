@@ -2,7 +2,8 @@ import { Button, Card } from 'antd';
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { combineClassNames, text } from '@tezos-payments/common/dist/utils';
+import { combineClassNames, text } from '@tezospayments/common/dist/utils';
+
 
 import { config } from '../../../../config';
 import { ExplorerLinkPure } from '../../../common';

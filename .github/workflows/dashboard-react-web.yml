@@ -32,13 +32,13 @@ jobs:
           node --version
           npm --version
 
-      - name: Install npm packages of the @tezos-payments/common package
+      - name: Install npm packages of the @tezospayments/common package
         working-directory: 'src/common'
         env:
           CI: true
         run: npm ci
 
-      - name: Build the @tezos-payments/common package
+      - name: Build the @tezospayments/common package
         working-directory: 'src/common'
         run: npm run build
 

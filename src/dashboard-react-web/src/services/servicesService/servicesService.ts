@@ -1,11 +1,11 @@
 import { NetworkType } from '@airgap/beacon-sdk';
 import { BigNumber } from 'bignumber.js';
 
-import { networks, Network, tokenWhitelist, tezosMeta } from '@tezos-payments/common/dist/models/blockchain';
+import { networks, Network, tokenWhitelist, tezosMeta } from '@tezospayments/common/dist/models/blockchain';
 import {
   Service, ServiceOperationType, ServiceOperation, ServiceOperationDirection, ServiceOperationStatus
-} from '@tezos-payments/common/dist/models/service';
-import { wait } from '@tezos-payments/common/dist/utils';
+} from '@tezospayments/common/dist/models/service';
+import { wait } from '@tezospayments/common/dist/utils';
 
 import type { Operation } from './operation';
 

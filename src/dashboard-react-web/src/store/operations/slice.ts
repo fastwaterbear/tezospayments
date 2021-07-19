@@ -1,8 +1,8 @@
 import { NetworkType } from '@airgap/beacon-sdk';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { ServiceOperation } from '@tezos-payments/common/dist/models/service';
-import { optimization } from '@tezos-payments/common/dist/utils';
+import { ServiceOperation } from '@tezospayments/common/dist/models/service';
+import { optimization } from '@tezospayments/common/dist/utils';
 
 import { AppThunkAPI } from '../thunk';
 

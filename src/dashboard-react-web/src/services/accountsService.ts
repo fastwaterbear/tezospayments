@@ -2,7 +2,8 @@ import { ColorMode, DAppClient, NetworkType } from '@airgap/beacon-sdk';
 import { TezosToolkit } from '@taquito/taquito';
 import { BigNumber } from 'bignumber.js';
 
-import { Token, TokenFA2, TokenFA12 } from '@tezos-payments/common/dist/models/blockchain';
+import { Token, TokenFA2, TokenFA12 } from '@tezospayments/common/dist/models/blockchain';
+
 
 import { config } from '../config';
 

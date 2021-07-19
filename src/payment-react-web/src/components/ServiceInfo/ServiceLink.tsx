@@ -1,7 +1,8 @@
 import { LinkOutlined, FacebookOutlined, TwitterOutlined, InstagramOutlined, GithubOutlined, MailOutlined } from '@ant-design/icons';
 import React from 'react';
 
-import { IconId, ServiceLinkHelper } from '@tezos-payments/common/dist/helpers';
+import { IconId, ServiceLinkHelper } from '@tezospayments/common/dist/helpers';
+
 
 import { TelegramIcon } from '../../assets/icons';
 import { ExternalLink } from '../common';

@@ -1,8 +1,8 @@
 import { ArrowRightOutlined, ArrowLeftOutlined, ClockCircleTwoTone, ExclamationCircleFilled } from '@ant-design/icons';
 import React from 'react';
 
-import { ServiceOperationDirection, ServiceOperationStatus } from '@tezos-payments/common/dist/models/service';
-import { combineClassNames } from '@tezos-payments/common/dist/utils';
+import { ServiceOperationDirection, ServiceOperationStatus } from '@tezospayments/common/dist/models/service';
+import { combineClassNames } from '@tezospayments/common/dist/utils';
 
 import './OperationIcon.scss';
 import { useCurrentLanguageResources } from '../../hooks';
