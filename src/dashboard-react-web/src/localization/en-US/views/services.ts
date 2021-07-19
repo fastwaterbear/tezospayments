@@ -5,7 +5,6 @@ export const services = {
     paused: 'Paused'
   },
   createNewService: 'Create New Service',
-  editService: 'Edit Service',
   acceptPayments: 'Accept Payments',
   acceptPaymentsDescription: 'Generate a payment link using our constructor to accept payments on your service',
   operations: {
@@ -20,5 +19,16 @@ export const services = {
     pauseServiceDescription: 'Pause accepting payments and donations',
     deleteService: 'Delete Service',
     deleteServiceDescription: 'Delete this service. After deleting this service can’t accept payments and donations. You can restore the deleted service'
+  },
+  editing: {
+    editService: 'Edit Service',
+    updateService: 'Update Service',
+    addCurrency: 'Add Currency',
+    addLink: 'Add Link',
+    serviceName: 'Service Name',
+    description: 'Description',
+    accept: 'Accept',
+    acceptPayments: 'Accept Payments',
+    acceptDonations: 'Accept Donations',
   }
 };

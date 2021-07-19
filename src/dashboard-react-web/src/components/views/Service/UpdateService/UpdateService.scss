@@ -1,0 +1,53 @@
+@use '../common.scss';
+
+.service-edit {
+  margin: 0 auto;
+  width: 100%;
+  max-width: common.$container-width;
+}
+
+.service-edit__caption {
+  display: block;
+  font-size: 16px;
+  margin-top: 24px;
+  margin-bottom: 6px;
+}
+
+.service-edit__lists-container {
+  margin-top: 24px;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  margin-bottom: 16px;
+}
+
+.service-edit__list-container {
+  flex: 1 1 50%;
+}
+
+.service-edit__list-header {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.service-edit__button {
+  margin-top: 16px;
+  width: 228px;
+}
+
+.service-edit__accept-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.service-edit__accept-list-item {
+  margin: 0 !important;
+}
+
+.service-edit__buttons-container {
+  margin-top: 26px;
+  display: flex;
+  justify-content: space-between;
+}

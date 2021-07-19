@@ -51,7 +51,7 @@ export const Header = ({ service }: HeaderProps) => {
         </div>
       </div>
     </div>
-    <Button className="service-button" icon={<EditFilled />} type="primary" onClick={handleEditClick}>{servicesLangResources.editService}</Button>
+    <Button className="service-button" icon={<EditFilled />} type="primary" onClick={handleEditClick}>{servicesLangResources.editing.editService}</Button>
   </div>;
 };
 
