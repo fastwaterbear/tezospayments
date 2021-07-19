@@ -8,10 +8,6 @@ delete validPaymentBase.successUrl;
 
 export default [
   [
-    validPaymentBase,
-    [PaymentValidator.errors.invalidSuccessUrl]
-  ],
-  [
     {
       ...validPaymentBase,
       successUrl: null

@@ -8,10 +8,6 @@ delete validPaymentBase.cancelUrl;
 
 export default [
   [
-    validPaymentBase,
-    [PaymentValidator.errors.invalidCancelUrl]
-  ],
-  [
     {
       ...validPaymentBase,
       cancelUrl: null

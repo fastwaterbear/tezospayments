@@ -17,10 +17,12 @@ export interface PaymentBase {
   readonly amount: BigNumber;
   readonly asset?: string;
   readonly created: Date;
+  readonly successUrl?: URL;
+  readonly cancelUrl?: URL;
   readonly urls: readonly PaymentUrl[];
 }
 
-export class PaymentBase extends StateModel {
+export abstract class PaymentBase extends StateModel {
   static inTez(payment: PaymentBase) {
     return !!payment.asset;
   }

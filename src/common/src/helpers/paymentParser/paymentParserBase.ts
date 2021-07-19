@@ -57,12 +57,8 @@ export abstract class PaymentParserBase<
     if (rawPaymentFieldNames.length < this.minPaymentFieldsCount || rawPaymentFieldNames.length > this.maxPaymentFieldsCount)
       return false;
 
-    for (const rawPaymentFieldName of rawPaymentFieldNames) {
+    for (const [rawPaymentFieldName, expectedPaymentFieldType] of this.paymentFieldTypes) {
       const actualPaymentFieldType = typeof rawPayment[rawPaymentFieldName];
-      const expectedPaymentFieldType = this.paymentFieldTypes.get(rawPaymentFieldName);
-
-      if (!expectedPaymentFieldType)
-        return false;
 
       if (typeof expectedPaymentFieldType === 'string'
         ? actualPaymentFieldType !== expectedPaymentFieldType

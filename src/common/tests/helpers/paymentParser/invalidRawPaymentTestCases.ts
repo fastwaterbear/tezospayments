@@ -27,7 +27,7 @@ const cases: ReadonlyArray<readonly [
       ]
     ],
     [
-      'payment with excess fields',
+      'payment with excess fields (a fields count is greater than the maximum)',
       [
         {
           amount: '3939439430403',
@@ -40,9 +40,13 @@ const cases: ReadonlyArray<readonly [
           cancelUrl: 'https://fastwaterbear.com/tezospayments/test/payment/cancel',
           created: createdDate,
           expired: expiredDate,
-          someExtraField: 100,
+          ...[...new Array(30)].reduce((obj, _, index) => {
+            obj[`someExtraField${index}`] = index * 100;
+
+            return obj;
+          }, {})
         },
-        'eyJhbW91bnQiOiIzOTM5NDM5NDMwNDAzIiwiZGF0YSI6eyJwdWJsaWMiOnsib3JkZXJJZCI6IjBhNmQyZGIxODFmYTRlYzdhN2RiZmI3YjcyODIwMWY2In19LCJzdWNjZXNzVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9zdWNjZXNzIiwiY2FuY2VsVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9jYW5jZWwiLCJjcmVhdGVkIjoiMjAyMS0wNi0yNlQwMDozNzowMy45MzBaIiwiZXhwaXJlZCI6IjIwMjEtMDYtMjZUMDA6NTc6MDMuOTMwWiIsInNvbWVFeHRyYUZpZWxkIjoxMDB9',
+        'eyJhbW91bnQiOiIzOTM5NDM5NDMwNDAzIiwiZGF0YSI6eyJwdWJsaWMiOnsib3JkZXJJZCI6IjBhNmQyZGIxODFmYTRlYzdhN2RiZmI3YjcyODIwMWY2In19LCJzdWNjZXNzVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9zdWNjZXNzIiwiY2FuY2VsVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9jYW5jZWwiLCJjcmVhdGVkIjoiMjAyMS0wNi0yNlQwMDozNzowMy45MzBaIiwiZXhwaXJlZCI6IjIwMjEtMDYtMjZUMDA6NTc6MDMuOTMwWiIsInNvbWVFeHRyYUZpZWxkMCI6MCwic29tZUV4dHJhRmllbGQxIjoxMDAsInNvbWVFeHRyYUZpZWxkMiI6MjAwLCJzb21lRXh0cmFGaWVsZDMiOjMwMCwic29tZUV4dHJhRmllbGQ0Ijo0MDAsInNvbWVFeHRyYUZpZWxkNSI6NTAwLCJzb21lRXh0cmFGaWVsZDYiOjYwMCwic29tZUV4dHJhRmllbGQ3Ijo3MDAsInNvbWVFeHRyYUZpZWxkOCI6ODAwLCJzb21lRXh0cmFGaWVsZDkiOjkwMCwic29tZUV4dHJhRmllbGQxMCI6MTAwMCwic29tZUV4dHJhRmllbGQxMSI6MTEwMCwic29tZUV4dHJhRmllbGQxMiI6MTIwMCwic29tZUV4dHJhRmllbGQxMyI6MTMwMCwic29tZUV4dHJhRmllbGQxNCI6MTQwMCwic29tZUV4dHJhRmllbGQxNSI6MTUwMCwic29tZUV4dHJhRmllbGQxNiI6MTYwMCwic29tZUV4dHJhRmllbGQxNyI6MTcwMCwic29tZUV4dHJhRmllbGQxOCI6MTgwMCwic29tZUV4dHJhRmllbGQxOSI6MTkwMCwic29tZUV4dHJhRmllbGQyMCI6MjAwMCwic29tZUV4dHJhRmllbGQyMSI6MjEwMCwic29tZUV4dHJhRmllbGQyMiI6MjIwMCwic29tZUV4dHJhRmllbGQyMyI6MjMwMCwic29tZUV4dHJhRmllbGQyNCI6MjQwMCwic29tZUV4dHJhRmllbGQyNSI6MjUwMCwic29tZUV4dHJhRmllbGQyNiI6MjYwMCwic29tZUV4dHJhRmllbGQyNyI6MjcwMCwic29tZUV4dHJhRmllbGQyOCI6MjgwMCwic29tZUV4dHJhRmllbGQyOSI6MjkwMH0=',
       ]
     ],
     [

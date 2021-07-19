@@ -1,5 +1,4 @@
 import { PaymentParser, NonIncludedPaymentFields, PaymentValidator } from '../../helpers';
-import { URL } from '../../native';
 import { PaymentBase, PaymentType } from './paymentBase';
 
 interface PublicPaymentData {
@@ -18,8 +17,6 @@ type PaymentData =
 export interface Payment extends PaymentBase {
   readonly type: PaymentType.Payment;
   readonly data: PaymentData;
-  readonly successUrl: URL;
-  readonly cancelUrl: URL;
   readonly expired?: Date;
 }
 

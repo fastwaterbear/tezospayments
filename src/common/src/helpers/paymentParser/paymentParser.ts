@@ -9,8 +9,8 @@ type RawPaymentBase = {
   amount: string;
   data: Payment['data'];
   asset?: string;
-  successUrl: string;
-  cancelUrl: string;
+  successUrl?: string;
+  cancelUrl?: string;
   created: Date;
   expired?: Date;
 };
@@ -26,8 +26,8 @@ export class PaymentParser extends PaymentParserBase<Payment, RawPayment, ValidR
     .set('amount', 'string')
     .set('data', 'object')
     .set('asset', ['string', 'undefined', 'null'])
-    .set('successUrl', 'string')
-    .set('cancelUrl', 'string')
+    .set('successUrl', ['string', 'undefined', 'null'])
+    .set('cancelUrl', ['string', 'undefined', 'null'])
     .set('created', 'string')
     .set('expired', ['string', 'undefined', 'null']);
 
@@ -41,8 +41,8 @@ export class PaymentParser extends PaymentParserBase<Payment, RawPayment, ValidR
       amount: new BigNumber(rawPayment.amount),
       data: rawPayment.data,
       asset: rawPayment.asset,
-      successUrl: new URL(rawPayment.successUrl),
-      cancelUrl: new URL(rawPayment.cancelUrl),
+      successUrl: rawPayment.successUrl ? new URL(rawPayment.successUrl) : undefined,
+      cancelUrl: rawPayment.cancelUrl ? new URL(rawPayment.cancelUrl) : undefined,
       created: new Date(rawPayment.created),
       expired: rawPayment.expired ? new Date(rawPayment.expired) : undefined,
       targetAddress: nonIncludedFields.targetAddress,

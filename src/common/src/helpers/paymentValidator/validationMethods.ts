@@ -61,9 +61,12 @@ export const validateCreatedDate = (
 };
 
 export const validateUrl = (
-  url: URL,
+  url: URL | undefined,
   errors: Errors<'invalidUrl' | 'invalidProtocol'>
 ): FailedValidationResults => {
+  if (url === undefined)
+    return;
+
   if (!(url instanceof URL))
     return [errors.invalidUrl];
 
