@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 
 import { App } from './app';
 import { App as AppComponent } from './components/App';
+import { AppConfig, config } from './config';
 import reportWebVitals from './reportWebVitals';
 import { appReducer } from './store';
 import './index.scss';
@@ -35,5 +36,7 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
+
+(window as unknown as { config: AppConfig }).config = config;
 
 reportWebVitals();
