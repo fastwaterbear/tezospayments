@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { PaymentValidator } from '../../../src/helpers';
-import { FailedValidationResults } from '../../../src/models/validation';
-import type { NegativeTestCases } from './testCase';
+import { PaymentValidator } from '../../../../src/helpers';
+import { FailedValidationResults } from '../../../../src/models/validation';
+import type { NegativeTestCases } from '../testCase';
 import validPaymentTestCases from './validPaymentTestCases';
 
 const validPaymentBase = { ...validPaymentTestCases[0] };

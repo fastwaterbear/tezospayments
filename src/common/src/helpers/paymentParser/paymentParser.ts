@@ -8,10 +8,10 @@ import { PaymentFieldInfoType, PaymentParserBase } from './paymentParserBase';
 type RawPaymentBase = {
   amount: string;
   data: Payment['data'];
+  created: Date;
   asset?: string;
   successUrl?: string;
   cancelUrl?: string;
-  created: Date;
   expired?: Date;
 };
 

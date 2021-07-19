@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import type { RawPayment } from '../../../src/helpers/paymentParser/paymentParser';
+import type { RawPayment } from '../../../../src/helpers/paymentParser/paymentParser';
 
 const createdDate = new Date('2021-06-26T00:37:03.930Z');
 const expiredDate = new Date('2021-06-26T00:57:03.930Z');
@@ -18,9 +18,8 @@ const cases: ReadonlyArray<readonly [
               orderId: '0a6d2db181fa4ec7a7dbfb7b728201f6',
             }
           },
-          // successUrl: ,
-          cancelUrl: 'https://fastwaterbear.com/tezospayments/test/payment/cancel',
           // created: ,
+          cancelUrl: 'https://fastwaterbear.com/tezospayments/test/payment/cancel',
           expired: expiredDate
         },
         'eyJhbW91bnQiOiIzOTM5NDM5NDMwNDAzIiwiZGF0YSI6eyJwdWJsaWMiOnsib3JkZXJJZCI6IjBhNmQyZGIxODFmYTRlYzdhN2RiZmI3YjcyODIwMWY2In19LCJjYW5jZWxVcmwiOiJodHRwczovL2Zhc3R3YXRlcmJlYXIuY29tL3Rlem9zcGF5bWVudHMvdGVzdC9wYXltZW50L2NhbmNlbCIsImV4cGlyZWQiOiIyMDIxLTA2LTI2VDAwOjU3OjAzLjkzMFoifQ==',
