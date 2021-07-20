@@ -27,8 +27,7 @@ export const Donation = (props: DonationProps) => {
   const handleDonationAmountChange = useCallback(
     (rawValue: string) => {
       const value = new BigNumber(rawValue);
-      if (value.isPositive())
-        setNetworkDonation(previousNetworkDonation => ({ ...previousNetworkDonation, amount: value }));
+      setNetworkDonation(previousNetworkDonation => ({ ...previousNetworkDonation, amount: value.isPositive() ? value : zeroAmount }));
     },
     []
   );
