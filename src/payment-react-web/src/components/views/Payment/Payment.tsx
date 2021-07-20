@@ -29,7 +29,7 @@ export const Payment = (props: PaymentProps) => {
   return <View className="payment-view">
     <View.Side isRight={false}>
       <PaymentDetails paymentData={props.payment.data} />
-      <ServiceInfoPure service={props.service} />
+      <ServiceInfoPure service={props.service} showDescription={false} />
     </View.Side>
     <View.Side isRight={true}>
       <TotalAmount value={props.payment.amount} />

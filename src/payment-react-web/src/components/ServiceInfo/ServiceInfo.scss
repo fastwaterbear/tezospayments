@@ -30,6 +30,11 @@
   margin-bottom: var(--grid-layout-margin);
 }
 
+.service-info__description {
+  grid-area: description;
+  margin-bottom: var(--grid-layout-margin);
+}
+
 .service-info__links {
   grid-area: links;
 }
