@@ -9,9 +9,16 @@ import './ServiceInfo.scss';
 
 interface ServiceInfoProps {
   service: Service;
+  showDescription?: boolean;
 }
 
-export const ServiceInfo = (props: ServiceInfoProps) => {
+type DefaultServiceInfoProps = Required<Pick<ServiceInfoProps, 'showDescription'>>;
+
+const defaultProps: DefaultServiceInfoProps = {
+  showDescription: true
+};
+
+export const ServiceInfo = (props: ServiceInfoProps & DefaultServiceInfoProps) => {
   const contractAddressUrl = `https://better-call.dev/${props.service.network.name}/${props.service.contractAddress}`;
 
   return <div className="service-info">
@@ -23,8 +30,12 @@ export const ServiceInfo = (props: ServiceInfoProps) => {
         {props.service.contractAddress}
       </BlockchainLinkPure>
     </div>
+    {props.showDescription && !!props.service.description && <div className="service-info__description">
+      {props.service.description}
+    </div>}
     <ServiceLinks className="service-info__links" links={props.service.links} />
   </div>;
 };
+ServiceInfo.defaultProps = defaultProps;
 
 export const ServiceInfoPure = React.memo(ServiceInfo);
