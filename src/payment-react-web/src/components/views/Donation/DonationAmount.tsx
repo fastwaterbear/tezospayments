@@ -26,8 +26,7 @@ export const DonationAmount = (props: DonationAmountProps) => {
       ref={inputAmountRef}
       size="large"
       min="0"
-      defaultValue="0"
-      value={props.desiredAmount?.toFormat()}
+      defaultValue={props.desiredAmount?.toString()}
       onChange={props.onChange}
     />
     <div className="donation-amount__currency">

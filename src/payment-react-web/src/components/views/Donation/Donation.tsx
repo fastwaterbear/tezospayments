@@ -21,7 +21,7 @@ export const Donation = (props: DonationProps) => {
   const [networkDonation, setNetworkDonation] = useState<NetworkDonation>({
     type: props.donation.type,
     targetAddress: props.donation.targetAddress,
-    amount: zeroAmount,
+    amount: props.donation.desiredAmount ? new BigNumber(props.donation.desiredAmount) : zeroAmount,
   });
 
   const handleDonationAmountChange = useCallback(
