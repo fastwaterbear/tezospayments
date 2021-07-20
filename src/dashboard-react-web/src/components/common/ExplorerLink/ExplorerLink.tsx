@@ -21,7 +21,7 @@ export const ExplorerLink = (props: ExplorerLinkProps) => {
     navigator.clipboard.writeText(props.hash);
   }, [props.hash]);
 
-  return <div>
+  return <div className="explorer-link__container">
     <a href={`${config.links.tzStats}/${props.hash}`} target="_blank" rel="noreferrer" className={props.className}>
       {props.children}
     </a>

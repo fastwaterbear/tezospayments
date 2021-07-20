@@ -1,5 +1,9 @@
 @use '../../../styles/ant-colors.scss';
 
+.explorer-link__container {
+  display: inline-block;
+}
+
 .explorer-link__copy-icon {
   color: ant-colors.$blue-6 !important;
   margin-left: 8px;
