@@ -11,9 +11,10 @@ import './PayButton.scss';
 interface PayButtonProps {
   networkPayment: NetworkPayment | NetworkDonation;
   text: string;
+  disabled?: boolean;
 }
 
-export const PayButton = ({ networkPayment, text }: PayButtonProps) => {
+export const PayButton = ({ networkPayment, text, disabled }: PayButtonProps) => {
   const currentPaymentStatus = useAppSelector(state => state.currentPaymentState && state.currentPaymentState.status);
   const dispatch = useAppDispatch();
 
@@ -32,6 +33,7 @@ export const PayButton = ({ networkPayment, text }: PayButtonProps) => {
     type="primary"
     size="large"
     onClick={handleButtonClick}
+    disabled={disabled}
     loading={currentPaymentStatus === PaymentStatus.UserProcessing || currentPaymentStatus === PaymentStatus.NetworkProcessing}>
     {text}
   </Button>;

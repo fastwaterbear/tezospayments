@@ -2,7 +2,6 @@ import { BigNumber } from 'bignumber.js';
 
 import { tezosMeta } from '@tezospayments/common/dist/models/blockchain';
 
-
 import './TotalAmount.scss';
 
 interface TotalAmountProps {
