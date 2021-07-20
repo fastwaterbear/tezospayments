@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { Service, ServiceOperationType } from '@tezospayments/common/dist/models/service';
 
 import { config } from '../../../../config';
-import { ServiceLinks } from '../../../common/ServiceLinks';
+import { ServiceLinksEditor } from '../../../common/ServiceLinks';
 import { useCurrentLanguageResources } from '../../../hooks';
 import { TokensPure } from '../Tokens';
 
@@ -44,10 +44,7 @@ export const UpdateService = (props: UpdateServiceProps) => {
       </div>
       <div className="service-edit__list-container">
         <span className="service-edit__list-header">{servicesLangResources.links}</span>
-        <ServiceLinks className="service-info__links" links={props.service.links} />
-        <Button className="service-edit__button" icon={<PlusOutlined />}>
-          {servicesLangResources.editing.addLink}
-        </Button>
+        <ServiceLinksEditor defaultValue={props.service.links as string[]} />
       </div>
     </div>
     <span className="service-edit__caption">{servicesLangResources.editing.accept}</span>

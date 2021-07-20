@@ -1,0 +1,16 @@
+@use '../../../styles/layout-variables.scss';
+
+$-icon-size: 24px;
+
+.service-link-editor {
+  display: flex;
+  align-items: center;
+}
+
+.service-link-editor__icon {
+  font-size: $-icon-size;
+  width: 30px;
+  height: $-icon-size;
+  margin-right: layout-variables.$element-spacing-small / 2;
+  vertical-align: top;
+}
