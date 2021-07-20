@@ -105,39 +105,41 @@ export const currentPaymentSlice = createSlice({
         };
       });
 
-    builder
-      .addCase(pay.pending, (state, action) => {
-        return state
-          ? {
-            status: PaymentStatus.UserProcessing,
-            payment: state.payment,
-            networkPayment: action.meta.arg,
-            service: state.service
-          }
-          : null;
-      })
-      .addCase(pay.fulfilled, (state, action) => {
-        return state
-          ? {
-            status: action.payload ? PaymentStatus.Succeeded : PaymentStatus.Initial,
-            payment: state.payment,
-            networkPayment: state.networkPayment,
-            service: state.service,
-            operation: action.payload ? state.operation : undefined,
-          }
-          : null;
-      })
-      .addCase(pay.rejected, (state, _action) => {
-        return state
-          ? {
-            status: PaymentStatus.Initial,
-            payment: state.payment,
-            networkPayment: state.networkPayment,
-            service: state.service,
-            operation: undefined
-          }
-          : null;
-      });
+    for (const action of [pay, donate]) {
+      builder
+        .addCase(action.pending, (state, action) => {
+          return state
+            ? {
+              status: PaymentStatus.UserProcessing,
+              payment: state.payment,
+              networkPayment: action.meta.arg,
+              service: state.service
+            }
+            : null;
+        })
+        .addCase(action.fulfilled, (state, action) => {
+          return state
+            ? {
+              status: action.payload ? PaymentStatus.Succeeded : PaymentStatus.Initial,
+              payment: state.payment,
+              networkPayment: state.networkPayment,
+              service: state.service,
+              operation: action.payload ? state.operation : undefined,
+            }
+            : null;
+        })
+        .addCase(action.rejected, (state, _action) => {
+          return state
+            ? {
+              status: PaymentStatus.Initial,
+              payment: state.payment,
+              networkPayment: state.networkPayment,
+              service: state.service,
+              operation: undefined
+            }
+            : null;
+        });
+    }
   }
 });
 

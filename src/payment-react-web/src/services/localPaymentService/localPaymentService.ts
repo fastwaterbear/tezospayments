@@ -1,6 +1,7 @@
 import { ColorMode, NetworkType, RequestPermissionInput, AbortedBeaconError } from '@airgap/beacon-sdk';
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit, TransactionWalletOperation, Wallet } from '@taquito/taquito';
+import { BigNumber } from 'bignumber.js';
 
 import { networks } from '@tezospayments/common/dist/models/blockchain';
 import { Donation, Payment, PaymentType } from '@tezospayments/common/dist/models/payment';
@@ -78,41 +79,53 @@ export class LocalPaymentService {
   }
 
   async pay(payment: NetworkPayment): Promise<ServiceResult<boolean>> {
-    try {
-      if (!Payment.publicDataExists(payment.data))
-        return { isServiceError: true, error: errors.invalidPayment };
+    return (Payment.publicDataExists(payment.data))
+      ? this.sendPayment(
+        ServiceOperationType.Payment,
+        payment.targetAddress,
+        payment.amount,
+        payment.asset,
+        converters.objectToBytes(payment.data.public)
+      )
+      : { isServiceError: true, error: errors.invalidPayment };
+  }
 
+  async donate(donation: NetworkDonation): Promise<ServiceResult<boolean>> {
+    return this.sendPayment(
+      ServiceOperationType.Donation,
+      donation.targetAddress,
+      donation.amount,
+      donation.asset,
+      ''
+    );
+  }
+
+  protected async sendPayment(
+    serviceOperationType: ServiceOperationType,
+    targetAddress: string,
+    amount: BigNumber,
+    assetTokenAddress: string | undefined,
+    payload: string
+  ): Promise<ServiceResult<boolean>> {
+    try {
       await this.tezosWallet.client.clearActiveAccount();
       const canceled = await this.requestPermissions({ network: { type: NetworkType.EDONET } });
       if (canceled)
         return false;
 
-      const contract: TezosPaymentsServiceContract<Wallet> = await this.tezosToolkit.wallet.at(payment.targetAddress);
+      const contract: TezosPaymentsServiceContract<Wallet> = await this.tezosToolkit.wallet.at(targetAddress);
       if (!contract.methods.send_payment)
         return { isServiceError: true, error: errors.invalidContract };
 
       const result = await contract.methods.send_payment(
-        undefined,
-        ServiceOperationType.Payment,
+        assetTokenAddress as void,
+        serviceOperationType,
         'public',
-        converters.objectToBytes(payment.data.public),
+        payload,
       )
-        .send({
-          amount: payment.amount
-        });
+        .send({ amount });
 
       await this.waitConfirmation(result);
-
-      return true;
-    }
-    catch (error: unknown) {
-      return (error instanceof AbortedBeaconError) ? false : { isServiceError: true, error: (error as Error).message };
-    }
-  }
-
-  async donate(_donation: NetworkDonation): Promise<ServiceResult<boolean>> {
-    try {
-      // TODO
 
       return true;
     }
