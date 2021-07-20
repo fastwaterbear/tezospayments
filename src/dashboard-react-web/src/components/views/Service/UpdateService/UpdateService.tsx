@@ -1,9 +1,11 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Input } from 'antd';
-import React from 'react';
+import React, { useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { Service, ServiceOperationType } from '@tezospayments/common/dist/models/service';
 
+import { config } from '../../../../config';
 import { ServiceLinks } from '../../../common/ServiceLinks';
 import { useCurrentLanguageResources } from '../../../hooks';
 import { TokensPure } from '../Tokens';
@@ -15,12 +17,17 @@ interface UpdateServiceProps {
 }
 
 export const UpdateService = (props: UpdateServiceProps) => {
+  const history = useHistory();
   const langResources = useCurrentLanguageResources();
   const commonLangResources = langResources.common;
   const servicesLangResources = langResources.views.services;
 
   const acceptPayments = props.service.allowedOperationType === ServiceOperationType.All || props.service.allowedOperationType === ServiceOperationType.Payment;
   const acceptDonations = props.service.allowedOperationType === ServiceOperationType.All || props.service.allowedOperationType === ServiceOperationType.Donation;
+
+  const handleCancelClick = useCallback(() => {
+    history.push(`${config.routers.services}/${props.service.contractAddress}`);
+  }, [history, props.service.contractAddress]);
 
   return <div className="service-edit">
     <span className="service-edit__caption">{servicesLangResources.editing.serviceName}</span>
@@ -49,8 +56,8 @@ export const UpdateService = (props: UpdateServiceProps) => {
       <Checkbox className="service-edit__accept-list-item" defaultChecked={acceptDonations}>{servicesLangResources.editing.acceptDonations}</Checkbox>
     </div>
     <div className="service-edit__buttons-container">
-      <Button className="service-edit__button">{commonLangResources.cancel}</Button>
-      <Button className="service-edit__button" type="primary">{commonLangResources.save}</Button>
+      <Button className="service-edit__button" onClick={handleCancelClick}>{commonLangResources.cancel}</Button>
+      <Button className="service-edit__button" type="primary">{servicesLangResources.editing.updateService}</Button>
     </div>
   </div>;
 };
