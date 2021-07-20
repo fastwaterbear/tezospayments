@@ -35,28 +35,32 @@ const classNameBase = 'blockchain-link';
 // TODO: extract into the common utils.text
 const getShortHash = (hash: string) => `${hash.substr(0, 9)}...${hash.substr(hash.length - 6, 6)}`;
 
-export const BlockchainLink = (props: BlockchainLinkProps & DefaultBlockchainLinkProps) => {
+export const BlockchainLink = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  children, option, showCopyButton, className: classNameProp, longLinkClassName: longLinkClassNameProp,
+  shortLinkClassName: shortLinkClassNameProp, ...externalLinkProps
+}: BlockchainLinkProps & DefaultBlockchainLinkProps) => {
   const className = combineClassNames(
     classNameBase,
-    props.className
+    classNameProp
   );
   const longLinkClassName = combineClassNames(
     `${classNameBase}__link_length-full`,
-    props.longLinkClassName
+    longLinkClassNameProp
   );
   const shortLinkClassName = combineClassNames(
     `${classNameBase}__link_length-short`,
-    props.longLinkClassName
+    shortLinkClassNameProp
   );
 
   return <div className={className}>
-    <ExternalLink className={longLinkClassName}>
-      {props.children}
+    <ExternalLink {...externalLinkProps} className={longLinkClassName}>
+      {children}
     </ExternalLink>
-    <ExternalLink className={shortLinkClassName}>
-      {getShortHash(props.children)}
+    <ExternalLink {...externalLinkProps} className={shortLinkClassName}>
+      {getShortHash(children)}
     </ExternalLink>
-    {props.showCopyButton && <CopyButtonPure copyText={props.children} />}
+    {showCopyButton && <CopyButtonPure copyText={children} />}
   </div>;
 };
 BlockchainLink.defaultProps = defaultProps;
