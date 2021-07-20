@@ -135,23 +135,15 @@ export class LocalPaymentService {
   }
 
   protected requestPermissions(request?: RequestPermissionInput) {
-    let popupObserver: MutationObserver | undefined;
+    const beaconAlertWrapperObserver = this.getBeaconAlertWrapperObserver();
 
     return Promise.race(
       [
         this.tezosWallet.requestPermissions(request),
-        new Promise<boolean>(resolve => {
-          popupObserver = this.getBeaconAlertWrapperObserver(closedByUser => {
-            if (closedByUser)
-              resolve(true);
-            else
-              popupObserver?.disconnect();
-          });
-          popupObserver.observe(document.body, { childList: true });
-        })
+        beaconAlertWrapperObserver.observe()
       ])
       .finally(() => {
-        popupObserver?.disconnect();
+        beaconAlertWrapperObserver.finalize();
       });
   }
 
@@ -212,24 +204,34 @@ export class LocalPaymentService {
     });
   }
 
-  private getBeaconAlertWrapperObserver(onBeaconAlertWrapperClosed: (closedByUser: boolean) => void) {
-    return new MutationObserver(mutations => {
-      for (const mutation of mutations) {
-        for (const addedNode of mutation.addedNodes) {
-          if (addedNode instanceof Element && addedNode.getAttribute('id') === 'beacon-toast-wrapper') {
-            onBeaconAlertWrapperClosed(false);
-            return;
-          }
-        }
+  private getBeaconAlertWrapperObserver() {
+    let beaconAlertWrapperObserverIntervalId: ReturnType<typeof setInterval> | undefined;
+    let closeButtonElement: Element | null | undefined;
+    let onCloseButtonElementClickHandler: (() => void) | undefined;
 
-        for (const removedNode of mutation.removedNodes) {
-          if (removedNode instanceof Element && removedNode.shadowRoot
-            && removedNode.shadowRoot.querySelector('[id^="beacon-alert-modal"]')) {
-            onBeaconAlertWrapperClosed(true);
+    return {
+      observe: () => new Promise<boolean>(resolve => {
+        beaconAlertWrapperObserverIntervalId = setInterval(() => {
+          closeButtonElement = document.querySelector('[id^="beacon-alert-wrapper"]')
+            ?.shadowRoot
+            ?.querySelector('.beacon-modal__close__wrapper');
+          if (!closeButtonElement)
             return;
+
+          if (beaconAlertWrapperObserverIntervalId !== undefined) {
+            clearInterval(beaconAlertWrapperObserverIntervalId);
+            beaconAlertWrapperObserverIntervalId = undefined;
           }
-        }
+
+          onCloseButtonElementClickHandler = () => resolve(true);
+          closeButtonElement.addEventListener('click', onCloseButtonElementClickHandler);
+        }, 100);
+      }),
+      finalize: () => {
+        beaconAlertWrapperObserverIntervalId && clearInterval(beaconAlertWrapperObserverIntervalId);
+        if (closeButtonElement && onCloseButtonElementClickHandler)
+          closeButtonElement.removeEventListener('click', onCloseButtonElementClickHandler);
       }
-    });
+    } as const;
   }
 }
