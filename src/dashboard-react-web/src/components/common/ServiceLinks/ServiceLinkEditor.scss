@@ -1,4 +1,5 @@
 @use '../../../styles/layout-variables.scss';
+@use '../../../styles/ant-colors.scss';
 
 $-icon-size: 24px;
 
@@ -13,4 +14,12 @@ $-icon-size: 24px;
   height: $-icon-size;
   margin-right: layout-variables.$element-spacing-small / 2;
   vertical-align: top;
+}
+
+.service-link-editor__input {
+  color: ant-colors.$blue-6 !important;
+}
+
+.service-link-editor__delete-button {
+  margin-left: 2px;
 }

@@ -23,7 +23,7 @@ export const ServiceLinkEditor = (props: ServiceLinkEditorProps) => {
 
   return <div className="service-link-editor">
     <Icon className="service-link-editor__icon" />
-    <Input defaultValue={props.defaultValue} />
-    <Button type="text" danger icon={<DeleteOutlined />} />
+    <Input className="service-link-editor__input" defaultValue={props.defaultValue} />
+    <Button className="service-link-editor__delete-button" type="text" danger icon={<DeleteOutlined />} />
   </div>;
 };
