@@ -33,6 +33,11 @@ export const UpdateService = (props: UpdateServiceProps) => {
   const [description, setDescription] = useState(props.service.description);
   const handleDescriptionChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value), []);
 
+  const [links, setLinks] = useState(props.service.links);
+  const handleLinksChange = useCallback((e: { value: string[] }) => {
+    setLinks(e.value);
+  }, []);
+
   const [acceptPayments, setAcceptPayments] = useState(props.service.allowedOperationType === ServiceOperationType.All || props.service.allowedOperationType === ServiceOperationType.Payment);
   const [acceptDonations, setAcceptDonations] = useState(props.service.allowedOperationType === ServiceOperationType.All || props.service.allowedOperationType === ServiceOperationType.Donation);
 
@@ -79,7 +84,7 @@ export const UpdateService = (props: UpdateServiceProps) => {
       </div>
       <div className="service-edit__list-container">
         <span className="service-edit__list-header">{servicesLangResources.links}</span>
-        <ServiceLinksEditor defaultValue={props.service.links as string[]} />
+        <ServiceLinksEditor value={links as string[]} onChange={handleLinksChange} />
       </div>
     </div>
     <span className="service-edit__caption">{servicesLangResources.editing.accept}</span>

@@ -1,5 +1,6 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
+import { useCallback } from 'react';
 
 import { useCurrentLanguageResources } from '../../hooks';
 import { ServiceLinkEditor } from './ServiceLinkEditor';
@@ -7,13 +8,21 @@ import { ServiceLinkEditor } from './ServiceLinkEditor';
 import './ServiceLinksEditor.scss';
 
 interface ServiceLinksEditorProps {
-  defaultValue: string[];
+  value: string[];
+  onChange: (e: { value: string[] }) => void;
 }
 
 export const ServiceLinksEditor = (props: ServiceLinksEditorProps) => {
   const langResources = useCurrentLanguageResources();
   const servicesLangResources = langResources.views.services;
-  const editors = props.defaultValue.map((l, i) => <ServiceLinkEditor key={i} defaultValue={l} />);
+
+  const handleDelete = useCallback((i: number) => {
+    const value = [...props.value];
+    value.splice(i, 1);
+    props.onChange({ value });
+  }, [props]);
+
+  const editors = props.value.map((l, i) => <ServiceLinkEditor key={l} value={l} onDelete={() => handleDelete(i)} />);
 
   return <div className="service-links-editor">
     {editors}
