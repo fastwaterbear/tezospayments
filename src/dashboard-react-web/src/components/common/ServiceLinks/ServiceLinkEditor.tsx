@@ -1,5 +1,6 @@
 import { DeleteOutlined } from '@ant-design/icons';
 import { Button, Input } from 'antd';
+import { useCallback } from 'react';
 
 import { ServiceLinkHelper } from '@tezospayments/common/dist/helpers';
 
@@ -9,6 +10,7 @@ import './ServiceLinkEditor.scss';
 
 interface ServiceLinkEditorProps {
   value: string;
+  onChange: (e: { value: string }) => void
   onDelete: () => void;
 }
 
@@ -16,6 +18,10 @@ const serviceLinkHelper = new ServiceLinkHelper();
 
 export const ServiceLinkEditor = (props: ServiceLinkEditorProps) => {
   const linkInfo = serviceLinkHelper.getLinkInfo(props.value);
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    props.onChange({ value: e.target.value });
+  }, [props]);
+
   if (!linkInfo) {
     return null;
   }
@@ -24,7 +30,7 @@ export const ServiceLinkEditor = (props: ServiceLinkEditorProps) => {
 
   return <div className="service-link-editor">
     <Icon className="service-link-editor__icon" />
-    <Input className="service-link-editor__input" defaultValue={props.value} />
+    <Input className="service-link-editor__input" value={props.value} onChange={handleChange} />
     <Button className="service-link-editor__delete-button" type="text" danger icon={<DeleteOutlined />} onClick={props.onDelete} />
   </div>;
 };

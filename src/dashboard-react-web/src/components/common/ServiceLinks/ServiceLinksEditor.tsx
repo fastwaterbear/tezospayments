@@ -16,18 +16,29 @@ export const ServiceLinksEditor = (props: ServiceLinksEditorProps) => {
   const langResources = useCurrentLanguageResources();
   const servicesLangResources = langResources.views.services;
 
+  const handleChange = useCallback((i: number, e: { value: string }) => {
+    const value = [...props.value];
+    value[i] = e.value;
+    props.onChange({ value });
+  }, [props]);
+
   const handleDelete = useCallback((i: number) => {
     const value = [...props.value];
     value.splice(i, 1);
     props.onChange({ value });
   }, [props]);
 
-  const editors = props.value.map((l, i) => <ServiceLinkEditor key={l} value={l} onDelete={() => handleDelete(i)} />);
+  const handleAdd = useCallback(() => {
+    const value = [...props.value, 'https://bbb.com'];
+    props.onChange({ value });
+  }, [props]);
+
+  const editors = props.value.map((l, i) => <ServiceLinkEditor key={i} value={l} onDelete={() => handleDelete(i)} onChange={e => handleChange(i, e)} />);
 
   return <div className="service-links-editor">
     {editors}
-    <Button className="service-links-editor__button" icon={<PlusOutlined />}>
+    <Button className="service-links-editor__button" icon={<PlusOutlined />} onClick={handleAdd}>
       {servicesLangResources.editing.addLink}
     </Button>
-  </div>;
+  </div >;
 };
