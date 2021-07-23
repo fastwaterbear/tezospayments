@@ -1,0 +1,46 @@
+name: apps/landing
+on:
+  push:
+    paths:
+      - 'src/landing/**'
+      - '.github/workflows/landing.yml'
+  pull_request:
+    paths:
+      - 'src/landing/**'
+      - '.github/workflows/landing.yml'
+
+jobs:
+  build-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@master
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '15'
+
+      - name: Print environment info
+        run: |
+          node --version
+          npm --version
+
+      - name: Install npm packages of the Landing app
+        working-directory: 'src/landing'
+        env:
+          CI: true
+        run: npm ci
+
+      - name: Build the Landing app
+        working-directory: 'src/landing'
+        run: npm run build
+
+      - name: Deploy
+        if: github.ref == 'refs/heads/master'
+        uses: peaceiris/actions-gh-pages@068dc23d9710f1ba62e86896f84735d869951305 # v3.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: 'src/landing/dist'
+          publish_branch: dist/landing
