@@ -73,7 +73,6 @@ footer {
 footer nav ul {
   display: flex;
   align-items: center;
-  margin-bottom: 16px;
 }
 
 footer a {
@@ -170,6 +169,10 @@ button,
 
   .main-buttons .button_primary {
     margin-right: 0;
+  }
+
+  footer nav ul {
+    margin-bottom: 16px;
   }
 
   .footer-content {
