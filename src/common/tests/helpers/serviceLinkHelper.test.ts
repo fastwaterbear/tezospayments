@@ -94,6 +94,24 @@ describe('Service Link Helper', () => {
       displayLink: 'https://github.com',
       icon: IconId.Common
     }],
+    ['https://www.reddit.com/r/tezospayments', {
+      rawLink: 'https://www.reddit.com/r/tezospayments',
+      formattedLink: 'https://www.reddit.com/r/tezospayments',
+      displayLink: 'r/tezospayments',
+      icon: IconId.Reddit
+    }],
+    ['https://www.reddit.com/user/tezospayments', {
+      rawLink: 'https://www.reddit.com/user/tezospayments',
+      formattedLink: 'https://www.reddit.com/user/tezospayments',
+      displayLink: 'user/tezospayments',
+      icon: IconId.Reddit
+    }],
+    ['https://www.reddit.com', {
+      rawLink: 'https://www.reddit.com',
+      formattedLink: 'https://www.reddit.com',
+      displayLink: 'https://www.reddit.com',
+      icon: IconId.Common
+    }],
     ['test@tezospayment.com', {
       rawLink: 'test@tezospayment.com',
       formattedLink: 'mailto:test@tezospayment.com',

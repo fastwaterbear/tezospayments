@@ -2,12 +2,13 @@ import { memoize } from '../utils';
 
 export enum IconId {
   Common = 0,
-  Telegram = 1,
-  Facebook = 2,
-  Twitter = 3,
-  Instagram = 4,
-  GitHub = 5,
-  Email = 6
+  Email = 1,
+  Telegram = 2,
+  Facebook = 3,
+  Twitter = 4,
+  Instagram = 5,
+  GitHub = 6,
+  Reddit = 7
 }
 
 interface LinkInfo {
@@ -50,6 +51,7 @@ const facebookLinkInfoProvider: LinkInfoProvider = link => socialMediaLinkInfoPr
 const twitterLinkInfoProvider: LinkInfoProvider = link => socialMediaLinkInfoProvider(link, 'https://twitter.com/', IconId.Twitter);
 const instagramLinkInfoProvider: LinkInfoProvider = link => socialMediaLinkInfoProvider(link, 'https://instagram.com/', IconId.Instagram);
 const gitHubLinkInfoProvider: LinkInfoProvider = link => socialMediaLinkInfoProvider(link, 'https://github.com/', IconId.GitHub);
+const redditLinkInfoProvider: LinkInfoProvider = link => socialMediaLinkInfoProvider(link, 'https://www.reddit.com/', IconId.Reddit);
 
 // This regex should not use for email validation
 const emailCheckingRegEx = /^[^\s/@]+@[^\s@/]+$/;
@@ -91,6 +93,7 @@ export class ServiceLinkHelper {
     instagramLinkInfoProvider,
     gitHubLinkInfoProvider,
     emailLinkInfoProvider,
+    redditLinkInfoProvider,
     commonLinkInfoProvider
   ];
 

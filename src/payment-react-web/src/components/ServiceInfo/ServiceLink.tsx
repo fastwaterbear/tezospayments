@@ -1,4 +1,7 @@
-import { LinkOutlined, FacebookOutlined, TwitterOutlined, InstagramOutlined, GithubOutlined, MailOutlined } from '@ant-design/icons';
+import {
+  LinkOutlined, FacebookOutlined, TwitterOutlined, InstagramOutlined,
+  GithubOutlined, MailOutlined, RedditOutlined
+} from '@ant-design/icons';
 import React from 'react';
 
 import { IconId, ServiceLinkHelper } from '@tezospayments/common/dist/helpers';
@@ -15,12 +18,13 @@ const serviceLinkHelper = new ServiceLinkHelper();
 
 const iconIdMap = {
   [IconId.Common]: LinkOutlined,
+  [IconId.Email]: MailOutlined,
   [IconId.Telegram]: TelegramIcon,
   [IconId.Facebook]: FacebookOutlined,
   [IconId.Twitter]: TwitterOutlined,
   [IconId.Instagram]: InstagramOutlined,
   [IconId.GitHub]: GithubOutlined,
-  [IconId.Email]: MailOutlined
+  [IconId.Reddit]: RedditOutlined,
 };
 
 export const ServiceLink = (props: ServiceLinkProps) => {
