@@ -13,12 +13,17 @@ module.exports = {
         test: /\.css$/i,
         use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
+      {
+        test: /\.(webp|png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset'
+      },
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
       inject: true,
       template: './src/index.html',
+      scriptLoading: 'blocking',
       minify: {
         collapseWhitespace: true,
         keepClosingSlash: true,
@@ -36,8 +41,10 @@ module.exports = {
     new MiniCssExtractPlugin()
   ],
   output: {
+    publicPath: '',
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].[contenthash:8].js',
+    assetModuleFilename: 'assets/[name].[contenthash:8][ext]',
     clean: true
   },
   optimization: {

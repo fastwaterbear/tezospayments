@@ -23,6 +23,9 @@ header {
 main {
   grid-area: main;
   align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 h1 {
@@ -61,6 +64,25 @@ h3 {
 
 .main-buttons .button_primary {
   margin-right: 24px;
+}
+
+.screens {
+  min-width: 660px;
+  min-height: 575px;
+  margin-left: 16px;
+}
+
+.screens img {
+  width: 400px;
+  position: absolute;
+}
+
+.screens img:nth-child(2) {
+  transform: translateX(130px) translateY(130px);
+}
+
+.screens img:nth-child(3) {
+  transform: translateX(260px) translateY(260px);
 }
 
 footer {
@@ -147,13 +169,17 @@ button,
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1140px) {
   main {
     text-align: center;
   }
 
   .main-buttons {
     justify-content: center;
+  }
+
+  .screens {
+    display: none;
   }
 }
 
