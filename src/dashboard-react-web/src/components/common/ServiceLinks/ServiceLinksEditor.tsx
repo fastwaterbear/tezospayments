@@ -29,7 +29,7 @@ export const ServiceLinksEditor = (props: ServiceLinksEditorProps) => {
   }, [props]);
 
   const handleAdd = useCallback(() => {
-    const value = [...props.value, 'https://bbb.com'];
+    const value = [...props.value, ''];
     props.onChange({ value });
   }, [props]);
 
