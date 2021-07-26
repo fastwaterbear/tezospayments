@@ -81,6 +81,18 @@ const commonLinkInfoProvider: LinkInfoProvider = link => {
   };
 };
 
+const editLinkInfoProvider: LinkInfoProvider = link => {
+  const formattedLink = prepareFormattedLink(link);
+
+  return {
+    rawLink: link,
+    formattedLink,
+    displayLink: prepareDisplayLink(link),
+    icon: IconId.Common
+  };
+};
+
+
 export class ServiceLinkHelper {
   // Order is important
   static readonly linkInfoProviders: readonly LinkInfoProvider[] = [
@@ -97,13 +109,16 @@ export class ServiceLinkHelper {
     commonLinkInfoProvider
   ];
 
-  getLinkInfo(link: string): LinkInfo | null {
+  getLinkInfo(link: string, isEditMode = false): LinkInfo | null {
     for (const provider of ServiceLinkHelper.linkInfoProviders) {
       const linkInfo = provider(link);
 
       if (linkInfo)
         return this.linkInfoIsValid(linkInfo) ? linkInfo : null;
     }
+
+    if (isEditMode)
+      return editLinkInfoProvider(link) as LinkInfo;
 
     return null;
   }

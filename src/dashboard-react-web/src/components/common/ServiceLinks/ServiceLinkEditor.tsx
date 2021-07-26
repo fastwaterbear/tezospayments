@@ -17,7 +17,7 @@ interface ServiceLinkEditorProps {
 const serviceLinkHelper = new ServiceLinkHelper();
 
 export const ServiceLinkEditor = (props: ServiceLinkEditorProps) => {
-  const linkInfo = serviceLinkHelper.getLinkInfo(props.value);
+  const linkInfo = serviceLinkHelper.getLinkInfo(props.value, true);
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     props.onChange({ value: e.target.value });
   }, [props]);
