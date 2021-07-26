@@ -7,8 +7,9 @@ import { useHistory } from 'react-router-dom';
 import { Service, ServiceOperationType } from '@tezospayments/common/dist/models/service';
 
 import { config } from '../../../../config';
+import { updateService } from '../../../../store/services/slice';
 import { ServiceLinksEditor } from '../../../common/ServiceLinks';
-import { useCurrentLanguageResources } from '../../../hooks';
+import { useAppDispatch, useCurrentLanguageResources } from '../../../hooks';
 import { TokensPure } from '../Tokens';
 
 import './UpdateService.scss';
@@ -22,6 +23,8 @@ export const UpdateService = (props: UpdateServiceProps) => {
   const langResources = useCurrentLanguageResources();
   const commonLangResources = langResources.common;
   const servicesLangResources = langResources.views.services;
+
+  const dispatch = useAppDispatch();
 
   const handleCancelClick = useCallback(() => {
     history.push(`${config.routers.services}/${props.service.contractAddress}`);
@@ -56,18 +59,23 @@ export const UpdateService = (props: UpdateServiceProps) => {
   }, [acceptPayments]);
 
   const handleUpdateClick = useCallback(() => {
-    const allowedOperationsType = acceptPayments && acceptDonations
+    const allowedOperationType = acceptPayments && acceptDonations
       ? ServiceOperationType.All
       : acceptPayments
         ? ServiceOperationType.Payment
         : ServiceOperationType.Donation;
 
-    const message = JSON.stringify({
-      name, description, allowedOperationsType: ServiceOperationType[allowedOperationsType]
-    });
+    const updatedService: Service = {
+      ...props.service,
+      name,
+      description,
+      allowedOperationType,
+      links
+    };
 
-    alert(message);
-  }, [acceptDonations, acceptPayments, description, name]);
+    dispatch(updateService({ accountAddress: updatedService.owner, service: updatedService }));
+    handleCancelClick();
+  }, [acceptDonations, acceptPayments, description, dispatch, handleCancelClick, links, name, props.service]);
 
   return <div className="service-edit">
     <span className="service-edit__caption">{servicesLangResources.editing.serviceName}</span>

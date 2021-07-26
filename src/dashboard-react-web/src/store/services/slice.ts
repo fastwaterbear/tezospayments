@@ -34,6 +34,15 @@ export const loadServices = createAsyncThunk<Service[], string, AppThunkAPI>(
   }
 );
 
+export const updateService = createAsyncThunk<void, { accountAddress: string, service: Service }, AppThunkAPI>(
+  `${namespace}/updateService`,
+  async ({ accountAddress, service }, { extra: app, dispatch }) => {
+    await app.services.servicesService.updateService(service);
+
+    dispatch(loadServices(accountAddress));
+  }
+);
+
 export const clearServices = createAsyncThunk<void, void, AppThunkAPI>(
   `${namespace}/clearServices`,
   async (_, { dispatch }) => {
@@ -51,6 +60,11 @@ export const servicesSlice = createSlice({
       (state.services as Service[]) = action.payload;
       state.initialized = true;
     });
+
+    builder.addCase(updateService.pending, state => {
+      state.initialized = false;
+    });
+
     builder.addCase(clearServices.fulfilled, state => {
       state.services = optimization.emptyArray;
       state.initialized = false;

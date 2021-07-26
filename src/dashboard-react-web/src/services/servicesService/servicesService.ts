@@ -10,53 +10,41 @@ import { wait } from '@tezospayments/common/dist/utils';
 import type { Operation } from './operation';
 
 export class ServicesService {
-  getServices(network: Network): Promise<Service[]> {
+  getServices(_network: Network): Promise<Service[]> {
     return new Promise(resolve => {
       wait(1000).then(() => {
-        const testServices: Service[] = [{
-          name: 'Test Service of Fast Water Bear',
-          links: [
-            'https://github.com/fastwaterbear',
-            'https://t.me/fastwaterbear'
-          ],
-          description: 'This is a test service of Fast Water Bear which provides basics information and scenarios to debug and investigate',
-          iconUri: 'https://avatars.githubusercontent.com/u/82229602',
-          version: 1,
-          metadata: '7b226e616d65223a22546573742053657276696365206f6620466173742057617465722042656172227d',
-          contractAddress: 'KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x',
-          network: networks.edo2net,
-          allowedTokens: {
-            tez: true,
-            assets: tokenWhitelist.filter(t => t.network === network).map(t => t.contractAddress)
-          },
-          allowedOperationType: ServiceOperationType.All,
-          owner: 'tz1aANkwuYKxB1XCyhB3CjMDDBQuPmNcBcCc',
-          deleted: false,
-          paused: false,
-        }, {
-          name: 'Maxima-net Service',
-          // eslint-disable-next-line
-          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam scelerisque leo ut dignissim posuere. Phasellus condimentum dui id felis posuere, eu tincidunt ipsum euismod. Aliquam erat volutpat. Vivamus vitae diam finibus metus finibus vestibulum. Quisque at facilisis nibh. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce tincidunt urna a ex consectetur, quis malesuada nunc scelerisque. Nulla ultricies dolor vel velit pulvinar scelerisque. Pellentesque vehicula sodales erat laoreet iaculis. Vivamus egestas ligula at aliquam condimentum. Aliquam erat volutpat. Sed a gravida justo. Ut porttitor velit sit amet tellus blandit faucibus. Sed lobortis tristique enim non iaculis. Donec ac sapien eu nunc posuere semper quis mollis mi. Phasellus at libero ac neque finibus finibus id eu mauris.',
-          links: [
-            'https://github.com/fastwaterbear',
-            'https://t.me/fastwaterbear',
-            'https://abc.com',
-          ],
-          version: 1,
-          metadata: '7b226e616d65223a22546573742053657276696365206f6620466173742057617465722042656172227d',
-          contractAddress: 'KT1J5rMCDMG2iHfA4EhpKdFyQVQAVY8wHf6x',
-          network: networks.edo2net,
-          allowedTokens: {
-            tez: true,
-            assets: tokenWhitelist.filter(t => t.network === network).map(t => t.contractAddress)
-          },
-          allowedOperationType: ServiceOperationType.Payment,
-          owner: 'tz1aANkwuYKxB1XCyhB3CjMDDBQuPmNcBcCc',
-          deleted: false,
-          paused: true,
-        }];
-
         resolve(testServices);
+      });
+    });
+  }
+
+  async updateService(service: Service): Promise<void> {
+    return new Promise(resolve => {
+      wait(1000).then(() => {
+        testServices = testServices.map(s => {
+          if (s.contractAddress === service.contractAddress) {
+            return {
+              ...s,
+              allowedOperationType: service.allowedOperationType,
+              allowedTokens: service.allowedTokens,
+              contractAddress: service.contractAddress,
+              deleted: service.deleted,
+              description: service.description,
+              iconUri: service.iconUri,
+              links: service.links,
+              metadata: service.metadata,
+              name: service.name,
+              network: service.network,
+              owner: service.owner,
+              paused: service.paused,
+              version: service.version,
+            } as Service;
+          } else {
+            return s;
+          }
+        });
+
+        resolve();
       });
     });
   }
@@ -96,3 +84,46 @@ export class ServicesService {
     }
   }
 }
+
+let testServices: Service[] = [{
+  name: 'Test Service of Fast Water Bear',
+  links: [
+    'https://github.com/fastwaterbear',
+    'https://t.me/fastwaterbear'
+  ],
+  description: 'This is a test service of Fast Water Bear which provides basics information and scenarios to debug and investigate',
+  iconUri: 'https://avatars.githubusercontent.com/u/82229602',
+  version: 1,
+  metadata: '7b226e616d65223a22546573742053657276696365206f6620466173742057617465722042656172227d',
+  contractAddress: 'KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x',
+  network: networks.edo2net,
+  allowedTokens: {
+    tez: true,
+    assets: tokenWhitelist.filter(t => t.network === networks.main).map(t => t.contractAddress)
+  },
+  allowedOperationType: ServiceOperationType.All,
+  owner: 'tz1aANkwuYKxB1XCyhB3CjMDDBQuPmNcBcCc',
+  deleted: false,
+  paused: false,
+}, {
+  name: 'Maxima-net Service',
+  // eslint-disable-next-line
+  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam scelerisque leo ut dignissim posuere. Phasellus condimentum dui id felis posuere, eu tincidunt ipsum euismod. Aliquam erat volutpat. Vivamus vitae diam finibus metus finibus vestibulum. Quisque at facilisis nibh. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce tincidunt urna a ex consectetur, quis malesuada nunc scelerisque. Nulla ultricies dolor vel velit pulvinar scelerisque. Pellentesque vehicula sodales erat laoreet iaculis. Vivamus egestas ligula at aliquam condimentum. Aliquam erat volutpat. Sed a gravida justo. Ut porttitor velit sit amet tellus blandit faucibus. Sed lobortis tristique enim non iaculis. Donec ac sapien eu nunc posuere semper quis mollis mi. Phasellus at libero ac neque finibus finibus id eu mauris.',
+  links: [
+    'https://github.com/fastwaterbear',
+    'https://t.me/fastwaterbear',
+    'https://abc.com',
+  ],
+  version: 1,
+  metadata: '7b226e616d65223a22546573742053657276696365206f6620466173742057617465722042656172227d',
+  contractAddress: 'KT1J5rMCDMG2iHfA4EhpKdFyQVQAVY8wHf6x',
+  network: networks.edo2net,
+  allowedTokens: {
+    tez: true,
+    assets: tokenWhitelist.filter(t => t.network === networks.main).map(t => t.contractAddress)
+  },
+  allowedOperationType: ServiceOperationType.Payment,
+  owner: 'tz1aANkwuYKxB1XCyhB3CjMDDBQuPmNcBcCc',
+  deleted: false,
+  paused: true,
+}];
