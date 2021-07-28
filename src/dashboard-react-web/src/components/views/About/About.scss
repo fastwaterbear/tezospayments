@@ -1,0 +1,38 @@
+@use '../../../styles/layout-variables.scss';
+
+$-about-link-icon-size: 36px;
+
+.about-view {
+  padding-top: layout-variables.$element-spacing-medium * 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.about-view__title {
+  max-width: 600px;
+  margin-bottom: layout-variables.$element-spacing-medium * 2;
+  font-size: 38px;
+  font-weight: 400;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.about-view__version-info {
+  margin-bottom: layout-variables.$element-spacing-medium * 2;
+}
+
+.about-link {
+  margin: 0 calc(var(--grid-layout-gutter) / 2);
+}
+
+.about-link__icon {
+  vertical-align: text-top;
+}
+
+.about-link,
+.about-link__icon {
+  font-size: $-about-link-icon-size;
+  width: $-about-link-icon-size;
+  height: $-about-link-icon-size;
+}

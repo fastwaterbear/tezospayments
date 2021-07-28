@@ -8,10 +8,7 @@ import { selectAccountsState } from '../../store/accounts/selectors';
 import { loadActiveAccount } from '../../store/accounts/slice';
 import { PrivateRouteContainer } from '../common';
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { OverviewPure, ConnectPure } from '../views';
-import { OperationsPure } from '../views/Operations';
-import { ServicePure } from '../views/Service';
-import { ServicesPure } from '../views/Services';
+import { OverviewPure, ConnectPure, OperationsPure, ServicePure, ServicesPure, AboutPure } from '../views';
 import { HeaderPure } from './Header';
 import { NavBarPure } from './NavBar';
 
@@ -44,6 +41,9 @@ export const App = () => {
         <PrivateRouteContainer exact path={`${config.routers.services}/:address`}>
           <ServicePure />
         </PrivateRouteContainer>
+        <Route path={config.routers.about}>
+          <AboutPure />
+        </Route>
         <Route path={config.routers.connect}>
           <ConnectPure />
         </Route>
