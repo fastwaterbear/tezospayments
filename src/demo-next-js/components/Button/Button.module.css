@@ -1,0 +1,25 @@
+.button {
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1.5;
+  padding: 8px 16px;
+}
+
+.button_primary {
+  background-color: #1890ff;
+  border: 1px solid #1890ff;
+  color: #fff;
+}
+
+.button_secondary {
+  background-color: #fff;
+  border: 1px solid #d9d9d9;
+}
+
+.button_primary:hover {
+  color: #fff;
+  background: #40a9ff;
+  border-color: #40a9ff;
+}
