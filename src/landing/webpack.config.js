@@ -23,6 +23,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       inject: true,
       template: './src/index.html',
+      favicon: './src/favicon.ico',
       scriptLoading: 'blocking',
       minify: {
         collapseWhitespace: true,

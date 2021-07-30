@@ -5,11 +5,13 @@ class InlineChunkHtmlPlugin {
     .set('script', {
       sourceTagName: 'script',
       targetTagName: 'script',
+      predicate: _tag => true,
       getAssetName: tag => tag && tag.attributes && tag.attributes.src,
     })
     .set('link', {
       sourceTagName: 'link',
       targetTagName: 'style',
+      predicate: tag => tag && tag.attributes && tag.attributes.rel === 'stylesheet',
       getAssetName: tag => tag && tag.attributes && tag.attributes.href,
     });
 
@@ -43,7 +45,7 @@ class InlineChunkHtmlPlugin {
 
   getInlinedTag(assets, tag) {
     const tagInfo = InlineChunkHtmlPlugin.inlinedTagInfos.get(tag.tagName);
-    if (!tagInfo)
+    if (!tagInfo || !tagInfo.predicate(tag))
       return tag;
 
     const assetName = tagInfo.getAssetName(tag);
