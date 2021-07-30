@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { v4 as uuid } from 'uuid';
 
+import config from '../../config';
 import type { Money } from '../../models';
 import { getFormattedMoney } from '../../utils';
 import { ButtonPure } from '../Button';
@@ -11,7 +13,29 @@ interface ProductProps {
   imageUrl: string;
 }
 
+const getPaymentUrl = (orderId: string, price: Money) => {
+  const payment = {
+    amount: price[0].toString(),
+    data: {
+      public: {
+        orderId
+      }
+    },
+    created: Date.now(),
+  };
+  const rawPayment = Buffer.from(JSON.stringify(payment), 'utf8').toString('base64');
+
+  return `${config.paymentBaseUrl}/${config.serviceContractAddress}/payment#${rawPayment}`;
+};
+
 export const Product = (props: ProductProps) => {
+  const handleBuyButtonClick = useCallback(
+    () => {
+      window.location.href = getPaymentUrl(uuid(), props.price);
+    },
+    [props.price]
+  );
+
   return <div className={cssClasses.product}>
     <div className={cssClasses['product__image-container']}>
       {/* TODO: use the next/image when a site will be not static */
@@ -22,7 +46,9 @@ export const Product = (props: ProductProps) => {
       <span className={cssClasses.product__name}>{props.name}</span>
 
     </div>
-    <ButtonPure type="primary" className={cssClasses['product__buy-button']}>Buy <span className={cssClasses.product__price}>{getFormattedMoney(props.price)}</span></ButtonPure>
+    <ButtonPure type="primary" className={cssClasses['product__buy-button']} onClick={handleBuyButtonClick}>
+      Buy <span className={cssClasses.product__price}>{getFormattedMoney(props.price)}</span>
+    </ButtonPure>
   </div>;
 };
 
