@@ -99,7 +99,7 @@ let testServices: Service[] = [{
   network: networks.edo2net,
   allowedTokens: {
     tez: true,
-    assets: tokenWhitelist.filter(t => t.network === networks.main).map(t => t.contractAddress)
+    assets: tokenWhitelist.filter(t => t.network === networks.edo2net).map(t => t.contractAddress)
   },
   allowedOperationType: ServiceOperationType.All,
   owner: 'tz1aANkwuYKxB1XCyhB3CjMDDBQuPmNcBcCc',
@@ -120,7 +120,7 @@ let testServices: Service[] = [{
   network: networks.edo2net,
   allowedTokens: {
     tez: true,
-    assets: tokenWhitelist.filter(t => t.network === networks.main).map(t => t.contractAddress)
+    assets: tokenWhitelist.filter(t => t.network === networks.edo2net).map(t => t.contractAddress)
   },
   allowedOperationType: ServiceOperationType.Payment,
   owner: 'tz1aANkwuYKxB1XCyhB3CjMDDBQuPmNcBcCc',
