@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import React from 'react';
 
 import type { Money } from '../../models';
@@ -15,7 +14,9 @@ interface ProductProps {
 export const Product = (props: ProductProps) => {
   return <div className={cssClasses.product}>
     <div className={cssClasses['product__image-container']}>
-      <Image src={props.imageUrl} layout="fill" objectFit="cover" alt={props.name} />
+      {/* TODO: use the next/image when a site will be not static */
+        /* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={props.imageUrl} alt={props.name} />
     </div>
     <div className={cssClasses['product__product-info']}>
       <span className={cssClasses.product__name}>{props.name}</span>
