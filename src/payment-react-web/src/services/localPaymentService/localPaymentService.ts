@@ -206,16 +206,16 @@ export class LocalPaymentService {
 
   private getBeaconAlertWrapperObserver() {
     let beaconAlertWrapperObserverIntervalId: ReturnType<typeof setInterval> | undefined;
+    let beaconAlertWrapperShadowRoot: ShadowRoot | null | undefined;
+    let alertModalElement: Element | null | undefined;
     let closeButtonElement: Element | null | undefined;
-    let onCloseButtonElementClickHandler: (() => void) | undefined;
+    let onBeaconAlertWrapperClosedHandler: ((event: Event) => void) | undefined;
 
     return {
       observe: () => new Promise<boolean>(resolve => {
         beaconAlertWrapperObserverIntervalId = setInterval(() => {
-          closeButtonElement = document.querySelector('[id^="beacon-alert-wrapper"]')
-            ?.shadowRoot
-            ?.querySelector('.beacon-modal__close__wrapper');
-          if (!closeButtonElement)
+          beaconAlertWrapperShadowRoot = document.querySelector('[id^="beacon-alert-wrapper"]')?.shadowRoot;
+          if (!beaconAlertWrapperShadowRoot)
             return;
 
           if (beaconAlertWrapperObserverIntervalId !== undefined) {
@@ -223,14 +223,29 @@ export class LocalPaymentService {
             beaconAlertWrapperObserverIntervalId = undefined;
           }
 
-          onCloseButtonElementClickHandler = () => resolve(true);
-          closeButtonElement.addEventListener('click', onCloseButtonElementClickHandler);
+          alertModalElement = beaconAlertWrapperShadowRoot.querySelector('[id^="beacon-alert-modal"]');
+          closeButtonElement = beaconAlertWrapperShadowRoot.querySelector('.beacon-modal__close__wrapper');
+
+          onBeaconAlertWrapperClosedHandler = (event: Event) => {
+            if (event instanceof KeyboardEvent && event.key !== 'Escape')
+              return;
+
+            resolve(true);
+          };
+
+          window.addEventListener('keydown', onBeaconAlertWrapperClosedHandler);
+          alertModalElement?.addEventListener('click', onBeaconAlertWrapperClosedHandler);
+          closeButtonElement?.addEventListener('click', onBeaconAlertWrapperClosedHandler);
         }, 100);
       }),
       finalize: () => {
         beaconAlertWrapperObserverIntervalId && clearInterval(beaconAlertWrapperObserverIntervalId);
-        if (closeButtonElement && onCloseButtonElementClickHandler)
-          closeButtonElement.removeEventListener('click', onCloseButtonElementClickHandler);
+
+        if (onBeaconAlertWrapperClosedHandler) {
+          window.removeEventListener('keydown', onBeaconAlertWrapperClosedHandler);
+          alertModalElement?.removeEventListener('click', onBeaconAlertWrapperClosedHandler);
+          closeButtonElement?.removeEventListener('click', onBeaconAlertWrapperClosedHandler);
+        }
       }
     } as const;
   }
