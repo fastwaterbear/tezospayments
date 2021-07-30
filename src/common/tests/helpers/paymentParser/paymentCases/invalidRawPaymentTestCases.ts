@@ -20,9 +20,9 @@ const cases: ReadonlyArray<readonly [
           },
           // created: ,
           cancelUrl: 'https://fastwaterbear.com/tezospayments/test/payment/cancel',
-          expired: expiredDate
+          expired: expiredDate.getTime()
         },
-        'eyJhbW91bnQiOiIzOTM5NDM5NDMwNDAzIiwiZGF0YSI6eyJwdWJsaWMiOnsib3JkZXJJZCI6IjBhNmQyZGIxODFmYTRlYzdhN2RiZmI3YjcyODIwMWY2In19LCJjYW5jZWxVcmwiOiJodHRwczovL2Zhc3R3YXRlcmJlYXIuY29tL3Rlem9zcGF5bWVudHMvdGVzdC9wYXltZW50L2NhbmNlbCIsImV4cGlyZWQiOiIyMDIxLTA2LTI2VDAwOjU3OjAzLjkzMFoifQ==',
+        'eyJhbW91bnQiOiIzOTM5NDM5NDMwNDAzIiwiZGF0YSI6eyJwdWJsaWMiOnsib3JkZXJJZCI6IjBhNmQyZGIxODFmYTRlYzdhN2RiZmI3YjcyODIwMWY2In19LCJjYW5jZWxVcmwiOiJodHRwczovL2Zhc3R3YXRlcmJlYXIuY29tL3Rlem9zcGF5bWVudHMvdGVzdC9wYXltZW50L2NhbmNlbCIsImV4cGlyZWQiOjE2MjQ2NjkwMjM5MzB9',
       ]
     ],
     [
@@ -37,15 +37,15 @@ const cases: ReadonlyArray<readonly [
           },
           successUrl: 'https://fastwaterbear.com/tezospayments/test/payment/success',
           cancelUrl: 'https://fastwaterbear.com/tezospayments/test/payment/cancel',
-          created: createdDate,
-          expired: expiredDate,
+          created: createdDate.getTime(),
+          expired: expiredDate.getTime(),
           ...[...new Array(30)].reduce((obj, _, index) => {
             obj[`someExtraField${index}`] = index * 100;
 
             return obj;
           }, {})
         },
-        'eyJhbW91bnQiOiIzOTM5NDM5NDMwNDAzIiwiZGF0YSI6eyJwdWJsaWMiOnsib3JkZXJJZCI6IjBhNmQyZGIxODFmYTRlYzdhN2RiZmI3YjcyODIwMWY2In19LCJzdWNjZXNzVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9zdWNjZXNzIiwiY2FuY2VsVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9jYW5jZWwiLCJjcmVhdGVkIjoiMjAyMS0wNi0yNlQwMDozNzowMy45MzBaIiwiZXhwaXJlZCI6IjIwMjEtMDYtMjZUMDA6NTc6MDMuOTMwWiIsInNvbWVFeHRyYUZpZWxkMCI6MCwic29tZUV4dHJhRmllbGQxIjoxMDAsInNvbWVFeHRyYUZpZWxkMiI6MjAwLCJzb21lRXh0cmFGaWVsZDMiOjMwMCwic29tZUV4dHJhRmllbGQ0Ijo0MDAsInNvbWVFeHRyYUZpZWxkNSI6NTAwLCJzb21lRXh0cmFGaWVsZDYiOjYwMCwic29tZUV4dHJhRmllbGQ3Ijo3MDAsInNvbWVFeHRyYUZpZWxkOCI6ODAwLCJzb21lRXh0cmFGaWVsZDkiOjkwMCwic29tZUV4dHJhRmllbGQxMCI6MTAwMCwic29tZUV4dHJhRmllbGQxMSI6MTEwMCwic29tZUV4dHJhRmllbGQxMiI6MTIwMCwic29tZUV4dHJhRmllbGQxMyI6MTMwMCwic29tZUV4dHJhRmllbGQxNCI6MTQwMCwic29tZUV4dHJhRmllbGQxNSI6MTUwMCwic29tZUV4dHJhRmllbGQxNiI6MTYwMCwic29tZUV4dHJhRmllbGQxNyI6MTcwMCwic29tZUV4dHJhRmllbGQxOCI6MTgwMCwic29tZUV4dHJhRmllbGQxOSI6MTkwMCwic29tZUV4dHJhRmllbGQyMCI6MjAwMCwic29tZUV4dHJhRmllbGQyMSI6MjEwMCwic29tZUV4dHJhRmllbGQyMiI6MjIwMCwic29tZUV4dHJhRmllbGQyMyI6MjMwMCwic29tZUV4dHJhRmllbGQyNCI6MjQwMCwic29tZUV4dHJhRmllbGQyNSI6MjUwMCwic29tZUV4dHJhRmllbGQyNiI6MjYwMCwic29tZUV4dHJhRmllbGQyNyI6MjcwMCwic29tZUV4dHJhRmllbGQyOCI6MjgwMCwic29tZUV4dHJhRmllbGQyOSI6MjkwMH0=',
+        'eyJhbW91bnQiOiIzOTM5NDM5NDMwNDAzIiwiZGF0YSI6eyJwdWJsaWMiOnsib3JkZXJJZCI6IjBhNmQyZGIxODFmYTRlYzdhN2RiZmI3YjcyODIwMWY2In19LCJzdWNjZXNzVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9zdWNjZXNzIiwiY2FuY2VsVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9jYW5jZWwiLCJjcmVhdGVkIjoxNjI0NjY3ODIzOTMwLCJleHBpcmVkIjoxNjI0NjY5MDIzOTMwLCJzb21lRXh0cmFGaWVsZDAiOjAsInNvbWVFeHRyYUZpZWxkMSI6MTAwLCJzb21lRXh0cmFGaWVsZDIiOjIwMCwic29tZUV4dHJhRmllbGQzIjozMDAsInNvbWVFeHRyYUZpZWxkNCI6NDAwLCJzb21lRXh0cmFGaWVsZDUiOjUwMCwic29tZUV4dHJhRmllbGQ2Ijo2MDAsInNvbWVFeHRyYUZpZWxkNyI6NzAwLCJzb21lRXh0cmFGaWVsZDgiOjgwMCwic29tZUV4dHJhRmllbGQ5Ijo5MDAsInNvbWVFeHRyYUZpZWxkMTAiOjEwMDAsInNvbWVFeHRyYUZpZWxkMTEiOjExMDAsInNvbWVFeHRyYUZpZWxkMTIiOjEyMDAsInNvbWVFeHRyYUZpZWxkMTMiOjEzMDAsInNvbWVFeHRyYUZpZWxkMTQiOjE0MDAsInNvbWVFeHRyYUZpZWxkMTUiOjE1MDAsInNvbWVFeHRyYUZpZWxkMTYiOjE2MDAsInNvbWVFeHRyYUZpZWxkMTciOjE3MDAsInNvbWVFeHRyYUZpZWxkMTgiOjE4MDAsInNvbWVFeHRyYUZpZWxkMTkiOjE5MDAsInNvbWVFeHRyYUZpZWxkMjAiOjIwMDAsInNvbWVFeHRyYUZpZWxkMjEiOjIxMDAsInNvbWVFeHRyYUZpZWxkMjIiOjIyMDAsInNvbWVFeHRyYUZpZWxkMjMiOjIzMDAsInNvbWVFeHRyYUZpZWxkMjQiOjI0MDAsInNvbWVFeHRyYUZpZWxkMjUiOjI1MDAsInNvbWVFeHRyYUZpZWxkMjYiOjI2MDAsInNvbWVFeHRyYUZpZWxkMjciOjI3MDAsInNvbWVFeHRyYUZpZWxkMjgiOjI4MDAsInNvbWVFeHRyYUZpZWxkMjkiOjI5MDB9',
       ]
     ],
     [
@@ -60,10 +60,10 @@ const cases: ReadonlyArray<readonly [
           },
           successUrl: 'https://fastwaterbear.com/tezospayments/test/payment/success',
           cancelUrl: 'https://fastwaterbear.com/tezospayments/test/payment/cancel',
-          created: createdDate,
-          expired: expiredDate
+          created: createdDate.getTime(),
+          expired: expiredDate.getTime()
         },
-        'eyJhbW91bnQiOjM1MDM5LCJkYXRhIjp7InB1YmxpYyI6eyJvcmRlcklkIjoiMGE2ZDJkYjE4MWZhNGVjN2E3ZGJmYjdiNzI4MjAxZjYifX0sInN1Y2Nlc3NVcmwiOiJodHRwczovL2Zhc3R3YXRlcmJlYXIuY29tL3Rlem9zcGF5bWVudHMvdGVzdC9wYXltZW50L3N1Y2Nlc3MiLCJjYW5jZWxVcmwiOiJodHRwczovL2Zhc3R3YXRlcmJlYXIuY29tL3Rlem9zcGF5bWVudHMvdGVzdC9wYXltZW50L2NhbmNlbCIsImNyZWF0ZWQiOiIyMDIxLTA2LTI2VDAwOjM3OjAzLjkzMFoiLCJleHBpcmVkIjoiMjAyMS0wNi0yNlQwMDo1NzowMy45MzBaIn0=',
+        'eyJhbW91bnQiOjM1MDM5LCJkYXRhIjp7InB1YmxpYyI6eyJvcmRlcklkIjoiMGE2ZDJkYjE4MWZhNGVjN2E3ZGJmYjdiNzI4MjAxZjYifX0sInN1Y2Nlc3NVcmwiOiJodHRwczovL2Zhc3R3YXRlcmJlYXIuY29tL3Rlem9zcGF5bWVudHMvdGVzdC9wYXltZW50L3N1Y2Nlc3MiLCJjYW5jZWxVcmwiOiJodHRwczovL2Zhc3R3YXRlcmJlYXIuY29tL3Rlem9zcGF5bWVudHMvdGVzdC9wYXltZW50L2NhbmNlbCIsImNyZWF0ZWQiOjE2MjQ2Njc4MjM5MzAsImV4cGlyZWQiOjE2MjQ2NjkwMjM5MzB9',
       ],
     ],
     [
@@ -78,10 +78,10 @@ const cases: ReadonlyArray<readonly [
           },
           successUrl: '<script>alert(1)</script>',
           cancelUrl: 'https://fastwaterbear.com/tezospayments/test/payment/cancel',
-          created: createdDate,
-          expired: expiredDate
+          created: createdDate.getTime(),
+          expired: expiredDate.getTime()
         },
-        'eyJhbW91bnQiOiIzOTM5NDM5NDMwNDAzIiwiZGF0YSI6eyJwdWJsaWMiOnsib3JkZXJJZCI6IjBhNmQyZGIxODFmYTRlYzdhN2RiZmI3YjcyODIwMWY2In19LCJzdWNjZXNzVXJsIjoiPHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0PiIsImNhbmNlbFVybCI6Imh0dHBzOi8vZmFzdHdhdGVyYmVhci5jb20vdGV6b3NwYXltZW50cy90ZXN0L3BheW1lbnQvY2FuY2VsIiwiY3JlYXRlZCI6IjIwMjEtMDYtMjZUMDA6Mzc6MDMuOTMwWiIsImV4cGlyZWQiOiIyMDIxLTA2LTI2VDAwOjU3OjAzLjkzMFoifQ==',
+        'eyJhbW91bnQiOiIzOTM5NDM5NDMwNDAzIiwiZGF0YSI6eyJwdWJsaWMiOnsib3JkZXJJZCI6IjBhNmQyZGIxODFmYTRlYzdhN2RiZmI3YjcyODIwMWY2In19LCJzdWNjZXNzVXJsIjoiPHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0PiIsImNhbmNlbFVybCI6Imh0dHBzOi8vZmFzdHdhdGVyYmVhci5jb20vdGV6b3NwYXltZW50cy90ZXN0L3BheW1lbnQvY2FuY2VsIiwiY3JlYXRlZCI6MTYyNDY2NzgyMzkzMCwiZXhwaXJlZCI6MTYyNDY2OTAyMzkzMH0=',
       ]
     ],
     [
@@ -97,9 +97,9 @@ const cases: ReadonlyArray<readonly [
           asset: { value: 3333333 },
           successUrl: 'https://fastwaterbear.com/tezospayments/test/payment/success',
           cancelUrl: 'https://fastwaterbear.com/tezospayments/test/payment/cancel',
-          created: createdDate
+          created: createdDate.getTime()
         },
-        'eyJhbW91bnQiOiI4MzgzLjM4MzIwMjI4MzgyMjgzMjIzMiIsImRhdGEiOnsicHVibGljIjp7Im9yZGVySWQiOiIwYTZkMmRiMTgxZmE0ZWM3YTdkYmZiN2I3MjgyMDFmNiJ9fSwiYXNzZXQiOnsidmFsdWUiOjMzMzMzMzN9LCJzdWNjZXNzVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9zdWNjZXNzIiwiY2FuY2VsVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9jYW5jZWwiLCJjcmVhdGVkIjoiMjAyMS0wNi0yNlQwMDozNzowMy45MzBaIn0=',
+        'eyJhbW91bnQiOiI4MzgzLjM4MzIwMjI4MzgyMjgzMjIzMiIsImRhdGEiOnsicHVibGljIjp7Im9yZGVySWQiOiIwYTZkMmRiMTgxZmE0ZWM3YTdkYmZiN2I3MjgyMDFmNiJ9fSwiYXNzZXQiOnsidmFsdWUiOjMzMzMzMzN9LCJzdWNjZXNzVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9zdWNjZXNzIiwiY2FuY2VsVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9jYW5jZWwiLCJjcmVhdGVkIjoxNjI0NjY3ODIzOTMwfQ==',
       ]
     ],
     [

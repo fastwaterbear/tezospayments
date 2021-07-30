@@ -1,6 +1,6 @@
 import { PaymentBase } from '../../models/payment/paymentBase';
 
-export type PaymentFieldInfoType = 'object' | 'string' | 'undefined' | 'null';
+export type PaymentFieldInfoType = 'object' | 'string' | 'number' | 'undefined' | 'null';
 
 export abstract class PaymentParserBase<
   TPayment extends PaymentBase,
@@ -66,9 +66,9 @@ export abstract class PaymentParserBase<
     for (const [rawPaymentFieldName, expectedPaymentFieldType] of this.paymentFieldTypes) {
       const actualPaymentFieldType = typeof rawPayment[rawPaymentFieldName];
 
-      if (typeof expectedPaymentFieldType === 'string'
-        ? actualPaymentFieldType !== expectedPaymentFieldType
-        : !expectedPaymentFieldType.some(expectedType => actualPaymentFieldType === expectedType)
+      if (Array.isArray(expectedPaymentFieldType)
+        ? !expectedPaymentFieldType.some(expectedType => actualPaymentFieldType === expectedType)
+        : actualPaymentFieldType !== expectedPaymentFieldType
       ) {
         return false;
       }

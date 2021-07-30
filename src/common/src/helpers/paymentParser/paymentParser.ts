@@ -8,11 +8,11 @@ import { PaymentFieldInfoType, PaymentParserBase } from './paymentParserBase';
 type RawPaymentBase = {
   amount: string;
   data: Payment['data'];
-  created: Date;
+  created: number;
   asset?: string;
   successUrl?: string;
   cancelUrl?: string;
-  expired?: Date;
+  expired?: number;
 };
 
 export type RawPayment = Partial<RawPaymentBase>;
@@ -28,8 +28,8 @@ export class PaymentParser extends PaymentParserBase<Payment, RawPayment, ValidR
     .set('asset', ['string', 'undefined', 'null'])
     .set('successUrl', ['string', 'undefined', 'null'])
     .set('cancelUrl', ['string', 'undefined', 'null'])
-    .set('created', 'string')
-    .set('expired', ['string', 'undefined', 'null']);
+    .set('created', 'number')
+    .set('expired', ['number', 'undefined', 'null']);
 
   protected get paymentFieldTypes() {
     return this._paymentFieldTypes;
