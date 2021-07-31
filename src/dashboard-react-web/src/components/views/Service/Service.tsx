@@ -10,7 +10,7 @@ import { useAppSelector, useQuery } from '../../hooks';
 import { View } from '../View';
 import { DangerZonePure } from './DangerZone';
 import { HeaderPure } from './Header';
-import { UpdateServicePure } from './UpdateService';
+import { ServiceEditFormPure } from './ServiceEditForm';
 import { ViewZonePure } from './ViewZone';
 
 import './Service.scss';
@@ -40,7 +40,7 @@ export const Service = (props: ServiceProps) => {
     {!isInitialized || !service
       ? <Skeleton active />
       : isEdit || isCreateMode
-        ? <UpdateServicePure service={service} isCreateMode={isCreateMode} />
+        ? <ServiceEditFormPure service={service} isCreateMode={isCreateMode} />
         : <>
           <HeaderPure service={service} />
           <ViewZonePure service={service} />

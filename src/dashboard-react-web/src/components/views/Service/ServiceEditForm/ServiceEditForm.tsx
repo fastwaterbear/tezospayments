@@ -14,16 +14,16 @@ import { useAppDispatch, useCurrentLanguageResources } from '../../../hooks';
 import { View } from '../../View';
 import { TokensPure } from '../Tokens';
 
-import './UpdateService.scss';
+import './ServiceEditForm.scss';
 
-interface UpdateServiceProps {
+interface ServiceEditFormProps {
   service: Service;
   isCreateMode: boolean;
 }
 
 const serviceLinkHelper = new ServiceLinkHelper();
 
-export const UpdateService = (props: UpdateServiceProps) => {
+export const ServiceEditForm = (props: ServiceEditFormProps) => {
   const history = useHistory();
   const langResources = useCurrentLanguageResources();
   const commonLangResources = langResources.common;
@@ -42,11 +42,10 @@ export const UpdateService = (props: UpdateServiceProps) => {
 
   const validate = useCallback(() => {
     const isValid = !!name
-      && !!description
       && links.every(l => !!serviceLinkHelper.getLinkInfo(l));
 
     setIsFormValid(isValid);
-  }, [description, links, name]);
+  }, [links, name]);
 
   useEffect(() => validate(), [validate]);
 
@@ -145,4 +144,4 @@ export const UpdateService = (props: UpdateServiceProps) => {
   </>;
 
 };
-export const UpdateServicePure = React.memo(UpdateService);
+export const ServiceEditFormPure = React.memo(ServiceEditForm);
