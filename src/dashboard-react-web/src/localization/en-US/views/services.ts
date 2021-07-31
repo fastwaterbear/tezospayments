@@ -16,9 +16,17 @@ export const services = {
   dangerZone: {
     title: 'Danger Zone',
     pauseService: 'Pause Service',
+    pauseServiceConfirmation: 'Are you sure you want to pause the service',
     pauseServiceDescription: 'Pause accepting payments and donations',
+    unPauseService: 'Unpause Service',
+    unPauseServiceConfirmation: 'Are you sure you want to unpause the service',
+    unPauseServiceDescription: 'Accepting payments and donations are paused',
     deleteService: 'Delete Service',
-    deleteServiceDescription: 'Delete this service. After deleting this service can’t accept payments and donations. You can restore the deleted service'
+    deleteServiceConfirmation: 'Are you sure you want to delete the service',
+    deleteServiceDescription: 'Delete this service. After deleting this service can’t accept payments and donations. You can restore the deleted service',
+    unDeleteService: 'Undelete Service',
+    unDeleteServiceConfirmation: 'Are you sure you want to undelete the service',
+    unDeleteServiceDescription: 'Service is marked as deleted',
   },
   editing: {
     editService: 'Edit Service',

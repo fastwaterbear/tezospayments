@@ -97,9 +97,9 @@ export const ServiceEditForm = (props: ServiceEditFormProps) => {
     };
 
     if (props.isCreateMode) {
-      dispatch(createService({ accountAddress: updatedService.owner, service: updatedService }));
+      dispatch(createService(updatedService));
     } else {
-      dispatch(updateService({ accountAddress: updatedService.owner, service: updatedService }));
+      dispatch(updateService(updatedService));
     }
 
     handleCancelClick();
@@ -142,6 +142,6 @@ export const ServiceEditForm = (props: ServiceEditFormProps) => {
       </div>
     </div>
   </>;
-
 };
+
 export const ServiceEditFormPure = React.memo(ServiceEditForm);

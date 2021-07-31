@@ -34,21 +34,27 @@ export const loadServices = createAsyncThunk<Service[], string, AppThunkAPI>(
   }
 );
 
-export const updateService = createAsyncThunk<void, { accountAddress: string, service: Service }, AppThunkAPI>(
+export const updateService = createAsyncThunk<void, Service, AppThunkAPI>(
   `${namespace}/updateService`,
-  async ({ accountAddress, service }, { extra: app, dispatch }) => {
+  async (service, { extra: app, dispatch, getState }) => {
     await app.services.servicesService.updateService(service);
 
-    dispatch(loadServices(accountAddress));
+    const accountAddress = getState().accountsState.currentAccountAddress;
+    if (accountAddress) {
+      dispatch(loadServices(accountAddress));
+    }
   }
 );
 
-export const createService = createAsyncThunk<void, { accountAddress: string, service: Service }, AppThunkAPI>(
+export const createService = createAsyncThunk<void, Service, AppThunkAPI>(
   `${namespace}/createService`,
-  async ({ accountAddress, service }, { extra: app, dispatch }) => {
+  async (service, { extra: app, dispatch, getState }) => {
     await app.services.servicesService.createService(service);
 
-    dispatch(loadServices(accountAddress));
+    const accountAddress = getState().accountsState.currentAccountAddress;
+    if (accountAddress) {
+      dispatch(loadServices(accountAddress));
+    }
   }
 );
 
