@@ -96,7 +96,9 @@ export class ServicesService {
   }
 }
 
-let testServices: Service[] = [{
+let testServices: Service[] = [];
+
+const _testServices2: Service[] = [{
   name: 'Test Service of Fast Water Bear',
   links: [
     'https://github.com/fastwaterbear',

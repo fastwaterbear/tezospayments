@@ -3,8 +3,8 @@ import { LineConfig } from '@ant-design/charts/es/line';
 import { Skeleton } from 'antd';
 import React from 'react';
 
-import { selectServicesState } from '../../../store/services/selectors';
-import { useAppSelector } from '../../hooks';
+import { selectServicesState } from '../../../../store/services/selectors';
+import { useAppSelector } from '../../../hooks';
 
 export const VolumeChart = () => {
   const data = [

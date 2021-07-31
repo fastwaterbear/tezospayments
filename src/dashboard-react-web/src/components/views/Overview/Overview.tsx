@@ -3,11 +3,8 @@ import React from 'react';
 
 import { useCurrentLanguageResources } from '../../hooks';
 import { View } from '../View';
-import { BalancesPure } from './Balances';
-import { Incoming } from './Incoming';
-import { OperationCountChartPure } from './OperationCountChart';
-import { Outgoing } from './Outgoing';
-import { VolumeChartPure } from './VolumeChart';
+import { OperationCountChartPure, VolumeChartPure } from './LargeCards';
+import { BalancesPure, IncomingPure, OutgoingPure } from './SmallCards';
 import './Overview.scss';
 
 export const Overview = () => {
@@ -25,12 +22,12 @@ export const Overview = () => {
 
       {/*eslint-disable-next-line max-len*/}
       <Card className="cards-container__small-card" size="small" title={`${overviewLangResources.incoming.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">All Month</a>} style={{ height: 220 }}>
-        <Incoming />
+        <IncomingPure />
       </Card>
 
       {/*eslint-disable-next-line max-len*/}
       <Card className="cards-container__small-card" size="small" title={`${overviewLangResources.outgoing.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">All Month</a>} style={{ height: 220 }}>
-        <Outgoing />
+        <OutgoingPure />
       </Card>
 
       <Card className="cards-container__large-card" title={`${overviewLangResources.operationCount.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">6 Months</a>}>

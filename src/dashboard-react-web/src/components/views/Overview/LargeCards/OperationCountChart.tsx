@@ -3,8 +3,8 @@ import { ColumnConfig } from '@ant-design/charts/es/column';
 import { Skeleton } from 'antd';
 import React from 'react';
 
-import { selectServicesState } from '../../../store/services/selectors';
-import { useAppSelector } from '../../hooks';
+import { selectServicesState } from '../../../../store/services/selectors';
+import { useAppSelector } from '../../../hooks';
 
 export const OperationCountChart = () => {
   const data = [

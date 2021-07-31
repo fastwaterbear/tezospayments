@@ -4,16 +4,18 @@ import React from 'react';
 import { tezosMeta } from '@tezospayments/common/dist/models/blockchain';
 
 
-import { getAcceptTezos, getAllAcceptedTokens, selectServicesState } from '../../../store/services/selectors';
-import { TokenList } from '../../common';
-import { useAppSelector } from '../../hooks';
+import { selectBalancesState } from '../../../../store/balances/selectors';
+import { getAcceptTezos, getAllAcceptedTokens, selectServicesState } from '../../../../store/services/selectors';
+import { TokenList } from '../../../common';
+import { useAppSelector } from '../../../hooks';
 
-export const Incoming = () => {
+export const Balances = () => {
   const acceptTezos = useAppSelector(getAcceptTezos);
-  const services = useAppSelector(selectServicesState);
   const tokens = useAppSelector(getAllAcceptedTokens);
+  const services = useAppSelector(selectServicesState);
+  const balances = useAppSelector(selectBalancesState);
 
-  if (!services.initialized) {
+  if (!services.initialized || !balances.initialized) {
     return <Skeleton active />;
   }
 
@@ -25,9 +27,8 @@ export const Incoming = () => {
       ticker={tezosMeta.symbol}
       name={tezosMeta.name}
       decimals={tezosMeta.decimals}
-      value={52.4}
-      iconSrc={tezosMeta.thumbnailUri}
-      highlightSign />);
+      value={balances.tezos}
+      iconSrc={tezosMeta.thumbnailUri} />);
   }
 
   tokens.forEach(t => {
@@ -36,9 +37,8 @@ export const Incoming = () => {
       ticker={t.metadata?.symbol || 'unknown'}
       name={t.metadata?.name || 'unknown'}
       decimals={t.metadata ? t.metadata.decimals : 2}
-      value={462518}
-      iconSrc={t.metadata?.thumbnailUri}
-      highlightSign />);
+      value={balances.tokens[t.contractAddress] || 0}
+      iconSrc={t.metadata?.thumbnailUri} />);
   });
 
   return <TokenList>
@@ -46,5 +46,4 @@ export const Incoming = () => {
   </TokenList>;
 };
 
-
-export const IncomingPure = React.memo(Incoming);
+export const BalancesPure = React.memo(Balances);

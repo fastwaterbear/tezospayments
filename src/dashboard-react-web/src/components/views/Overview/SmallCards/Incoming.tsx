@@ -4,11 +4,11 @@ import React from 'react';
 import { tezosMeta } from '@tezospayments/common/dist/models/blockchain';
 
 
-import { getAcceptTezos, getAllAcceptedTokens, selectServicesState } from '../../../store/services/selectors';
-import { TokenList } from '../../common';
-import { useAppSelector } from '../../hooks';
+import { getAcceptTezos, getAllAcceptedTokens, selectServicesState } from '../../../../store/services/selectors';
+import { TokenList } from '../../../common';
+import { useAppSelector } from '../../../hooks';
 
-export const Outgoing = () => {
+export const Incoming = () => {
   const acceptTezos = useAppSelector(getAcceptTezos);
   const services = useAppSelector(selectServicesState);
   const tokens = useAppSelector(getAllAcceptedTokens);
@@ -25,7 +25,7 @@ export const Outgoing = () => {
       ticker={tezosMeta.symbol}
       name={tezosMeta.name}
       decimals={tezosMeta.decimals}
-      value={-52.4}
+      value={52.4}
       iconSrc={tezosMeta.thumbnailUri}
       highlightSign />);
   }
@@ -36,7 +36,7 @@ export const Outgoing = () => {
       ticker={t.metadata?.symbol || 'unknown'}
       name={t.metadata?.name || 'unknown'}
       decimals={t.metadata ? t.metadata.decimals : 2}
-      value={-462518.0000006}
+      value={462518}
       iconSrc={t.metadata?.thumbnailUri}
       highlightSign />);
   });
@@ -47,4 +47,4 @@ export const Outgoing = () => {
 };
 
 
-export const OutgoingPure = React.memo(Outgoing);
+export const IncomingPure = React.memo(Incoming);
