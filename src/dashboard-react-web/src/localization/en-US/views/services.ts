@@ -7,6 +7,8 @@ export const services = {
   createNewService: 'Create New Service',
   acceptPayments: 'Accept Payments',
   acceptPaymentsDescription: 'Generate a payment link using our constructor to accept payments on your service',
+  youDoNotHaveAnyServicesYet: 'You don\'t have any services yet',
+  createYourFirstService: 'Create your first service to accept payments or connect another Tezos account',
   operations: {
     paymentsEnabled: 'Payments Enabled',
     donationsEnabled: 'Donations Enabled',

@@ -3,8 +3,9 @@ import React from 'react';
 
 import { ServiceOperation, ServiceOperationDirection } from '@tezospayments/common/dist/models/service';
 
-
-import { getSortedOperations, selectOperationsState } from '../../../store/operations/selectors';
+import { getSortedOperations } from '../../../store/operations/selectors';
+import { selectServicesState } from '../../../store/services/selectors';
+import { NoServicesCreated } from '../../common/NoServicesCreated';
 import { OperationList } from '../../common/OperationList';
 import { useAppSelector, useCurrentLanguageResources } from '../../hooks';
 import { View } from '../View';
@@ -13,8 +14,9 @@ export const Operations = () => {
   const langResources = useCurrentLanguageResources();
   const operationsLangResources = langResources.views.operations;
 
-  const isInitialized = useAppSelector(selectOperationsState).initialized;
   const operations = useAppSelector(getSortedOperations);
+
+  const servicesState = useAppSelector(selectServicesState);
 
   const operationProps: Array<React.ComponentProps<typeof OperationList.Item>> = operations.map(o => ({
     date: o.date,
@@ -31,11 +33,13 @@ export const Operations = () => {
 
   return <View title={operationsLangResources.title}>
     <View.Title>{operationsLangResources.title}</View.Title>
-    {!isInitialized
+    {!servicesState.initialized
       ? <Skeleton active />
-      : <OperationList>
-        {operationProps.map(o => <OperationList.Item key={o.hash} {...o} />)}
-      </OperationList>}
+      : !servicesState.services.length
+        ? <NoServicesCreated />
+        : <OperationList>
+          {operationProps.map(o => <OperationList.Item key={o.hash} {...o} />)}
+        </OperationList>}
   </View>;
 };
 

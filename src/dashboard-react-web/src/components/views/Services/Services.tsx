@@ -2,6 +2,7 @@ import { Skeleton } from 'antd';
 import React from 'react';
 
 import { getSortedServices, selectServicesState } from '../../../store/services/selectors';
+import { NoServicesCreatedPure } from '../../common/NoServicesCreated';
 import { useAppSelector, useCurrentLanguageResources } from '../../hooks';
 import { View } from '../View';
 import { NewServiceCardPure, ServiceCardPure } from './ServiceCards';
@@ -11,7 +12,8 @@ export const Services = () => {
   const langResources = useCurrentLanguageResources();
   const servicesLangResources = langResources.views.services;
 
-  const isInitialized = useAppSelector(selectServicesState).initialized;
+  const servicesState = useAppSelector(selectServicesState);
+
   const services = useAppSelector(getSortedServices);
   const servicesCards = services.map(s => <ServiceCardPure
     key={s.contractAddress}
@@ -23,12 +25,14 @@ export const Services = () => {
 
   return <View title={servicesLangResources.title}>
     <View.Title>{servicesLangResources.title}</View.Title>
-    {!isInitialized
+    {!servicesState.initialized
       ? <Skeleton active />
-      : <div className="services-container">
-        {servicesCards}
-        <NewServiceCardPure />
-      </div>}
+      : !servicesState.services.length
+        ? <NoServicesCreatedPure />
+        : <div className="services-container">
+          {servicesCards}
+          <NewServiceCardPure />
+        </div>}
   </View >;
 };
 
