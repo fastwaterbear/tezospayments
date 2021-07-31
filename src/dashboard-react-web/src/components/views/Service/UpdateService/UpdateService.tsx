@@ -1,9 +1,10 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Input } from 'antd';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { ServiceLinkHelper } from '@tezospayments/common/dist/helpers';
 import { Service, ServiceOperationType } from '@tezospayments/common/dist/models/service';
 
 import { config } from '../../../../config';
@@ -18,6 +19,8 @@ interface UpdateServiceProps {
   service: Service;
 }
 
+const serviceLinkHelper = new ServiceLinkHelper();
+
 export const UpdateService = (props: UpdateServiceProps) => {
   const history = useHistory();
   const langResources = useCurrentLanguageResources();
@@ -30,16 +33,35 @@ export const UpdateService = (props: UpdateServiceProps) => {
     history.push(`${config.routers.services}/${props.service.contractAddress}`);
   }, [history, props.service.contractAddress]);
 
+  const [isFormValid, setIsFormValid] = useState(false);
   const [name, setName] = useState(props.service.name);
-  const handleNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value), []);
-
   const [description, setDescription] = useState(props.service.description);
-  const handleDescriptionChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value), []);
-
   const [links, setLinks] = useState(props.service.links);
+
+  const validate = useCallback(() => {
+    const isValid = !!name
+      && !!description
+      && links.every(l => !!serviceLinkHelper.getLinkInfo(l));
+
+    setIsFormValid(isValid);
+  }, [description, links, name]);
+
+  useEffect(() => validate(), [validate]);
+
+  const handleNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+    validate();
+  }, [validate]);
+
+  const handleDescriptionChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setDescription(e.target.value);
+    validate();
+  }, [validate]);
+
   const handleLinksChange = useCallback((e: { value: string[] }) => {
     setLinks(e.value);
-  }, []);
+    validate();
+  }, [validate]);
 
   const [acceptPayments, setAcceptPayments] = useState(props.service.allowedOperationType === ServiceOperationType.All || props.service.allowedOperationType === ServiceOperationType.Payment);
   const [acceptDonations, setAcceptDonations] = useState(props.service.allowedOperationType === ServiceOperationType.All || props.service.allowedOperationType === ServiceOperationType.Donation);
@@ -106,7 +128,7 @@ export const UpdateService = (props: UpdateServiceProps) => {
     </div>
     <div className="service-edit__buttons-container">
       <Button className="service-edit__button" onClick={handleCancelClick}>{commonLangResources.cancel}</Button>
-      <Button className="service-edit__button" onClick={handleUpdateClick} type="primary">{servicesLangResources.editing.updateService}</Button>
+      <Button className="service-edit__button" onClick={handleUpdateClick} disabled={!isFormValid} type="primary">{servicesLangResources.editing.updateService}</Button>
     </div>
   </div>;
 };
