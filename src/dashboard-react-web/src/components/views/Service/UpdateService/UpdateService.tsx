@@ -8,15 +8,17 @@ import { ServiceLinkHelper } from '@tezospayments/common/dist/helpers';
 import { Service, ServiceOperationType } from '@tezospayments/common/dist/models/service';
 
 import { config } from '../../../../config';
-import { updateService } from '../../../../store/services/slice';
+import { createService, updateService } from '../../../../store/services/slice';
 import { ServiceLinksEditor } from '../../../common/ServiceLinks';
 import { useAppDispatch, useCurrentLanguageResources } from '../../../hooks';
+import { View } from '../../View';
 import { TokensPure } from '../Tokens';
 
 import './UpdateService.scss';
 
 interface UpdateServiceProps {
   service: Service;
+  isCreateMode: boolean;
 }
 
 const serviceLinkHelper = new ServiceLinkHelper();
@@ -95,42 +97,52 @@ export const UpdateService = (props: UpdateServiceProps) => {
       links
     };
 
-    dispatch(updateService({ accountAddress: updatedService.owner, service: updatedService }));
+    if (props.isCreateMode) {
+      dispatch(createService({ accountAddress: updatedService.owner, service: updatedService }));
+    } else {
+      dispatch(updateService({ accountAddress: updatedService.owner, service: updatedService }));
+    }
+
     handleCancelClick();
-  }, [acceptDonations, acceptPayments, description, dispatch, handleCancelClick, links, name, props.service]);
+  }, [acceptDonations, acceptPayments, description, dispatch, handleCancelClick, links, name, props.isCreateMode, props.service]);
 
-  return <div className="service-edit">
-    <span className="service-edit__caption">{servicesLangResources.editing.serviceName}</span>
-    <Input placeholder={servicesLangResources.editing.serviceName} value={name} onChange={handleNameChange} />
-    <span className="service-edit__caption">{servicesLangResources.editing.description}</span>
-    <Input.TextArea rows={5} placeholder={servicesLangResources.editing.description} value={description} onChange={handleDescriptionChange} />
-    <div className="service-edit__lists-container">
-      <div className="service-edit__list-container">
-        <span className="service-edit__list-header">{servicesLangResources.allowedCurrencies}</span>
-        <TokensPure service={props.service} />
-        <Button className="service-edit__button" disabled icon={<PlusOutlined />}>
-          {`${servicesLangResources.editing.addCurrency} (${commonLangResources.comingSoon})`}
-        </Button>
+  const operationName = props.isCreateMode ? servicesLangResources.editing.createService : servicesLangResources.editing.updateService;
+
+  return <>
+    <View.Title>{operationName}</View.Title>
+    <div className="service-edit">
+      <span className="service-edit__caption">{servicesLangResources.editing.serviceName}</span>
+      <Input placeholder={servicesLangResources.editing.serviceName} value={name} onChange={handleNameChange} />
+      <span className="service-edit__caption">{servicesLangResources.editing.description}</span>
+      <Input.TextArea rows={5} placeholder={servicesLangResources.editing.description} value={description} onChange={handleDescriptionChange} />
+      <div className="service-edit__lists-container">
+        <div className="service-edit__list-container">
+          <span className="service-edit__list-header">{servicesLangResources.allowedCurrencies}</span>
+          <TokensPure service={props.service} />
+          <Button className="service-edit__button" disabled icon={<PlusOutlined />}>
+            {`${servicesLangResources.editing.addCurrency} (${commonLangResources.comingSoon})`}
+          </Button>
+        </div>
+        <div className="service-edit__list-container">
+          <span className="service-edit__list-header">{servicesLangResources.links}</span>
+          <ServiceLinksEditor value={links as string[]} onChange={handleLinksChange} />
+        </div>
       </div>
-      <div className="service-edit__list-container">
-        <span className="service-edit__list-header">{servicesLangResources.links}</span>
-        <ServiceLinksEditor value={links as string[]} onChange={handleLinksChange} />
+      <span className="service-edit__caption">{servicesLangResources.editing.accept}</span>
+      <div className="service-edit__accept-list">
+        <Checkbox className="service-edit__accept-list-item" checked={acceptPayments} onChange={handleAcceptPaymentsChange}>
+          {servicesLangResources.editing.acceptPayments}
+        </Checkbox>
+        <Checkbox className="service-edit__accept-list-item" checked={acceptDonations} onChange={handleDonationsPaymentsChange}>
+          {servicesLangResources.editing.acceptDonations}
+        </Checkbox>
+      </div>
+      <div className="service-edit__buttons-container">
+        <Button className="service-edit__button" onClick={handleCancelClick}>{commonLangResources.cancel}</Button>
+        <Button className="service-edit__button" onClick={handleUpdateClick} disabled={!isFormValid} type="primary">{operationName}</Button>
       </div>
     </div>
-    <span className="service-edit__caption">{servicesLangResources.editing.accept}</span>
-    <div className="service-edit__accept-list">
-      <Checkbox className="service-edit__accept-list-item" checked={acceptPayments} onChange={handleAcceptPaymentsChange}>
-        {servicesLangResources.editing.acceptPayments}
-      </Checkbox>
-      <Checkbox className="service-edit__accept-list-item" checked={acceptDonations} onChange={handleDonationsPaymentsChange}>
-        {servicesLangResources.editing.acceptDonations}
-      </Checkbox>
-    </div>
-    <div className="service-edit__buttons-container">
-      <Button className="service-edit__button" onClick={handleCancelClick}>{commonLangResources.cancel}</Button>
-      <Button className="service-edit__button" onClick={handleUpdateClick} disabled={!isFormValid} type="primary">{servicesLangResources.editing.updateService}</Button>
-    </div>
-  </div>;
+  </>;
+
 };
-
 export const UpdateServicePure = React.memo(UpdateService);

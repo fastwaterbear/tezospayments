@@ -9,6 +9,7 @@ import { loadActiveAccount } from '../../store/accounts/slice';
 import { PrivateRouteContainer } from '../common';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { OverviewPure, ConnectPure, OperationsPure, ServicePure, ServicesPure, AboutPure } from '../views';
+import { ServiceViewMode } from '../views/Service/Service';
 import { HeaderPure } from './Header';
 import { NavBarPure } from './NavBar';
 
@@ -35,11 +36,14 @@ export const App = () => {
         <PrivateRouteContainer exact path={config.routers.operations}>
           <OperationsPure />
         </PrivateRouteContainer>
-        <PrivateRouteContainer exact path={config.routers.services}>
-          <ServicesPure />
+        <PrivateRouteContainer exact path={`${config.routers.services}/create`}>
+          <ServicePure mode={ServiceViewMode.Create} />
         </PrivateRouteContainer>
         <PrivateRouteContainer exact path={`${config.routers.services}/:address`}>
-          <ServicePure />
+          <ServicePure mode={ServiceViewMode.ViewAndEdit} />
+        </PrivateRouteContainer>
+        <PrivateRouteContainer exact path={config.routers.services}>
+          <ServicesPure />
         </PrivateRouteContainer>
         <Route path={config.routers.about}>
           <AboutPure />

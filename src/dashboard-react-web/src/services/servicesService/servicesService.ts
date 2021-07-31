@@ -49,6 +49,17 @@ export class ServicesService {
     });
   }
 
+  async createService(service: Service): Promise<void> {
+    return new Promise(resolve => {
+      wait(1000).then(() => {
+        service = { ...service, contractAddress: `KT1J5rMCDMG2iHfA4EhpKdFyQVQAVY8wHf6${testServices.length + 1}` };
+        testServices = [...testServices, service];
+
+        resolve();
+      });
+    });
+  }
+
   async getOperations(network: NetworkType, contractAddress: string): Promise<ServiceOperation[]> {
     const response = await fetch(`https://${this.getTzktUrl(network)}/v1/accounts/${contractAddress}/operations?type=transaction&parameters.as=*%22entrypoint%22:%22send_payment%22*`);
     const operations: Operation[] = await response.json();

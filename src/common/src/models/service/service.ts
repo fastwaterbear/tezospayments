@@ -1,4 +1,4 @@
-import { Network } from '../blockchain/network';
+import { Network, networks } from '../blockchain/network';
 import { ServiceOperationType } from './serviceOperationType';
 
 export interface Service {
@@ -21,3 +21,21 @@ export interface Service {
   readonly paused: boolean;
   readonly deleted: boolean;
 }
+
+export const emptyService: Service = {
+  name: '',
+  description: '',
+  links: [],
+  version: 0,
+  metadata: '',
+  contractAddress: '',
+  allowedTokens: {
+    tez: true,
+    assets: []
+  },
+  allowedOperationType: ServiceOperationType.Payment,
+  owner: '',
+  paused: false,
+  deleted: false,
+  network: networks.edo2net,
+};

@@ -23,6 +23,7 @@ export const services = {
   editing: {
     editService: 'Edit Service',
     updateService: 'Update Service',
+    createService: 'Create Service',
     addCurrency: 'Add Currency',
     addLink: 'Add Link',
     serviceName: 'Service Name',
