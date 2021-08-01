@@ -38,11 +38,17 @@ export const loadServices = createAsyncThunk<Service[], string, AppThunkAPI>(
 export const updateService = createAsyncThunk<void, Service, AppThunkAPI>(
   `${namespace}/updateService`,
   async (service, { extra: app, dispatch, getState }) => {
-    await app.services.servicesService.updateService(service);
+    const operation = await app.services.servicesService.updateService(service);
 
-    const accountAddress = getState().accountsState.currentAccountAddress;
-    if (accountAddress) {
-      dispatch(loadServices(accountAddress));
+    if (operation) {
+      const callback = () => {
+        const accountAddress = getState().accountsState.currentAccountAddress;
+        if (accountAddress) {
+          dispatch(loadServices(accountAddress));
+        }
+      };
+
+      dispatch(awaitOperation({ operation, callback }));
     }
   }
 );

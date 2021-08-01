@@ -30,35 +30,27 @@ export class ServicesService {
     });
   }
 
-  async updateService(service: Service): Promise<void> {
-    return new Promise(resolve => {
-      wait(1000).then(() => {
-        testServices = testServices.map(s => {
-          if (s.contractAddress === service.contractAddress) {
-            return {
-              ...s,
-              allowedOperationType: service.allowedOperationType,
-              allowedTokens: service.allowedTokens,
-              contractAddress: service.contractAddress,
-              deleted: service.deleted,
-              description: service.description,
-              iconUri: service.iconUri,
-              links: service.links,
-              metadata: service.metadata,
-              name: service.name,
-              network: service.network,
-              owner: service.owner,
-              paused: service.paused,
-              version: service.version,
-            } as Service;
-          } else {
-            return s;
-          }
-        });
+  async updateService(service: Service): Promise<TransactionWalletOperation | null> {
+    try {
+      const factoryContract = await this.tezosToolkit.wallet.at(service.contractAddress);
 
-        resolve();
-      });
-    });
+      if (factoryContract.methods.update_service_parameters) {
+        const encodedServiceMetadata = this.encodeMetadata(service);
+
+        const operation = await factoryContract.methods.update_service_parameters(
+          encodedServiceMetadata,
+          service.allowedTokens.tez,
+          service.allowedTokens.assets,
+          service.allowedOperationType
+        ).send();
+
+        return operation;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
+    return null;
   }
 
   async createService(service: Service): Promise<TransactionWalletOperation | null> {
@@ -66,13 +58,7 @@ export class ServicesService {
       const factoryContract = await this.tezosToolkit.wallet.at(this.factoryContractAddress);
 
       if (factoryContract.methods.create_service) {
-        const serviceMetadata = {
-          name: service.name,
-          links: service.links.length ? service.links : undefined,
-          description: service.description || undefined,
-          iconUrl: service.iconUri || undefined
-        };
-        const encodedServiceMetadata = Buffer.from(JSON.stringify(serviceMetadata), 'utf8').toString('hex');
+        const encodedServiceMetadata = this.encodeMetadata(service);
 
         const operation = await factoryContract.methods.create_service(
           encodedServiceMetadata,
@@ -95,6 +81,17 @@ export class ServicesService {
     const operations: Operation[] = await response.json();
 
     return operations.map(operation => this.mapOperationToServiceOperation(operation));
+  }
+
+  private encodeMetadata(service: Service) {
+    const serviceMetadata = {
+      name: service.name || undefined,
+      links: service.links.length ? service.links : undefined,
+      description: service.description || undefined,
+      iconUrl: service.iconUri || undefined
+    };
+
+    return Buffer.from(JSON.stringify(serviceMetadata), 'utf8').toString('hex');
   }
 
   private mapOperationToServiceOperation(operation: Operation): ServiceOperation {
@@ -126,7 +123,7 @@ export class ServicesService {
   }
 }
 
-let testServices: Service[] = [{
+const testServices: Service[] = [{
   name: 'Test Service of Fast Water Bear',
   links: [
     'https://github.com/fastwaterbear',
@@ -157,7 +154,7 @@ let testServices: Service[] = [{
   ],
   version: 1,
   metadata: '7b226e616d65223a22546573742053657276696365206f6620466173742057617465722042656172227d',
-  contractAddress: 'KT1J5rMCDMG2iHfA4EhpKdFyQVQAVY8wHf6x',
+  contractAddress: 'KT1BQWbm77qsvSsSB8jNZcwjNEipN1kNc29R',
   network: networks.edo2net,
   allowedTokens: {
     tez: true,
