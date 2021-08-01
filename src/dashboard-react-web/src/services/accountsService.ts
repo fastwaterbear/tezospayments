@@ -17,16 +17,16 @@ export class AccountsService {
     return this._client;
   }
 
-  private _tezos: TezosToolkit | null = null;
+  private _tezosToolKit: TezosToolkit | null = null;
 
-  private get tezos(): TezosToolkit {
-    if (!this._tezos) {
+  private get tezosToolKit(): TezosToolkit {
+    if (!this._tezosToolKit) {
       const tezos = new TezosToolkit('https://edonet.smartpy.io/');
       tezos.setProvider({ signer: new ReadOnlySigner() });
-      this._tezos = tezos;
+      this._tezosToolKit = tezos;
     }
 
-    return this._tezos;
+    return this._tezosToolKit;
   }
 
   async connect(): Promise<string | null> {
@@ -50,7 +50,7 @@ export class AccountsService {
   }
 
   async getTezosBalance(address: string): Promise<number> {
-    const balance = await this.tezos.tz.getBalance(address);
+    const balance = await this.tezosToolKit.tz.getBalance(address);
 
     return +balance / 1000000;
   }
@@ -73,14 +73,14 @@ export class AccountsService {
   }
 
   private async getTokenFA12Balance(address: string, token: TokenFA12): Promise<BigNumber> {
-    const contract = await this.tezos.contract.at(token.contractAddress);
+    const contract = await this.tezosToolKit.contract.at(token.contractAddress);
     const result = await contract.views.getBalance?.(address).read();
 
     return result || 0;
   }
 
   private async getTokenFA2Balance(address: string, token: TokenFA2): Promise<BigNumber> {
-    const contract = await this.tezos.contract.at(token.contractAddress);
+    const contract = await this.tezosToolKit.contract.at(token.contractAddress);
     const response = await contract.views?.['balance_of']?.([{ owner: address, token_id: token.fa2TokenId }])
       .read();
 
