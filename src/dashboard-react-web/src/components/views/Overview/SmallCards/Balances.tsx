@@ -3,7 +3,6 @@ import React from 'react';
 
 import { tezosMeta } from '@tezospayments/common/dist/models/blockchain';
 
-
 import { selectBalancesState } from '../../../../store/balances/selectors';
 import { getAcceptTezos, getAllAcceptedTokens, selectServicesState } from '../../../../store/services/selectors';
 import { TokenList } from '../../../common';

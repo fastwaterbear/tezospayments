@@ -2,7 +2,6 @@ import { createSelector } from 'reselect';
 
 import { Token, tokenWhitelistMap } from '@tezospayments/common/dist/models/blockchain';
 
-
 import { AppState } from '../index';
 
 // TODO

@@ -25,7 +25,6 @@ type ServiceOperationPayload =
   | PrivateServiceOperationPayload
   | PublicServiceOperationPayload & PrivateServiceOperationPayload;
 
-
 export interface ServiceOperation {
   readonly hash: string;
   readonly type: ServiceOperationType;
