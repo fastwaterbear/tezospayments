@@ -2,10 +2,9 @@ import React from 'react';
 
 import { ServiceLinkHelper } from '@tezospayments/common/dist/helpers';
 
-
 import { ExternalLink } from '../../common';
-import './ServiceLink.scss';
 import { iconIdMap } from './iconIdMap';
+import './ServiceLink.scss';
 
 interface ServiceLinkProps {
   link: string;

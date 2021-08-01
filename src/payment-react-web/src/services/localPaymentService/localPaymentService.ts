@@ -161,8 +161,7 @@ export class LocalPaymentService {
 
   private parseDonation(donationBase64: string, targetAddress: string, urls: PaymentBase['urls']): ServiceResult<Donation, LocalPaymentServiceError> {
     const donation = Donation.parse(donationBase64, {
-      type: PaymentType.Donation
-      ,
+      type: PaymentType.Donation,
       targetAddress,
       urls
     });

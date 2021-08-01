@@ -4,12 +4,10 @@ import { useHistory } from 'react-router-dom';
 
 import { combineClassNames, text } from '@tezospayments/common/dist/utils';
 
-
 import { config } from '../../../../config';
 import { ExplorerLinkPure } from '../../../common';
 import { ActiveTagPure } from '../../../common/Tags';
 import { useCurrentLanguageResources } from '../../../hooks';
-
 import './ServiceCard.scss';
 
 interface ServiceCardProps {

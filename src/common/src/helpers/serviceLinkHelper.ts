@@ -92,7 +92,6 @@ const editLinkInfoProvider: LinkInfoProvider = link => {
   };
 };
 
-
 export class ServiceLinkHelper {
   // Order is important
   static readonly linkInfoProviders: readonly LinkInfoProvider[] = [

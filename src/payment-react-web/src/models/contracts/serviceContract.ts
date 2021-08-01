@@ -3,7 +3,6 @@ import type { BigNumber } from 'bignumber.js';
 
 import type { ServiceOperationType } from '@tezospayments/common/dist/models/service';
 
-
 export type TezosPaymentsServiceContract<T extends ContractProvider | Wallet = ContractProvider> = ContractAbstraction<T> & {
   methods: {
     send_payment(

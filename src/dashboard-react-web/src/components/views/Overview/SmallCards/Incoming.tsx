@@ -3,7 +3,6 @@ import React from 'react';
 
 import { tezosMeta } from '@tezospayments/common/dist/models/blockchain';
 
-
 import { getAcceptTezos, getAllAcceptedTokens, selectServicesState } from '../../../../store/services/selectors';
 import { TokenList } from '../../../common';
 import { useAppSelector } from '../../../hooks';
@@ -45,6 +44,5 @@ export const Incoming = () => {
     {items}
   </TokenList>;
 };
-
 
 export const IncomingPure = React.memo(Incoming);

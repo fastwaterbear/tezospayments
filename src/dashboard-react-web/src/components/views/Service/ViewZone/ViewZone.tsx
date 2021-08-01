@@ -3,11 +3,9 @@ import React from 'react';
 
 import { Service } from '@tezospayments/common/dist/models/service';
 
-
 import { ServiceLinks } from '../../../common/ServiceLinks';
 import { useCurrentLanguageResources } from '../../../hooks';
 import { TokensPure } from '../Tokens';
-
 import './ViewZone.scss';
 
 interface ViewZoneProps {

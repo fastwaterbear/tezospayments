@@ -2,7 +2,6 @@ import React from 'react';
 
 import { combineClassNames } from '@tezospayments/common/dist/utils';
 
-
 interface ViewTitleProps {
     className?: string;
     children?: React.ReactNode;
