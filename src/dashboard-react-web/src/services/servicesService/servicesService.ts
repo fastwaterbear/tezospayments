@@ -1,4 +1,7 @@
 import { NetworkType } from '@airgap/beacon-sdk';
+import { InMemorySigner } from '@taquito/signer';
+import { TezosToolkit } from '@taquito/taquito';
+import { b58cencode, prefix, Prefix } from '@taquito/utils';
 import { BigNumber } from 'bignumber.js';
 
 import { networks, Network, tokenWhitelist, tezosMeta } from '@tezospayments/common/dist/models/blockchain';
@@ -10,6 +13,20 @@ import { wait } from '@tezospayments/common/dist/utils';
 import type { Operation } from './operation';
 
 export class ServicesService {
+  private readonly factoryContractAddress = 'KT1PXyQ3wDpwm6J3r6iyLCWu5QKH5tef7ejU';
+  private readonly secret = b58cencode('7c842c15c8b0c8fd228e6cb5302a50201f41642dd36b699003fb3c857920bc9d', prefix[Prefix.P2SK]);
+  private _tezos: TezosToolkit | null = null;
+
+  private get tezos(): TezosToolkit {
+    if (!this._tezos) {
+      const tezos = new TezosToolkit('https://edonet.smartpy.io/');
+      tezos.setSignerProvider(new InMemorySigner(this.secret));
+      this._tezos = tezos;
+    }
+
+    return this._tezos;
+  }
+
   getServices(_network: Network): Promise<Service[]> {
     return new Promise(resolve => {
       wait(1000).then(() => {
@@ -50,14 +67,25 @@ export class ServicesService {
   }
 
   async createService(service: Service): Promise<void> {
-    return new Promise(resolve => {
-      wait(1000).then(() => {
-        service = { ...service, contractAddress: `KT1J5rMCDMG2iHfA4EhpKdFyQVQAVY8wHf6${testServices.length + 1}` };
-        testServices = [...testServices, service];
+    try {
+      const factoryContract = await this.tezos.contract.at(this.factoryContractAddress);
+      const encodedServiceMetadata = Buffer.from(JSON.stringify(service.metadata), 'utf8').toString('hex');
 
-        resolve();
-      });
-    });
+      if (!factoryContract.methods.create_service) {
+        return;
+      }
+
+      const operation = await factoryContract.methods.create_service(
+        encodedServiceMetadata,
+        service.allowedTokens.tez,
+        service.allowedTokens.assets,
+        service.allowedOperationType
+      ).send();
+
+      console.log(operation);
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   async getOperations(network: NetworkType, contractAddress: string): Promise<ServiceOperation[]> {
