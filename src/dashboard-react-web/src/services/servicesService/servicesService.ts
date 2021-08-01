@@ -1,7 +1,6 @@
-import { NetworkType } from '@airgap/beacon-sdk';
-import { InMemorySigner } from '@taquito/signer';
-import { TezosToolkit } from '@taquito/taquito';
-import { b58cencode, prefix, Prefix } from '@taquito/utils';
+import { ColorMode, NetworkType } from '@airgap/beacon-sdk';
+import { BeaconWallet } from '@taquito/beacon-wallet';
+import { TezosToolkit, TransactionWalletOperation } from '@taquito/taquito';
 import { BigNumber } from 'bignumber.js';
 
 import { networks, Network, tokenWhitelist, tezosMeta } from '@tezospayments/common/dist/models/blockchain';
@@ -10,21 +9,17 @@ import {
 } from '@tezospayments/common/dist/models/service';
 import { wait } from '@tezospayments/common/dist/utils';
 
+import { config } from '../../config';
 import type { Operation } from './operation';
 
 export class ServicesService {
   private readonly factoryContractAddress = 'KT1PXyQ3wDpwm6J3r6iyLCWu5QKH5tef7ejU';
-  private readonly secret = b58cencode('7c842c15c8b0c8fd228e6cb5302a50201f41642dd36b699003fb3c857920bc9d', prefix[Prefix.P2SK]);
-  private _tezos: TezosToolkit | null = null;
 
-  private get tezos(): TezosToolkit {
-    if (!this._tezos) {
-      const tezos = new TezosToolkit('https://edonet.smartpy.io/');
-      tezos.setSignerProvider(new InMemorySigner(this.secret));
-      this._tezos = tezos;
-    }
+  readonly tezosToolkit = new TezosToolkit('https://edonet.smartpy.io/');
+  readonly tezosWallet = new BeaconWallet({ name: config.app.name, colorMode: ColorMode.LIGHT });
 
-    return this._tezos;
+  constructor() {
+    this.tezosToolkit.setWalletProvider(this.tezosWallet);
   }
 
   getServices(_network: Network): Promise<Service[]> {
@@ -66,26 +61,33 @@ export class ServicesService {
     });
   }
 
-  async createService(service: Service): Promise<void> {
+  async createService(service: Service): Promise<TransactionWalletOperation | null> {
     try {
-      const factoryContract = await this.tezos.contract.at(this.factoryContractAddress);
-      const encodedServiceMetadata = Buffer.from(JSON.stringify(service.metadata), 'utf8').toString('hex');
+      const factoryContract = await this.tezosToolkit.wallet.at(this.factoryContractAddress);
 
-      if (!factoryContract.methods.create_service) {
-        return;
+      if (factoryContract.methods.create_service) {
+        const serviceMetadata = {
+          name: service.name,
+          links: service.links.length ? service.links : undefined,
+          description: service.description || undefined,
+          iconUrl: service.iconUri || undefined
+        };
+        const encodedServiceMetadata = Buffer.from(JSON.stringify(serviceMetadata), 'utf8').toString('hex');
+
+        const operation = await factoryContract.methods.create_service(
+          encodedServiceMetadata,
+          service.allowedTokens.tez,
+          service.allowedTokens.assets,
+          service.allowedOperationType
+        ).send();
+
+        return operation;
       }
-
-      const operation = await factoryContract.methods.create_service(
-        encodedServiceMetadata,
-        service.allowedTokens.tez,
-        service.allowedTokens.assets,
-        service.allowedOperationType
-      ).send();
-
-      console.log(operation);
     } catch (e) {
       console.error(e);
     }
+
+    return null;
   }
 
   async getOperations(network: NetworkType, contractAddress: string): Promise<ServiceOperation[]> {

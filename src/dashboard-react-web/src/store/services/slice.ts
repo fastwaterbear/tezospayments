@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { TransactionWalletOperation } from '@taquito/taquito';
 
 import { networks } from '@tezospayments/common/dist/models/blockchain';
 import { Service } from '@tezospayments/common/dist/models/service';
@@ -49,11 +50,17 @@ export const updateService = createAsyncThunk<void, Service, AppThunkAPI>(
 export const createService = createAsyncThunk<void, Service, AppThunkAPI>(
   `${namespace}/createService`,
   async (service, { extra: app, dispatch, getState }) => {
-    await app.services.servicesService.createService(service);
+    const operation = await app.services.servicesService.createService(service);
 
-    const accountAddress = getState().accountsState.currentAccountAddress;
-    if (accountAddress) {
-      dispatch(loadServices(accountAddress));
+    if (operation) {
+      const callback = () => {
+        const accountAddress = getState().accountsState.currentAccountAddress;
+        if (accountAddress) {
+          dispatch(loadServices(accountAddress));
+        }
+      };
+
+      dispatch(awaitOperation({ operation, callback }));
     }
   }
 );
@@ -62,6 +69,18 @@ export const clearServices = createAsyncThunk<void, void, AppThunkAPI>(
   `${namespace}/clearServices`,
   async (_, { dispatch }) => {
     dispatch(clearBalances());
+  }
+);
+
+const awaitOperation = createAsyncThunk<void, { operation: TransactionWalletOperation, callback: () => void }, AppThunkAPI>(
+  `${namespace}/createService`,
+  async ({ operation, callback }) => {
+    const promise = new Promise<void>((resolve, reject) => {
+      operation.confirmationObservable(3)
+        .subscribe(() => callback(), reject, resolve);
+    });
+
+    await promise;
   }
 );
 
