@@ -79,10 +79,10 @@ export const clearServices = createAsyncThunk<void, void, AppThunkAPI>(
 );
 
 const awaitOperation = createAsyncThunk<void, { operation: TransactionWalletOperation, callback: () => void }, AppThunkAPI>(
-  `${namespace}/createService`,
+  `${namespace}/awaitOperation`,
   async ({ operation, callback }) => {
     const promise = new Promise<void>((resolve, reject) => {
-      operation.confirmationObservable(3)
+      operation.confirmationObservable()
         .subscribe(() => callback(), reject, resolve);
     });
 
