@@ -1,6 +1,6 @@
-import { NetworkType } from '@airgap/beacon-sdk';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
+import { networks } from '@tezospayments/common/dist/models/blockchain';
 import { ServiceOperation } from '@tezospayments/common/dist/models/service';
 import { optimization } from '@tezospayments/common/dist/utils';
 
@@ -21,7 +21,7 @@ const namespace = 'operations';
 export const loadOperations = createAsyncThunk<ServiceOperation[], string[], AppThunkAPI>(
   `${namespace}/loadOperations`,
   async (contracts, { extra: app }) => {
-    const operationsPromises = contracts.map(c => app.services.servicesService.getOperations(NetworkType.EDONET, c));
+    const operationsPromises = contracts.map(c => app.services.servicesService.getOperations(networks.edo2net, c));
     const operations = (await Promise.all(operationsPromises)).flat();
 
     return operations;

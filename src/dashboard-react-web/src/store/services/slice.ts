@@ -24,7 +24,7 @@ const namespace = 'services';
 export const loadServices = createAsyncThunk<Service[], string, AppThunkAPI>(
   `${namespace}/loadServices`,
   async (address, { extra: app, dispatch }) => {
-    const services = await app.services.servicesService.getServices(networks.edo2net);
+    const services = await app.services.servicesService.getServices(networks.edo2net, address);
 
     if (services.length) {
       dispatch(loadBalances(address));
