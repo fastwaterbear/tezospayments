@@ -21,15 +21,20 @@ export class ServicesService {
   }
 
   async getServices(network: Network, accountAddress: string): Promise<Service[]> {
-    const response = await fetch(`https://${this.getTzktUrl(network)}/v1/contracts/${this.factoryContractAddress}/bigmaps/services/keys/${accountAddress}`);
-    const keyValue: ServicesBigMapKeyValuePair = await response.json();
-    const contractAddresses = keyValue.value;
+    try {
+      const response = await fetch(`https://${this.getTzktUrl(network)}/v1/contracts/${this.factoryContractAddress}/bigmaps/services/keys/${accountAddress}`);
+      const keyValue: ServicesBigMapKeyValuePair = await response.json();
+      const contractAddresses = keyValue.value;
 
-    const rawContractsInfoPromises = contractAddresses.map(v => fetch(`https://${this.getTzktUrl(network)}/v1/contracts/${v}/storage`).then(r => r.json()));
-    const rawContractsInfo = await Promise.all(rawContractsInfoPromises) as ServiceDto[];
-    const result = rawContractsInfo.map((s, i) => this.mapServiceDtoToService(s, contractAddresses[i] || '', network));
 
-    return result.filter(s => s) as Service[];
+      const rawContractsInfoPromises = contractAddresses.map(v => fetch(`https://${this.getTzktUrl(network)}/v1/contracts/${v}/storage`).then(r => r.json()));
+      const rawContractsInfo = await Promise.all(rawContractsInfoPromises) as ServiceDto[];
+      const result = rawContractsInfo.map((s, i) => this.mapServiceDtoToService(s, contractAddresses[i] || '', network));
+
+      return result.filter(s => s) as Service[];
+    } catch {
+      return [];
+    }
   }
 
   async updateService(service: Service): Promise<TransactionWalletOperation | null> {
