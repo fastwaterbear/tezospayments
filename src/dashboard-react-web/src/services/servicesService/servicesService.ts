@@ -27,8 +27,6 @@ export class ServicesService {
 
     const rawContractsInfoPromises = contractAddresses.map(v => fetch(`https://${this.getTzktUrl(network)}/v1/contracts/${v}/storage`).then(r => r.json()));
     const rawContractsInfo = await Promise.all(rawContractsInfoPromises) as ServiceDto[];
-    console.log(rawContractsInfo);
-
     const result = rawContractsInfo.map((s, i) => this.mapServiceDtoToService(s, contractAddresses[i] || '', network));
 
     return result.filter(s => s) as Service[];
