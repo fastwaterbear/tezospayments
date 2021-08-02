@@ -1,20 +1,14 @@
-import { ColorMode, DAppClient, NetworkType } from '@airgap/beacon-sdk';
+import { DAppClient, NetworkType } from '@airgap/beacon-sdk';
 import { TezosToolkit } from '@taquito/taquito';
 import { BigNumber } from 'bignumber.js';
 
 import { Token, TokenFA2, TokenFA12 } from '@tezospayments/common/dist/models/blockchain';
 
-import { config } from '../config';
-
 export class AccountsService {
-  private _client: DAppClient | null = null;
+  private readonly dAppClient: DAppClient;
 
-  private get client(): DAppClient {
-    if (!this._client) {
-      this._client = new DAppClient({ name: config.app.name, colorMode: ColorMode.LIGHT });
-    }
-
-    return this._client;
+  constructor(dAppClient: DAppClient) {
+    this.dAppClient = dAppClient;
   }
 
   private _tezosToolKit: TezosToolkit | null = null;
@@ -30,21 +24,21 @@ export class AccountsService {
   }
 
   async connect(): Promise<string | null> {
-    return this.client.requestPermissions({ network: { type: NetworkType.EDONET } })
+    return this.dAppClient.requestPermissions({ network: { type: NetworkType.EDONET } })
       .then(permissions => permissions.address)
       .catch(e => {
         console.error(e);
-        this.client.clearActiveAccount();
+        this.dAppClient.clearActiveAccount();
         return null;
       });
   }
 
   disconnect(): Promise<void> {
-    return this.client.clearActiveAccount();
+    return this.dAppClient.clearActiveAccount();
   }
 
   async getActiveAccount(): Promise<string | undefined> {
-    const activeAccount = await this.client.getActiveAccount();
+    const activeAccount = await this.dAppClient.getActiveAccount();
 
     return activeAccount?.address;
   }

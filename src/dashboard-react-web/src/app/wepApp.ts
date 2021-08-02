@@ -1,5 +1,8 @@
+import { ColorMode } from '@airgap/beacon-sdk';
+import { BeaconWallet } from '@taquito/beacon-wallet';
 import { History, createBrowserHistory } from 'history';
 
+import { config } from '../config';
 import { AccountsService } from '../services/accountsService';
 import { ServicesService } from '../services/servicesService';
 import { AppStore } from '../store';
@@ -35,9 +38,11 @@ export class WebApp {
   }
 
   private createServices(): AppServices {
+    const wallet = new BeaconWallet({ name: config.app.name, colorMode: ColorMode.LIGHT });
+
     return {
-      accountsService: new AccountsService(),
-      servicesService: new ServicesService()
+      accountsService: new AccountsService(wallet.client),
+      servicesService: new ServicesService(wallet)
     };
   }
 }

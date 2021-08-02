@@ -1,4 +1,4 @@
-import { ColorMode, NetworkType } from '@airgap/beacon-sdk';
+import { NetworkType } from '@airgap/beacon-sdk';
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit, TransactionWalletOperation } from '@taquito/taquito';
 import { BigNumber } from 'bignumber.js';
@@ -9,16 +9,15 @@ import {
 } from '@tezospayments/common/dist/models/service';
 import { wait } from '@tezospayments/common/dist/utils';
 
-import { config } from '../../config';
 import type { Operation } from './operation';
 
 export class ServicesService {
   private readonly factoryContractAddress = 'KT1PXyQ3wDpwm6J3r6iyLCWu5QKH5tef7ejU';
+  private readonly tezosToolkit = new TezosToolkit('https://edonet.smartpy.io/');
+  private readonly tezosWallet: BeaconWallet;
 
-  readonly tezosToolkit = new TezosToolkit('https://edonet.smartpy.io/');
-  readonly tezosWallet = new BeaconWallet({ name: config.app.name, colorMode: ColorMode.LIGHT });
-
-  constructor() {
+  constructor(tezosWallet: BeaconWallet) {
+    this.tezosWallet = tezosWallet;
     this.tezosToolkit.setWalletProvider(this.tezosWallet);
   }
 
