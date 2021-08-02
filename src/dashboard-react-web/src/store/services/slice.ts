@@ -48,7 +48,7 @@ export const updateService = createAsyncThunk<void, Service, AppThunkAPI>(
         }
       };
 
-      dispatch(awaitOperation({ operation, callback }));
+      dispatch(setOperation({ operation, callback }));
     }
   }
 );
@@ -66,7 +66,7 @@ export const createService = createAsyncThunk<void, Service, AppThunkAPI>(
         }
       };
 
-      dispatch(awaitOperation({ operation, callback }));
+      dispatch(setOperation({ operation, callback }));
     }
   }
 );
@@ -78,15 +78,16 @@ export const clearServices = createAsyncThunk<void, void, AppThunkAPI>(
   }
 );
 
-const awaitOperation = createAsyncThunk<void, { operation: TransactionWalletOperation, callback: () => void }, AppThunkAPI>(
-  `${namespace}/awaitOperation`,
+const setOperation = createAsyncThunk<void, { operation: TransactionWalletOperation, callback: () => void }, AppThunkAPI>(
+  `${namespace}/setOperation`,
   async ({ operation, callback }) => {
     const promise = new Promise<void>((resolve, reject) => {
-      operation.confirmationObservable()
-        .subscribe(() => callback(), reject, resolve);
+      operation.confirmationObservable(1)
+        .subscribe(undefined, reject, resolve);
     });
 
     await promise;
+    callback();
   }
 );
 
