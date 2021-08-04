@@ -1,7 +1,7 @@
 import { SettingOutlined, DashboardOutlined, UnorderedListOutlined, ProfileOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { Menu, Button } from 'antd';
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useCallback } from 'react';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 
 import { config } from '../../config';
 import { useCurrentLanguageResources } from '../hooks';
@@ -11,6 +11,11 @@ const NavBar = () => {
   const location = useLocation();
   const langResources = useCurrentLanguageResources();
   const viewsLangResources = langResources.views;
+  const history = useHistory();
+
+  const handleCreateServiceClick = useCallback(() => {
+    history.push(`${config.routers.services}/create`);
+  }, [history]);
 
   return <nav className="navbar">
     <Menu className="navbar__menu" mode="inline" selectedKeys={[location.pathname]}>
@@ -30,7 +35,7 @@ const NavBar = () => {
     </Menu>
 
     <div className="navbar__bottom-buttons">
-      <Button>{viewsLangResources.createService.title}</Button>
+      <Button onClick={handleCreateServiceClick}>{viewsLangResources.createService.title}</Button>
       <Button type="primary">{viewsLangResources.acceptPayments.title}</Button>
     </div>
   </nav>;
