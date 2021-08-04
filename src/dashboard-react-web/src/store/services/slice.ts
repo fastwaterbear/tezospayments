@@ -37,7 +37,7 @@ export const loadServices = createAsyncThunk<Service[], string, AppThunkAPI>(
 
 export const updateService = createAsyncThunk<void, Service, AppThunkAPI>(
   `${namespace}/updateService`,
-  async (service, { extra: app, dispatch, getState }) => {
+  async (service, { extra: app, dispatch, getState, rejectWithValue }) => {
     const operation = await app.services.servicesService.updateService(service);
 
     if (operation) {
@@ -49,13 +49,15 @@ export const updateService = createAsyncThunk<void, Service, AppThunkAPI>(
       };
 
       dispatch(setOperation({ operation, callback }));
+    } else {
+      return rejectWithValue(null);
     }
   }
 );
 
 export const createService = createAsyncThunk<void, Service, AppThunkAPI>(
   `${namespace}/createService`,
-  async (service, { extra: app, dispatch, getState }) => {
+  async (service, { extra: app, dispatch, getState, rejectWithValue }) => {
     const operation = await app.services.servicesService.createService(service);
 
     if (operation) {
@@ -67,8 +69,10 @@ export const createService = createAsyncThunk<void, Service, AppThunkAPI>(
       };
 
       dispatch(setOperation({ operation, callback }));
+    } else {
+      return rejectWithValue(null);
     }
-  }
+  },
 );
 
 export const clearServices = createAsyncThunk<void, void, AppThunkAPI>(
@@ -102,17 +106,18 @@ export const servicesSlice = createSlice({
       state.initialized = true;
     });
 
-    builder.addCase(updateService.pending, state => {
-      state.initialized = false;
-    });
-
-    builder.addCase(createService.pending, state => {
-      state.initialized = false;
-    });
-
     builder.addCase(clearServices.fulfilled, state => {
       state.services = optimization.emptyArray;
       state.initialized = false;
     });
+
+    for (const action of [createService, updateService]) {
+      builder.addCase(action.pending, state => {
+        state.initialized = false;
+      });
+      builder.addCase(action.rejected, state => {
+        state.initialized = true;
+      });
+    }
   }
 });
