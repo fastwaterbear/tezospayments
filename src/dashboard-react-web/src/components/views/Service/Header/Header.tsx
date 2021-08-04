@@ -24,7 +24,7 @@ export const Header = ({ service }: HeaderProps) => {
 
   const logoClassName = combineClassNames(
     'service__logo',
-    service?.iconUri ? 'service__logo_image' : 'service__logo_text',
+    service?.iconUrl ? 'service__logo_image' : 'service__logo_text',
   );
 
   const arePaymentsAllowed = service?.allowedOperationType === ServiceOperationType.Payment || service?.allowedOperationType === ServiceOperationType.All;
@@ -36,8 +36,8 @@ export const Header = ({ service }: HeaderProps) => {
 
   return <div className="service-header">
     <div className="service-header__logo-container">
-      {service.iconUri
-        ? <img className={logoClassName} alt="logo" src={service.iconUri} />
+      {service.iconUrl
+        ? <img className={logoClassName} alt="logo" src={service.iconUrl} />
         : <span className={logoClassName}>{text.getAvatarText(service.name)}</span>}
       <div className="service-header__main-info">
         <h1>{service.name}</h1>

@@ -41,13 +41,13 @@ export class BetterCallDevServiceProvider implements ServiceProvider {
     return (metadataJson && typeof metadataJson.name === 'string'
       && (guards.isArray(metadataJson.links) || metadataJson.links === undefined)
       && (typeof metadataJson.description === 'string' || metadataJson.description === undefined)
-      && (typeof metadataJson.iconUri === 'string' || metadataJson.iconUri === undefined)
+      && (typeof metadataJson.iconUrl === 'string' || metadataJson.iconUrl === undefined)
     )
       ? {
         name: metadataJson.name,
         links: metadataJson.links || optimization.emptyArray,
         description: metadataJson.description,
-        iconUri: metadataJson.iconUri,
+        iconUrl: metadataJson.iconUrl,
         version: +serviceStorage[0].children[6].value,
         metadata: converters.stringToBytes(serviceStorage[0].children[3].value),
 

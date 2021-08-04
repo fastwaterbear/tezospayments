@@ -4,16 +4,16 @@ import './ServiceIcon.scss';
 type ServiceIconProps = {
   serviceName: string;
   className?: string;
-  iconUri?: string;
+  iconUrl?: string;
 };
 
 export const ServiceIcon = (props: ServiceIconProps) => {
   const className = combineClassNames(
     'service-icon',
-    props.iconUri ? 'service-icon_type-image' : 'service-icon_type-text',
+    props.iconUrl ? 'service-icon_type-image' : 'service-icon_type-text',
     props.className
   );
 
-  return props.iconUri ? <img className={className} src={props.iconUri} alt="Service" draggable="false" />
+  return props.iconUrl ? <img className={className} src={props.iconUrl} alt="Service" draggable="false" />
     : <span className={className}>{text.getAvatarText(props.serviceName)}</span>;
 };

@@ -5,7 +5,7 @@ export interface Service {
   readonly name: string;
   readonly links: readonly string[];
   readonly description?: string;
-  readonly iconUri?: string;
+  readonly iconUrl?: string;
   readonly version: number;
   readonly metadata: string;
 

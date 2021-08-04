@@ -19,7 +19,7 @@ export const Services = () => {
     key={s.contractAddress}
     contractAddress={s.contractAddress}
     isActive={!s.paused}
-    logoUrl={s.iconUri}
+    logoUrl={s.iconUrl}
     name={s.name}
   />);
 

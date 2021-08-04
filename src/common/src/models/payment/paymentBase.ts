@@ -1,7 +1,4 @@
-import { BigNumber } from 'bignumber.js';
-
 import { URL } from '../../native';
-import { StateModel } from '../core';
 
 export enum PaymentType {
   Payment = 1,

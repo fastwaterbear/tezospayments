@@ -95,7 +95,7 @@ export class ServicesService {
       name: service.name || undefined,
       links: service.links.length ? service.links : undefined,
       description: service.description || undefined,
-      iconUrl: service.iconUri || undefined
+      iconUrl: service.iconUrl || undefined
     };
 
     return Buffer.from(JSON.stringify(serviceMetadata), 'utf8').toString('hex');
@@ -125,13 +125,13 @@ export class ServicesService {
     return (metadataJson && typeof metadataJson.name === 'string'
       && (guards.isArray(metadataJson.links) || metadataJson.links === undefined)
       && (typeof metadataJson.description === 'string' || metadataJson.description === undefined)
-      && (typeof metadataJson.iconUri === 'string' || metadataJson.iconUri === undefined)
+      && (typeof metadataJson.iconUrl === 'string' || metadataJson.iconUrl === undefined)
     )
       ? {
         name: metadataJson.name,
         links: metadataJson.links || optimization.emptyArray,
         description: metadataJson.description,
-        iconUri: metadataJson.iconUri,
+        iconUrl: metadataJson.iconUrl,
         version: +serviceDto.version,
         metadata: serviceDto.metadata,
 
