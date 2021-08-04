@@ -33,6 +33,7 @@ $-logo-size: 64px;
   height: $-logo-size;
   width: $-logo-size;
   margin: 0 8px 14px 0;
+  flex-shrink: 0;
 }
 
 .service-card__logo_text {
