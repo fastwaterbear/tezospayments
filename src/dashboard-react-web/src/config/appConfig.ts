@@ -23,6 +23,7 @@ export type AppConfig = DeepReadonly<{
   },
   links: {
     tzStats: string;
+    tzktIo: string;
     tezosPayments: {
       webSite: string;
       gitHub: string;

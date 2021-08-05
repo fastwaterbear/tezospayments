@@ -25,6 +25,7 @@ export const config: AppConfig = {
   },
   links: {
     tzStats: 'https://edo.tzstats.com',
+    tzktIo: 'https://tzkt.io',
     tezosPayments: {
       webSite: 'https://tezospayments.com',
       gitHub: 'https://github.com/fastwaterbear/tezospayments',

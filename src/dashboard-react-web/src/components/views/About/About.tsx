@@ -40,6 +40,15 @@ export const About = () => {
         <RedditCircleFilled className="about-link__icon" />
       </ExternalLink>
     </div>
+    <div className="about-view__powered-by">
+      {aboutLangResources.poweredBy}
+      &nbsp;
+      <ExternalLink href={config.links.tzktIo}>
+        {aboutLangResources.tzKt}
+      </ExternalLink>
+      &nbsp;
+      {aboutLangResources.api}
+    </div>
   </View>;
 };
 
