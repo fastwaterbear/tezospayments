@@ -9,6 +9,7 @@ import { NoServicesCreated } from '../../common/NoServicesCreated';
 import { OperationList } from '../../common/OperationList';
 import { useAppSelector, useCurrentLanguageResources } from '../../hooks';
 import { View } from '../View';
+import { NoOperationsPerformedPure } from './NoOperationsPerformed';
 
 export const Operations = () => {
   const langResources = useCurrentLanguageResources();
@@ -37,9 +38,11 @@ export const Operations = () => {
       ? <Skeleton active />
       : !servicesState.services.length
         ? <NoServicesCreated />
-        : <OperationList>
-          {operationProps.map(o => <OperationList.Item key={o.hash} {...o} />)}
-        </OperationList>}
+        : !operations.length
+          ? <NoOperationsPerformedPure />
+          : <OperationList>
+            {operationProps.map(o => <OperationList.Item key={o.hash} {...o} />)}
+          </OperationList>}
   </View>;
 };
 

@@ -6,6 +6,7 @@ export const operations = {
     income: 'Income',
     expense: 'Expense',
     cancelled: 'Cancelled',
-    pending: 'Pending'
+    pending: 'Pending',
+    noOperationsPerformedYet: 'No operations performed yet'
   }
 };
