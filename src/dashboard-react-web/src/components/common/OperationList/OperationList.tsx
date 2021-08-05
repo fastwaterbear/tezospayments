@@ -1,9 +1,11 @@
 import { BigNumber } from 'bignumber.js';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { ServiceOperationDirection, ServiceOperationType, ServiceOperationStatus } from '@tezospayments/common/dist/models/service';
 import { combineClassNames } from '@tezospayments/common/dist/utils';
 
+import { config } from '../../../config';
 import { useCurrentLanguageResources } from '../../hooks';
 import { ExplorerLink } from '../ExplorerLink/ExplorerLink';
 import { OperationIconPure } from './OperationIcon';
@@ -54,6 +56,8 @@ const OperationListItem = (props: OperationListItemProps) => {
     { 'operation-list-item__amount_cancelled': props.status === ServiceOperationStatus.Cancelled }
   );
 
+  const serviceLink = `${config.routers.services}/${props.serviceAddress}`;
+
   return <div className="operation-list-row">
     <div className="operation-list-item__icon">
       <OperationIconPure direction={props.direction} status={props.status} />
@@ -64,12 +68,16 @@ const OperationListItem = (props: OperationListItemProps) => {
       <span className="operation-list-item__data">{data}</span>
     </div>
     <div className="operation-list-item__transfer-info">
-      <ExplorerLink hash={from}>{from === props.serviceAddress ? props.serviceName : getShortHash(from)}</ExplorerLink>
+      {from === props.serviceAddress
+        ? <Link to={serviceLink}>{props.serviceName}</Link>
+        : <ExplorerLink hash={from}>{getShortHash(from)}</ExplorerLink>}
       &nbsp;→&nbsp;
-      <ExplorerLink hash={to}>{to === props.serviceAddress ? props.serviceName : getShortHash(to)}</ExplorerLink>
+      {to === props.serviceAddress
+        ? <Link to={serviceLink}>{props.serviceName}</Link>
+        : <ExplorerLink hash={to}>{getShortHash(to)}</ExplorerLink>}
     </div>
     <div className={amountClassNames}>{sign}{props.value.toFormat()} {props.ticker}</div>
-  </div>;
+  </div >;
 };
 
 const getShortHash = (hash: string) => `${hash.substr(0, 9)}...${hash.substr(hash.length - 6, 6)}`;
