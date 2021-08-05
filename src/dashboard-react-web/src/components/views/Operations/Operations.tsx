@@ -25,6 +25,7 @@ export const Operations = () => {
     data: ServiceOperation.publicPayloadExists(o) ? o.payload.public.valueString : '',
     accountAddress: o.sender,
     serviceAddress: o.target,
+    serviceName: servicesState.services.filter(s => s.contractAddress === o.target)[0]?.name || '',
     ticker: 'XTZ',
     value: o.amount,
     status: o.status,

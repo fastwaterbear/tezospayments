@@ -27,6 +27,7 @@ interface OperationListItemProps {
   date: Date;
   hash: string;
   serviceAddress: string;
+  serviceName: string;
   accountAddress: string;
   data: string;
   value: BigNumber;
@@ -63,9 +64,9 @@ const OperationListItem = (props: OperationListItemProps) => {
       <span className="operation-list-item__data">{data}</span>
     </div>
     <div className="operation-list-item__transfer-info">
-      <ExplorerLink hash={from}>{from === props.serviceAddress ? 'Service 1' : getShortHash(from)}</ExplorerLink>
+      <ExplorerLink hash={from}>{from === props.serviceAddress ? props.serviceName : getShortHash(from)}</ExplorerLink>
       &nbsp;→&nbsp;
-      <ExplorerLink hash={to}>{to === props.serviceAddress ? 'Service 1' : getShortHash(to)}</ExplorerLink>
+      <ExplorerLink hash={to}>{to === props.serviceAddress ? props.serviceName : getShortHash(to)}</ExplorerLink>
     </div>
     <div className={amountClassNames}>{sign}{props.value.toFormat()} {props.ticker}</div>
   </div>;
