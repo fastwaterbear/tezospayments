@@ -26,7 +26,6 @@ export class ServicesService {
       const keyValue: ServicesBigMapKeyValuePair = await response.json();
       const contractAddresses = keyValue.value;
 
-
       const rawContractsInfoPromises = contractAddresses.map(v => fetch(`https://${this.getTzktUrl(network)}/v1/contracts/${v}/storage`).then(r => r.json()));
       const rawContractsInfo = await Promise.all(rawContractsInfoPromises) as ServiceDto[];
       const result = rawContractsInfo.map((s, i) => this.mapServiceDtoToService(s, contractAddresses[i] || '', network));
@@ -50,6 +49,38 @@ export class ServicesService {
           service.allowedTokens.assets,
           service.allowedOperationType
         ).send();
+
+        return operation;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
+    return null;
+  }
+
+  async setPaused(contractAddress: string, paused: boolean): Promise<TransactionWalletOperation | null> {
+    try {
+      const factoryContract = await this.tezosToolkit.wallet.at(contractAddress);
+
+      if (factoryContract.methods.set_pause) {
+        const operation = await factoryContract.methods.set_pause(paused).send();
+
+        return operation;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
+    return null;
+  }
+
+  async setDeleted(contractAddress: string, deleted: boolean): Promise<TransactionWalletOperation | null> {
+    try {
+      const factoryContract = await this.tezosToolkit.wallet.at(contractAddress);
+
+      if (factoryContract.methods.set_deleted) {
+        const operation = await factoryContract.methods.set_deleted(deleted).send();
 
         return operation;
       }

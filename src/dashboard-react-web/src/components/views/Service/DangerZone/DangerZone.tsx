@@ -3,7 +3,7 @@ import React, { useCallback } from 'react';
 
 import { Service } from '@tezospayments/common/dist/models/service';
 
-import { updateService } from '../../../../store/services/slice';
+import { setDeleted, setPaused } from '../../../../store/services/slice';
 import { useAppDispatch, useCurrentLanguageResources } from '../../../hooks';
 
 import './DangerZone.scss';
@@ -18,11 +18,11 @@ export const DangerZone = (props: DangerZoneProps) => {
   const dispatch = useAppDispatch();
 
   const handlePauseModalOkClick = useCallback(() => {
-    dispatch(updateService({ ...props.service, paused: !props.service.paused }));
+    dispatch(setPaused({ contractAddress: props.service.contractAddress, paused: !props.service.paused }));
   }, [dispatch, props.service]);
 
   const handleDeleteModalOkClick = useCallback(() => {
-    dispatch(updateService({ ...props.service, deleted: !props.service.deleted }));
+    dispatch(setDeleted({ contractAddress: props.service.contractAddress, deleted: !props.service.deleted }));
   }, [dispatch, props.service]);
 
   const confirm = useCallback((content: React.ReactNode, onOk: () => void) => {
