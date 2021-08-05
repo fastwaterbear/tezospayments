@@ -17,10 +17,7 @@ export const Services = () => {
   const services = useAppSelector(getSortedServices);
   const servicesCards = services.map(s => <ServiceCardPure
     key={s.contractAddress}
-    contractAddress={s.contractAddress}
-    isActive={!s.paused}
-    logoUrl={s.iconUrl}
-    name={s.name}
+    service={s}
   />);
 
   return <View title={servicesLangResources.title}>

@@ -5,3 +5,9 @@
   color: ant-colors.$green-6 !important;
   border-color: ant-colors.$green-6 !important;
 }
+
+.tag-active_deleted {
+  background-color: ant-colors.$red-1 !important;
+  color: ant-colors.$red-6 !important;
+  border-color: ant-colors.$red-6 !important;
+}

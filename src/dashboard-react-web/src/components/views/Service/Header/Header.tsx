@@ -45,7 +45,7 @@ export const Header = ({ service }: HeaderProps) => {
           {service.contractAddress}
         </ExplorerLinkPure>
         <div className="service-header__tags-container">
-          <ActiveTagPure isActive={!service.paused} />
+          <ActiveTagPure paused={service.paused} deleted={service.deleted} />
           {arePaymentsAllowed && <CustomTagPure text={servicesLangResources.operations.paymentsEnabled} />}
           {areDonationsAllowed && <CustomTagPure text={servicesLangResources.operations.donationsEnabled} />}
         </div>

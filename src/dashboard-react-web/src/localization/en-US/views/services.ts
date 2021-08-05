@@ -2,7 +2,8 @@ export const services = {
   title: 'Services',
   status: {
     active: 'Active',
-    paused: 'Paused'
+    paused: 'Paused',
+    deleted: 'Deleted'
   },
   createNewService: 'Create New Service',
   acceptPayments: 'Accept Payments',
