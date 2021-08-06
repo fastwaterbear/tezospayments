@@ -1,0 +1,13 @@
+.accept-payments {
+  display: flex;
+  flex-direction: row;
+}
+
+.accept-payments__settings {
+  width: 300px;
+  flex: 0 0 auto;
+}
+
+.accept-payments__generator {
+  width: 100%;
+}

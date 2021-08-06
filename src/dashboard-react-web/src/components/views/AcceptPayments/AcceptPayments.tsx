@@ -6,6 +6,10 @@ import { selectServicesState } from '../../../store/services/selectors';
 import { NoServicesCreatedPure } from '../../common/NoServicesCreated';
 import { useAppSelector, useCurrentLanguageResources } from '../../hooks';
 import { View } from '../View';
+import { GeneratorPure } from './Generator';
+import { SettingsPure } from './Settings';
+
+import './AcceptPayments.scss';
 
 export const AcceptPayments = () => {
   const langResources = useCurrentLanguageResources();
@@ -20,8 +24,13 @@ export const AcceptPayments = () => {
       ? <Skeleton active />
       : !servicesState.services.length
         ? <NoServicesCreatedPure />
-        : <div>
-          {address}
+        : <div className="accept-payments">
+          <div className="accept-payments__settings">
+            <SettingsPure address={address} />
+          </div>
+          <div className="accept-payments__generator">
+            <GeneratorPure />
+          </div>
         </div>}
   </View >;
 };
