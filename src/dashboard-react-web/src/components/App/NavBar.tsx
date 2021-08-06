@@ -17,6 +17,10 @@ const NavBar = () => {
     history.push(`${config.routers.services}/create`);
   }, [history]);
 
+  const handleAcceptPaymentsClick = useCallback(() => {
+    history.push(`${config.routers.acceptPayments}`);
+  }, [history]);
+
   return <nav className="navbar">
     <Menu className="navbar__menu" mode="inline" selectedKeys={[location.pathname]}>
       <Menu.Item key={config.routers.overview} icon={<DashboardOutlined />}>
@@ -36,7 +40,7 @@ const NavBar = () => {
 
     <div className="navbar__bottom-buttons">
       <Button onClick={handleCreateServiceClick}>{viewsLangResources.createService.title}</Button>
-      <Button type="primary">{viewsLangResources.acceptPayments.title}</Button>
+      <Button onClick={handleAcceptPaymentsClick} type="primary">{viewsLangResources.acceptPayments.title}</Button>
     </div>
   </nav>;
 };

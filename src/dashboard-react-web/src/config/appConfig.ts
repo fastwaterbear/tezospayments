@@ -18,6 +18,7 @@ export type AppConfig = DeepReadonly<{
     overview: string;
     operations: string;
     services: string;
+    acceptPayments: string;
     connect: string;
     about: string;
   },

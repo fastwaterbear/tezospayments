@@ -20,6 +20,7 @@ export const config: AppConfig = {
     overview: '/',
     operations: '/operations',
     services: '/services',
+    acceptPayments: '/acceptPayments',
     connect: '/connect',
     about: '/about'
   },
