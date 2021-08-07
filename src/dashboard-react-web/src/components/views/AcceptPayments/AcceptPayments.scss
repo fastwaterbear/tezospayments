@@ -1,7 +1,10 @@
+@use "../../../styles/layout-variables.scss";
+
 .accept-payments {
   display: flex;
   gap: 24px;
   flex-direction: row;
+  height: calc(100% - (#{layout-variables.$view-title-height} + var(--grid-layout-gutter)));
 }
 
 .accept-payments__settings {
