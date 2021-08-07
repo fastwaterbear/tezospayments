@@ -8,5 +8,6 @@ export const acceptPayments = {
   donationData: 'Donation Data',
   shortDescription: 'Short description on the page',
   shortDescriptionHelpText: 'This message will be shown to your donators when they will donate',
-  directLinkHelpText: 'Copy the following link and paste it into your website or send to your customer directly using messengers, email, social networks, etc.'
+  directLinkPaymentHelpText: 'Copy the following link and paste it into your website or send to your customer directly using messengers, email, social networks, etc',
+  directLinkDonationHelpText: 'Copy the following link and paste it into your profile on social networks or website so your subscribers can donate to you by opening this link'
 };

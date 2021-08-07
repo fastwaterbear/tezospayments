@@ -1,4 +1,5 @@
-import { Card } from 'antd';
+import { CopyOutlined } from '@ant-design/icons';
+import { Button, Card } from 'antd';
 import React from 'react';
 
 import { ExternalLink } from '../../../common';
@@ -6,9 +7,13 @@ import { useCurrentLanguageResources } from '../../../hooks';
 
 import './Generator.scss';
 
-export const Generator = () => {
+interface GeneratorProps {
+  helpText: string;
+}
+
+export const Generator = (props: GeneratorProps) => {
   const langResources = useCurrentLanguageResources();
-  const acceptPaymentsLangResources = langResources.views.acceptPayments;
+  const commonLangResources = langResources.common;
 
   const tabList = [
     { key: 'directLink', tab: 'Direct Link' },
@@ -27,8 +32,11 @@ export const Generator = () => {
     activeTabKey={tabList[0]?.key}
   >
     <div className="generator__direct-link">
-      <span className="generator__direct-link-help-text">{acceptPaymentsLangResources.directLinkHelpText}</span>
+      <span className="generator__direct-link-help-text">{props.helpText}</span>
       <ExternalLink className="generator__direct-link-link" href={url}>{url}</ExternalLink>
+      <div className="generator__direct-link-buttons">
+        <Button icon={<CopyOutlined />}>{commonLangResources.copyLink}</Button>
+      </div>
     </div>
   </Card >;
 };

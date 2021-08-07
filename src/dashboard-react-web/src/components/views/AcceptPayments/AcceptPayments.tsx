@@ -29,7 +29,7 @@ export const AcceptPayments = () => {
             <SettingsPure address={address} />
           </div>
           <div className="accept-payments__generator">
-            <GeneratorPure />
+            <GeneratorPure helpText={acceptPaymentsLangResources.directLinkPaymentHelpText} />
           </div>
         </div>}
   </View >;
