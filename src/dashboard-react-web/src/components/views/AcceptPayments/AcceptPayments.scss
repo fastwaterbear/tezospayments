@@ -1,10 +1,11 @@
 .accept-payments {
   display: flex;
+  gap: 24px;
   flex-direction: row;
 }
 
 .accept-payments__settings {
-  width: 300px;
+  width: 280px;
   flex: 0 0 auto;
 }
 

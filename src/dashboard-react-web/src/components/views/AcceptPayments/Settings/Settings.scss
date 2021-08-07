@@ -1,0 +1,36 @@
+.accept-payments-settings__caption {
+  display: block;
+  font-size: 16px;
+  margin-top: 24px;
+  margin-bottom: 6px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.accept-payments-settings__header {
+  display: block;
+  font-size: 24px;
+  margin-top: 32px;
+  margin-bottom: 6px;
+}
+
+.accept-payments-settings__help-text {
+  color: var(--global-secondary-dark-color);
+}
+
+.accept-payments-settings__service-select {
+  width: 100%;
+}
+
+.accept-payments-settings__type-select {
+  width: 100%;
+  display: flex !important;
+  justify-content: space-between;
+
+  .ant-radio-button-wrapper {
+    width: 128px;
+    text-align: center;
+  }
+}

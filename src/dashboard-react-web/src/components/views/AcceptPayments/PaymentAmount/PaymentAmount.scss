@@ -1,0 +1,12 @@
+.payment-amount {
+  display: flex;
+}
+
+.payment-amount__select {
+  width: 98px;
+  flex: 0 0 auto;
+}
+
+.payment-amount__input {
+  width: 100% !important;
+}

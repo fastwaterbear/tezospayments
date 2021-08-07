@@ -15,6 +15,7 @@ export const services = {
     donationsEnabled: 'Donations Enabled',
   },
   allowedCurrencies: 'Allowed Currencies',
+  service: 'Service',
   links: 'Links',
   dangerZone: {
     title: 'Danger Zone',
