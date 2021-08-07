@@ -1,9 +1,11 @@
 import { Input, Radio, RadioChangeEvent, Select } from 'antd';
+import { SelectValue } from 'antd/lib/select';
 import React, { useCallback, useState } from 'react';
 
 import { PaymentType } from '@tezospayments/common/dist/models/payment';
 
-import { useCurrentLanguageResources } from '../../../hooks';
+import { getSortedServices } from '../../../../store/services/selectors';
+import { useAppSelector, useCurrentLanguageResources } from '../../../hooks';
 import { PaymentAmountPure } from '../PaymentAmount';
 
 import './Settings.scss';
@@ -12,25 +14,41 @@ interface SettingsProps {
   address?: string;
 }
 
-export const Settings = (_props: SettingsProps) => {
+export const Settings = (props: SettingsProps) => {
   const langResources = useCurrentLanguageResources();
 
   const acceptPaymentsLangResources = langResources.views.acceptPayments;
   const serviceLangResources = langResources.views.services;
+
+  const services = useAppSelector(getSortedServices);
+  const serviceOptions = services.map(s => ({
+    label: s.name,
+    value: s.contractAddress
+  }));
+
+  const [service, setService] = useState<string | undefined>(props.address);
+  const handleServiceChanged = useCallback((value: SelectValue) => {
+    setService(value as string);
+  }, []);
 
   const typeOptions = [
     { label: 'Payment', value: PaymentType.Payment },
     { label: 'Donation', value: PaymentType.Donation },
   ];
 
-  const [paymentType, setPaymentType] = useState(typeOptions[0]?.value);
+  const [paymentType, setPaymentType] = useState<PaymentType>(PaymentType.Payment);
   const handleTypeChanged = useCallback((e: RadioChangeEvent) => {
     setPaymentType(e.target.value);
   }, []);
 
   return <div className="accept-payments-settings">
     <span className="accept-payments-settings__caption">{serviceLangResources.service}</span>
-    <Select className="accept-payments-settings__service-select" />
+    <Select
+      className="accept-payments-settings__service-select"
+      options={serviceOptions}
+      value={service}
+      onChange={handleServiceChanged}
+    />
 
     <span className="accept-payments-settings__caption">{acceptPaymentsLangResources.type}</span>
     <Radio.Group

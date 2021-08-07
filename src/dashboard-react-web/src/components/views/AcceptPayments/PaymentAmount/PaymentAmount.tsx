@@ -1,6 +1,8 @@
 import { InputNumber, Select } from 'antd';
 import React from 'react';
 
+import { tezosMeta } from '@tezospayments/common/dist/models/blockchain';
+
 import './PaymentAmount.scss';
 
 interface DonationAmountProps {
@@ -8,12 +10,21 @@ interface DonationAmountProps {
 }
 
 export const PaymentAmount = (props: DonationAmountProps) => {
-  const assetsOptions = [
-    { label: 'XTZ', value: 'XTZ' },
+  const assets = [
+    { label: tezosMeta.symbol, value: tezosMeta.symbol, imageUrl: tezosMeta.thumbnailUri },
   ];
 
+  const options = assets.map(a => <Select.Option key={a.label} value={a.value} label={a.label}>
+    <div className="payment-amount__select-option">
+      <img className="payment-amount__select-option-image" alt={a.label} src={a.imageUrl} />
+      <span className="payment-amount__select-option-label">{a.label}</span>
+    </div>
+  </Select.Option>);
+
   return <div className="payment-amount">
-    <Select className="payment-amount__select" options={assetsOptions} defaultValue={assetsOptions[0]?.value} />
+    <Select className="payment-amount__select" value={tezosMeta.symbol}>
+      {options}
+    </Select>
     <InputNumber className="payment-amount__input" min={'0'} defaultValue={'1'} onChange={props.onChange} />
   </div>;
 };
