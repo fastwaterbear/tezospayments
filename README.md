@@ -6,7 +6,7 @@
 [Demo - Donations](https://payment.tezospayments.com/KT1BhWg791Mg4x2xVrh2Zb2yjf87U275JmGW/donation) &nbsp;&nbsp;•&nbsp;&nbsp; 
 [Service Factory Contract [Edo2net]](https://better-call.dev/edo2net/KT1BhWg791Mg4x2xVrh2Zb2yjf87U275JmGW)  
 
-> ⚠️ Tezos Payments is in active development so any component (application, contract, package, API) are subject to change ⚠️
+> ⚠️ Tezos Payments is in active development so any component (application, contract, package, API) is subject to change ⚠️
 
 Prod  
 **Coming Soon**  
