@@ -1,8 +1,9 @@
 import { Input, Radio, RadioChangeEvent, Select } from 'antd';
 import { SelectValue } from 'antd/lib/select';
+import BigNumber from 'bignumber.js';
 import React, { useCallback, useState } from 'react';
 
-import { PaymentType } from '@tezospayments/common/dist/models/payment';
+import { Donation, Payment, PaymentType } from '@tezospayments/common/dist/models/payment';
 
 import { getSortedServices } from '../../../../store/services/selectors';
 import { useAppSelector, useCurrentLanguageResources } from '../../../hooks';
@@ -12,11 +13,11 @@ import './Settings.scss';
 
 interface SettingsProps {
   address?: string;
+  onChange: (payment: Payment | Donation) => void
 }
 
 export const Settings = (props: SettingsProps) => {
   const langResources = useCurrentLanguageResources();
-
   const acceptPaymentsLangResources = langResources.views.acceptPayments;
   const serviceLangResources = langResources.views.services;
 
@@ -27,9 +28,6 @@ export const Settings = (props: SettingsProps) => {
   }));
 
   const [service, setService] = useState<string | undefined>(props.address);
-  const handleServiceChanged = useCallback((value: SelectValue) => {
-    setService(value as string);
-  }, []);
 
   const typeOptions = [
     { label: 'Payment', value: PaymentType.Payment },
@@ -37,9 +35,51 @@ export const Settings = (props: SettingsProps) => {
   ];
 
   const [paymentType, setPaymentType] = useState<PaymentType>(PaymentType.Payment);
-  const handleTypeChanged = useCallback((e: RadioChangeEvent) => {
+  const [amount, setAmount] = useState(1);
+  const [publicData, setPublicData] = useState('');
+
+  const emitOnChange = useCallback(() => {
+    if (service) {
+      const data = paymentType === PaymentType.Payment
+        ? {
+          created: new Date(),
+          targetAddress: service,
+          type: paymentType,
+          amount: new BigNumber(amount),
+          data: { public: { orderId: publicData } },
+          urls: []
+        } as Payment
+        : {
+          targetAddress: service,
+          type: paymentType,
+        } as Donation;
+
+      props.onChange(data);
+    }
+  }, [amount, paymentType, props, publicData, service]);
+
+  const handleTypeChange = useCallback((e: RadioChangeEvent) => {
     setPaymentType(e.target.value);
-  }, []);
+    emitOnChange();
+  }, [emitOnChange]);
+
+  const handleServiceChange = useCallback((value: SelectValue) => {
+    setService(value as string);
+    emitOnChange();
+  }, [emitOnChange]);
+
+  const handleAmountChange = useCallback((rawValue: string) => {
+    const numberValue = +rawValue;
+    if (!isNaN(numberValue) && numberValue > 0) {
+      setAmount(numberValue);
+      emitOnChange();
+    }
+  }, [emitOnChange]);
+
+  const handlePublicDataChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setPublicData(e.target.value);
+    emitOnChange();
+  }, [emitOnChange]);
 
   return <div className="accept-payments-settings">
     <span className="accept-payments-settings__caption">{serviceLangResources.service}</span>
@@ -47,7 +87,7 @@ export const Settings = (props: SettingsProps) => {
       className="accept-payments-settings__service-select"
       options={serviceOptions}
       value={service}
-      onChange={handleServiceChanged}
+      onChange={handleServiceChange}
     />
 
     <span className="accept-payments-settings__caption">{acceptPaymentsLangResources.type}</span>
@@ -57,16 +97,16 @@ export const Settings = (props: SettingsProps) => {
       buttonStyle="outline"
       options={typeOptions}
       value={paymentType}
-      onChange={handleTypeChanged}
+      onChange={handleTypeChange}
     />
 
     {paymentType === PaymentType.Payment
       ? <>
         <span className="accept-payments-settings__caption">{acceptPaymentsLangResources.amount}</span>
-        <PaymentAmountPure onChange={e => { console.log(e); }} />
+        <PaymentAmountPure onChange={handleAmountChange} value={amount} />
         <span className="accept-payments-settings__header">{acceptPaymentsLangResources.paymentPublicData}</span>
         <span className="accept-payments-settings__caption">{acceptPaymentsLangResources.orderId}</span>
-        <Input className="accept-payments-settings__order-id-input" />
+        <Input className="accept-payments-settings__order-id-input" value={publicData} onChange={handlePublicDataChange} />
         <span className="accept-payments-settings__help-text">{acceptPaymentsLangResources.orderIdHelpText}</span>
       </>
       : <>

@@ -2,18 +2,21 @@ import { CopyOutlined } from '@ant-design/icons';
 import { Button, Card } from 'antd';
 import React from 'react';
 
+import { Donation, Payment } from '@tezospayments/common/src/models/payment';
+
 import { ExternalLink } from '../../../common';
 import { useCurrentLanguageResources } from '../../../hooks';
 
 import './Generator.scss';
 
 interface GeneratorProps {
-  helpText: string;
+  paymentOrDonation: Payment | Donation | undefined;
 }
 
-export const Generator = (props: GeneratorProps) => {
+export const Generator = (_props: GeneratorProps) => {
   const langResources = useCurrentLanguageResources();
   const commonLangResources = langResources.common;
+  const acceptPaymentsLangResources = langResources.views.acceptPayments;
 
   const tabList = [
     { key: 'directLink', tab: 'Direct Link' },
@@ -32,7 +35,7 @@ export const Generator = (props: GeneratorProps) => {
     activeTabKey={tabList[0]?.key}
   >
     <div className="generator__direct-link">
-      <span className="generator__direct-link-help-text">{props.helpText}</span>
+      <span className="generator__direct-link-help-text">{acceptPaymentsLangResources.directLinkPaymentHelpText}</span>
       <ExternalLink className="generator__direct-link-link" href={url}>{url}</ExternalLink>
       <div className="generator__direct-link-buttons">
         <Button icon={<CopyOutlined />}>{commonLangResources.copyLink}</Button>

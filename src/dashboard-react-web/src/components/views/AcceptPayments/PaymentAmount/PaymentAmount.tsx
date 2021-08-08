@@ -7,6 +7,7 @@ import './PaymentAmount.scss';
 
 interface DonationAmountProps {
   onChange: (rawValue: string) => void;
+  value: number;
 }
 
 export const PaymentAmount = (props: DonationAmountProps) => {
@@ -25,7 +26,7 @@ export const PaymentAmount = (props: DonationAmountProps) => {
     <Select className="payment-amount__select" value={tezosMeta.symbol}>
       {options}
     </Select>
-    <InputNumber className="payment-amount__input" min={'0'} defaultValue={'1'} onChange={props.onChange} />
+    <InputNumber className="payment-amount__input" min={'0'} value={props.value.toString()} onChange={props.onChange} />
   </div>;
 };
 

@@ -1,6 +1,8 @@
 import { Skeleton } from 'antd';
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
+
+import { Donation, Payment } from '@tezospayments/common/src/models/payment';
 
 import { selectServicesState } from '../../../store/services/selectors';
 import { NoServicesCreatedPure } from '../../common/NoServicesCreated';
@@ -18,6 +20,12 @@ export const AcceptPayments = () => {
 
   const { address } = useParams<{ address: string }>();
 
+  const [paymentOrDonation, setPaymentOrDonation] = useState<Payment | Donation | undefined>();
+
+  const handleSettingsPureChange = useCallback((data: Payment | Donation) => {
+    setPaymentOrDonation(data);
+  }, []);
+
   return <View title={acceptPaymentsLangResources.title}>
     <View.Title>{acceptPaymentsLangResources.title}</View.Title>
     {!servicesState.initialized
@@ -26,10 +34,10 @@ export const AcceptPayments = () => {
         ? <NoServicesCreatedPure />
         : <div className="accept-payments">
           <div className="accept-payments__settings">
-            <SettingsPure address={address} />
+            <SettingsPure address={address} onChange={handleSettingsPureChange} />
           </div>
           <div className="accept-payments__generator">
-            <GeneratorPure helpText={acceptPaymentsLangResources.directLinkPaymentHelpText} />
+            <GeneratorPure paymentOrDonation={paymentOrDonation} />
           </div>
         </div>}
   </View >;
