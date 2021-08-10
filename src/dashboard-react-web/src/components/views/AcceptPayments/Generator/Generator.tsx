@@ -8,6 +8,7 @@ import { URL } from '@tezospayments/common/dist/native';
 import { getSortedServices } from '../../../../store/services/selectors';
 import { useAppSelector } from '../../../hooks';
 import { DirectLinkGeneratorPure } from './DirectLinkGenerator';
+import { FailedValidationResult } from './FailedValidationResult';
 
 import './Generator.scss';
 
@@ -48,7 +49,7 @@ export const Generator = (props: GeneratorProps) => {
       urls
     } as Donation;
 
-  const failedValidationResult = paymentOrDonation.type === PaymentType.Payment
+  const failedValidationResults = paymentOrDonation.type === PaymentType.Payment
     ? Payment.validate(paymentOrDonation)
     : Donation.validate(paymentOrDonation);
 
@@ -58,8 +59,8 @@ export const Generator = (props: GeneratorProps) => {
     tabList={tabList}
     activeTabKey={tabList[0]?.key}
   >
-    {failedValidationResult
-      ? JSON.stringify(failedValidationResult)
+    {failedValidationResults
+      ? <FailedValidationResult results={failedValidationResults} />
       : <DirectLinkGeneratorPure paymentOrDonation={paymentOrDonation} />}
   </Card >;
 };
