@@ -1,10 +1,9 @@
 import { RadioChangeEvent, Skeleton } from 'antd';
 import { SelectValue } from 'antd/lib/select';
-import BigNumber from 'bignumber.js';
 import React, { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { Donation, Payment, PaymentType } from '@tezospayments/common/dist/models/payment';
+import { PaymentType } from '@tezospayments/common/dist/models/payment';
 
 import { selectServicesState } from '../../../store/services/selectors';
 import { NoServicesCreatedPure } from '../../common/NoServicesCreated';
@@ -20,15 +19,15 @@ export const AcceptPayments = () => {
   const acceptPaymentsLangResources = langResources.views.acceptPayments;
   const servicesState = useAppSelector(selectServicesState);
 
-  const { address } = useParams<{ address: string }>();
-  const [service, setService] = useState<string | undefined>(address);
+  const { address: addressFromUrl } = useParams<{ address: string }>();
+  const [serviceAddress, setServiceAddress] = useState<string | undefined>(addressFromUrl);
   const [paymentType, setPaymentType] = useState<PaymentType>(PaymentType.Payment);
   const [amount, setAmount] = useState<number>(1);
   const [publicData, setPublicData] = useState<string>('');
   const [donationData, setDonationData] = useState<string>('');
 
-  const handleServiceChange = useCallback((value: SelectValue) => {
-    setService(value as string);
+  const handleServiceAddressChange = useCallback((value: SelectValue) => {
+    setServiceAddress(value as string);
   }, []);
 
   const handlePaymentTypeChange = useCallback((e: RadioChangeEvent) => {
@@ -50,24 +49,6 @@ export const AcceptPayments = () => {
     setDonationData(e.target.value);
   }, []);
 
-  const emitOnChange = useCallback(() => {
-    if (service) {
-      const data = paymentType === PaymentType.Payment
-        ? {
-          created: new Date(),
-          targetAddress: service,
-          type: paymentType,
-          amount: new BigNumber(amount),
-          data: { public: { orderId: publicData } },
-          urls: []
-        } as Payment
-        : {
-          targetAddress: service,
-          type: paymentType,
-        } as Donation;
-    }
-  }, [amount, paymentType, publicData, service]);
-
   return <View title={acceptPaymentsLangResources.title}>
     <View.Title>{acceptPaymentsLangResources.title}</View.Title>
     {!servicesState.initialized
@@ -77,7 +58,7 @@ export const AcceptPayments = () => {
         : <div className="accept-payments">
           <div className="accept-payments__settings">
             <AcceptPaymentsSettings
-              serviceAddress={address} onServiceAddressChange={handleServiceChange}
+              serviceAddress={serviceAddress} onServiceAddressChange={handleServiceAddressChange}
               paymentType={paymentType} onPaymentTypeChange={handlePaymentTypeChange}
               amount={amount} onAmountChange={handleAmountChange}
               publicData={publicData} onPublicDataChange={handlePublicDataChange}
@@ -85,7 +66,13 @@ export const AcceptPayments = () => {
             />
           </div>
           <div className="accept-payments__generator">
-            <GeneratorPure />
+            <GeneratorPure
+              serviceAddress={addressFromUrl}
+              paymentType={paymentType}
+              amount={amount}
+              publicData={publicData}
+              donationData={donationData}
+            />
           </div>
         </div>}
   </View >;

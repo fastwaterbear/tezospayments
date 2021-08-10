@@ -1,8 +1,9 @@
 import { CopyOutlined } from '@ant-design/icons';
 import { Button, Card } from 'antd';
+import BigNumber from 'bignumber.js';
 import React from 'react';
 
-import { Donation, Payment } from '@tezospayments/common/src/models/payment';
+import { Donation, Payment, PaymentType } from '@tezospayments/common/dist/models/payment';
 
 import { ExternalLink } from '../../../common';
 import { useCurrentLanguageResources } from '../../../hooks';
@@ -10,13 +11,31 @@ import { useCurrentLanguageResources } from '../../../hooks';
 import './Generator.scss';
 
 interface GeneratorProps {
-  paymentOrDonation?: Payment | Donation | undefined;
+  serviceAddress: string | undefined;
+  paymentType: PaymentType;
+  amount: number;
+  publicData: string;
+  donationData: string;
 }
 
-export const Generator = (_props: GeneratorProps) => {
+export const Generator = (props: GeneratorProps) => {
   const langResources = useCurrentLanguageResources();
   const commonLangResources = langResources.common;
   const acceptPaymentsLangResources = langResources.views.acceptPayments;
+
+  const _data = props.paymentType === PaymentType.Payment
+    ? {
+      created: new Date(),
+      targetAddress: props.serviceAddress,
+      type: props.paymentType,
+      amount: new BigNumber(props.amount),
+      data: { public: { orderId: props.publicData } },
+      urls: []
+    } as Payment
+    : {
+      targetAddress: props.serviceAddress,
+      type: props.paymentType,
+    } as Donation;
 
   const tabList = [
     { key: 'directLink', tab: 'Direct Link' },
