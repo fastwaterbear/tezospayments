@@ -3,8 +3,12 @@ import BigNumber from 'bignumber.js';
 import React from 'react';
 
 import { Donation, Payment, PaymentType } from '@tezospayments/common/dist/models/payment';
+import { URL } from '@tezospayments/common/dist/native';
 
+import { getSortedServices } from '../../../../store/services/selectors';
+import { useAppSelector } from '../../../hooks';
 import { DirectLinkGeneratorPure } from './DirectLinkGenerator';
+
 import './Generator.scss';
 
 interface GeneratorProps {
@@ -23,18 +27,25 @@ export const Generator = (props: GeneratorProps) => {
     { key: 'dotnet', tab: '.NET Library', disabled: true },
   ];
 
+  const services = useAppSelector(getSortedServices);
+  const urls = services.find(s => s.contractAddress === props.serviceAddress)?.links.map(l => ({
+    type: 'base64',
+    url: new URL(l)
+  }));
+
   const paymentOrDonation = props.paymentType === PaymentType.Payment
     ? {
       created: new Date(),
       targetAddress: props.serviceAddress,
       type: props.paymentType,
       amount: new BigNumber(props.amount),
-      data: { public: { orderId: props.publicData } },
-      urls: []
+      data: props.publicData ? { public: { orderId: props.publicData } } : undefined,
+      urls
     } as Payment
     : {
       targetAddress: props.serviceAddress,
       type: props.paymentType,
+      urls
     } as Donation;
 
   const failedValidationResult = paymentOrDonation.type === PaymentType.Payment
