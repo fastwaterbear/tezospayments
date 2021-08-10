@@ -9,14 +9,14 @@ import { getSortedServices } from '../../../../store/services/selectors';
 import { useAppSelector, useCurrentLanguageResources } from '../../../hooks';
 import { PaymentAmountPure } from '../PaymentAmount';
 
-import './Settings.scss';
+import './AcceptPaymentsSettings.scss';
 
-interface SettingsProps {
+interface AcceptPaymentsSettingsProps {
   address?: string;
   onChange: (payment: Payment | Donation) => void
 }
 
-export const Settings = (props: SettingsProps) => {
+export const AcceptPaymentsSettings = (props: AcceptPaymentsSettingsProps) => {
   const langResources = useCurrentLanguageResources();
   const acceptPaymentsLangResources = langResources.views.acceptPayments;
   const serviceLangResources = langResources.views.services;
@@ -118,4 +118,4 @@ export const Settings = (props: SettingsProps) => {
   </div>;
 };
 
-export const SettingsPure = React.memo(Settings);
+export const AcceptPaymentsSettingsPure = React.memo(AcceptPaymentsSettings);

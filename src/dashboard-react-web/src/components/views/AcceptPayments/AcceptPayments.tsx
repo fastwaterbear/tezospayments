@@ -8,8 +8,8 @@ import { selectServicesState } from '../../../store/services/selectors';
 import { NoServicesCreatedPure } from '../../common/NoServicesCreated';
 import { useAppSelector, useCurrentLanguageResources } from '../../hooks';
 import { View } from '../View';
+import { AcceptPaymentsSettings } from './AcceptPaymentsSettings';
 import { GeneratorPure } from './Generator';
-import { SettingsPure } from './Settings';
 
 import './AcceptPayments.scss';
 
@@ -34,7 +34,7 @@ export const AcceptPayments = () => {
         ? <NoServicesCreatedPure />
         : <div className="accept-payments">
           <div className="accept-payments__settings">
-            <SettingsPure address={address} onChange={handleSettingsPureChange} />
+            <AcceptPaymentsSettings address={address} onChange={handleSettingsPureChange} />
           </div>
           <div className="accept-payments__generator">
             <GeneratorPure paymentOrDonation={paymentOrDonation} />
