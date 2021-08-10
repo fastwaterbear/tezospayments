@@ -67,7 +67,7 @@ export const AcceptPayments = () => {
           </div>
           <div className="accept-payments__generator">
             <GeneratorPure
-              serviceAddress={addressFromUrl}
+              serviceAddress={serviceAddress}
               paymentType={paymentType}
               amount={amount}
               publicData={publicData}
