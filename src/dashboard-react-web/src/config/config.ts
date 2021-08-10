@@ -29,6 +29,7 @@ export const config: AppConfig = {
     tzktIo: 'https://tzkt.io',
     tezosPayments: {
       webSite: 'https://tezospayments.com',
+      paymentsApp: 'https://payment.tezospayments.com',
       gitHub: 'https://github.com/fastwaterbear/tezospayments',
       telegram: 'https://t.me/fastwaterbear',
       twitter: 'https://twitter.com/fastwaterbear',

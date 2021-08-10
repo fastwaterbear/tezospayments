@@ -27,6 +27,7 @@ export type AppConfig = DeepReadonly<{
     tzktIo: string;
     tezosPayments: {
       webSite: string;
+      paymentsApp: string;
       gitHub: string;
       telegram: string;
       twitter: string;

@@ -2,17 +2,33 @@ import { CopyOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import React from 'react';
 
+import { RawPayment } from '@tezospayments/common/dist/helpers/paymentParser/paymentParser';
+import { Donation, Payment, PaymentType } from '@tezospayments/common/dist/models/payment';
+
+import { config } from '../../../../../config';
 import { ExternalLink } from '../../../../common';
 import { useCurrentLanguageResources } from '../../../../hooks';
+
 import './DirectLinkGenerator.scss';
 
-export const DirectLinkGenerator = () => {
+interface DirectLinkGeneratorProps {
+  paymentOrDonation: Payment | Donation;
+}
+
+export const DirectLinkGenerator = ({ paymentOrDonation }: DirectLinkGeneratorProps) => {
   const langResources = useCurrentLanguageResources();
   const commonLangResources = langResources.common;
   const acceptPaymentsLangResources = langResources.views.acceptPayments;
 
-  // eslint-disable-next-line max-len
-  const url = 'https://payment.tezospayments.com/KT1TwUi5inZPTJhGBhx1mvCEhWHLYpniKmTB/payment#eyJhbW91bnQiOiIxOS45OSIsImRhdGEiOnsicHVibGljIjp7Im9yZGVySWQiOiJmNTAwMDg0Mi1jNGY5LTRhM2UtYTJiZS0xMThkNTUxMjQ1ZjcifX0sImNyZWF0ZWQiOjE2Mjc4OTM3MzM0NDZ9';
+  const rawPayment: RawPayment = {
+    created: +new Date(),
+    amount: paymentOrDonation.type === PaymentType.Payment ? paymentOrDonation.amount.toString(10) : undefined,
+    data: paymentOrDonation.type === PaymentType.Payment ? paymentOrDonation.data : undefined
+  };
+
+  const base64 = Buffer.from(JSON.stringify(rawPayment), 'utf8').toString('base64');
+  const operation = paymentOrDonation.type === PaymentType.Payment ? 'payment' : 'donation';
+  const url = `${config.links.tezosPayments.paymentsApp}/${paymentOrDonation.targetAddress}/${operation}/#${base64}`;
 
   return <div className="generator__direct-link">
     <span className="generator__direct-link-help-text">{acceptPaymentsLangResources.directLinkPaymentHelpText}</span>

@@ -23,7 +23,7 @@ export const Generator = (props: GeneratorProps) => {
     { key: 'dotnet', tab: '.NET Library', disabled: true },
   ];
 
-  const data = props.paymentType === PaymentType.Payment
+  const paymentOrDonation = props.paymentType === PaymentType.Payment
     ? {
       created: new Date(),
       targetAddress: props.serviceAddress,
@@ -37,7 +37,9 @@ export const Generator = (props: GeneratorProps) => {
       type: props.paymentType,
     } as Donation;
 
-  const failedValidationResult = data.type === PaymentType.Payment ? Payment.validate(data) : Donation.validate(data);
+  const failedValidationResult = paymentOrDonation.type === PaymentType.Payment
+    ? Payment.validate(paymentOrDonation)
+    : Donation.validate(paymentOrDonation);
 
   return <Card
     className="generator"
@@ -47,7 +49,7 @@ export const Generator = (props: GeneratorProps) => {
   >
     {failedValidationResult
       ? JSON.stringify(failedValidationResult)
-      : <DirectLinkGeneratorPure />}
+      : <DirectLinkGeneratorPure paymentOrDonation={paymentOrDonation} />}
   </Card >;
 };
 
