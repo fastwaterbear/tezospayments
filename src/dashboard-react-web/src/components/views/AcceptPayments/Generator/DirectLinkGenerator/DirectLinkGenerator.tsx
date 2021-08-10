@@ -1,6 +1,6 @@
 import { CopyOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { RawPayment } from '@tezospayments/common/dist/helpers/paymentParser/paymentParser';
 import { Donation, Payment, PaymentType } from '@tezospayments/common/dist/models/payment';
@@ -30,11 +30,15 @@ export const DirectLinkGenerator = ({ paymentOrDonation }: DirectLinkGeneratorPr
   const operation = paymentOrDonation.type === PaymentType.Payment ? 'payment' : 'donation';
   const url = `${config.links.tezosPayments.paymentsApp}/${paymentOrDonation.targetAddress}/${operation}/#${base64}`;
 
+  const handleCopyClick = useCallback(() => {
+    navigator.clipboard.writeText(url);
+  }, [url]);
+
   return <div className="generator__direct-link">
     <span className="generator__direct-link-help-text">{acceptPaymentsLangResources.directLinkPaymentHelpText}</span>
     <ExternalLink className="generator__direct-link-link" href={url}>{url}</ExternalLink>
     <div className="generator__direct-link-buttons">
-      <Button icon={<CopyOutlined />}>{commonLangResources.copyLink}</Button>
+      <Button onClick={handleCopyClick} icon={<CopyOutlined />}>{commonLangResources.copyLink}</Button>
     </div>
   </div>;
 };
