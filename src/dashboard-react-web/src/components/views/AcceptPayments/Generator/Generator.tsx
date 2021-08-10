@@ -10,7 +10,7 @@ import { useCurrentLanguageResources } from '../../../hooks';
 import './Generator.scss';
 
 interface GeneratorProps {
-  paymentOrDonation: Payment | Donation | undefined;
+  paymentOrDonation?: Payment | Donation | undefined;
 }
 
 export const Generator = (_props: GeneratorProps) => {
