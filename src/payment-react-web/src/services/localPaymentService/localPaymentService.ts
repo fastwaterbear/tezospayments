@@ -17,7 +17,7 @@ import { AppStore } from '../../store';
 import { confirmPayment } from '../../store/currentPayment';
 import { ServiceResult } from '../serviceResult';
 import { errors, LocalPaymentServiceError } from './errors';
-import { BetterCallDevServiceProvider, ServiceProvider } from './serviceProvider';
+import { ServiceProvider, TzKTServiceProvider } from './serviceProvider';
 
 type Segments = readonly [
   targetAddress: string,
@@ -27,7 +27,7 @@ type Segments = readonly [
 export class LocalPaymentService {
   readonly tezosToolkit = new TezosToolkit(config.tezos.rpcNodes.edo2net[0]);
   readonly tezosWallet = new BeaconWallet({ name: config.app.name, colorMode: ColorMode.LIGHT });
-  readonly serviceProvider: ServiceProvider = new BetterCallDevServiceProvider(networks.edo2net);
+  readonly serviceProvider: ServiceProvider = new TzKTServiceProvider(networks.edo2net);
 
   constructor(readonly store: AppStore) {
     this.tezosToolkit.setWalletProvider(this.tezosWallet);
