@@ -1,5 +1,4 @@
 import { Column } from '@ant-design/charts';
-import { ColumnConfig } from '@ant-design/charts/es/column';
 import { Skeleton } from 'antd';
 import React from 'react';
 
@@ -34,7 +33,7 @@ export const OperationCountChart = () => {
     },
   ];
 
-  const config: ColumnConfig = {
+  const config: React.ComponentProps<typeof Column> = {
     data,
     xField: 'month',
     yField: 'operationCount',

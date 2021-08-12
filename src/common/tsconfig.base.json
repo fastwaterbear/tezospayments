@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "ESNext",
+        "target": "es6",
         "module": "ESNext",
         "moduleResolution": "node",
         "lib": [
@@ -13,6 +13,7 @@
         "declaration": true,
         "composite": true,
         "tsBuildInfoFile": "temp/tsconfig.tsbuildinfo",
-        "allowSyntheticDefaultImports": true
+        "allowSyntheticDefaultImports": true,
+        "skipLibCheck": true
     }
 }

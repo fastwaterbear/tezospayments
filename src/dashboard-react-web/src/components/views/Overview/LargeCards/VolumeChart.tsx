@@ -1,5 +1,4 @@
 import { Line } from '@ant-design/charts';
-import { LineConfig } from '@ant-design/charts/es/line';
 import { Skeleton } from 'antd';
 import React from 'react';
 
@@ -42,7 +41,7 @@ export const VolumeChart = () => {
     },
   ];
 
-  const config: LineConfig = {
+  const config: React.ComponentProps<typeof Line> = {
     data,
     xField: 'quarter',
     yField: 'sum',
