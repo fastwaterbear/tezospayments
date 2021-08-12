@@ -1,3 +1,4 @@
+@use 'sass:math';
 @use '../../styles/colors.scss';
 
 $icon-size: 80px;
@@ -12,7 +13,7 @@ $icon-size: 80px;
 }
 
 .service-icon_type-text {
-  font-size: $icon-size / 2.5;
+  font-size: math.div($icon-size, 2.5);
   font-weight: 700;
   border-radius: 50%;
   color: #fff;

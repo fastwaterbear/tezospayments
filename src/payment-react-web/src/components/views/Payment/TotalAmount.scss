@@ -1,3 +1,4 @@
+@use 'sass:math';
 @use '../../../styles/layout-variables.scss';
 @use '../../../styles/colors.scss';
 @use '../../../styles/mixins.scss';
@@ -12,7 +13,7 @@
 }
 
 .total-amount__value {
-  margin: 0 (layout-variables.$element-spacing-small / 4) (layout-variables.$element-spacing-small / 4)
+  margin: 0 math.div(layout-variables.$element-spacing-small, 4) math.div(layout-variables.$element-spacing-small, 4)
     layout-variables.$element-spacing-small;
   line-height: 1;
 

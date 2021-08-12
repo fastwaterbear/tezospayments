@@ -1,8 +1,9 @@
+@use 'sass:math';
 @use '../../styles/layout-variables.scss';
 @use '../../styles/colors.scss';
 
 .copy-button {
-  margin: 0 layout-variables.$element-spacing-small / 2;
+  margin: 0 math.div(layout-variables.$element-spacing-small, 2);
   padding: 0;
   border: none;
   background: none;
