@@ -28,14 +28,12 @@ jobs:
           npm --version
 
       - name: Install npm packages of the Landing app
-        working-directory: 'src/landing'
         env:
           CI: true
-        run: npm ci
+        run: npm ci -w @tezospayments/landing
 
       - name: Build the Landing app
-        working-directory: 'src/landing'
-        run: npm run build
+        run: npm run build -w @tezospayments/landing
 
       - name: Deploy
         if: github.ref == 'refs/heads/master'

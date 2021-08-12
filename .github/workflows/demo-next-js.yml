@@ -31,18 +31,15 @@ jobs:
           npm --version
 
       - name: Install npm packages of the demo app
-        working-directory: 'src/demo-next-js'
         env:
           CI: true
-        run: npm ci
+        run: npm ci -w @tezospayments/demo-next-js
 
       - name: Build the demo app
-        working-directory: 'src/demo-next-js'
-        run: npm run export
+        run: npm run export -w @tezospayments/demo-next-js
 
       - name: Lint the demo app
-        working-directory: 'src/demo-next-js'
-        run: npm run lint # -- --max-warnings -1
+        run: npm run lint -w @tezospayments/demo-next-js # -- --max-warnings -1
 
       - name: Deploy
         if: github.ref == 'refs/heads/master'

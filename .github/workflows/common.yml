@@ -28,19 +28,15 @@ jobs:
           npm --version
 
       - name: Install npm packages
-        working-directory: 'src/common'
         env:
           CI: true
-        run: npm ci
+        run: npm ci -w @tezospayments/common
 
       - name: Build
-        working-directory: 'src/common'
-        run: npm run build
+        run: npm run build -w @tezospayments/common
 
       - name: Lint
-        working-directory: 'src/common'
-        run: npm run lint # -- --max-warnings -1
+        run: npm run lint -w @tezospayments/common # -- --max-warnings -1
 
       - name: Test
-        working-directory: 'src/common'
-        run: npm test
+        run: npm test -w @tezospayments/common
