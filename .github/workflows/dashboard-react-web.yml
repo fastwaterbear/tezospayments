@@ -33,10 +33,9 @@ jobs:
           npm --version
 
       - name: Install npm packages
-        working-directory: 'src/common'
         env:
           CI: true
-        run: npm ci -w @tezospayments/common -w @tezospayments/dashboard-react-web
+        run: npm ci
 
       - name: Build the @tezospayments/common package
         run: npm run build -w @tezospayments/common

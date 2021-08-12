@@ -30,7 +30,7 @@ jobs:
       - name: Install npm packages
         env:
           CI: true
-        run: npm ci -w @tezospayments/common
+        run: npm ci
 
       - name: Build
         run: npm run build -w @tezospayments/common

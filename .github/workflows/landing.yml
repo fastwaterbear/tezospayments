@@ -30,7 +30,7 @@ jobs:
       - name: Install npm packages of the Landing app
         env:
           CI: true
-        run: npm ci -w @tezospayments/landing
+        run: npm ci
 
       - name: Build the Landing app
         run: npm run build -w @tezospayments/landing

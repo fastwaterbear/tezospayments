@@ -33,7 +33,7 @@ jobs:
       - name: Install npm packages of the demo app
         env:
           CI: true
-        run: npm ci -w @tezospayments/demo-next-js
+        run: npm ci
 
       - name: Build the demo app
         run: npm run export -w @tezospayments/demo-next-js
