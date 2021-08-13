@@ -60,40 +60,33 @@ Usage: React, Ant Design, Redux Toolkit, Taquito, Beacon SDK, TypeScript;
 * [Node.js](https://nodejs.org) version 15.14.0 or later  
 * [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) version 7.7.6 or later  
 
+### Install dependencies
+Open the root directory of the repository and launch the following command:
+```
+npm install
+```
+After all the dependencies are installed you can launch applications.
+
 ### Dashboard Application
+Don't forget install the dependencies (see above).  
 Open the root directory of the repository and launch the following commands:  
 ```bash
-# Install npm packages for the common package
-cd ./src/common
-npm i
-
 # Build the common package
-npm run build
-
-# Install npm packages for the dashboard-react-web application
-cd ../dashboard-react-web
-npm i
+npm run build -w @tezospayments/common
 
 # Start the dashboard-react-web application
-npm run start
+npm run start -w @tezospayments/dashboard-react-web
 ```
 
 ### Payment Application
+Don't forget install the dependencies (see above).  
 Open the root directory of the repository and launch the following commands:  
 ```bash
-# Install npm packages for the common package
-cd ./src/common
-npm i
-
 # Build the common package
-npm run build
-
-# Install npm packages for the payment-react-web application
-cd ../payment-react-web
-npm i
+npm run build -w @tezospayments/common
 
 # Start the payment-react-web application
-npm run start
+npm run start -w @tezospayments/payment-react-web
 ```
 
 ## Urls

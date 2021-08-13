@@ -1,3 +1,4 @@
+@use 'sass:math';
 @use '../../../styles/layout-variables.scss';
 
 $-icon-size: 24px;
@@ -11,7 +12,7 @@ $-icon-size: 24px;
   font-size: $-icon-size;
   width: $-icon-size;
   height: $-icon-size;
-  margin-right: layout-variables.$element-spacing-small / 2;
+  margin-right: math.div(layout-variables.$element-spacing-small, 2);
   vertical-align: top;
 }
 

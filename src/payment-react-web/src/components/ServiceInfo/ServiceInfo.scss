@@ -1,3 +1,4 @@
+@use 'sass:math';
 @use '../../styles/layout-variables.scss';
 @use '../../styles/colors.scss';
 @use '../../styles/mixins.scss';
@@ -9,12 +10,12 @@
     "icon name" auto
     "icon contract" auto
     "description description" auto
-    "links links" / (service-icon.$icon-size + layout-variables.$element-spacing-small / 2) 1fr;
+    "links links" / (service-icon.$icon-size + math.div(layout-variables.$element-spacing-small, 2)) 1fr;
 }
 
 .service-info__name {
   grid-area: name;
-  margin: 0 0 (layout-variables.$element-spacing-small / 4) 0;
+  margin: 0 0 math.div(layout-variables.$element-spacing-small, 4) 0;
 
   @include mixins.break-word();
 }

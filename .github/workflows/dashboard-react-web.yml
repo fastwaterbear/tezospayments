@@ -32,29 +32,19 @@ jobs:
           node --version
           npm --version
 
-      - name: Install npm packages of the @tezospayments/common package
-        working-directory: 'src/common'
+      - name: Install npm packages
         env:
           CI: true
         run: npm ci
 
       - name: Build the @tezospayments/common package
-        working-directory: 'src/common'
-        run: npm run build
-
-      - name: Install npm packages of the Dashboard app
-        working-directory: 'src/dashboard-react-web'
-        env:
-          CI: true
-        run: npm ci
+        run: npm run build -w @tezospayments/common
 
       - name: Build the Dashboard app
-        working-directory: 'src/dashboard-react-web'
-        run: npm run build
+        run: npm run build -w @tezospayments/dashboard-react-web
 
       - name: Lint the Dashboard app
-        working-directory: 'src/dashboard-react-web'
-        run: npm run lint # -- --max-warnings -1
+        run: npm run lint -w @tezospayments/dashboard-react-web # -- --max-warnings -1
 
       - name: Deploy
         if: github.ref == 'refs/heads/master'
