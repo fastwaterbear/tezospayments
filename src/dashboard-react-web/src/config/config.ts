@@ -38,8 +38,18 @@ export const config: AppConfig = {
   },
   tezos: {
     rpcNodes: {
-      edo2net: ['https://edonet.smartpy.io/'],
-      granadanet: ['https://granadanet.smartpy.io/'],
+      granadanet: {
+        links: ['https://granadanet.smartpy.io/'],
+        color: 'rgb(102, 126, 234)'
+      },
+      florence: {
+        links: ['https://florencenet.smartpy.io/'],
+        color: 'rgb(255, 216, 138)'
+      },
+      edo2net: {
+        links: ['https://edonet.smartpy.io/'],
+        color: 'rgb(251, 191, 36)'
+      }
     }
   }
 };

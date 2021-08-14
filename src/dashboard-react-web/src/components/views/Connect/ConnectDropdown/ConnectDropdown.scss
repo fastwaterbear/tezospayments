@@ -1,0 +1,20 @@
+@use "../../../../styles/ant-colors.scss";
+
+$-icon-size: 12px;
+
+.connect-dropdown__item-container {
+  display: flex;
+}
+
+.connect-dropdown__item-icon-container {
+  padding-top: 1px;
+}
+
+.connect-dropdown__item-icon {
+  display: inline-block;
+  margin-right: 6px;
+  height: $-icon-size;
+  width: $-icon-size;
+  border-radius: 50%;
+  background-color: ant-colors.$purple-5;
+}

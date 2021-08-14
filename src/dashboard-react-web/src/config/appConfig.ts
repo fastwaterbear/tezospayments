@@ -36,8 +36,18 @@ export type AppConfig = DeepReadonly<{
   },
   tezos: {
     rpcNodes: {
-      edo2net: [string, ...string[]],
-      granadanet: [string, ...string[]],
+      granadanet: {
+        color: string,
+        links: [string, ...string[]]
+      },
+      florence: {
+        color: string,
+        links: [string, ...string[]]
+      }
+      edo2net: {
+        color: string,
+        links: [string, ...string[]]
+      }
     }
   }
 }>;

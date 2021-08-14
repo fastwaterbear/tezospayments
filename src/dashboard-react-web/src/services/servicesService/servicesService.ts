@@ -13,7 +13,7 @@ import type { Operation } from './operation';
 
 export class ServicesService {
   private readonly factoryContractAddress = 'KT1PXyQ3wDpwm6J3r6iyLCWu5QKH5tef7ejU';
-  private readonly tezosToolkit = new TezosToolkit(config.tezos.rpcNodes.edo2net[0]);
+  private readonly tezosToolkit = new TezosToolkit(config.tezos.rpcNodes.edo2net.links[0]);
   private readonly tezosWallet: BeaconWallet;
 
   constructor(tezosWallet: BeaconWallet) {
