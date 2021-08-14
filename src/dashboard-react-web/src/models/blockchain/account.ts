@@ -1,7 +1,10 @@
+import { NetworkType } from '@airgap/beacon-sdk';
+
 import { StateModel } from '@tezospayments/common/dist/models/core';
 
 export interface Account {
   readonly address: string;
+  readonly networkType: NetworkType
 }
 
 export class Account extends StateModel {

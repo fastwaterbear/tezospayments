@@ -24,13 +24,13 @@ const namespace = 'accounts';
 export const loadActiveAccount = createAsyncThunk<Account | null, void, AppThunkAPI>(
   `${namespace}/loadActiveAccount`,
   async (_, { extra: app, dispatch }) => {
-    const address = await app.services.accountsService.getActiveAccount();
+    const account = await app.services.accountsService.getActiveAccount();
 
-    if (address) {
-      dispatch(loadServices(address));
+    if (account) {
+      dispatch(loadServices(account.address));
     }
 
-    return address ? { address } : null;
+    return account || null;
   }
 );
 
@@ -43,7 +43,7 @@ export const connectAccount = createAsyncThunk<Account | null, NetworkType, AppT
       dispatch(loadServices(address));
     }
 
-    return address ? { address } : null;
+    return address ? { address, networkType } : null;
   }
 );
 

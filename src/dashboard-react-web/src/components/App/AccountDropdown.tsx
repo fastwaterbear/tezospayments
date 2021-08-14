@@ -8,7 +8,7 @@ import { combineClassNames } from '@tezospayments/common/dist/utils';
 
 import { config } from '../../config';
 import { Account } from '../../models/blockchain';
-import { getCurrentAccount, selectAccountsState } from '../../store/accounts/selectors';
+import { getAccountsByNetwork, getCurrentAccount } from '../../store/accounts/selectors';
 import { disconnectAccount } from '../../store/accounts/slice';
 import { useAppDispatch, useAppSelector, useCurrentLanguageResources } from '../hooks';
 
@@ -16,7 +16,7 @@ export const AccountDropDown = () => {
   const langResources = useCurrentLanguageResources();
   const actionsLangResources = langResources.views.header.accountActions;
 
-  const accounts = useAppSelector(selectAccountsState);
+  const accountsByNetwork = useAppSelector(getAccountsByNetwork);
   const currentAccount = useAppSelector(getCurrentAccount);
 
   const handleCopyAddressClick = useCallback(() => {
@@ -36,18 +36,22 @@ export const AccountDropDown = () => {
     return null;
   }
 
-  const connectedAccounts = accounts.connectedAccounts.map(a =>
-    <Menu.Item
-      key={a.address}
-      icon={<UserOutlined />}
-      className={combineClassNames('account-menu-item', { 'account-menu-item_selected': a.address === currentAccount.address })}
-      style={a.address !== currentAccount.address ? undefined : {
-        backgroundColor: blue[0],
-        color: blue.primary
-      }}
-    >
-      {a.address}
-    </Menu.Item>
+  const connectedAccounts = Array.from(accountsByNetwork.keys()).map(k =>
+    <Menu.ItemGroup key={k} title={k}>
+      {accountsByNetwork.get(k)?.map(a =>
+        <Menu.Item
+          key={a.address}
+          icon={<UserOutlined />}
+          className={combineClassNames('account-menu-item', { 'account-menu-item_selected': a.address === currentAccount.address })}
+          style={a.address !== currentAccount.address ? undefined : {
+            backgroundColor: blue[0],
+            color: blue.primary
+          }}
+        >
+          {a.address}
+        </Menu.Item>
+      )}
+    </Menu.ItemGroup>
   );
 
   const menu = <Menu>

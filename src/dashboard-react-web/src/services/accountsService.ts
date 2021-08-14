@@ -5,6 +5,7 @@ import { BigNumber } from 'bignumber.js';
 import { Token, TokenFA2, TokenFA12 } from '@tezospayments/common/dist/models/blockchain';
 
 import { config } from '../config';
+import { Account } from '../models/blockchain';
 
 export class AccountsService {
   private readonly dAppClient: DAppClient;
@@ -39,10 +40,12 @@ export class AccountsService {
     return this.dAppClient.clearActiveAccount();
   }
 
-  async getActiveAccount(): Promise<string | undefined> {
+  async getActiveAccount(): Promise<Pick<Account, 'address' | 'networkType'> | undefined> {
     const activeAccount = await this.dAppClient.getActiveAccount();
 
-    return activeAccount?.address;
+    return activeAccount
+      ? { address: activeAccount.address, networkType: activeAccount.network.type }
+      : undefined;
   }
 
   async getTezosBalance(address: string): Promise<number> {
