@@ -2,6 +2,12 @@
 
 $-icon-size: 12px;
 
+.connect-dropdown {
+  .anticon {
+    padding-top: 5px;
+  }
+}
+
 .connect-dropdown__item-container {
   display: flex;
 }
