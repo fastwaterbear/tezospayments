@@ -1,3 +1,4 @@
+import { NetworkType } from '@airgap/beacon-sdk';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { optimization } from '@tezospayments/common/dist/utils';
@@ -33,10 +34,10 @@ export const loadActiveAccount = createAsyncThunk<Account | null, void, AppThunk
   }
 );
 
-export const connectAccount = createAsyncThunk<Account | null, void, AppThunkAPI>(
+export const connectAccount = createAsyncThunk<Account | null, NetworkType, AppThunkAPI>(
   `${namespace}/connect`,
-  async (_, { extra: app, dispatch }) => {
-    const address = await app.services.accountsService.connect();
+  async (networkType: NetworkType, { extra: app, dispatch }) => {
+    const address = await app.services.accountsService.connect(networkType);
 
     if (address) {
       dispatch(loadServices(address));

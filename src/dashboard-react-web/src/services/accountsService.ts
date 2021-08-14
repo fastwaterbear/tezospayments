@@ -25,8 +25,8 @@ export class AccountsService {
     return this._tezosToolKit;
   }
 
-  async connect(): Promise<string | null> {
-    return this.dAppClient.requestPermissions({ network: { type: NetworkType.EDONET } })
+  async connect(networkType: NetworkType): Promise<string | null> {
+    return this.dAppClient.requestPermissions({ network: { type: networkType } })
       .then(permissions => permissions.address)
       .catch(e => {
         console.error(e);
