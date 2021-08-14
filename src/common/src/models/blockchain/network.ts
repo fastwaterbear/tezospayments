@@ -10,6 +10,10 @@ const networksInternal = {
   edo2net: {
     id: 'NetXSgo1ZT2DRUG',
     name: 'edo2net',
+  },
+  granadanet: {
+    id: 'NetXz969SFaFn8k',
+    name: 'granadanet',
   }
 } as const;
 

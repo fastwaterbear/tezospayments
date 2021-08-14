@@ -8,9 +8,10 @@ import { ServiceLinkHelper } from '@tezospayments/common/dist/helpers';
 import { Service, ServiceOperationType } from '@tezospayments/common/dist/models/service';
 
 import { config } from '../../../../config';
+import { getCurrentAccount } from '../../../../store/accounts/selectors';
 import { createService, updateService } from '../../../../store/services/slice';
 import { ServiceLinksEditor } from '../../../common/ServiceLinks';
-import { useAppDispatch, useCurrentLanguageResources } from '../../../hooks';
+import { useAppDispatch, useAppSelector, useCurrentLanguageResources } from '../../../hooks';
 import { View } from '../../View';
 import { TokensPure } from '../Tokens';
 
@@ -28,6 +29,7 @@ export const ServiceEditForm = (props: ServiceEditFormProps) => {
   const langResources = useCurrentLanguageResources();
   const commonLangResources = langResources.common;
   const servicesLangResources = langResources.views.services;
+  const currentAccount = useAppSelector(getCurrentAccount);
 
   const dispatch = useAppDispatch();
 
@@ -93,8 +95,10 @@ export const ServiceEditForm = (props: ServiceEditFormProps) => {
       name,
       description,
       allowedOperationType,
-      links
+      links,
+      network: props.isCreateMode && currentAccount ? currentAccount.network : props.service.network
     };
+
 
     if (props.isCreateMode) {
       dispatch(createService(updatedService));
@@ -103,7 +107,7 @@ export const ServiceEditForm = (props: ServiceEditFormProps) => {
     }
 
     handleCancelClick();
-  }, [acceptDonations, acceptPayments, description, dispatch, handleCancelClick, links, name, props.isCreateMode, props.service]);
+  }, [acceptDonations, acceptPayments, currentAccount, description, dispatch, handleCancelClick, links, name, props.isCreateMode, props.service]);
 
   const operationName = props.isCreateMode ? servicesLangResources.editing.createService : servicesLangResources.editing.updateService;
 

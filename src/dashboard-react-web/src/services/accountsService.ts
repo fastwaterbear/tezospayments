@@ -1,33 +1,23 @@
-import { DAppClient, NetworkType } from '@airgap/beacon-sdk';
+import { DAppClient } from '@airgap/beacon-sdk';
 import { TezosToolkit } from '@taquito/taquito';
 import { BigNumber } from 'bignumber.js';
 
-import { Token, TokenFA2, TokenFA12 } from '@tezospayments/common/dist/models/blockchain';
+import { Token, TokenFA2, TokenFA12, Network } from '@tezospayments/common/dist/models/blockchain';
 
 import { config } from '../config';
 import { Account } from '../models/blockchain';
+import { getBeaconNetworkType, getNetwork } from './utils';
 
 export class AccountsService {
   private readonly dAppClient: DAppClient;
+  private readonly tezosToolKitByNetwork: Map<Network, TezosToolkit> = new Map<Network, TezosToolkit>();
 
   constructor(dAppClient: DAppClient) {
     this.dAppClient = dAppClient;
   }
 
-  private _tezosToolKit: TezosToolkit | null = null;
-
-  private get tezosToolKit(): TezosToolkit {
-    if (!this._tezosToolKit) {
-      const tezos = new TezosToolkit(config.tezos.rpcNodes.edonet.links[0]);
-      tezos.setProvider({ signer: new ReadOnlySigner() });
-      this._tezosToolKit = tezos;
-    }
-
-    return this._tezosToolKit;
-  }
-
-  async connect(networkType: NetworkType): Promise<string | null> {
-    return this.dAppClient.requestPermissions({ network: { type: networkType } })
+  async connect(network: Network): Promise<string | null> {
+    return this.dAppClient.requestPermissions({ network: { type: getBeaconNetworkType(network) } })
       .then(permissions => permissions.address)
       .catch(e => {
         console.error(e);
@@ -40,29 +30,30 @@ export class AccountsService {
     return this.dAppClient.clearActiveAccount();
   }
 
-  async getActiveAccount(): Promise<Pick<Account, 'address' | 'networkType'> | undefined> {
+  async getActiveAccount(): Promise<Pick<Account, 'address' | 'network'> | undefined> {
     const activeAccount = await this.dAppClient.getActiveAccount();
 
     return activeAccount
-      ? { address: activeAccount.address, networkType: activeAccount.network.type }
+      ? { address: activeAccount.address, network: getNetwork(activeAccount.network.type) }
       : undefined;
   }
 
-  async getTezosBalance(address: string): Promise<number> {
-    const balance = await this.tezosToolKit.tz.getBalance(address);
+  async getTezosBalance(account: Account): Promise<number> {
+    const tezosToolKit = this.getTezosToolKit(account.network);
+    const balance = await tezosToolKit.tz.getBalance(account.address);
 
     return +balance / 1000000;
   }
 
-  async getTokenBalance(address: string, token: Token): Promise<number> {
+  async getTokenBalance(account: Account, token: Token): Promise<number> {
     let result = null;
 
     switch (token.type) {
       case 'fa1.2':
-        result = await this.getTokenFA12Balance(address, token);
+        result = await this.getTokenFA12Balance(account, token);
         break;
       case 'fa2':
-        result = await this.getTokenFA2Balance(address, token);
+        result = await this.getTokenFA2Balance(account, token);
         break;
       default:
         throw new Error('Not Supported');
@@ -71,16 +62,30 @@ export class AccountsService {
     return result.toNumber();
   }
 
-  private async getTokenFA12Balance(address: string, token: TokenFA12): Promise<BigNumber> {
-    const contract = await this.tezosToolKit.contract.at(token.contractAddress);
-    const result = await contract.views.getBalance?.(address).read();
+  private getTezosToolKit(network: Network): TezosToolkit {
+    let tezosToolkit = this.tezosToolKitByNetwork.get(network);
+    if (!tezosToolkit) {
+      tezosToolkit = new TezosToolkit(config.tezos.networks[network.name].rpcUrls[0]);
+      tezosToolkit.setProvider({ signer: new ReadOnlySigner() });
+      this.tezosToolKitByNetwork.set(network, tezosToolkit);
+    }
+    return tezosToolkit;
+  }
+
+  private async getTokenFA12Balance(account: Account, token: TokenFA12): Promise<BigNumber> {
+    const tezosToolKit = this.getTezosToolKit(account.network);
+
+    const contract = await tezosToolKit.contract.at(token.contractAddress);
+    const result = await contract.views.getBalance?.(account.address).read();
 
     return result || 0;
   }
 
-  private async getTokenFA2Balance(address: string, token: TokenFA2): Promise<BigNumber> {
-    const contract = await this.tezosToolKit.contract.at(token.contractAddress);
-    const response = await contract.views?.['balance_of']?.([{ owner: address, token_id: token.fa2TokenId }])
+  private async getTokenFA2Balance(account: Account, token: TokenFA2): Promise<BigNumber> {
+    const tezosToolKit = this.getTezosToolKit(account.network);
+
+    const contract = await tezosToolKit.contract.at(token.contractAddress);
+    const response = await contract.views?.['balance_of']?.([{ owner: account.address, token_id: token.fa2TokenId }])
       .read();
 
     const result = response[0].balance;

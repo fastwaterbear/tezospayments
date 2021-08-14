@@ -1,11 +1,12 @@
-import { NetworkType } from '@airgap/beacon-sdk';
-
+import { Network } from '@tezospayments/common/dist/models/blockchain';
 import type { DeepReadonly } from '@tezospayments/common/dist/models/core';
 
 interface NetworkConfig {
   name: string;
   color: string;
-  links: [string, ...string[]];
+  servicesFactoryContractAddress: string;
+  rpcUrls: [string, ...string[]];
+  explorerUrl: string;
 }
 
 export type AppConfig = DeepReadonly<{
@@ -43,6 +44,6 @@ export type AppConfig = DeepReadonly<{
     }
   },
   tezos: {
-    rpcNodes: { [key in NetworkType]: NetworkConfig }
+    networks: { [key in Network['name']]: NetworkConfig }
   }
 }>;

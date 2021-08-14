@@ -1,16 +1,17 @@
-import { NetworkType } from '@airgap/beacon-sdk';
 import React from 'react';
+
+import { Network } from '@tezospayments/common/dist/models/blockchain';
 
 import { config } from '../../../../config';
 
 import './AccountNetworkGroup.scss';
 
 interface AccountNetworkGroupProps {
-  networkType: NetworkType;
+  network: Network;
 }
 
 export const AccountNetworkGroup = (props: AccountNetworkGroupProps) => {
-  const network = config.tezos.rpcNodes[props.networkType];
+  const network = config.tezos.networks[props.network.name];
 
   return <div className="account-network-group">
     <div className="account-network-group__icon-container">

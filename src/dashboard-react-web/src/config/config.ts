@@ -37,36 +37,34 @@ export const config: AppConfig = {
     }
   },
   tezos: {
-    rpcNodes: {
-      mainnet: {
+    networks: {
+      main: {
         name: 'Tezos Mainnet',
-        links: ['https://mainnet.smartpy.io/'],
-        color: 'rgb(131, 179, 0)'
+        color: '#83b300',
+        rpcUrls: ['https://mainnet.smartpy.io/'],
+        explorerUrl: 'https://api.mainnet.tzkt.io/',
+        servicesFactoryContractAddress: ''
       },
       granadanet: {
         name: 'Granada Testnet',
-        links: ['https://granadanet.smartpy.io/'],
-        color: 'rgb(102, 126, 234)'
+        color: '#667eea',
+        rpcUrls: ['https://granadanet.smartpy.io/'],
+        explorerUrl: 'https://api.granadanet.tzkt.io/',
+        servicesFactoryContractAddress: 'KT1TsixZzkALSuJhzKkyCDgyJxQCbHsGoqda'
       },
-      florencenet: {
+      florence: {
         name: 'Florence Testnet',
-        links: ['https://florencenet.smartpy.io/'],
-        color: 'rgb(255, 216, 138)'
+        color: '#ffd88a',
+        rpcUrls: ['https://florencenet.smartpy.io/'],
+        explorerUrl: 'https://api.florencenet.tzkt.io/',
+        servicesFactoryContractAddress: ''
       },
-      edonet: {
+      edo2net: {
         name: 'Edo2 Testnet',
-        links: ['https://edonet.smartpy.io/'],
-        color: 'rgb(251, 191, 36)'
-      },
-      delphinet: {
-        name: 'Delphinet Testnet',
-        links: [''],
-        color: 'rgb(209, 84, 240)'
-      },
-      custom: {
-        name: 'Custom network',
-        links: [''],
-        color: 'rgb(227, 87, 36)'
+        color: '#fbbf24',
+        rpcUrls: ['https://edonet.smartpy.io/'],
+        explorerUrl: 'https://api.edo2net.tzkt.io/',
+        servicesFactoryContractAddress: 'KT1PXyQ3wDpwm6J3r6iyLCWu5QKH5tef7ejU'
       }
     }
   }

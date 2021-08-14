@@ -38,7 +38,7 @@ export const AccountDropDown = () => {
   }
 
   const connectedAccounts = Array.from(accountsByNetwork.keys()).map(k =>
-    <Menu.ItemGroup key={k} title={<AccountNetworkGroupPure networkType={k} />}>
+    <Menu.ItemGroup key={k.id} title={<AccountNetworkGroupPure network={k} />}>
       {accountsByNetwork.get(k)?.map(a =>
         <Menu.Item
           key={a.address}
