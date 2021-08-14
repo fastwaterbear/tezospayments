@@ -4,7 +4,7 @@
 [Dashboard](https://dashboard.tezospayments.com) &nbsp;&nbsp;•&nbsp;&nbsp;
 [Demo - Payments](https://demo.tezospayments.com) &nbsp;&nbsp;•&nbsp;&nbsp;
 [Demo - Donations](https://payment.tezospayments.com/KT1BhWg791Mg4x2xVrh2Zb2yjf87U275JmGW/donation) &nbsp;&nbsp;•&nbsp;&nbsp; 
-[Service Factory Contract [Edo2net]](https://better-call.dev/edo2net/KT1PXyQ3wDpwm6J3r6iyLCWu5QKH5tef7ejU)  
+[Service Factory Contract [Granadanet]](https://better-call.dev/granadanet/KT1TsixZzkALSuJhzKkyCDgyJxQCbHsGoqda)  
 
 > ⚠️ Tezos Payments is in active development so any component (application, contract, package, API) is subject to change ⚠️
 
@@ -101,4 +101,5 @@ npm run start -w @tezospayments/payment-react-web
 
 * Services Factory 
   * Mainnet: Coming Soon
+  * Granadanet: [KT1PXyQ3wDpwm6J3r6iyLCWu5QKH5tef7ejU](https://better-call.dev/granadanet/KT1TsixZzkALSuJhzKkyCDgyJxQCbHsGoqda)
   * Edo2net: [KT1PXyQ3wDpwm6J3r6iyLCWu5QKH5tef7ejU](https://better-call.dev/edo2net/KT1PXyQ3wDpwm6J3r6iyLCWu5QKH5tef7ejU)
