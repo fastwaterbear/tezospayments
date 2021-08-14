@@ -48,15 +48,25 @@ export const config: AppConfig = {
         links: ['https://granadanet.smartpy.io/'],
         color: 'rgb(102, 126, 234)'
       },
-      florence: {
+      florencenet: {
         name: 'Florence Testnet',
         links: ['https://florencenet.smartpy.io/'],
         color: 'rgb(255, 216, 138)'
       },
-      edo2net: {
+      edonet: {
         name: 'Edo2 Testnet',
         links: ['https://edonet.smartpy.io/'],
         color: 'rgb(251, 191, 36)'
+      },
+      delphinet: {
+        name: 'Delphinet Testnet',
+        links: [''],
+        color: 'rgb(209, 84, 240)'
+      },
+      custom: {
+        name: 'Custom network',
+        links: [''],
+        color: 'rgb(227, 87, 36)'
       }
     }
   }

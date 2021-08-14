@@ -18,7 +18,7 @@ export class AccountsService {
 
   private get tezosToolKit(): TezosToolkit {
     if (!this._tezosToolKit) {
-      const tezos = new TezosToolkit(config.tezos.rpcNodes.edo2net.links[0]);
+      const tezos = new TezosToolkit(config.tezos.rpcNodes.edonet.links[0]);
       tezos.setProvider({ signer: new ReadOnlySigner() });
       this._tezosToolKit = tezos;
     }

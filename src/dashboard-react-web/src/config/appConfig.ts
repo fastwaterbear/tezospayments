@@ -1,3 +1,5 @@
+import { NetworkType } from '@airgap/beacon-sdk';
+
 import type { DeepReadonly } from '@tezospayments/common/dist/models/core';
 
 interface NetworkConfig {
@@ -41,11 +43,6 @@ export type AppConfig = DeepReadonly<{
     }
   },
   tezos: {
-    rpcNodes: {
-      mainnet: NetworkConfig,
-      granadanet: NetworkConfig,
-      florence: NetworkConfig,
-      edo2net: NetworkConfig,
-    }
+    rpcNodes: { [key in NetworkType]: NetworkConfig }
   }
 }>;

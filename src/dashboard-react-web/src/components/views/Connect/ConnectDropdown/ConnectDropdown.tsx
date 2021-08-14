@@ -22,20 +22,19 @@ export const ConnectDropdown = () => {
   const langResources = useCurrentLanguageResources();
   const connectLangResources = langResources.views.connect.actions.connect;
 
-  const testNets = [{
-    text: `${connectLangResources.connectTo} ${config.tezos.rpcNodes.granadanet.name}`,
-    color: config.tezos.rpcNodes.granadanet.color,
-    network: NetworkType.GRANADANET
-  }];
+  const networkTypes = [NetworkType.GRANADANET];
+  const connectMenuItems = networkTypes.map(t => {
+    const network = config.tezos.rpcNodes[t];
 
-  const connectMenuItems = testNets.map(t => <Menu.Item key={t.network}>
-    <div className="connect-dropdown__item-container">
-      <div className="connect-dropdown__item-icon-container">
-        <div className="connect-dropdown__item-icon" style={{ backgroundColor: t.color }}></div>
+    return <Menu.Item key={t}>
+      <div className="connect-dropdown__item-container">
+        <div className="connect-dropdown__item-icon-container">
+          <div className="connect-dropdown__item-icon" style={{ backgroundColor: network.color }}></div>
+        </div>
+        <div className="connect-dropdown__item-text">{`${connectLangResources.connectTo} ${network.name}`}</div>
       </div>
-      <div className="connect-dropdown__item-text">{t.text}</div>
-    </div>
-  </Menu.Item>);
+    </Menu.Item>;
+  });
 
   const connectMenu = (
     <Menu onClick={handleMenuItemButtonClick}>
@@ -44,7 +43,7 @@ export const ConnectDropdown = () => {
   );
 
   return <Dropdown.Button className="connect-dropdown" type="primary" onClick={handleConnectButtonClick} overlay={connectMenu}>
-    {`${connectLangResources.connectTo} ${config.tezos.rpcNodes.edo2net.name}`}
+    {`${connectLangResources.connectTo} ${config.tezos.rpcNodes.edonet.name}`}
   </Dropdown.Button>;
 };
 
