@@ -12,7 +12,7 @@ export const ConnectDropdown = () => {
   const dispatch = useAppDispatch();
   const handleConnectButtonClick = useCallback(() => {
 
-    dispatch(connectAccount(NetworkType.MAINNET));
+    dispatch(connectAccount(NetworkType.EDONET));
   }, [dispatch]);
 
   const handleMenuItemButtonClick = useCallback((e: { key: string }) => {
@@ -26,14 +26,6 @@ export const ConnectDropdown = () => {
     text: connectLangResources.connectToGranada,
     color: config.tezos.rpcNodes.granadanet.color,
     network: NetworkType.GRANADANET
-  }, {
-    text: connectLangResources.connectToFlorence,
-    color: config.tezos.rpcNodes.florence.color,
-    network: NetworkType.FLORENCENET
-  }, {
-    text: connectLangResources.connectToEdo2,
-    color: config.tezos.rpcNodes.edo2net.color,
-    network: NetworkType.EDONET
   }];
 
   const connectMenuItems = testNets.map(t => <Menu.Item key={t.network}>
@@ -52,7 +44,7 @@ export const ConnectDropdown = () => {
   );
 
   return <Dropdown.Button className="connect-dropdown" type="primary" onClick={handleConnectButtonClick} overlay={connectMenu}>
-    {connectLangResources.connectToMainnet}
+    {connectLangResources.connectToEdo2}
   </Dropdown.Button>;
 };
 
