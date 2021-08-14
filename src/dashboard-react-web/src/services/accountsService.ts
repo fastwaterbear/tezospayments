@@ -4,6 +4,8 @@ import { BigNumber } from 'bignumber.js';
 
 import { Token, TokenFA2, TokenFA12 } from '@tezospayments/common/dist/models/blockchain';
 
+import { config } from '../config';
+
 export class AccountsService {
   private readonly dAppClient: DAppClient;
 
@@ -15,7 +17,7 @@ export class AccountsService {
 
   private get tezosToolKit(): TezosToolkit {
     if (!this._tezosToolKit) {
-      const tezos = new TezosToolkit('https://edonet.smartpy.io/');
+      const tezos = new TezosToolkit(config.tezos.rpcNodes.edo2net[0]);
       tezos.setProvider({ signer: new ReadOnlySigner() });
       this._tezosToolKit = tezos;
     }

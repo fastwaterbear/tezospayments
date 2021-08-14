@@ -8,11 +8,12 @@ import {
 } from '@tezospayments/common/dist/models/service';
 import { converters, guards, optimization } from '@tezospayments/common/dist/utils';
 
+import { config } from '../../config';
 import type { Operation } from './operation';
 
 export class ServicesService {
   private readonly factoryContractAddress = 'KT1PXyQ3wDpwm6J3r6iyLCWu5QKH5tef7ejU';
-  private readonly tezosToolkit = new TezosToolkit('https://edonet.smartpy.io/');
+  private readonly tezosToolkit = new TezosToolkit(config.tezos.rpcNodes.edo2net[0]);
   private readonly tezosWallet: BeaconWallet;
 
   constructor(tezosWallet: BeaconWallet) {

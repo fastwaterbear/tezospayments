@@ -33,5 +33,11 @@ export type AppConfig = DeepReadonly<{
       twitter: string;
       reddit: string;
     }
+  },
+  tezos: {
+    rpcNodes: {
+      edo2net: [string, ...string[]],
+      granadanet: [string, ...string[]],
+    }
   }
 }>;

@@ -35,5 +35,11 @@ export const config: AppConfig = {
       twitter: 'https://twitter.com/fastwaterbear',
       reddit: 'https://www.reddit.com/user/fastwaterbear'
     }
+  },
+  tezos: {
+    rpcNodes: {
+      edo2net: ['https://edonet.smartpy.io/'],
+      granadanet: ['https://granadanet.smartpy.io/'],
+    }
   }
 };
