@@ -6,11 +6,11 @@ import './AccountDropdown.scss';
 
 import { combineClassNames } from '@tezospayments/common/dist/utils';
 
-import { config } from '../../config';
-import { Account } from '../../models/blockchain';
-import { getAccountsByNetwork, getCurrentAccount } from '../../store/accounts/selectors';
-import { disconnectAccount } from '../../store/accounts/slice';
-import { useAppDispatch, useAppSelector, useCurrentLanguageResources } from '../hooks';
+import { config } from '../../../config';
+import { Account } from '../../../models/blockchain';
+import { getAccountsByNetwork, getCurrentAccount } from '../../../store/accounts/selectors';
+import { disconnectAccount } from '../../../store/accounts/slice';
+import { useAppDispatch, useAppSelector, useCurrentLanguageResources } from '../../hooks';
 
 export const AccountDropDown = () => {
   const langResources = useCurrentLanguageResources();
