@@ -1,5 +1,11 @@
 import type { DeepReadonly } from '@tezospayments/common/dist/models/core';
 
+interface NetworkConfig {
+  name: string;
+  color: string;
+  links: [string, ...string[]];
+}
+
 export type AppConfig = DeepReadonly<{
   app: {
     publicUrl: string;
@@ -36,18 +42,10 @@ export type AppConfig = DeepReadonly<{
   },
   tezos: {
     rpcNodes: {
-      granadanet: {
-        color: string,
-        links: [string, ...string[]]
-      },
-      florence: {
-        color: string,
-        links: [string, ...string[]]
-      }
-      edo2net: {
-        color: string,
-        links: [string, ...string[]]
-      }
+      mainnet: NetworkConfig,
+      granadanet: NetworkConfig,
+      florence: NetworkConfig,
+      edo2net: NetworkConfig,
     }
   }
 }>;

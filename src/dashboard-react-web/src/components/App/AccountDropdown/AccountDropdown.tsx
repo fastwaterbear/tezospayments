@@ -11,6 +11,7 @@ import { Account } from '../../../models/blockchain';
 import { getAccountsByNetwork, getCurrentAccount } from '../../../store/accounts/selectors';
 import { disconnectAccount } from '../../../store/accounts/slice';
 import { useAppDispatch, useAppSelector, useCurrentLanguageResources } from '../../hooks';
+import { AccountNetworkGroupPure } from './AccountNetworkGroup';
 
 export const AccountDropDown = () => {
   const langResources = useCurrentLanguageResources();
@@ -37,7 +38,7 @@ export const AccountDropDown = () => {
   }
 
   const connectedAccounts = Array.from(accountsByNetwork.keys()).map(k =>
-    <Menu.ItemGroup key={k} title={k}>
+    <Menu.ItemGroup key={k} title={<AccountNetworkGroupPure networkType={k} />}>
       {accountsByNetwork.get(k)?.map(a =>
         <Menu.Item
           key={a.address}

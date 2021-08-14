@@ -23,7 +23,7 @@ export const ConnectDropdown = () => {
   const connectLangResources = langResources.views.connect.actions.connect;
 
   const testNets = [{
-    text: connectLangResources.connectToGranada,
+    text: `${connectLangResources.connectTo} ${config.tezos.rpcNodes.granadanet.name}`,
     color: config.tezos.rpcNodes.granadanet.color,
     network: NetworkType.GRANADANET
   }];
@@ -44,7 +44,7 @@ export const ConnectDropdown = () => {
   );
 
   return <Dropdown.Button className="connect-dropdown" type="primary" onClick={handleConnectButtonClick} overlay={connectMenu}>
-    {connectLangResources.connectToEdo2}
+    {`${connectLangResources.connectTo} ${config.tezos.rpcNodes.edo2net.name}`}
   </Dropdown.Button>;
 };
 

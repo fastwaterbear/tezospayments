@@ -38,15 +38,23 @@ export const config: AppConfig = {
   },
   tezos: {
     rpcNodes: {
+      mainnet: {
+        name: 'Tezos Mainnet',
+        links: ['https://mainnet.smartpy.io/'],
+        color: 'rgb(131, 179, 0)'
+      },
       granadanet: {
+        name: 'Granada Testnet',
         links: ['https://granadanet.smartpy.io/'],
         color: 'rgb(102, 126, 234)'
       },
       florence: {
+        name: 'Florence Testnet',
         links: ['https://florencenet.smartpy.io/'],
         color: 'rgb(255, 216, 138)'
       },
       edo2net: {
+        name: 'Edo2 Testnet',
         links: ['https://edonet.smartpy.io/'],
         color: 'rgb(251, 191, 36)'
       }
