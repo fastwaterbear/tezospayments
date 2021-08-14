@@ -30,18 +30,19 @@
   ],
   "cSpell.language": "en,ru",
   "cSpell.words": [
-    "tezospayments",
+    "airgap",
     "antd",
-    "promisify",
+    "bignumber",
     "browserslist",
-    "fastwaterbear",
-    "tezos",
-    "mutez",
+    "edonet",
     "entrypoint",
     "entrypoints",
-    "airgap",
-    "edonet",
+    "fastwaterbear",
+    "granadanet",
+    "mutez",
+    "promisify",
     "serializable",
-    "bignumber"
+    "tezos",
+    "tezospayments"
   ]
 }
