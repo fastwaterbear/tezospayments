@@ -22,5 +22,13 @@
     "watch": "npm run build -- -w",
     "test-watch": "jest --watchAll",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "*",
+        "dist/*"
+      ]
+    }
   }
 }
