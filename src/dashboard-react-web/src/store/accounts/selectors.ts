@@ -8,8 +8,9 @@ import type { AppState } from '../index';
 export const selectAccountsState = (state: AppState) => state.accountsState;
 export const getCurrentAccount = createSelector(
   selectAccountsState,
-  accountsState => accountsState.currentAccountAddress
-    ? (accountsState.connectedAccounts.find(account => account.address === accountsState.currentAccountAddress) || null)
+  accountsState => accountsState.currentAccount
+    ? (accountsState.connectedAccounts.find(account =>
+      account.address === accountsState.currentAccount?.address && account.network.id === accountsState.currentAccount.network.id) || null)
     : null
 );
 export const getAccountsByNetwork = createSelector(
