@@ -18,18 +18,19 @@ export const AccountDropDown = () => {
 
   const accountsByNetwork = useAppSelector(getAccountsByNetwork);
   const currentAccount = useAppSelector(getCurrentAccount);
+  const currentAccountAddress = currentAccount?.address || '';
   const currentNetworkConfig = useAppSelector(getCurrentNetworkConfig);
   const currentExplorer = currentNetworkConfig && currentNetworkConfig.explorers[currentNetworkConfig.default.explorer];
 
   const handleCopyAddressClick = useCallback(() => {
-    navigator.clipboard.writeText(currentAccount?.address || '');
-  }, [currentAccount]);
+    navigator.clipboard.writeText(currentAccountAddress);
+  }, [currentAccountAddress]);
 
   const handleViewOnExplorerClick = useCallback(() => {
     if (currentExplorer) {
-      window.open(`${currentExplorer.url}${currentAccount?.address}`, '_blank');
+      window.open(`${currentExplorer.url}${currentAccountAddress}`, '_blank');
     }
-  }, [currentAccount?.address, currentExplorer]);
+  }, [currentAccountAddress, currentExplorer]);
 
   const dispatch = useAppDispatch();
   const handleDisconnectButtonClick = useCallback(() => {
@@ -40,7 +41,7 @@ export const AccountDropDown = () => {
     return null;
   }
 
-  const connectedAccounts = Array.from(accountsByNetwork.keys()).map(k =>
+  const connectedAccounts = [...accountsByNetwork.keys()].map(k =>
     <Menu.ItemGroup key={k.id} title={<AccountNetworkGroupPure network={k} />}>
       {accountsByNetwork.get(k)?.map(a =>
         <Menu.Item

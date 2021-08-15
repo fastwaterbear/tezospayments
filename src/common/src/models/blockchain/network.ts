@@ -33,3 +33,4 @@ type Networks = {
 export type Network = Networks[keyof Networks];
 
 export const networks: Networks = networksInternal;
+export const networksCollection = Object.values(networksInternal);

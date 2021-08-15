@@ -1,7 +1,7 @@
 import { Dropdown, Menu } from 'antd';
 import React, { useCallback } from 'react';
 
-import { networks } from '@tezospayments/common/dist/models/blockchain';
+import { networks, networksCollection } from '@tezospayments/common/dist/models/blockchain';
 
 import { config } from '../../../../config';
 import { connectAccount } from '../../../../store/accounts/slice';
@@ -16,7 +16,7 @@ export const ConnectDropdown = () => {
   }, [dispatch]);
 
   const handleMenuItemButtonClick = useCallback((e: { key: string }) => {
-    const selectedNetwork = Object.values(networks).find(n => n.id === e.key);
+    const selectedNetwork = networksCollection.find(n => n.id === e.key);
     if (selectedNetwork) {
       dispatch(connectAccount(selectedNetwork));
     }
