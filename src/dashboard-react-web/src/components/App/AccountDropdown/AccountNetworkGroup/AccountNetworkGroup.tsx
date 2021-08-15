@@ -17,7 +17,7 @@ export const AccountNetworkGroup = (props: AccountNetworkGroupProps) => {
     <div className="account-network-group__icon-container">
       <div className="account-network-group__icon" style={{ backgroundColor: network.color }}></div>
     </div>
-    <div>{network.name}</div>
+    <div>{network.title}</div>
   </div>;
 };
 

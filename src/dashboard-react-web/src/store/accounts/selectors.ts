@@ -2,6 +2,7 @@ import { createSelector } from 'reselect';
 
 import { Network } from '@tezospayments/common/dist/models/blockchain';
 
+import { config } from '../../config';
 import { Account } from '../../models/blockchain';
 import type { AppState } from '../index';
 
@@ -16,4 +17,8 @@ export const getCurrentAccount = createSelector(
 export const getAccountsByNetwork = createSelector(
   selectAccountsState,
   accountsState => accountsState.connectedAccounts.reduce((p, c) => p.set(c.network, [...(p.get(c.network) || []), c]), new Map<Network, Account[]>())
+);
+export const getCurrentNetworkConfig = createSelector(
+  getCurrentAccount,
+  account => account && config.tezos.networks[account.network.name]
 );

@@ -25,7 +25,6 @@ export const config: AppConfig = {
     about: '/about'
   },
   links: {
-    tzStats: 'https://edo.tzstats.com',
     tzktIo: 'https://tzkt.io',
     tezosPayments: {
       webSite: 'https://tezospayments.com',
@@ -39,31 +38,81 @@ export const config: AppConfig = {
   tezos: {
     networks: {
       main: {
-        name: 'Tezos Mainnet',
+        title: 'Tezos Mainnet',
         color: '#83b300',
-        rpcUrls: ['https://mainnet.smartpy.io/'],
-        explorerUrl: 'https://api.mainnet.tzkt.io/',
+        default: {
+          rpc: 'smartpy',
+          indexer: 'tzkt',
+          explorer: 'tzkt'
+        },
+        rpcUrls: {
+          smartpy: 'https://mainnet.smartpy.io/'
+        },
+        indexerUrls: {
+          tzkt: 'https://mainnet.tzkt.io/'
+        },
+        explorers: {
+          tzkt: {
+            url: 'https://api.mainnet.tzkt.io/', title: 'TzKT'
+          }
+        },
         servicesFactoryContractAddress: ''
       },
       granadanet: {
-        name: 'Granada Testnet',
+        title: 'Granada Testnet',
         color: '#667eea',
-        rpcUrls: ['https://granadanet.smartpy.io/'],
-        explorerUrl: 'https://api.granadanet.tzkt.io/',
+        default: {
+          rpc: 'smartpy',
+          indexer: 'tzkt',
+          explorer: 'tzkt'
+        },
+        rpcUrls: {
+          smartpy: 'https://granadanet.smartpy.io/'
+        },
+        indexerUrls: {
+          tzkt: 'https://api.granadanet.tzkt.io/'
+        },
+        explorers: {
+          tzkt: { url: 'https://granadanet.tzkt.io/', title: 'TzKT' }
+        },
         servicesFactoryContractAddress: 'KT1TsixZzkALSuJhzKkyCDgyJxQCbHsGoqda'
       },
       florence: {
-        name: 'Florence Testnet',
+        title: 'Florence Testnet',
         color: '#ffd88a',
-        rpcUrls: ['https://florencenet.smartpy.io/'],
-        explorerUrl: 'https://api.florencenet.tzkt.io/',
+        default: {
+          rpc: 'smartpy',
+          indexer: 'tzkt',
+          explorer: 'tzkt'
+        },
+        rpcUrls: {
+          smartpy: 'https://florencenet.smartpy.io/'
+        },
+        indexerUrls: {
+          tzkt: 'https://api.florencenet.tzkt.io/'
+        },
+        explorers: {
+          tzkt: { url: 'https://florencenet.tzkt.io/', title: 'TzKT' }
+        },
         servicesFactoryContractAddress: ''
       },
       edo2net: {
-        name: 'Edo2 Testnet',
+        title: 'Edo2 Testnet',
         color: '#fbbf24',
-        rpcUrls: ['https://edonet.smartpy.io/'],
-        explorerUrl: 'https://api.edo2net.tzkt.io/',
+        default: {
+          rpc: 'smartpy',
+          indexer: 'tzkt',
+          explorer: 'tzkt'
+        },
+        rpcUrls: {
+          smartpy: 'https://edonet.smartpy.io/'
+        },
+        indexerUrls: {
+          tzkt: 'https://api.edo2net.tzkt.io/'
+        },
+        explorers: {
+          tzkt: { url: 'https://edo2net.tzkt.io/', title: 'TzKT' }
+        },
         servicesFactoryContractAddress: 'KT1PXyQ3wDpwm6J3r6iyLCWu5QKH5tef7ejU'
       }
     }

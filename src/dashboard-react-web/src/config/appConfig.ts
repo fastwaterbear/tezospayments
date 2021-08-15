@@ -1,12 +1,22 @@
 import { Network } from '@tezospayments/common/dist/models/blockchain';
 import type { DeepReadonly } from '@tezospayments/common/dist/models/core';
 
+type RpcProvider = 'smartpy';
+type IndexerProvider = 'tzkt';
+type ExplorerProvider = 'tzkt';
+
 interface NetworkConfig {
-  name: string;
+  title: string;
   color: string;
   servicesFactoryContractAddress: string;
-  rpcUrls: [string, ...string[]];
-  explorerUrl: string;
+  default: {
+    rpc: RpcProvider;
+    indexer: IndexerProvider;
+    explorer: ExplorerProvider;
+  },
+  rpcUrls: { [key in RpcProvider]: string };
+  indexerUrls: { [key in IndexerProvider]: string };
+  explorers: { [key in ExplorerProvider]: { url: string; title: string } };
 }
 
 export type AppConfig = DeepReadonly<{
@@ -32,7 +42,6 @@ export type AppConfig = DeepReadonly<{
     about: string;
   },
   links: {
-    tzStats: string;
     tzktIo: string;
     tezosPayments: {
       webSite: string;

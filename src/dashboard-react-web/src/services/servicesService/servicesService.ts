@@ -23,11 +23,12 @@ export class ServicesService {
   async getServices(account: Account): Promise<Service[]> {
     try {
       const networkConfig = config.tezos.networks[account.network.name];
-      const response = await fetch(`${networkConfig.explorerUrl}v1/contracts/${networkConfig.servicesFactoryContractAddress}/bigmaps/services/keys/${account.address}`);
+      const indexerUrl = networkConfig.indexerUrls[networkConfig.default.indexer];
+      const response = await fetch(`${indexerUrl}v1/contracts/${networkConfig.servicesFactoryContractAddress}/bigmaps/services/keys/${account.address}`);
       const keyValue: ServicesBigMapKeyValuePair = await response.json();
       const contractAddresses = keyValue.value;
 
-      const rawContractsInfoPromises = contractAddresses.map(v => fetch(`${networkConfig.explorerUrl}v1/contracts/${v}/storage`).then(r => r.json()));
+      const rawContractsInfoPromises = contractAddresses.map(v => fetch(`${indexerUrl}v1/contracts/${v}/storage`).then(r => r.json()));
       const rawContractsInfo = await Promise.all(rawContractsInfoPromises) as ServiceDto[];
       const result = rawContractsInfo.map((s, i) => this.mapServiceDtoToService(s, contractAddresses[i] || '', account.network));
 
@@ -121,8 +122,9 @@ export class ServicesService {
   }
 
   async getOperations(network: Network, contractAddress: string): Promise<ServiceOperation[]> {
-    const tzktUrl = config.tezos.networks[network.name].explorerUrl;
-    const response = await fetch(`${tzktUrl}v1/accounts/${contractAddress}/operations?type=transaction&parameters.as=*%22entrypoint%22:%22send_payment%22*`);
+    const networkConfig = config.tezos.networks[network.name];
+    const indexerUrl = networkConfig.indexerUrls[networkConfig.default.indexer];
+    const response = await fetch(`${indexerUrl}v1/accounts/${contractAddress}/operations?type=transaction&parameters.as=*%22entrypoint%22:%22send_payment%22*`);
     const operations: Operation[] = await response.json();
 
     return operations.map(operation => this.mapOperationToServiceOperation(operation));
@@ -131,7 +133,8 @@ export class ServicesService {
   private getTezosToolKit(network: Network): TezosToolkit {
     let tezosToolkit = this.tezosToolKitByNetwork.get(network);
     if (!tezosToolkit) {
-      tezosToolkit = new TezosToolkit(config.tezos.networks[network.name].rpcUrls[0]);
+      const networkConfig = config.tezos.networks[network.name];
+      tezosToolkit = new TezosToolkit(networkConfig.rpcUrls[networkConfig.default.rpc]);
       tezosToolkit.setWalletProvider(this.tezosWallet);
       this.tezosToolKitByNetwork.set(network, tezosToolkit);
     }

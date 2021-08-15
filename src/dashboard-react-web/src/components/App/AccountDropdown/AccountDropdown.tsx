@@ -6,9 +6,8 @@ import './AccountDropdown.scss';
 
 import { combineClassNames } from '@tezospayments/common/dist/utils';
 
-import { config } from '../../../config';
 import { Account } from '../../../models/blockchain';
-import { getAccountsByNetwork, getCurrentAccount } from '../../../store/accounts/selectors';
+import { getAccountsByNetwork, getCurrentAccount, getCurrentNetworkConfig } from '../../../store/accounts/selectors';
 import { disconnectAccount } from '../../../store/accounts/slice';
 import { useAppDispatch, useAppSelector, useCurrentLanguageResources } from '../../hooks';
 import { AccountNetworkGroupPure } from './AccountNetworkGroup';
@@ -19,14 +18,18 @@ export const AccountDropDown = () => {
 
   const accountsByNetwork = useAppSelector(getAccountsByNetwork);
   const currentAccount = useAppSelector(getCurrentAccount);
+  const currentNetworkConfig = useAppSelector(getCurrentNetworkConfig);
+  const currentExplorer = currentNetworkConfig && currentNetworkConfig.explorers[currentNetworkConfig.default.explorer];
 
   const handleCopyAddressClick = useCallback(() => {
     navigator.clipboard.writeText(currentAccount?.address || '');
   }, [currentAccount]);
 
-  const handleViewOnTzStatsClick = useCallback(() => {
-    window.open(`${config.links.tzStats}/${currentAccount?.address}`, '_blank');
-  }, [currentAccount]);
+  const handleViewOnExplorerClick = useCallback(() => {
+    if (currentExplorer) {
+      window.open(`${currentExplorer.url}${currentAccount?.address}`, '_blank');
+    }
+  }, [currentAccount?.address, currentExplorer]);
 
   const dispatch = useAppDispatch();
   const handleDisconnectButtonClick = useCallback(() => {
@@ -61,8 +64,8 @@ export const AccountDropDown = () => {
     <Menu.Item key={1} icon={<CopyOutlined />} onClick={handleCopyAddressClick}>
       {actionsLangResources.copyAddress.title}
     </Menu.Item>
-    <Menu.Item key={2} icon={<ArrowRightOutlined />} onClick={handleViewOnTzStatsClick}>
-      {actionsLangResources.viewOnTzStats.title}
+    <Menu.Item key={2} icon={<ArrowRightOutlined />} onClick={handleViewOnExplorerClick}>
+      {`${actionsLangResources.viewOn} ${currentExplorer?.title}`}
     </Menu.Item>
     <Menu.Item key={3} icon={<LoginOutlined />}>
       {`${actionsLangResources.connectAnotherAccount.title} (${langResources.common.comingSoon.toLowerCase()})`}

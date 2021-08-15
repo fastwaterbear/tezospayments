@@ -65,7 +65,8 @@ export class AccountsService {
   private getTezosToolKit(network: Network): TezosToolkit {
     let tezosToolkit = this.tezosToolKitByNetwork.get(network);
     if (!tezosToolkit) {
-      tezosToolkit = new TezosToolkit(config.tezos.networks[network.name].rpcUrls[0]);
+      const networkConfig = config.tezos.networks[network.name];
+      tezosToolkit = new TezosToolkit(networkConfig.rpcUrls[networkConfig.default.rpc]);
       tezosToolkit.setProvider({ signer: new ReadOnlySigner() });
       this.tezosToolKitByNetwork.set(network, tezosToolkit);
     }

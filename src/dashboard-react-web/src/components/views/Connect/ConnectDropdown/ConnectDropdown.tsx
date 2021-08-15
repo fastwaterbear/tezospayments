@@ -34,7 +34,7 @@ export const ConnectDropdown = () => {
         <div className="connect-dropdown__item-icon-container">
           <div className="connect-dropdown__item-icon" style={{ backgroundColor: network.color }}></div>
         </div>
-        <div className="connect-dropdown__item-text">{`${connectLangResources.connectTo} ${network.name}`}</div>
+        <div className="connect-dropdown__item-text">{`${connectLangResources.connectTo} ${network.title}`}</div>
       </div>
     </Menu.Item>;
   });
@@ -46,7 +46,7 @@ export const ConnectDropdown = () => {
   );
 
   return <Dropdown.Button className="connect-dropdown" type="primary" onClick={handleConnectButtonClick} overlay={connectMenu}>
-    {`${connectLangResources.connectTo} ${config.tezos.networks.edo2net.name}`}
+    {`${connectLangResources.connectTo} ${config.tezos.networks.edo2net.title}`}
   </Dropdown.Button>;
 };
 
