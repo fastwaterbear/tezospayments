@@ -49,11 +49,11 @@ export const config: AppConfig = {
           smartpy: 'https://mainnet.smartpy.io/'
         },
         indexerUrls: {
-          tzkt: 'https://mainnet.tzkt.io/'
+          tzkt: 'https://api.mainnet.tzkt.io/'
         },
         explorers: {
           tzkt: {
-            url: 'https://api.mainnet.tzkt.io/', title: 'TzKT'
+            url: 'https://mainnet.tzkt.io/', title: 'TzKT'
           }
         },
         servicesFactoryContractAddress: ''
