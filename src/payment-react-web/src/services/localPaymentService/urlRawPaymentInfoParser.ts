@@ -5,7 +5,6 @@ type OperationTypeName = 'payment' | 'donation';
 interface RawPaymentInfoBase {
   readonly targetAddress: string;
   readonly operationType: OperationTypeName;
-  readonly networkName: string | null;
 }
 
 export type RawPaymentInfo = RawPaymentInfoBase &
@@ -32,12 +31,9 @@ export class UrlRawPaymentInfoParser {
     if (!serializedPaymentOrDonation && isPaymentType)
       return errors.invalidUrl;
 
-    const networkName = new URLSearchParams(url.search).get('network');
-
     return {
       targetAddress,
       operationType,
-      networkName,
       serializedPayment: serializedPaymentOrDonation,
     };
   }

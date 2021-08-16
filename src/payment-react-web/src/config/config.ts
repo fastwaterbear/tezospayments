@@ -19,18 +19,20 @@ export const config: AppConfig = {
         color: '#667eea',
         default: {
           rpc: 'smartpy',
-          indexer: 'tzkt',
+          indexer: 'betterCallDev',
           explorer: 'tzStats'
         },
         rpcUrls: {
-          smartpy: 'https://granadanet.smartpy.io/'
+          smartpy: 'https://granadanet.smartpy.io'
         },
         indexerUrls: {
-          betterCallDev: 'https://api.better-call.dev/',
-          tzkt: 'https://api.granadanet.tzkt.io/'
+          betterCallDev: 'https://api.better-call.dev',
+          tzKT: 'https://api.granadanet.tzkt.io',
+          tzStats: 'https://api.granada.tzstats.com'
         },
         explorers: {
-          tzStats: { url: 'https://granada.tzstats.com/', title: 'TzStats' },
+          tzStats: { baseUrl: 'https://granada.tzstats.com', title: 'TzStats' },
+          betterCallDev: { baseUrl: 'https://better-call.dev', title: 'Better Call Dev' }
         },
         servicesFactoryContractAddress: 'KT1TsixZzkALSuJhzKkyCDgyJxQCbHsGoqda'
       },
@@ -39,18 +41,20 @@ export const config: AppConfig = {
         color: '#fbbf24',
         default: {
           rpc: 'smartpy',
-          indexer: 'tzkt',
+          indexer: 'tzKT',
           explorer: 'tzStats'
         },
         rpcUrls: {
-          smartpy: 'https://edonet.smartpy.io/'
+          smartpy: 'https://edonet.smartpy.io'
         },
         indexerUrls: {
-          betterCallDev: 'https://api.better-call.dev/',
-          tzkt: 'https://api.granadanet.tzkt.io/'
+          betterCallDev: 'https://api.better-call.dev',
+          tzKT: 'https://api.edo2net.tzkt.io',
+          tzStats: 'https://api.edo.tzstats.com'
         },
         explorers: {
-          tzStats: { url: 'https://edo.tzstats.com/', title: 'TzStats' }
+          tzStats: { baseUrl: 'https://edo.tzstats.com', title: 'TzStats' },
+          betterCallDev: { baseUrl: 'https://better-call.dev', title: 'Better Call Dev' }
         },
         servicesFactoryContractAddress: 'KT1PXyQ3wDpwm6J3r6iyLCWu5QKH5tef7ejU'
       }

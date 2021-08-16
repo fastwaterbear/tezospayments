@@ -1,9 +1,9 @@
-import { ColorMode, RequestPermissionInput, AbortedBeaconError } from '@airgap/beacon-sdk';
+import { RequestPermissionInput, AbortedBeaconError } from '@airgap/beacon-sdk';
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit, TransactionWalletOperation, Wallet } from '@taquito/taquito';
 import { BigNumber } from 'bignumber.js';
 
-import { Network, networks } from '@tezospayments/common/dist/models/blockchain';
+import { Network } from '@tezospayments/common/dist/models/blockchain';
 import { Donation, Payment, PaymentType } from '@tezospayments/common/dist/models/payment';
 import { PaymentBase } from '@tezospayments/common/dist/models/payment/paymentBase';
 import { Service, ServiceOperationType } from '@tezospayments/common/dist/models/service';
@@ -17,20 +17,32 @@ import { AppStore } from '../../store';
 import { confirmPayment } from '../../store/currentPayment';
 import { ServiceResult } from '../serviceResult';
 import { errors, LocalPaymentServiceError } from './errors';
-import { ServiceProvider, TzKTServiceProvider } from './serviceProvider';
+import { BetterCallDevServiceProvider, ServiceProvider, TzKTServiceProvider, TzStatsServiceProvider } from './serviceProvider';
 import { RawPaymentInfo, UrlRawPaymentInfoParser } from './urlRawPaymentInfoParser';
 import { getBeaconNetworkType } from './utils';
 
-export class LocalPaymentService {
-  readonly urlRawPaymentInfoParser = new UrlRawPaymentInfoParser();
-  readonly tezosToolkit = new TezosToolkit(
-    config.tezos.networks[config.tezos.defaultNetwork].rpcUrls[config.tezos.networks[config.tezos.defaultNetwork].default.rpc]
-  );
-  readonly tezosWallet = new BeaconWallet({ name: config.app.name, colorMode: ColorMode.LIGHT });
-  readonly serviceProvider: ServiceProvider = new TzKTServiceProvider(networks.edo2net);
+interface LocalPaymentServiceOptions {
+  readonly store: AppStore;
+  readonly network: Network;
+  readonly tezosToolkit: TezosToolkit;
+  readonly tezosWallet: BeaconWallet;
+}
 
-  constructor(readonly store: AppStore) {
-    this.tezosToolkit.setWalletProvider(this.tezosWallet);
+export class LocalPaymentService {
+  protected readonly network: Network;
+  protected readonly store: AppStore;
+  protected readonly tezosToolkit: TezosToolkit;
+  protected readonly tezosWallet: BeaconWallet;
+  protected readonly serviceProvider: ServiceProvider;
+  protected readonly urlRawPaymentInfoParser = new UrlRawPaymentInfoParser();
+
+  constructor(options: LocalPaymentServiceOptions) {
+    this.network = options.network;
+    this.store = options.store;
+    this.tezosToolkit = options.tezosToolkit;
+    this.tezosWallet = options.tezosWallet;
+
+    this.serviceProvider = this.createServiceProvider(this.network);
   }
 
   async getCurrentPaymentInfo(): Promise<ServiceResult<PaymentInfo, LocalPaymentServiceError>> {
@@ -42,14 +54,9 @@ export class LocalPaymentService {
     if (serviceResult.isServiceError)
       return serviceResult;
 
-    const networkResult = this.getCurrentNetwork();
-    if (networkResult.isServiceError)
-      return networkResult;
-
     return {
       payment: paymentResult,
-      service: serviceResult,
-      network: networkResult
+      service: serviceResult
     };
   }
 
@@ -69,23 +76,6 @@ export class LocalPaymentService {
       return currentRawPaymentInfoResult;
 
     return this.serviceProvider.getService(currentRawPaymentInfoResult.targetAddress);
-  }
-
-  getCurrentNetwork(): ServiceResult<Network, LocalPaymentServiceError> {
-    const currentRawPaymentInfoResult = this.parseRawPaymentInfo(window.location);
-    if (currentRawPaymentInfoResult.isServiceError)
-      return currentRawPaymentInfoResult;
-
-    let network: Network | undefined;
-    if (currentRawPaymentInfoResult.networkName) {
-      // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-      const isSupportedNetwork: boolean = !!config.tezos.networks[currentRawPaymentInfoResult.networkName as keyof typeof config.tezos.networks];
-      network = isSupportedNetwork && currentRawPaymentInfoResult.networkName
-        ? networks[currentRawPaymentInfoResult.networkName as keyof typeof networks]
-        : undefined;
-    }
-
-    return network || networks[config.tezos.defaultNetwork];
   }
 
   async pay(payment: NetworkPayment): Promise<ServiceResult<boolean>> {
@@ -128,12 +118,8 @@ export class LocalPaymentService {
     payload: string
   ): Promise<ServiceResult<boolean>> {
     try {
-      const currentNetworkResult = this.getCurrentNetwork();
-      if (currentNetworkResult.isServiceError)
-        return currentNetworkResult;
-
       await this.tezosWallet.client.clearActiveAccount();
-      const canceled = await this.requestPermissions({ network: { type: getBeaconNetworkType(currentNetworkResult) } });
+      const canceled = await this.requestPermissions({ network: { type: getBeaconNetworkType(this.network) } });
       if (canceled)
         return false;
 
@@ -169,6 +155,20 @@ export class LocalPaymentService {
       .finally(() => {
         beaconAlertWrapperObserver.finalize();
       });
+  }
+
+  private createServiceProvider(network: Network): ServiceProvider {
+    const networkConfig = config.tezos.networks[network.name];
+    const indexerName = networkConfig.default.indexer;
+
+    if (indexerName === 'betterCallDev')
+      return new BetterCallDevServiceProvider(network, networkConfig.indexerUrls.betterCallDev);
+    else if (indexerName === 'tzKT')
+      return new TzKTServiceProvider(network, networkConfig.indexerUrls.tzKT);
+    else if (indexerName === 'tzStats')
+      return new TzStatsServiceProvider(network, networkConfig.indexerUrls.tzStats);
+    else
+      throw new Error('Unknown service provider');
   }
 
   private parsePayment(paymentBase64: string, targetAddress: string, urls: PaymentBase['urls']): ServiceResult<Payment, LocalPaymentServiceError> {

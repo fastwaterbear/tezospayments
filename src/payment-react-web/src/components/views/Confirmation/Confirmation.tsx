@@ -1,8 +1,9 @@
 import { Result, Spin } from 'antd';
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { Network } from '@tezospayments/common/dist/models/blockchain';
 
+import { AppViewContext } from '../../../app';
 import { BlockchainLinkPure } from '../../common';
 
 interface ConfirmationProps {
@@ -11,8 +12,8 @@ interface ConfirmationProps {
 }
 
 export const Confirmation = (props: ConfirmationProps) => {
-  // TODO: extract into a separate module
-  const operationUrl = `https://${props.network.name === 'mainnet' ? '' : 'edo.'}tzstats.com/${props.operationHash}`;
+  const appContext = useContext(AppViewContext);
+  const operationUrl = appContext.tzStatsUrlBlockchainExplorer.getOperationUrl(props.operationHash);
 
   return <Result
     title="Confirmation"

@@ -32,7 +32,7 @@ const checkSendPaymentCondition = (
 export const loadCurrentPayment = createAsyncThunk<PaymentInfo, void, AppThunkAPI>(
   `${namespace}/loadCurrentPay`,
   async (_, { extra: app, rejectWithValue }) => {
-    const result = await app.localPaymentService.getCurrentPaymentInfo();
+    const result = await app.services.localPaymentService.getCurrentPaymentInfo();
 
     return !result.isServiceError
       ? result
@@ -43,7 +43,7 @@ export const loadCurrentPayment = createAsyncThunk<PaymentInfo, void, AppThunkAP
 export const pay = createAsyncThunk<boolean, NetworkPayment, AppThunkAPI>(
   `${namespace}/pay`,
   async (networkPayment, { extra: app, rejectWithValue }) => {
-    const result = await app.localPaymentService.pay(networkPayment);
+    const result = await app.services.localPaymentService.pay(networkPayment);
 
     return !result.isServiceError
       ? result
@@ -62,7 +62,7 @@ export const pay = createAsyncThunk<boolean, NetworkPayment, AppThunkAPI>(
 export const donate = createAsyncThunk<boolean, NetworkDonation, AppThunkAPI>(
   `${namespace}/donate`,
   async (networkDonation, { extra: app, rejectWithValue }) => {
-    const result = await app.localPaymentService.donate(networkDonation);
+    const result = await app.services.localPaymentService.donate(networkDonation);
 
     return !result.isServiceError
       ? result
