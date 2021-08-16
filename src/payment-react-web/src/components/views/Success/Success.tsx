@@ -3,7 +3,6 @@ import React from 'react';
 
 import { Network } from '@tezospayments/common/dist/models/blockchain';
 
-
 import { BlockchainLinkPure } from '../../common';
 
 interface SuccessProps {
@@ -13,7 +12,7 @@ interface SuccessProps {
 
 export const Success = (props: SuccessProps) => {
   // TODO: extract into a separate module
-  const operationUrl = `https://${props.network.name === 'main' ? '' : 'edo.'}tzstats.com/${props.operationHash}`;
+  const operationUrl = `https://${props.network.name === 'mainnet' ? '' : 'edo.'}tzstats.com/${props.operationHash}`;
 
   return <Result
     status="success"

@@ -34,7 +34,7 @@ export const tezosMeta: TokenMetadata = {
 
 export const tokenWhitelist: readonly Token[] = [
   {
-    network: networks.main,
+    network: networks.mainnet,
     type: 'fa1.2',
     contractAddress: 'KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV',
     metadata: {
@@ -45,7 +45,7 @@ export const tokenWhitelist: readonly Token[] = [
     },
   },
   {
-    network: networks.main,
+    network: networks.mainnet,
     type: 'fa2',
     contractAddress: 'KT1REEb5VxWRjcHm5GzDMwErMmNFftsE5Gpf',
     fa2TokenId: 0,

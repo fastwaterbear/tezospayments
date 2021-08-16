@@ -1,11 +1,11 @@
 const networksInternal = {
-  main: {
+  mainnet: {
     id: 'NetXdQprcVkpaWU',
-    name: 'main',
+    name: 'mainnet',
   },
-  florence: {
+  florencenet: {
     id: 'NetXxkAx4woPLyu',
-    name: 'florence',
+    name: 'florencenet',
   },
   edo2net: {
     id: 'NetXSgo1ZT2DRUG',

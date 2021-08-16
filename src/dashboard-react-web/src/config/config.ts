@@ -37,7 +37,7 @@ export const config: AppConfig = {
   },
   tezos: {
     networks: {
-      main: {
+      mainnet: {
         title: 'Tezos Mainnet',
         color: '#83b300',
         default: {
@@ -77,7 +77,7 @@ export const config: AppConfig = {
         },
         servicesFactoryContractAddress: 'KT1TsixZzkALSuJhzKkyCDgyJxQCbHsGoqda'
       },
-      florence: {
+      florencenet: {
         title: 'Florence Testnet',
         color: '#ffd88a',
         default: {

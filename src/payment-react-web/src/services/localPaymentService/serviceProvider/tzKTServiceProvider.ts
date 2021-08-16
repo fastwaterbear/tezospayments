@@ -7,8 +7,8 @@ import { IndexerServiceProvider, ServiceDto } from './indexerServiceProvider';
 export class TzKTServiceProvider extends IndexerServiceProvider {
   private static readonly defaultBaseUrl = 'https://api.tzkt.io';
   private static readonly networkBaseUrlMap: ReadonlyMap<Network['id'], string> = new Map<Network['id'], string>()
-    .set(networks.main.id, 'https://api.tzkt.io')
-    .set(networks.florence.id, 'https://api.florencenet.tzkt.io')
+    .set(networks.mainnet.id, 'https://api.tzkt.io')
+    .set(networks.florencenet.id, 'https://api.florencenet.tzkt.io')
     .set(networks.edo2net.id, 'https://api.edo2net.tzkt.io');
 
   constructor(network: Network) {

@@ -20,16 +20,17 @@ export const config: AppConfig = {
         default: {
           rpc: 'smartpy',
           indexer: 'tzkt',
-          explorer: 'tzkt'
+          explorer: 'tzStats'
         },
         rpcUrls: {
           smartpy: 'https://granadanet.smartpy.io/'
         },
         indexerUrls: {
+          betterCallDev: 'https://api.better-call.dev/',
           tzkt: 'https://api.granadanet.tzkt.io/'
         },
         explorers: {
-          tzkt: { url: 'https://granadanet.tzkt.io/', title: 'TzKT' }
+          tzStats: { url: 'https://granada.tzstats.com/', title: 'TzStats' },
         },
         servicesFactoryContractAddress: 'KT1TsixZzkALSuJhzKkyCDgyJxQCbHsGoqda'
       },
@@ -39,16 +40,17 @@ export const config: AppConfig = {
         default: {
           rpc: 'smartpy',
           indexer: 'tzkt',
-          explorer: 'tzkt'
+          explorer: 'tzStats'
         },
         rpcUrls: {
           smartpy: 'https://edonet.smartpy.io/'
         },
         indexerUrls: {
-          tzkt: 'https://api.edo2net.tzkt.io/'
+          betterCallDev: 'https://api.better-call.dev/',
+          tzkt: 'https://api.granadanet.tzkt.io/'
         },
         explorers: {
-          tzkt: { url: 'https://edo2net.tzkt.io/', title: 'TzKT' }
+          tzStats: { url: 'https://edo.tzstats.com/', title: 'TzStats' }
         },
         servicesFactoryContractAddress: 'KT1PXyQ3wDpwm6J3r6iyLCWu5QKH5tef7ejU'
       }

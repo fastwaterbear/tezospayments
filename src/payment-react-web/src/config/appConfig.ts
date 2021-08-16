@@ -2,9 +2,9 @@ import type { Network } from '@tezospayments/common/dist/models/blockchain';
 import type { DeepReadonly } from '@tezospayments/common/dist/models/core';
 
 type RpcProvider = 'smartpy';
-type IndexerProvider = 'tzkt';
-type ExplorerProvider = 'tzkt';
-type SupportedNetwork = Exclude<Network, { name: 'main' } | { name: 'florence' }>;
+type IndexerProvider = 'betterCallDev' | 'tzkt';
+type ExplorerProvider = 'tzStats';
+type SupportedNetwork = Exclude<Network, { name: 'mainnet' } | { name: 'florencenet' }>;
 
 interface NetworkConfig {
   title: string;

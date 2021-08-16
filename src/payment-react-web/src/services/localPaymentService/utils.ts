@@ -5,11 +5,11 @@ import { Network, networks } from '@tezospayments/common/dist/models/blockchain'
 // TODO: move to the application-core package
 export const getBeaconNetworkType: (network: Network) => NetworkType = network => {
   switch (network) {
-    case networks.main:
+    case networks.mainnet:
       return NetworkType.MAINNET;
     case networks.granadanet:
       return NetworkType.GRANADANET;
-    case networks.florence:
+    case networks.florencenet:
       return NetworkType.FLORENCENET;
     case networks.edo2net:
       return NetworkType.EDONET;

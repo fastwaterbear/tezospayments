@@ -7,8 +7,8 @@ import { IndexerServiceProvider, ServiceDto } from './indexerServiceProvider';
 export class TzStatsServiceProvider extends IndexerServiceProvider {
   private static readonly defaultBaseUrl = 'https://api.tzstats.com';
   private static readonly networkBaseUrlMap: ReadonlyMap<Network['id'], string> = new Map<Network['id'], string>()
-    .set(networks.main.id, 'https://api.tzstats.com')
-    .set(networks.florence.id, 'https://api.florence.tzstats.com')
+    .set(networks.mainnet.id, 'https://api.tzstats.com')
+    .set(networks.florencenet.id, 'https://api.florence.tzstats.com')
     .set(networks.edo2net.id, 'https://api.edo.tzstats.com');
 
   constructor(network: Network) {
