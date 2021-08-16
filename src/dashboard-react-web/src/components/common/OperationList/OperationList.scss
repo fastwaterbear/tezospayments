@@ -2,14 +2,12 @@
 @use '../../../styles/fonts.scss';
 
 .operation-list {
-  display: table;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.operation-list-row {
-  display: table-row;
+.operation-list-group {
   &:hover {
     background-color: ant-colors.$blue-1;
   }
@@ -18,14 +16,17 @@
 .operation-list-item__icon,
 .operation-list-item__main-info,
 .operation-list-item__transfer-info,
-.operation-list-item__amount {
-  display: table-cell;
-  padding: 16px;
+.operation-list-item__amount,
+.operation-list-item__data {
+  padding: 16px 16px 0 16px;
+}
+
+.operation-list-item__data {
+  padding-bottom: 16px;
 }
 
 .operation-list-item__data {
   padding-top: 6px;
-  display: block;
   color: ant-colors.$gray-13;
 }
 
@@ -70,8 +71,7 @@
 }
 
 .operation-list-item__date,
-.operation-list-item__operation-hash,
-.operation-list-item__data {
+.operation-list-item__operation-hash {
   display: block;
 }
 
@@ -84,9 +84,13 @@
     display: block;
   }
 
+  .operation-list-group {
+    display: block;
+    margin-bottom: 16px;
+  }
+
   .operation-list-row {
     display: grid;
-    margin-bottom: 16px;
     padding: 8px;
     grid-template-columns: 60px auto;
     grid-template-areas:
@@ -95,10 +99,19 @@
       ". amount";
   }
 
+  .operation-list-row_general {
+    padding-bottom: 0;
+  }
+
+  .operation-list-row_order-data {
+    padding-top: 0;
+  }
+
   .operation-list-item__icon,
   .operation-list-item__main-info,
   .operation-list-item__transfer-info,
-  .operation-list-item__amount {
+  .operation-list-item__amount,
+  .operation-list-item__data {
     display: block;
     padding: 0;
   }
