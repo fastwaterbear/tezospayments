@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { optimization } from '@tezospayments/common/dist/utils';
 
+import { Account } from '../../models/blockchain';
 import { getAllAcceptedTokens } from '../services/selectors';
 import { AppThunkAPI } from '../thunk';
 
@@ -19,14 +20,14 @@ const initialState: BalancesState = {
 
 const namespace = 'balances';
 
-export const loadBalances = createAsyncThunk<Pick<BalancesState, 'tezos' | 'tokens'>, string, AppThunkAPI>(
+export const loadBalances = createAsyncThunk<Pick<BalancesState, 'tezos' | 'tokens'>, Account, AppThunkAPI>(
   `${namespace}/loadBalances`,
-  async (address, { extra: app, getState }) => {
-    const tezos = await app.services.accountsService.getTezosBalance(address);
+  async (account, { extra: app, getState }) => {
+    const tezos = await app.services.accountsService.getTezosBalance(account);
 
     const acceptedTokens = getAllAcceptedTokens(getState());
     const tokens: { [key: string]: number } = {};
-    const balancesPromises = acceptedTokens.map(t => app.services.accountsService.getTokenBalance(address, t));
+    const balancesPromises = acceptedTokens.map(t => app.services.accountsService.getTokenBalance(account, t));
     const balances = await Promise.all(balancesPromises);
 
     balances.forEach((b, i) => {

@@ -3,11 +3,11 @@ import { Menu, Button } from 'antd';
 import React, { useCallback } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 
-import { config } from '../../config';
-import { useCurrentLanguageResources } from '../hooks';
+import { config } from '../../../config';
+import { useCurrentLanguageResources } from '../../hooks';
 import './NavBar.scss';
 
-const NavBar = () => {
+export const NavBar = () => {
   const location = useLocation();
   const langResources = useCurrentLanguageResources();
   const viewsLangResources = langResources.views;

@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { config } from '../../config';
-import { getCurrentAccount } from '../../store/accounts/selectors';
-import { useAppSelector } from '../hooks';
-import { AccountDropDownPure } from './AccountDropdown';
+import { config } from '../../../config';
+import { getCurrentAccount } from '../../../store/accounts/selectors';
+import { useAppSelector } from '../../hooks';
+import { AccountDropDownPure } from './../AccountDropdown';
 
 import './Header.scss';
 

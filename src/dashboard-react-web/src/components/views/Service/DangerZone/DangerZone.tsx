@@ -18,11 +18,11 @@ export const DangerZone = (props: DangerZoneProps) => {
   const dispatch = useAppDispatch();
 
   const handlePauseModalOkClick = useCallback(() => {
-    dispatch(setPaused({ contractAddress: props.service.contractAddress, paused: !props.service.paused }));
+    dispatch(setPaused({ service: props.service, paused: !props.service.paused }));
   }, [dispatch, props.service]);
 
   const handleDeleteModalOkClick = useCallback(() => {
-    dispatch(setDeleted({ contractAddress: props.service.contractAddress, deleted: !props.service.deleted }));
+    dispatch(setDeleted({ service: props.service, deleted: !props.service.deleted }));
   }, [dispatch, props.service]);
 
   const confirm = useCallback((content: React.ReactNode, onOk: () => void) => {

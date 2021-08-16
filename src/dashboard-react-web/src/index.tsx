@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 
 import { WebApp } from './app';
-import { App } from './components/App/App';
+import { App } from './components/App';
 import { AppConfig, config } from './config';
 import reportWebVitals from './reportWebVitals';
 import { appReducer } from './store';
