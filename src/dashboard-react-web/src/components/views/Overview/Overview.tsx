@@ -22,17 +22,17 @@ export const Overview = () => {
     {servicesState.initialized && !servicesState.services.length
       ? <NoServicesCreatedPure />
       : <div className="cards-container">
-        <Card className="cards-container__small-card" size="small" title={overviewLangResources.balances.title} style={{ height: 220 }}>
+        <Card className="cards-container__small-card" size="small" title={overviewLangResources.balances.title}>
           <BalancesPure />
         </Card>
 
         {/*eslint-disable-next-line max-len*/}
-        <Card className="cards-container__small-card" size="small" title={`${overviewLangResources.incoming.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">All Month</a>} style={{ height: 220 }}>
+        <Card className="cards-container__small-card" size="small" title={`${overviewLangResources.incoming.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">All Month</a>}>
           <IncomingPure />
         </Card>
 
         {/*eslint-disable-next-line max-len*/}
-        <Card className="cards-container__small-card" size="small" title={`${overviewLangResources.outgoing.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">All Month</a>} style={{ height: 220 }}>
+        <Card className="cards-container__small-card" size="small" title={`${overviewLangResources.outgoing.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">All Month</a>}>
           <OutgoingPure />
         </Card>
 

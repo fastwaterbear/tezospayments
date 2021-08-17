@@ -6,7 +6,9 @@
 
 .cards-container__small-card {
   grid-column-start: span 2;
-
+  height: 220px;
+  overflow: auto;
+  
   .ant-card-head {
     border-bottom-width: 0;
   }
