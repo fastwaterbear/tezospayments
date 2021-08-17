@@ -53,6 +53,7 @@ export type AppConfig = DeepReadonly<{
     }
   },
   tezos: {
+    defaultNetwork: Network['name'];
     networks: { [key in Network['name']]: NetworkConfig }
   }
 }>;

@@ -36,6 +36,7 @@ export const config: AppConfig = {
     }
   },
   tezos: {
+    defaultNetwork: 'edo2net',
     networks: {
       granadanet: {
         title: 'Granada Testnet',
