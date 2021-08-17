@@ -1,19 +1,15 @@
 const networksInternal = {
-  main: {
-    id: 'NetXdQprcVkpaWU',
-    name: 'main',
-  },
-  florence: {
-    id: 'NetXxkAx4woPLyu',
-    name: 'florence',
+  // mainnet: {
+  //   id: 'NetXdQprcVkpaWU',
+  //   name: 'mainnet',
+  // },
+  granadanet: {
+    id: 'NetXz969SFaFn8k',
+    name: 'granadanet',
   },
   edo2net: {
     id: 'NetXSgo1ZT2DRUG',
     name: 'edo2net',
-  },
-  granadanet: {
-    id: 'NetXz969SFaFn8k',
-    name: 'granadanet',
   }
 } as const;
 

@@ -37,27 +37,6 @@ export const config: AppConfig = {
   },
   tezos: {
     networks: {
-      main: {
-        title: 'Tezos Mainnet',
-        color: '#83b300',
-        default: {
-          rpc: 'smartpy',
-          indexer: 'tzkt',
-          explorer: 'tzkt'
-        },
-        rpcUrls: {
-          smartpy: 'https://mainnet.smartpy.io/'
-        },
-        indexerUrls: {
-          tzkt: 'https://api.mainnet.tzkt.io/'
-        },
-        explorers: {
-          tzkt: {
-            url: 'https://mainnet.tzkt.io/', title: 'TzKT'
-          }
-        },
-        servicesFactoryContractAddress: ''
-      },
       granadanet: {
         title: 'Granada Testnet',
         color: '#667eea',
@@ -76,25 +55,6 @@ export const config: AppConfig = {
           tzkt: { url: 'https://granadanet.tzkt.io/', title: 'TzKT' }
         },
         servicesFactoryContractAddress: 'KT1TsixZzkALSuJhzKkyCDgyJxQCbHsGoqda'
-      },
-      florence: {
-        title: 'Florence Testnet',
-        color: '#ffd88a',
-        default: {
-          rpc: 'smartpy',
-          indexer: 'tzkt',
-          explorer: 'tzkt'
-        },
-        rpcUrls: {
-          smartpy: 'https://florencenet.smartpy.io/'
-        },
-        indexerUrls: {
-          tzkt: 'https://api.florencenet.tzkt.io/'
-        },
-        explorers: {
-          tzkt: { url: 'https://florencenet.tzkt.io/', title: 'TzKT' }
-        },
-        servicesFactoryContractAddress: ''
       },
       edo2net: {
         title: 'Edo2 Testnet',

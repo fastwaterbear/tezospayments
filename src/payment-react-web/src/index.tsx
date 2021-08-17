@@ -5,14 +5,14 @@ import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import { Provider } from 'react-redux';
 
-import { App } from './app';
+import { AppViewContext, WebApp } from './app';
 import { App as AppComponent } from './components/App';
 import { AppConfig, config } from './config';
 import reportWebVitals from './reportWebVitals';
 import { appReducer } from './store';
 import './index.scss';
 
-const app = new App(app => configureStore({
+const app = new WebApp(app => configureStore({
   reducer: appReducer,
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
@@ -31,7 +31,9 @@ const app = new App(app => configureStore({
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={app.store}>
-      <AppComponent />
+      <AppViewContext.Provider value={app.services}>
+        <AppComponent />
+      </AppViewContext.Provider>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')

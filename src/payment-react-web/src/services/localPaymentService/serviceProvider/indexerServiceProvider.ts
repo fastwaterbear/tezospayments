@@ -7,7 +7,7 @@ import { LocalPaymentServiceError } from '../errors';
 import { ServiceProvider } from './serviceProvider';
 
 export abstract class IndexerServiceProvider implements ServiceProvider {
-  constructor(readonly baseUrl: string, readonly network: Network) {
+  constructor(readonly network: Network, readonly baseUrl: string) {
   }
 
   async getService(serviceAddress: string): Promise<ServiceResult<Service, LocalPaymentServiceError>> {
