@@ -23,7 +23,7 @@ export const PrivateRoute = ({ children, isConnected, connectPath = defaultConne
 type PrivateRouteContainerProps = Omit<PrivateRouteProps, 'isConnected'>;
 
 export const PrivateRouteContainer = (props: PrivateRouteContainerProps) => {
-    const currentAccountAddress = useAppSelector(state => state.accountsState.currentAccountAddress);
+    const currentAccount = useAppSelector(state => state.accountsState.currentAccount);
 
-    return <PrivateRoute {...props} isConnected={!!currentAccountAddress} />;
+    return <PrivateRoute {...props} isConnected={!!currentAccount} />;
 };

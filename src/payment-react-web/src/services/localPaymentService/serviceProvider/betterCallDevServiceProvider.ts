@@ -5,9 +5,7 @@ import { LocalPaymentServiceError } from '../errors';
 import { ServiceProvider } from './serviceProvider';
 
 export class BetterCallDevServiceProvider implements ServiceProvider {
-  readonly baseUrl = 'https://api.better-call.dev';
-
-  constructor(readonly network: Network) {
+  constructor(readonly network: Network, readonly baseUrl: string) {
   }
 
   async getService(serviceAddress: string): Promise<ServiceResult<Service, LocalPaymentServiceError>> {

@@ -1,19 +1,19 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { optimization } from '@tezospayments/common';
+import { optimization, Network } from '@tezospayments/common';
 
-import type { Account } from '../../models/blockchain';
+import type { Account, CurrentAccountInfo } from '../../models/blockchain';
 import { clearServices, loadServices } from '../services/slice';
 import { AppThunkAPI } from '../thunk';
 
 export interface AccountsState {
-  readonly currentAccountAddress: string | null;
+  readonly currentAccount: CurrentAccountInfo | null;
   readonly connectedAccounts: readonly Account[];
   readonly initialized: boolean;
 }
 
 const initialState: AccountsState = {
-  currentAccountAddress: null,
+  currentAccount: null,
   connectedAccounts: optimization.emptyArray,
   initialized: false
 };
@@ -23,26 +23,27 @@ const namespace = 'accounts';
 export const loadActiveAccount = createAsyncThunk<Account | null, void, AppThunkAPI>(
   `${namespace}/loadActiveAccount`,
   async (_, { extra: app, dispatch }) => {
-    const address = await app.services.accountsService.getActiveAccount();
+    const account = await app.services.accountsService.getActiveAccount();
 
-    if (address) {
-      dispatch(loadServices(address));
+    if (account) {
+      dispatch(loadServices(account));
     }
 
-    return address ? { address } : null;
+    return account || null;
   }
 );
 
-export const connectAccount = createAsyncThunk<Account | null, void, AppThunkAPI>(
+export const connectAccount = createAsyncThunk<Account | null, Network, AppThunkAPI>(
   `${namespace}/connect`,
-  async (_, { extra: app, dispatch }) => {
-    const address = await app.services.accountsService.connect();
+  async (network: Network, { extra: app, dispatch }) => {
+    const address = await app.services.accountsService.connect(network);
+    const account = address ? { address, network } : null;
 
-    if (address) {
-      dispatch(loadServices(address));
+    if (account) {
+      dispatch(loadServices(account));
     }
 
-    return address ? { address } : null;
+    return account;
   }
 );
 
@@ -65,9 +66,14 @@ export const accountsSlice = createSlice({
     builder.addCase(loadActiveAccount.fulfilled, (state, action) => {
       const account = action.payload;
       if (account) {
-        state.currentAccountAddress = account.address;
-        if (!state.connectedAccounts.some(a => a.address === account.address))
+        state.currentAccount = {
+          address: account.address,
+          network: account.network
+        };
+
+        if (!state.connectedAccounts.some(a => a.address === account.address)) {
           state.connectedAccounts.push(account);
+        }
       }
       state.initialized = true;
     });
@@ -75,15 +81,24 @@ export const accountsSlice = createSlice({
     builder.addCase(connectAccount.fulfilled, (state, action) => {
       const account = action.payload;
       if (account) {
-        state.currentAccountAddress = account.address;
-        if (!state.connectedAccounts.some(a => a.address === account.address))
+        state.currentAccount = {
+          address: account.address,
+          network: account.network
+        };
+
+        if (!state.connectedAccounts.some(a => a.address === account.address)) {
           state.connectedAccounts.push(account);
+        }
       }
     });
 
     builder.addCase(disconnectAccount.fulfilled, state => {
-      state.connectedAccounts = state.connectedAccounts.filter(a => a.address !== state.currentAccountAddress);
-      state.currentAccountAddress = state.connectedAccounts[0] ? state.connectedAccounts[0].address : null;
+      state.connectedAccounts = state.connectedAccounts.filter(a =>
+        a.address !== state.currentAccount?.address || a.network.id !== state.currentAccount?.network.id
+      );
+
+      const nextAccount = state.connectedAccounts[0];
+      state.currentAccount = nextAccount ? { address: nextAccount.address, network: nextAccount.network } : null;
     });
   }
 });

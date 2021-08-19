@@ -1,8 +1,9 @@
 import { Result } from 'antd';
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { Network } from '@tezospayments/common';
 
+import { AppViewContext } from '../../../app';
 import { BlockchainLinkPure } from '../../common';
 
 interface SuccessProps {
@@ -11,8 +12,8 @@ interface SuccessProps {
 }
 
 export const Success = (props: SuccessProps) => {
-  // TODO: extract into a separate module
-  const operationUrl = `https://${props.network.name === 'main' ? '' : 'edo.'}tzstats.com/${props.operationHash}`;
+  const appContext = useContext(AppViewContext);
+  const operationUrl = appContext.tzStatsUrlBlockchainExplorer.getOperationUrl(props.operationHash);
 
   return <Result
     status="success"

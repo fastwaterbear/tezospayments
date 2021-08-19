@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { networks, ServiceOperation, optimization } from '@tezospayments/common';
+import { ServiceOperation, Network, optimization } from '@tezospayments/common';
 
 import { AppThunkAPI } from '../thunk';
 
@@ -16,10 +16,10 @@ const initialState: OperationsState = {
 
 const namespace = 'operations';
 
-export const loadOperations = createAsyncThunk<ServiceOperation[], string[], AppThunkAPI>(
+export const loadOperations = createAsyncThunk<ServiceOperation[], { servicesAddresses: string[], network: Network }, AppThunkAPI>(
   `${namespace}/loadOperations`,
-  async (contracts, { extra: app }) => {
-    const operationsPromises = contracts.map(c => app.services.servicesService.getOperations(networks.edo2net, c));
+  async ({ servicesAddresses, network }, { extra: app }) => {
+    const operationsPromises = servicesAddresses.map(s => app.services.servicesService.getOperations(network, s));
     const operations = (await Promise.all(operationsPromises)).flat();
 
     return operations;

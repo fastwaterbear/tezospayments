@@ -1,14 +1,14 @@
 
 import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
 
-import type { App } from '../app';
+import type { WebApp } from '../app';
 
 import type { AppState, AppDispatch } from './index';
 
 export type AppThunkAPI = {
   state: AppState;
   dispatch: AppDispatch;
-  extra: App;
+  extra: WebApp;
 };
 
-export type AppThunkDispatch = ThunkDispatch<AppState, App, AnyAction>;
+export type AppThunkDispatch = ThunkDispatch<AppState, WebApp, AnyAction>;

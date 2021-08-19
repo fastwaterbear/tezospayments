@@ -1,0 +1,19 @@
+$-icon-size: 12px;
+
+.account-network-group {
+  display: flex;
+  align-items: center;
+}
+
+.account-network-group__icon-container {
+  padding-top: 2px;
+}
+
+.account-network-group__icon {
+  display: inline-block;
+  margin-right: 6px;
+  height: $-icon-size;
+  width: $-icon-size;
+  border-radius: 50%;
+  background-color: #9254de;
+}

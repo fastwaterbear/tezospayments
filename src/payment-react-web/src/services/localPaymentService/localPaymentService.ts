@@ -1,11 +1,11 @@
-import { ColorMode, NetworkType, RequestPermissionInput, AbortedBeaconError } from '@airgap/beacon-sdk';
+import { RequestPermissionInput, AbortedBeaconError } from '@airgap/beacon-sdk';
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit, TransactionWalletOperation, Wallet } from '@taquito/taquito';
 import { BigNumber } from 'bignumber.js';
 
 import {
-  networks, Donation, Payment, PaymentType, PaymentBase,
-  Service, ServiceOperationType, converters, memoize
+  Donation, Payment, PaymentType, PaymentBase,
+  Service, ServiceOperationType, Network, converters, memoize
 } from '@tezospayments/common';
 
 import { config } from '../../config';
@@ -16,20 +16,32 @@ import { AppStore } from '../../store';
 import { confirmPayment } from '../../store/currentPayment';
 import { ServiceResult } from '../serviceResult';
 import { errors, LocalPaymentServiceError } from './errors';
-import { ServiceProvider, TzKTServiceProvider } from './serviceProvider';
+import { BetterCallDevServiceProvider, ServiceProvider, TzKTServiceProvider, TzStatsServiceProvider } from './serviceProvider';
+import { RawPaymentInfo, UrlRawPaymentInfoParser } from './urlRawPaymentInfoParser';
+import { getBeaconNetworkType } from './utils';
 
-type Segments = readonly [
-  targetAddress: string,
-  operationType: string
-];
+interface LocalPaymentServiceOptions {
+  readonly store: AppStore;
+  readonly network: Network;
+  readonly tezosToolkit: TezosToolkit;
+  readonly tezosWallet: BeaconWallet;
+}
 
 export class LocalPaymentService {
-  readonly tezosToolkit = new TezosToolkit(config.tezos.rpcNodes.edo2net[0]);
-  readonly tezosWallet = new BeaconWallet({ name: config.app.name, colorMode: ColorMode.LIGHT });
-  readonly serviceProvider: ServiceProvider = new TzKTServiceProvider(networks.edo2net);
+  protected readonly network: Network;
+  protected readonly store: AppStore;
+  protected readonly tezosToolkit: TezosToolkit;
+  protected readonly tezosWallet: BeaconWallet;
+  protected readonly serviceProvider: ServiceProvider;
+  protected readonly urlRawPaymentInfoParser = new UrlRawPaymentInfoParser();
 
-  constructor(readonly store: AppStore) {
-    this.tezosToolkit.setWalletProvider(this.tezosWallet);
+  constructor(options: LocalPaymentServiceOptions) {
+    this.network = options.network;
+    this.store = options.store;
+    this.tezosToolkit = options.tezosToolkit;
+    this.tezosWallet = options.tezosWallet;
+
+    this.serviceProvider = this.createServiceProvider(this.network);
   }
 
   async getCurrentPaymentInfo(): Promise<ServiceResult<PaymentInfo, LocalPaymentServiceError>> {
@@ -43,38 +55,26 @@ export class LocalPaymentService {
 
     return {
       payment: paymentResult,
-      service: serviceResult,
+      service: serviceResult
     };
   }
 
   getCurrentPayment(): ServiceResult<Payment | Donation, LocalPaymentServiceError> {
-    const currentLocation = window.location;
+    const currentRawPaymentInfoResult = this.parseRawPaymentInfo(window.location);
+    if (currentRawPaymentInfoResult.isServiceError)
+      return currentRawPaymentInfoResult;
 
-    const segmentsResult = this.getSegments(currentLocation.pathname);
-    if (segmentsResult.isServiceError)
-      return segmentsResult;
-
-    const isPaymentType = segmentsResult[1] === 'payment';
-
-    const paymentOrDonationBase64 = currentLocation.hash.slice(1);
-    if (!paymentOrDonationBase64 && isPaymentType)
-      return { isServiceError: true, error: errors.invalidUrl };
-
-    const targetAddress = segmentsResult[0];
-    const urls = [{ type: 'base64', url: new URL(window.location.href) }] as const;
-
-    return isPaymentType
-      ? this.parsePayment(paymentOrDonationBase64, targetAddress, urls)
-      : this.parseDonation(paymentOrDonationBase64, targetAddress, urls);
+    return currentRawPaymentInfoResult.operationType === 'payment'
+      ? this.parsePayment(currentRawPaymentInfoResult.serializedPayment, currentRawPaymentInfoResult.targetAddress, [])
+      : this.parseDonation(currentRawPaymentInfoResult.serializedPayment || '', currentRawPaymentInfoResult.targetAddress, []);
   }
 
   async getCurrentService(): Promise<ServiceResult<Service, LocalPaymentServiceError>> {
-    const currentLocation = window.location;
-    const segmentsResult = this.getSegments(currentLocation.pathname);
-    if (segmentsResult.isServiceError)
-      return segmentsResult;
+    const currentRawPaymentInfoResult = this.parseRawPaymentInfo(window.location);
+    if (currentRawPaymentInfoResult.isServiceError)
+      return currentRawPaymentInfoResult;
 
-    return this.serviceProvider.getService(segmentsResult[0]);
+    return this.serviceProvider.getService(currentRawPaymentInfoResult.targetAddress);
   }
 
   async pay(payment: NetworkPayment): Promise<ServiceResult<boolean>> {
@@ -99,6 +99,16 @@ export class LocalPaymentService {
     );
   }
 
+  protected parseRawPaymentInfo = memoize(
+    (url: URL | Location): ServiceResult<RawPaymentInfo, LocalPaymentServiceError> => {
+      const parserResult = this.urlRawPaymentInfoParser.parse(url);
+
+      return typeof parserResult !== 'string'
+        ? parserResult
+        : { isServiceError: true, error: parserResult };
+    }
+  );
+
   protected async sendPayment(
     serviceOperationType: ServiceOperationType,
     targetAddress: string,
@@ -108,7 +118,7 @@ export class LocalPaymentService {
   ): Promise<ServiceResult<boolean>> {
     try {
       await this.tezosWallet.client.clearActiveAccount();
-      const canceled = await this.requestPermissions({ network: { type: NetworkType.EDONET } });
+      const canceled = await this.requestPermissions({ network: { type: getBeaconNetworkType(this.network) } });
       if (canceled)
         return false;
 
@@ -146,6 +156,20 @@ export class LocalPaymentService {
       });
   }
 
+  private createServiceProvider(network: Network): ServiceProvider {
+    const networkConfig = config.tezos.networks[network.name];
+    const indexerName = networkConfig.default.indexer;
+
+    if (indexerName === 'betterCallDev')
+      return new BetterCallDevServiceProvider(network, networkConfig.indexerUrls.betterCallDev);
+    else if (indexerName === 'tzKT')
+      return new TzKTServiceProvider(network, networkConfig.indexerUrls.tzKT);
+    else if (indexerName === 'tzStats')
+      return new TzStatsServiceProvider(network, networkConfig.indexerUrls.tzStats);
+    else
+      throw new Error('Unknown service provider');
+  }
+
   private parsePayment(paymentBase64: string, targetAddress: string, urls: PaymentBase['urls']): ServiceResult<Payment, LocalPaymentServiceError> {
     const payment = Payment.parse(paymentBase64, {
       type: PaymentType.Payment,
@@ -169,15 +193,6 @@ export class LocalPaymentService {
       ? donation
       : { isServiceError: true, error: errors.invalidDonation };
   }
-
-  private getSegments = memoize((pathname: string): ServiceResult<Segments, LocalPaymentServiceError> => {
-    const segments = pathname.split('/').filter(Boolean) as readonly string[] as Segments;
-
-    if (segments.length !== 2 || (segments[1] !== 'payment' && segments[1] !== 'donation'))
-      return { isServiceError: true, error: errors.invalidUrl };
-
-    return segments;
-  });
 
   private waitConfirmation(operation: TransactionWalletOperation, confirmations?: number) {
     // TODO: use a service event instead of dispatching

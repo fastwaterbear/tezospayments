@@ -1,11 +1,11 @@
 const networksInternal = {
-  main: {
-    id: 'NetXdQprcVkpaWU',
-    name: 'main',
-  },
-  florence: {
-    id: 'NetXxkAx4woPLyu',
-    name: 'florence',
+  // mainnet: {
+  //   id: 'NetXdQprcVkpaWU',
+  //   name: 'mainnet',
+  // },
+  granadanet: {
+    id: 'NetXz969SFaFn8k',
+    name: 'granadanet',
   },
   edo2net: {
     id: 'NetXSgo1ZT2DRUG',
@@ -29,3 +29,4 @@ type Networks = {
 export type Network = Networks[keyof Networks];
 
 export const networks: Networks = networksInternal;
+export const networksCollection = Object.values(networksInternal);

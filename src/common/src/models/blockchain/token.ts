@@ -33,29 +33,29 @@ export const tezosMeta: TokenMetadata = {
 };
 
 export const tokenWhitelist: readonly Token[] = [
-  {
-    network: networks.main,
-    type: 'fa1.2',
-    contractAddress: 'KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV',
-    metadata: {
-      decimals: 18,
-      symbol: 'KUSD',
-      name: 'Kolibri',
-      thumbnailUri: 'https://kolibri-data.s3.amazonaws.com/logo.png',
-    },
-  },
-  {
-    network: networks.main,
-    type: 'fa2',
-    contractAddress: 'KT1REEb5VxWRjcHm5GzDMwErMmNFftsE5Gpf',
-    fa2TokenId: 0,
-    metadata: {
-      decimals: 6,
-      symbol: 'USDS',
-      name: 'Stably USD',
-      thumbnailUri: 'https://quipuswap.com/tokens/stably.png',
-    },
-  },
+  // {
+  //   network: networks.mainnet,
+  //   type: 'fa1.2',
+  //   contractAddress: 'KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV',
+  //   metadata: {
+  //     decimals: 18,
+  //     symbol: 'KUSD',
+  //     name: 'Kolibri',
+  //     thumbnailUri: 'https://kolibri-data.s3.amazonaws.com/logo.png',
+  //   },
+  // },
+  // {
+  //   network: networks.mainnet,
+  //   type: 'fa2',
+  //   contractAddress: 'KT1REEb5VxWRjcHm5GzDMwErMmNFftsE5Gpf',
+  //   fa2TokenId: 0,
+  //   metadata: {
+  //     decimals: 6,
+  //     symbol: 'USDS',
+  //     name: 'Stably USD',
+  //     thumbnailUri: 'https://quipuswap.com/tokens/stably.png',
+  //   },
+  // },
   {
     network: networks.edo2net,
     type: 'fa2',

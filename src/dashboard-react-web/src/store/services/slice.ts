@@ -1,10 +1,11 @@
-import { CombinedState, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TransactionWalletOperation } from '@taquito/taquito';
 
-import { networks, Service, optimization } from '@tezospayments/common';
+import { Service, optimization } from '@tezospayments/common';
 
-import { AppDispatch } from '..';
-import { AccountsState } from '../accounts/slice';
+import { AppDispatch, AppState } from '..';
+import { Account } from '../../models/blockchain';
+import { getCurrentAccount } from '../accounts/selectors';
 import { clearBalances, loadBalances } from '../balances/slice';
 import { loadOperations } from '../operations/slice';
 import { AppThunkAPI } from '../thunk';
@@ -21,14 +22,14 @@ const initialState: ServicesState = {
 
 const namespace = 'services';
 
-export const loadServices = createAsyncThunk<Service[], string, AppThunkAPI>(
+export const loadServices = createAsyncThunk<Service[], Account, AppThunkAPI>(
   `${namespace}/loadServices`,
-  async (address, { extra: app, dispatch }) => {
-    const services = await app.services.servicesService.getServices(networks.edo2net, address);
+  async (account, { extra: app, dispatch }) => {
+    const services = await app.services.servicesService.getServices(account);
 
     if (services.length) {
-      dispatch(loadBalances(address));
-      dispatch(loadOperations(services.map(s => s.contractAddress)));
+      dispatch(loadBalances(account));
+      dispatch(loadOperations({ servicesAddresses: services.map(s => s.contractAddress), network: account.network }));
     }
 
     return services;
@@ -61,10 +62,10 @@ export const createService = createAsyncThunk<void, Service, AppThunkAPI>(
   },
 );
 
-export const setPaused = createAsyncThunk<void, { contractAddress: string, paused: boolean }, AppThunkAPI>(
+export const setPaused = createAsyncThunk<void, { service: Service, paused: boolean }, AppThunkAPI>(
   `${namespace}/setPaused`,
-  async ({ contractAddress, paused: isPaused }, { extra: app, dispatch, getState, rejectWithValue }) => {
-    const operation = await app.services.servicesService.setPaused(contractAddress, isPaused);
+  async ({ service, paused: isPaused }, { extra: app, dispatch, getState, rejectWithValue }) => {
+    const operation = await app.services.servicesService.setPaused(service, isPaused);
 
     if (operation) {
       dispatch(setOperation({ operation, callback: () => getWaitOperationCallback(dispatch, getState) }));
@@ -74,10 +75,10 @@ export const setPaused = createAsyncThunk<void, { contractAddress: string, pause
   },
 );
 
-export const setDeleted = createAsyncThunk<void, { contractAddress: string, deleted: boolean }, AppThunkAPI>(
+export const setDeleted = createAsyncThunk<void, { service: Service, deleted: boolean }, AppThunkAPI>(
   `${namespace}/setDeleted`,
-  async ({ contractAddress, deleted }, { extra: app, dispatch, getState, rejectWithValue }) => {
-    const operation = await app.services.servicesService.setDeleted(contractAddress, deleted);
+  async ({ service, deleted }, { extra: app, dispatch, getState, rejectWithValue }) => {
+    const operation = await app.services.servicesService.setDeleted(service, deleted);
 
     if (operation) {
       dispatch(setOperation({ operation, callback: () => getWaitOperationCallback(dispatch, getState) }));
@@ -94,10 +95,10 @@ export const clearServices = createAsyncThunk<void, void, AppThunkAPI>(
   }
 );
 
-const getWaitOperationCallback = (dispatch: AppDispatch, getState: () => CombinedState<{ accountsState: AccountsState }>) => {
-  const accountAddress = getState().accountsState.currentAccountAddress;
-  if (accountAddress) {
-    dispatch(loadServices(accountAddress));
+const getWaitOperationCallback = (dispatch: AppDispatch, getState: () => AppState) => {
+  const account = getCurrentAccount(getState());
+  if (account) {
+    dispatch(loadServices(account));
   }
 };
 

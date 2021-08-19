@@ -19,9 +19,9 @@ interface OperationListProps {
 }
 
 export const OperationList = (props: OperationListProps) => {
-  return <div className="operation-list">
+  return <table className="operation-list">
     {props.children}
-  </div>;
+  </table>;
 };
 
 interface OperationListItemProps {
@@ -43,7 +43,6 @@ const OperationListItem = (props: OperationListItemProps) => {
   const operationsLangResources = langResources.views.operations.operationList;
 
   const isIncoming = props.direction === ServiceOperationDirection.Incoming;
-  //TODO: fix service detection
   const from = isIncoming ? props.accountAddress : props.serviceAddress;
   const to = isIncoming ? props.serviceAddress : props.accountAddress;
 
@@ -60,26 +59,33 @@ const OperationListItem = (props: OperationListItemProps) => {
 
   const serviceLink = `${config.routers.services}/${props.serviceAddress}`;
 
-  return <div className="operation-list-row">
-    <div className="operation-list-item__icon">
-      <OperationIconPure direction={props.direction} status={props.status} />
-    </div>
-    <div className="operation-list-item__main-info">
-      <span className="operation-list-item__date">{props.date.toLocaleString()}</span>
-      <ExplorerLink hash={props.hash} className="operation-list-item__operation-hash">{hash}</ExplorerLink>
-      <span className="operation-list-item__data">{data}</span>
-    </div>
-    <div className="operation-list-item__transfer-info">
-      {from === props.serviceAddress
-        ? <Link to={serviceLink}>{props.serviceName}</Link>
-        : <ExplorerLink hash={from}>{getShortHash(from)}</ExplorerLink>}
-      &nbsp;→&nbsp;
-      {to === props.serviceAddress
-        ? <Link to={serviceLink}>{props.serviceName}</Link>
-        : <ExplorerLink hash={to}>{getShortHash(to)}</ExplorerLink>}
-    </div>
-    <div className={amountClassNames}>{sign}{props.value.toFormat()} {props.ticker}</div>
-  </div >;
+  return <tbody className="operation-list-group">
+    <tr className="operation-list-row operation-list-row_general">
+      <td className="operation-list-item__icon">
+        <OperationIconPure direction={props.direction} status={props.status} />
+      </td>
+      <td className="operation-list-item__main-info">
+        <span className="operation-list-item__date">{props.date.toLocaleString()}</span>
+        <ExplorerLink hash={props.hash} className="operation-list-item__operation-hash">{hash}</ExplorerLink>
+      </td>
+      <td className="operation-list-item__transfer-info">
+        {from === props.serviceAddress
+          ? <Link to={serviceLink}>{props.serviceName}</Link>
+          : <ExplorerLink hash={from}>{getShortHash(from)}</ExplorerLink>}
+        &nbsp;→&nbsp;
+        {to === props.serviceAddress
+          ? <Link to={serviceLink}>{props.serviceName}</Link>
+          : <ExplorerLink hash={to}>{getShortHash(to)}</ExplorerLink>}
+      </td>
+      <td className={amountClassNames}>{sign}{props.value.toFormat()} {props.ticker}</td>
+    </tr>
+    <tr className="operation-list-row operation-list-row_order-data">
+      <td></td>
+      <td className="operation-list-item__data" colSpan={3}>
+        {data}
+      </td>
+    </tr>
+  </tbody>;
 };
 
 const getShortHash = (hash: string) => `${hash.substr(0, 9)}...${hash.substr(hash.length - 6, 6)}`;

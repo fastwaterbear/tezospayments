@@ -2,11 +2,12 @@ import { CopyOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import React, { useCallback } from 'react';
 
-import { Donation, Payment, PaymentType } from '@tezospayments/common';
+import { Donation, Payment, PaymentType, Network, networks } from '@tezospayments/common';
 
 import { config } from '../../../../../config';
+import { getCurrentAccount } from '../../../../../store/accounts/selectors';
 import { ExternalLink } from '../../../../common';
-import { useCurrentLanguageResources } from '../../../../hooks';
+import { useAppSelector, useCurrentLanguageResources } from '../../../../hooks';
 
 import './DirectLinkGenerator.scss';
 
@@ -18,20 +19,13 @@ export const DirectLinkGenerator = ({ paymentOrDonation }: DirectLinkGeneratorPr
   const langResources = useCurrentLanguageResources();
   const commonLangResources = langResources.common;
   const acceptPaymentsLangResources = langResources.views.acceptPayments;
+  const currentAccount = useAppSelector(getCurrentAccount);
 
-  const isPayment = paymentOrDonation.type === PaymentType.Payment;
+  const url = getPaymentLink(paymentOrDonation, currentAccount?.network || networks[config.tezos.defaultNetwork]);
 
-  const rawPayment = {
-    created: +new Date(),
-    amount: isPayment ? (paymentOrDonation as Payment).amount.toString(10) : undefined,
-    data: isPayment ? (paymentOrDonation as Payment).data : undefined
-  };
-
-  const base64 = Buffer.from(JSON.stringify(rawPayment), 'utf8').toString('base64');
-  const operation = isPayment ? 'payment' : 'donation';
-  const url = `${config.links.tezosPayments.paymentsApp}/${paymentOrDonation.targetAddress}/${operation}/#${base64}`;
-
-  const helpText = isPayment ? acceptPaymentsLangResources.directLinkPaymentHelpText : acceptPaymentsLangResources.directLinkDonationHelpText;
+  const helpText = paymentOrDonation.type === PaymentType.Payment
+    ? acceptPaymentsLangResources.directLinkPaymentHelpText
+    : acceptPaymentsLangResources.directLinkDonationHelpText;
 
   const handleCopyClick = useCallback(() => {
     navigator.clipboard.writeText(url);
@@ -47,3 +41,22 @@ export const DirectLinkGenerator = ({ paymentOrDonation }: DirectLinkGeneratorPr
 };
 
 export const DirectLinkGeneratorPure = React.memo(DirectLinkGenerator);
+
+//TODO: move to common package
+const getPaymentLink = (paymentOrDonation: Payment | Donation, network: Network) => {
+  const isPayment = paymentOrDonation.type === PaymentType.Payment;
+
+  const rawPayment = isPayment ? {
+    created: +new Date(),
+    amount: (paymentOrDonation as Payment).amount.toString(10),
+    data: (paymentOrDonation as Payment).data
+  } : null;
+
+  const baseUrl = config.links.tezosPayments.paymentsApp;
+  const address = paymentOrDonation.targetAddress;
+  const operation = isPayment ? 'payment' : 'donation';
+  const networkSegment = network.name === config.tezos.defaultNetwork ? '' : `?network=${network.name}`;
+  const base64 = rawPayment ? Buffer.from(JSON.stringify(rawPayment), 'utf8').toString('base64') : null;
+
+  return `${baseUrl}/${address}/${operation}${networkSegment ? networkSegment : ''}${base64 ? `#${base64}` : ''}`;
+};

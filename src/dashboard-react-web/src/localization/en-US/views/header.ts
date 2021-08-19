@@ -3,9 +3,7 @@ export const header = {
     copyAddress: {
       title: 'Copy address'
     },
-    viewOnTzStats: {
-      title: 'View on TzStats'
-    },
+    viewOn: 'View on',
     connectAnotherAccount: {
       title: 'Connect another account'
     },

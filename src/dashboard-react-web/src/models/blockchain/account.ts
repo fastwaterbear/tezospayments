@@ -1,7 +1,8 @@
-import { StateModel } from '@tezospayments/common';
+import { StateModel, Network } from '@tezospayments/common';
 
 export interface Account {
   readonly address: string;
+  readonly network: Network;
 }
 
 export class Account extends StateModel {

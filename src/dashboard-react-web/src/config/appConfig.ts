@@ -1,4 +1,22 @@
-import type { DeepReadonly } from '@tezospayments/common';
+import type { DeepReadonly, Network } from '@tezospayments/common';
+
+type RpcProvider = 'smartpy';
+type IndexerProvider = 'tzkt';
+type ExplorerProvider = 'tzkt';
+
+interface NetworkConfig {
+  title: string;
+  color: string;
+  servicesFactoryContractAddress: string;
+  default: {
+    rpc: RpcProvider;
+    indexer: IndexerProvider;
+    explorer: ExplorerProvider;
+  },
+  rpcUrls: { [key in RpcProvider]: string };
+  indexerUrls: { [key in IndexerProvider]: string };
+  explorers: { [key in ExplorerProvider]: { url: string; title: string } };
+}
 
 export type AppConfig = DeepReadonly<{
   app: {
@@ -23,7 +41,6 @@ export type AppConfig = DeepReadonly<{
     about: string;
   },
   links: {
-    tzStats: string;
     tzktIo: string;
     tezosPayments: {
       webSite: string;
@@ -35,9 +52,7 @@ export type AppConfig = DeepReadonly<{
     }
   },
   tezos: {
-    rpcNodes: {
-      edo2net: [string, ...string[]],
-      granadanet: [string, ...string[]],
-    }
+    defaultNetwork: Network['name'];
+    networks: { [key in Network['name']]: NetworkConfig }
   }
 }>;

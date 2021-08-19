@@ -3,34 +3,35 @@ import { TezosToolkit, TransactionWalletOperation } from '@taquito/taquito';
 import { BigNumber } from 'bignumber.js';
 
 import {
-  networks, tezosMeta, Network,
+  tezosMeta, Network,
   Service, ServiceOperation, ServiceOperationDirection,
   ServiceOperationStatus, ServiceDto, ServicesBigMapKeyValuePair,
   converters, guards, optimization
 } from '@tezospayments/common';
 
 import { config } from '../../config';
+import { Account } from '../../models/blockchain';
 import type { Operation } from './operation';
 
 export class ServicesService {
-  private readonly factoryContractAddress = 'KT1PXyQ3wDpwm6J3r6iyLCWu5QKH5tef7ejU';
-  private readonly tezosToolkit = new TezosToolkit(config.tezos.rpcNodes.edo2net[0]);
   private readonly tezosWallet: BeaconWallet;
+  private readonly tezosToolKitByNetwork: Map<Network, TezosToolkit> = new Map<Network, TezosToolkit>();
 
   constructor(tezosWallet: BeaconWallet) {
     this.tezosWallet = tezosWallet;
-    this.tezosToolkit.setWalletProvider(this.tezosWallet);
   }
 
-  async getServices(network: Network, accountAddress: string): Promise<Service[]> {
+  async getServices(account: Account): Promise<Service[]> {
     try {
-      const response = await fetch(`https://${this.getTzktUrl(network)}/v1/contracts/${this.factoryContractAddress}/bigmaps/services/keys/${accountAddress}`);
+      const networkConfig = config.tezos.networks[account.network.name];
+      const indexerUrl = networkConfig.indexerUrls[networkConfig.default.indexer];
+      const response = await fetch(`${indexerUrl}v1/contracts/${networkConfig.servicesFactoryContractAddress}/bigmaps/services/keys/${account.address}`);
       const keyValue: ServicesBigMapKeyValuePair = await response.json();
       const contractAddresses = keyValue.value;
 
-      const rawContractsInfoPromises = contractAddresses.map(v => fetch(`https://${this.getTzktUrl(network)}/v1/contracts/${v}/storage`).then(r => r.json()));
+      const rawContractsInfoPromises = contractAddresses.map(v => fetch(`${indexerUrl}v1/contracts/${v}/storage`).then(r => r.json()));
       const rawContractsInfo = await Promise.all(rawContractsInfoPromises) as ServiceDto[];
-      const result = rawContractsInfo.map((s, i) => this.mapServiceDtoToService(s, contractAddresses[i] || '', network));
+      const result = rawContractsInfo.map((s, i) => this.mapServiceDtoToService(s, contractAddresses[i] || '', account.network));
 
       return result.filter(s => s) as Service[];
     } catch {
@@ -40,7 +41,8 @@ export class ServicesService {
 
   async updateService(service: Service): Promise<TransactionWalletOperation | null> {
     try {
-      const factoryContract = await this.tezosToolkit.wallet.at(service.contractAddress);
+      const tezosToolkit = this.getTezosToolKit(service.network);
+      const factoryContract = await tezosToolkit.wallet.at(service.contractAddress);
 
       if (factoryContract.methods.update_service_parameters) {
         const encodedServiceMetadata = this.encodeMetadata(service);
@@ -61,9 +63,10 @@ export class ServicesService {
     return null;
   }
 
-  async setPaused(contractAddress: string, paused: boolean): Promise<TransactionWalletOperation | null> {
+  async setPaused(service: Service, paused: boolean): Promise<TransactionWalletOperation | null> {
     try {
-      const factoryContract = await this.tezosToolkit.wallet.at(contractAddress);
+      const tezosToolkit = this.getTezosToolKit(service.network);
+      const factoryContract = await tezosToolkit.wallet.at(service.contractAddress);
 
       if (factoryContract.methods.set_pause) {
         const operation = await factoryContract.methods.set_pause(paused).send();
@@ -77,9 +80,10 @@ export class ServicesService {
     return null;
   }
 
-  async setDeleted(contractAddress: string, deleted: boolean): Promise<TransactionWalletOperation | null> {
+  async setDeleted(service: Service, deleted: boolean): Promise<TransactionWalletOperation | null> {
     try {
-      const factoryContract = await this.tezosToolkit.wallet.at(contractAddress);
+      const tezosToolkit = this.getTezosToolKit(service.network);
+      const factoryContract = await tezosToolkit.wallet.at(service.contractAddress);
 
       if (factoryContract.methods.set_deleted) {
         const operation = await factoryContract.methods.set_deleted(deleted).send();
@@ -95,7 +99,9 @@ export class ServicesService {
 
   async createService(service: Service): Promise<TransactionWalletOperation | null> {
     try {
-      const factoryContract = await this.tezosToolkit.wallet.at(this.factoryContractAddress);
+      const networkConfig = config.tezos.networks[service.network.name];
+      const tezosToolkit = this.getTezosToolKit(service.network);
+      const factoryContract = await tezosToolkit.wallet.at(networkConfig.servicesFactoryContractAddress);
 
       if (factoryContract.methods.create_service) {
         const encodedServiceMetadata = this.encodeMetadata(service);
@@ -117,10 +123,23 @@ export class ServicesService {
   }
 
   async getOperations(network: Network, contractAddress: string): Promise<ServiceOperation[]> {
-    const response = await fetch(`https://${this.getTzktUrl(network)}/v1/accounts/${contractAddress}/operations?type=transaction&parameters.as=*%22entrypoint%22:%22send_payment%22*`);
+    const networkConfig = config.tezos.networks[network.name];
+    const indexerUrl = networkConfig.indexerUrls[networkConfig.default.indexer];
+    const response = await fetch(`${indexerUrl}v1/accounts/${contractAddress}/operations?type=transaction&parameters.as=*%22entrypoint%22:%22send_payment%22*`);
     const operations: Operation[] = await response.json();
 
     return operations.map(operation => this.mapOperationToServiceOperation(operation));
+  }
+
+  private getTezosToolKit(network: Network): TezosToolkit {
+    let tezosToolkit = this.tezosToolKitByNetwork.get(network);
+    if (!tezosToolkit) {
+      const networkConfig = config.tezos.networks[network.name];
+      tezosToolkit = new TezosToolkit(networkConfig.rpcUrls[networkConfig.default.rpc]);
+      tezosToolkit.setWalletProvider(this.tezosWallet);
+      this.tezosToolKitByNetwork.set(network, tezosToolkit);
+    }
+    return tezosToolkit;
   }
 
   private encodeMetadata(service: Service) {
@@ -181,15 +200,5 @@ export class ServicesService {
         deleted: serviceDto.deleted
       }
       : null;
-  }
-
-  private getTzktUrl(network: Network) {
-    switch (network) {
-      case networks.edo2net:
-        return 'api.edo2net.tzkt.io';
-
-      default:
-        throw new Error('Not Supported network type');
-    }
   }
 }
