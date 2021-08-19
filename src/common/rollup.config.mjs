@@ -5,8 +5,10 @@ import commonjs from '@rollup/plugin-commonjs';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import typeScript from 'rollup-plugin-typescript2';
 
-const entryPointFilePath = 'src/index.ts';
+const isWatchMode = !!process.env.ROLLUP_WATCH;
+const sourceDirectory = 'src';
 const outputDirectory = 'dist';
+const entryPointFilePath = path.join(sourceDirectory, 'index.ts');
 
 const externalPackageNames = [
   /@babel\/runtime/
@@ -21,6 +23,11 @@ const defaultESBabelTargets = {
     'not ie <= 11'
   ]
 };
+
+const watchPaths = [
+  `${sourceDirectory}/**`,
+  /tsconfig/
+];
 
 const getBaseOutputOptions = ({ fileName, format }) => ({
   file: path.join(outputDirectory, fileName),
@@ -65,12 +72,13 @@ const getResolvePlugins = format => format === 'umd'
     nodeResolve({ resolveOnly: ['*'] }),
   ];
 
-const getDefaultES = (format, outputFileName, declarationEnabled = false) => ({
+const getDefaultES = (format, outputFileName, declarationEnabled = false, watchEnabled = false) => ({
   input: entryPointFilePath,
   output: [
     getBaseOutputOptions({ fileName: outputFileName, format })
   ],
   external: externalPackageNames,
+  watch: watchEnabled && { include: watchPaths },
   plugins: [
     ...getResolvePlugins(format),
     typeScript(getBaseTypeScriptPluginOptions(declarationEnabled)),
@@ -139,15 +147,19 @@ const getES5Umd = (format, outputFileName, globalName) => ({
   ]
 });
 
-export default [
-  getDefaultES('es', 'index.esm.js', true),
-  getDefaultES('cjs', 'index.cjs.js'),
-  getDefaultESUmd('umd', 'index.umd.js', 'tezosPaymentsCommon'),
+console.log('Is the Watch mode:', isWatchMode);
 
-  getESNext('es', 'esnext/index.esnext.esm.js'),
-  getESNext('cjs', 'esnext/index.esnext.cjs.js'),
+export default isWatchMode
+  ? getDefaultES('es', 'index.esm.js', true, true)
+  : [
+    getDefaultES('es', 'index.esm.js', true),
+    getDefaultES('cjs', 'index.cjs.js'),
+    getDefaultESUmd('umd', 'index.umd.js', 'tezosPaymentsCommon'),
 
-  getES5('es', 'es5/index.es5.esm.js'),
-  getES5('cjs', 'es5/index.es5.cjs.js'),
-  getES5Umd('umd', 'es5/index.es5.umd.js', 'tezosPaymentsCommon'),
-];
+    getESNext('es', 'esnext/index.esnext.esm.js'),
+    getESNext('cjs', 'esnext/index.esnext.cjs.js'),
+
+    getES5('es', 'es5/index.es5.esm.js'),
+    getES5('cjs', 'es5/index.es5.cjs.js'),
+    getES5Umd('umd', 'es5/index.es5.umd.js', 'tezosPaymentsCommon'),
+  ];

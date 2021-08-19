@@ -35,7 +35,7 @@
   "scripts": {
     "build": "rollup --config",
     "test": "jest --coverage",
-    "watch": "npm run build -- -w",
+    "watch": "rollup --config --watch",
     "test-watch": "jest --watchAll",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
   }
