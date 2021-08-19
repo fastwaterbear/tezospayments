@@ -1,4 +1,4 @@
-import { StateModel } from '@tezospayments/common/dist/models/core';
+import { StateModel } from '@tezospayments/common';
 
 export interface Account {
   readonly address: string;

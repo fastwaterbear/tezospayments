@@ -2,11 +2,12 @@ import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit, TransactionWalletOperation } from '@taquito/taquito';
 import { BigNumber } from 'bignumber.js';
 
-import { networks, tezosMeta, Network } from '@tezospayments/common/dist/models/blockchain';
 import {
-  Service, ServiceOperation, ServiceOperationDirection, ServiceOperationStatus, ServiceDto, ServicesBigMapKeyValuePair
-} from '@tezospayments/common/dist/models/service';
-import { converters, guards, optimization } from '@tezospayments/common/dist/utils';
+  networks, tezosMeta, Network,
+  Service, ServiceOperation, ServiceOperationDirection,
+  ServiceOperationStatus, ServiceDto, ServicesBigMapKeyValuePair,
+  converters, guards, optimization
+} from '@tezospayments/common';
 
 import { config } from '../../config';
 import type { Operation } from './operation';

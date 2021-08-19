@@ -1,4 +1,4 @@
-import type { Network } from '@tezospayments/common/models/blockchain';
+import type { Network } from '@tezospayments/common';
 import type { Payment, PaymentUrlType, SigningType } from './models';
 
 interface TezosPaymentsApiSigningOptions {

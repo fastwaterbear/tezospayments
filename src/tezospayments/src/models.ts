@@ -1,4 +1,4 @@
-export type Payment = import('@tezospayments/common/models/payment').Payment;
+export type Payment = import('@tezospayments/common').Payment;
 
 export const enum PaymentUrlType {
   MinifiedBase64 = 0,

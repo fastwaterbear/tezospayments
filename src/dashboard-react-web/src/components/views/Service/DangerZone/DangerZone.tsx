@@ -1,7 +1,7 @@
 import { Button, Modal } from 'antd';
 import React, { useCallback } from 'react';
 
-import { Service } from '@tezospayments/common/dist/models/service';
+import { Service } from '@tezospayments/common';
 
 import { setDeleted, setPaused } from '../../../../store/services/slice';
 import { useAppDispatch, useCurrentLanguageResources } from '../../../hooks';

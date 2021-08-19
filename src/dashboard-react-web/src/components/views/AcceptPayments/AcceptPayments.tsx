@@ -3,7 +3,7 @@ import { SelectValue } from 'antd/lib/select';
 import React, { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { PaymentType } from '@tezospayments/common/dist/models/payment';
+import { PaymentType } from '@tezospayments/common';
 
 import { selectServicesState } from '../../../store/services/selectors';
 import { NoServicesCreatedPure } from '../../common/NoServicesCreated';

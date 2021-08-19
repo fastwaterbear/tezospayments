@@ -1,4 +1,4 @@
-import { Network, networks } from '@tezospayments/common/dist/models/blockchain';
+import { Network, networks } from '@tezospayments/common';
 
 import { ServiceResult } from '../../serviceResult';
 import { LocalPaymentServiceError } from '../errors';

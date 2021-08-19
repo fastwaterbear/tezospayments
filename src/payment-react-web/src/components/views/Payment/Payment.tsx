@@ -1,8 +1,7 @@
 
 import React from 'react';
 
-import { Payment as PaymentModel } from '@tezospayments/common/dist/models/payment';
-import { Service } from '@tezospayments/common/dist/models/service';
+import { Payment as PaymentModel, Service } from '@tezospayments/common';
 
 import { NetworkPayment } from '../../../models/payment';
 import { FooterPure } from '../../Footer';

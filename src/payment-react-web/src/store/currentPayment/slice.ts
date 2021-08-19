@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { Donation, Payment, PaymentType } from '@tezospayments/common/dist/models/payment';
-import type { Service } from '@tezospayments/common/dist/models/service';
+import { Service, Donation, Payment, PaymentType } from '@tezospayments/common';
 
 import { NetworkDonation, NetworkPayment, PaymentInfo, PaymentStatus } from '../../models/payment';
 import { UnknownApplicationError } from '../../models/system';

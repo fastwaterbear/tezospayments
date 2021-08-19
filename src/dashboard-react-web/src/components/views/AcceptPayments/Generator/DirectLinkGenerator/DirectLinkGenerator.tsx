@@ -2,8 +2,7 @@ import { CopyOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import React, { useCallback } from 'react';
 
-import { RawPayment } from '@tezospayments/common/dist/helpers/paymentParser/paymentParser';
-import { Donation, Payment, PaymentType } from '@tezospayments/common/dist/models/payment';
+import { Donation, Payment, PaymentType } from '@tezospayments/common';
 
 import { config } from '../../../../../config';
 import { ExternalLink } from '../../../../common';
@@ -22,7 +21,7 @@ export const DirectLinkGenerator = ({ paymentOrDonation }: DirectLinkGeneratorPr
 
   const isPayment = paymentOrDonation.type === PaymentType.Payment;
 
-  const rawPayment: RawPayment = {
+  const rawPayment = {
     created: +new Date(),
     amount: isPayment ? (paymentOrDonation as Payment).amount.toString(10) : undefined,
     data: isPayment ? (paymentOrDonation as Payment).data : undefined

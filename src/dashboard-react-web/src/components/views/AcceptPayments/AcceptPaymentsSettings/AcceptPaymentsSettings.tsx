@@ -2,7 +2,7 @@ import { Input, Radio, RadioChangeEvent, Select } from 'antd';
 import { SelectValue } from 'antd/lib/select';
 import React from 'react';
 
-import { PaymentType } from '@tezospayments/common/dist/models/payment';
+import { PaymentType } from '@tezospayments/common';
 
 import { getSortedServices } from '../../../../store/services/selectors';
 import { useAppSelector, useCurrentLanguageResources } from '../../../hooks';

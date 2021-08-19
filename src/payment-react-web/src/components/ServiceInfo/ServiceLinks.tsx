@@ -1,4 +1,4 @@
-import { combineClassNames } from '@tezospayments/common/dist/utils';
+import { combineClassNames } from '@tezospayments/common';
 
 import { ServiceLink } from './ServiceLink';
 import './ServiceLinks.scss';

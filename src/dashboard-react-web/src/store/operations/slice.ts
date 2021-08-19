@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { networks } from '@tezospayments/common/dist/models/blockchain';
-import { ServiceOperation } from '@tezospayments/common/dist/models/service';
-import { optimization } from '@tezospayments/common/dist/utils';
+import { networks, ServiceOperation, optimization } from '@tezospayments/common';
 
 import { AppThunkAPI } from '../thunk';
 
