@@ -1,0 +1,17 @@
+@use '../../../../styles/ant-colors.scss';
+
+.api-keys__item {
+  display: flex;
+}
+
+.service-dev-zone__header {
+  display: block;
+  font-size: 16px;
+  margin-top: 64px;
+  margin-bottom: 16px;
+}
+
+.api-keys__item-key {
+  display: inline-block;
+  margin-right: 6px;
+}
