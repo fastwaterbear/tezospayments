@@ -1,3 +1,5 @@
+import { Buffer } from 'buffer';
+
 import { PaymentBase } from '../../models/payment/paymentBase';
 
 export type PaymentFieldInfoType = 'object' | 'string' | 'number' | 'undefined' | 'null';
