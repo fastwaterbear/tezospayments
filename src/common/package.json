@@ -4,7 +4,8 @@
   "private": true,
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
-  "browser": "dist/index.umd.js",
+  "browser": "dist/index.esm.js",
+  "umd": "dist/index.umd.js",
   "types": "dist/types/index.d.ts",
   "exports": {
     "esnext": {
@@ -15,7 +16,8 @@
     "es5": {
       "import": "./dist/es5/index.es5.esm.js",
       "require": "./dist/es5/index.es5.cjs.js",
-      "browser": "./dist/es5/index.es5.umd.js"
+      "browser": "./dist/es5/index.es5.esm.js",
+      "umd": "./dist/es5/index.es5.umd.js"
     }
   },
   "dependencies": {
