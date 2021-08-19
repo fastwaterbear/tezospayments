@@ -30,6 +30,10 @@ jobs:
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
 
+      - name: Update npm if needed
+        if: ${{ env.node-version < 15 }}
+        run: npm install -g npm@latest
+
       - name: Print environment info
         run: |
           node --version
@@ -62,6 +66,10 @@ jobs:
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
 
+      - name: Update npm if needed
+        if: ${{ matrix.node-version < 15 }}
+        run: npm install -g npm@latest
+
       - name: Print environment info
         run: |
           node --version
@@ -86,6 +94,10 @@ jobs:
           node-version: ${{ env.node-version }}
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
+
+      - name: Update npm if needed
+        if: ${{ env.node-version < 15 }}
+        run: npm install -g npm@latest
 
       - name: Print environment info
         run: |
