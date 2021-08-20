@@ -1,7 +1,7 @@
 import { Skeleton } from 'antd';
 import React from 'react';
 
-import { tezosMeta } from '@tezospayments/common/dist/models/blockchain';
+import { tezosMeta } from '@tezospayments/common';
 
 import { getAcceptTezos, getAllAcceptedTokens, selectServicesState } from '../../../../store/services/selectors';
 import { TokenList } from '../../../common';

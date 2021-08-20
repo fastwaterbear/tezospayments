@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-import { Network } from '@tezospayments/common/dist/models/blockchain';
+import { Network } from '@tezospayments/common';
 
 import { config } from '../../config';
 import { Account } from '../../models/blockchain';

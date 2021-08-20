@@ -1,7 +1,7 @@
 import { Dropdown, Menu } from 'antd';
 import React, { useCallback } from 'react';
 
-import { networks, networksCollection } from '@tezospayments/common/dist/models/blockchain';
+import { networks, networksCollection } from '@tezospayments/common';
 
 import { config } from '../../../../config';
 import { connectAccount } from '../../../../store/accounts/slice';

@@ -2,7 +2,7 @@ import { InputNumber } from 'antd';
 import { BigNumber } from 'bignumber.js';
 import { useCallback, useRef } from 'react';
 
-import { tezosMeta } from '@tezospayments/common/dist/models/blockchain';
+import { tezosMeta } from '@tezospayments/common';
 
 import './DonationAmount.scss';
 

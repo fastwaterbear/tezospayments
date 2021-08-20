@@ -1,8 +1,7 @@
 import BigNumber from 'bignumber.js';
 import React, { useCallback, useState } from 'react';
 
-import { Donation as DonationModel } from '@tezospayments/common/dist/models/payment';
-import { Service } from '@tezospayments/common/dist/models/service';
+import { Donation as DonationModel, Service } from '@tezospayments/common';
 
 import { NetworkDonation } from '../../../models/payment';
 import { FooterPure } from '../../Footer';

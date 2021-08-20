@@ -1,19 +1,21 @@
 {
-    "compilerOptions": {
-        "target": "es6",
-        "module": "ESNext",
-        "moduleResolution": "node",
-        "lib": [
-            "ESNext"
-        ],
-        "strict": true,
-        "noUncheckedIndexedAccess": true,
-        "allowJs": false,
-        "sourceMap": true,
-        "declaration": true,
-        "composite": true,
-        "tsBuildInfoFile": "temp/tsconfig.tsbuildinfo",
-        "allowSyntheticDefaultImports": true,
-        "skipLibCheck": true
-    }
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "lib": [
+      "ESNext"
+    ],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "allowJs": false,
+    "sourceMap": true,
+    "declaration": true,
+    "declarationDir": "dist/types",
+    "isolatedModules": true,
+    "composite": true,
+    "tsBuildInfoFile": "temp/tsconfig.tsbuildinfo",
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true
+  }
 }

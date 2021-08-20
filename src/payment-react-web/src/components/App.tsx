@@ -1,7 +1,7 @@
 import { Spin } from 'antd';
 import React, { useEffect } from 'react';
 
-import { PaymentType } from '@tezospayments/common/dist/models/payment';
+import { PaymentType } from '@tezospayments/common';
 
 import { PaymentStatus } from '../models/payment';
 import { loadCurrentPayment } from '../store/currentPayment';

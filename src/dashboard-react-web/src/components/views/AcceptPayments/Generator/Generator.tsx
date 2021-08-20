@@ -2,7 +2,7 @@ import { Card } from 'antd';
 import BigNumber from 'bignumber.js';
 import React from 'react';
 
-import { Donation, Payment, PaymentType } from '@tezospayments/common/dist/models/payment';
+import { Donation, Payment, PaymentType } from '@tezospayments/common';
 
 import { DirectLinkGeneratorPure } from './DirectLinkGenerator';
 import { FailedValidationResult } from './FailedValidationResult';

@@ -1,4 +1,4 @@
-import type { Network } from '@tezospayments/common/dist/models/blockchain';
+import type { Network } from '@tezospayments/common';
 
 export abstract class BlockchainUrlExplorer {
   constructor(readonly network: Network, readonly baseUrl: string) {

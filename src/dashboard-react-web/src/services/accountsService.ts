@@ -2,7 +2,7 @@ import { DAppClient } from '@airgap/beacon-sdk';
 import { TezosToolkit } from '@taquito/taquito';
 import { BigNumber } from 'bignumber.js';
 
-import { Token, TokenFA2, TokenFA12, Network } from '@tezospayments/common/dist/models/blockchain';
+import { Token, TokenFA2, TokenFA12, Network } from '@tezospayments/common';
 
 import { config } from '../config';
 import { Account } from '../models/blockchain';

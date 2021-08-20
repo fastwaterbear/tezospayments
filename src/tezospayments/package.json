@@ -1,0 +1,29 @@
+{
+  "name": "tezospayments",
+  "version": "0.1.0",
+  "description": "Package for payment generation in the Tezos Payments system.",
+  "main": "dist/index.js",
+  "dependencies": {
+    "bignumber.js": "^9.0.1",
+    "@tezospayments/common": "0.0.0"
+  },
+  "scripts": {
+    "build": "tsc -p ."
+  },
+  "license": "MIT",
+  "homepage": "https://tezospayments.com/",
+  "author": "Fast Water Bear",
+  "keywords": [
+    "tezos",
+    "payments",
+    "tezospayments"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fastwaterbear/tezospayments.git",
+    "directory": "src/tezospayments"
+  },
+  "bugs": {
+    "url": "https://github.com/fastwaterbear/tezospayments/issues"
+  }
+}

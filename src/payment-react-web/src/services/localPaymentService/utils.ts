@@ -1,6 +1,6 @@
 import { NetworkType } from '@airgap/beacon-sdk';
 
-import { Network, networks } from '@tezospayments/common/dist/models/blockchain';
+import { Network, networks } from '@tezospayments/common';
 
 // TODO: move to the application-core package
 export const getBeaconNetworkType: (network: Network) => NetworkType = network => {

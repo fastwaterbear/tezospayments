@@ -1,7 +1,7 @@
 import { InputNumber, Select } from 'antd';
 import React from 'react';
 
-import { tezosMeta } from '@tezospayments/common/dist/models/blockchain';
+import { tezosMeta } from '@tezospayments/common';
 
 import './PaymentAmount.scss';
 

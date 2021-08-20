@@ -2,8 +2,7 @@ import { Button, Card } from 'antd';
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Service } from '@tezospayments/common/dist/models/service';
-import { combineClassNames, text } from '@tezospayments/common/dist/utils';
+import { Service, combineClassNames, text } from '@tezospayments/common';
 
 import { config } from '../../../../config';
 import { ExplorerLinkPure } from '../../../common';

@@ -2,8 +2,10 @@ import { BigNumber } from 'bignumber.js';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { ServiceOperationDirection, ServiceOperationType, ServiceOperationStatus } from '@tezospayments/common/dist/models/service';
-import { combineClassNames } from '@tezospayments/common/dist/utils';
+import {
+  ServiceOperationDirection, ServiceOperationType,
+  ServiceOperationStatus, combineClassNames
+} from '@tezospayments/common';
 
 import { config } from '../../../config';
 import { useCurrentLanguageResources } from '../../hooks';

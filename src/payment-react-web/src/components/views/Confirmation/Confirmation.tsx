@@ -1,7 +1,7 @@
 import { Result, Spin } from 'antd';
 import React, { useContext } from 'react';
 
-import { Network } from '@tezospayments/common/dist/models/blockchain';
+import { Network } from '@tezospayments/common';
 
 import { AppViewContext } from '../../../app';
 import { BlockchainLinkPure } from '../../common';

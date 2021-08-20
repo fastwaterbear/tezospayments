@@ -2,7 +2,7 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { Button, Input } from 'antd';
 import { useCallback } from 'react';
 
-import { ServiceLinkHelper } from '@tezospayments/common/dist/helpers';
+import { ServiceLinkHelper } from '@tezospayments/common';
 
 import { iconIdMap } from './iconIdMap';
 
