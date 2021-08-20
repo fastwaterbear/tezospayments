@@ -103,11 +103,12 @@ jobs:
 
       - name: Push to the ${{ env.publish-branch }} branch
         env:
-          publish-branch: dist/payment-react-web
+          publish-branch: dist-new
         uses: peaceiris/actions-gh-pages@068dc23d9710f1ba62e86896f84735d869951305 # v3.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: 'src/payment-react-web/build'
+          publish_dir: src/payment-react-web/build
+          destination_dir: apps/payment-react-web
           exclude_assets: '**/*.LICENSE,**/*.LICENSE.txt'
           publish_branch: ${{ env.publish-branch }}
 
