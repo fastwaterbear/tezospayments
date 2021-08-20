@@ -6,6 +6,8 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/landing.yml'
+    branches:
+      - '**'
   pull_request:
     paths:
       - 'src/landing/**'

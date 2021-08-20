@@ -6,6 +6,8 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/demo-next-js.yml'
+    branches:
+      - '**'
   pull_request:
     paths:
       - 'src/demo-next-js/**'
