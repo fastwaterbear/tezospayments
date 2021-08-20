@@ -1,6 +1,6 @@
 {
   "name": "@tezospayments/common",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -38,5 +38,8 @@
     "watch": "rollup --config --watch",
     "test-watch": "jest --watchAll",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
-  }
+  },
+  "files": [
+    "dist"
+  ]
 }
