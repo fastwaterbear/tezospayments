@@ -4,8 +4,7 @@ import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ServiceLinkHelper } from '@tezospayments/common/dist/helpers';
-import { Service, ServiceOperationType } from '@tezospayments/common/dist/models/service';
+import { ServiceLinkHelper, Service, ServiceOperationType } from '@tezospayments/common';
 
 import { config } from '../../../../config';
 import { getCurrentAccount } from '../../../../store/accounts/selectors';

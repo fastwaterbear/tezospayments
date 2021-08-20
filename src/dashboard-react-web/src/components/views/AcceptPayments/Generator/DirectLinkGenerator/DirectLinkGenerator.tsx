@@ -2,9 +2,7 @@ import { CopyOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import React, { useCallback } from 'react';
 
-import { RawPayment } from '@tezospayments/common/dist/helpers/paymentParser/paymentParser';
-import { Network, networks } from '@tezospayments/common/dist/models/blockchain';
-import { Donation, Payment, PaymentType } from '@tezospayments/common/dist/models/payment';
+import { Donation, Payment, PaymentType, Network, networks } from '@tezospayments/common';
 
 import { config } from '../../../../../config';
 import { getCurrentAccount } from '../../../../../store/accounts/selectors';
@@ -52,7 +50,7 @@ const getPaymentLink = (paymentOrDonation: Payment | Donation, network: Network)
     created: +new Date(),
     amount: (paymentOrDonation as Payment).amount.toString(10),
     data: (paymentOrDonation as Payment).data
-  } as RawPayment : null;
+  } : null;
 
   const baseUrl = config.links.tezosPayments.paymentsApp;
   const address = paymentOrDonation.targetAddress;

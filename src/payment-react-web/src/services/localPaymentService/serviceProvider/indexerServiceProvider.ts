@@ -1,6 +1,4 @@
-import { Network } from '@tezospayments/common/dist/models/blockchain';
-import { Service } from '@tezospayments/common/dist/models/service';
-import { converters, guards, optimization } from '@tezospayments/common/dist/utils';
+import { Network, Service, converters, guards, optimization } from '@tezospayments/common';
 
 import { ServiceResult } from '../../serviceResult';
 import { LocalPaymentServiceError } from '../errors';

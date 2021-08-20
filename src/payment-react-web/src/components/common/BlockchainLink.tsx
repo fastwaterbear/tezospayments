@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { combineClassNames } from '@tezospayments/common/dist/utils';
-
+import { combineClassNames } from '@tezospayments/common';
 
 import { CopyButtonPure } from './CopyButton';
 import { ExternalLink } from './ExternalLink';

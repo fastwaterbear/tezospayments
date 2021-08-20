@@ -1,7 +1,7 @@
 import { Button } from 'antd';
 import React, { useCallback } from 'react';
 
-import { PaymentType } from '@tezospayments/common/dist/models/payment';
+import { PaymentType } from '@tezospayments/common';
 
 import { NetworkDonation, NetworkPayment, PaymentStatus } from '../models/payment';
 import { donate, pay } from '../store/currentPayment';

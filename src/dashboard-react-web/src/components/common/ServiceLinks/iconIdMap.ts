@@ -3,7 +3,7 @@ import {
   GithubOutlined, MailOutlined, RedditOutlined
 } from '@ant-design/icons';
 
-import { IconId } from '@tezospayments/common/dist/helpers';
+import { IconId } from '@tezospayments/common';
 
 import { TelegramIcon } from '../../../assets/icons';
 

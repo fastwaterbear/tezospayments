@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { Payment } from '@tezospayments/common/dist/models/payment';
-
+import { Payment } from '@tezospayments/common';
 
 import { PaymentField } from './PaymentField';
 import './PaymentDetails.scss';

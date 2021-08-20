@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Network } from '@tezospayments/common/dist/models/blockchain';
+import { Network } from '@tezospayments/common';
 
 import { config } from '../../../../config';
 

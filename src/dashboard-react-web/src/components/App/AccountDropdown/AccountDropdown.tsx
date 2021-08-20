@@ -4,7 +4,7 @@ import { Dropdown, Button, Menu } from 'antd';
 import React, { useCallback } from 'react';
 import './AccountDropdown.scss';
 
-import { combineClassNames } from '@tezospayments/common/dist/utils';
+import { combineClassNames } from '@tezospayments/common';
 
 import { Account } from '../../../models/blockchain';
 import { getAccountsByNetwork, getCurrentAccount, getCurrentNetworkConfig } from '../../../store/accounts/selectors';

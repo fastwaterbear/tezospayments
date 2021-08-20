@@ -1,3 +1,6 @@
 export { IconId, ServiceLinkHelper } from './serviceLinkHelper';
-export { PaymentParser, NonIncludedPaymentFields, DonationParser, NonIncludedDonationFields } from './paymentParser';
+
+export { PaymentParser, DonationParser } from './paymentParser';
+export type { NonIncludedDonationFields, NonIncludedPaymentFields } from './paymentParser';
+
 export { PaymentValidator, DonationValidator } from './paymentValidator';

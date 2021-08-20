@@ -2,7 +2,7 @@ import { ColorMode } from '@airgap/beacon-sdk';
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit } from '@taquito/taquito';
 
-import { Network, networks } from '@tezospayments/common/dist/models/blockchain';
+import { Network, networks } from '@tezospayments/common';
 
 import { config } from '../config';
 import { LocalPaymentService } from '../services/localPaymentService';

@@ -1,5 +1,4 @@
-import type { Donation, Payment } from '@tezospayments/common/dist/models/payment';
-import type { Service } from '@tezospayments/common/dist/models/service';
+import type { Donation, Payment, Service } from '@tezospayments/common';
 
 export interface PaymentInfo {
   readonly payment: Payment | Donation;

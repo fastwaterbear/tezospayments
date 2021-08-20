@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 
-import { Service } from '@tezospayments/common/dist/models/service';
+import { Service } from '@tezospayments/common';
 
 import { AppViewContext } from '../../app';
 import { BlockchainLinkPure } from '../common';

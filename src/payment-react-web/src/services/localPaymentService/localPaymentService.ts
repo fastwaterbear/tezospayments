@@ -3,11 +3,10 @@ import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit, TransactionWalletOperation, Wallet } from '@taquito/taquito';
 import { BigNumber } from 'bignumber.js';
 
-import { Network } from '@tezospayments/common/dist/models/blockchain';
-import { Donation, Payment, PaymentType } from '@tezospayments/common/dist/models/payment';
-import { PaymentBase } from '@tezospayments/common/dist/models/payment/paymentBase';
-import { Service, ServiceOperationType } from '@tezospayments/common/dist/models/service';
-import { converters, memoize } from '@tezospayments/common/dist/utils';
+import {
+  Donation, Payment, PaymentType, PaymentBase,
+  Service, ServiceOperationType, Network, converters, memoize
+} from '@tezospayments/common';
 
 import { config } from '../../config';
 import { TezosPaymentsServiceContract } from '../../models/contracts';

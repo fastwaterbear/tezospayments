@@ -1,5 +1,4 @@
-import { Network } from '@tezospayments/common/dist/models/blockchain';
-import type { DeepReadonly } from '@tezospayments/common/dist/models/core';
+import type { DeepReadonly, Network } from '@tezospayments/common';
 
 type RpcProvider = 'smartpy';
 type IndexerProvider = 'tzkt';

@@ -1,8 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TransactionWalletOperation } from '@taquito/taquito';
 
-import { Service } from '@tezospayments/common/dist/models/service';
-import { optimization } from '@tezospayments/common/dist/utils';
+import { Service, optimization } from '@tezospayments/common';
 
 import { AppDispatch, AppState } from '..';
 import { Account } from '../../models/blockchain';

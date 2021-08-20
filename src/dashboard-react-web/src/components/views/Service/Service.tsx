@@ -2,8 +2,7 @@ import { Skeleton } from 'antd';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { emptyService, Service as ServiceInterface } from '@tezospayments/common/dist/models/service';
-import { combineClassNames } from '@tezospayments/common/dist/utils';
+import { emptyService, Service as ServiceInterface, combineClassNames } from '@tezospayments/common';
 
 import { selectServicesState } from '../../../store/services/selectors';
 import { useAppSelector, useQuery } from '../../hooks';

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ServiceLinkHelper } from '@tezospayments/common/dist/helpers';
+import { ServiceLinkHelper } from '@tezospayments/common';
 
 import { ExternalLink } from '../../common';
 import { iconIdMap } from './iconIdMap';
