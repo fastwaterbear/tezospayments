@@ -4,6 +4,11 @@
   display: flex;
 }
 
+.api-keys__item_empty {
+  display: block !important;
+  text-align: center;
+}
+
 .service-dev-zone__header {
   display: block;
   font-size: 16px;
