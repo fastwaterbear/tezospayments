@@ -32,6 +32,11 @@ export const services = {
     unDeleteServiceConfirmation: 'Are you sure you want to undelete the service',
     unDeleteServiceDescription: 'Service is marked as deleted',
   },
+  devZone: {
+    title: 'API Keys',
+    addKey: 'Add Key',
+    noApiKeysAddedYet: 'No API keys added yet',
+  },
   editing: {
     editService: 'Edit Service',
     updateService: 'Update Service',
