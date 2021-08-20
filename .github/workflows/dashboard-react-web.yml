@@ -54,12 +54,11 @@ jobs:
         run: npm run build -w @tezospayments/dashboard-react-web
 
       - name: Upload the Dashboard app build as an artifact
-        if: github.ref == 'refs/heads/master'
         uses: actions/upload-artifact@v2
         with:
           name: dashboard-react-web
           path: src/dashboard-react-web/build
-          retention-days: 1
+          retention-days: 10
 
   lint:
     name: Lint

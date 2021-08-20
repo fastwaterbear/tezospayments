@@ -45,6 +45,15 @@ jobs:
       - name: Build
         run: npm run build -w @tezospayments/common
 
+      - name: Upload the build as an artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: common
+          path: |
+            src/common/dist
+            src/common/package.json
+          retention-days: 30
+
   test:
     name: Unit Tests
     runs-on: ubuntu-latest
