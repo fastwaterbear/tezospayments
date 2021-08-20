@@ -94,6 +94,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: demo-next-js
+          path: src/demo-next-js/out
 
       - name: Push to the ${{ env.publish-branch }} branch
         env:

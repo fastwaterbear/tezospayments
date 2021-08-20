@@ -99,6 +99,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: payment-react-web
+          path: src/payment-react-web/build
 
       - name: Push to the ${{ env.publish-branch }} branch
         env:
