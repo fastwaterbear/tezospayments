@@ -54,7 +54,7 @@ jobs:
             src/common/package.json
             src/common/README.md
             src/common/LICENSE
-          retention-days: 30
+          retention-days: 10
 
   test:
     name: Unit Tests
@@ -120,3 +120,17 @@ jobs:
 
       - name: Lint
         run: npm run lint -w @tezospayments/common # -- --max-warnings -1
+
+  release:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    needs: [build, test, lint]
+    if: ${{ contains(github.ref, 'refs/tags/npm/@tezospayments/common@') }}
+    steps:
+      - name: Download the build from the artifacts storage
+        uses: actions/download-artifact@v2
+        with:
+          name: common
+
+      - name: Publish
+        run: npm publish --dry-run
