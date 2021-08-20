@@ -25,11 +25,11 @@ export const DangerZone = (props: DangerZoneProps) => {
     dispatch(setDeleted({ service: props.service, deleted: !props.service.deleted }));
   }, [dispatch, props.service]);
 
-  const confirm = useCallback((content: React.ReactNode, onOk: () => void) => {
+  const confirm = useCallback((text: string, onOk: () => void) => {
     Modal.confirm({
       title: 'Confirm Operation',
       onOk,
-      content,
+      content: <p>{text}</p>,
       okText: 'Confirm',
       cancelText: 'Cancel',
       centered: true,
@@ -40,12 +40,12 @@ export const DangerZone = (props: DangerZoneProps) => {
 
   const handlePauseClick = useCallback(() => {
     const text = props.service.paused ? dangerZoneLangResources.unPauseServiceConfirmation : dangerZoneLangResources.pauseServiceConfirmation;
-    confirm(<p>{text}</p>, handlePauseModalOkClick);
+    confirm(text, handlePauseModalOkClick);
   }, [confirm, dangerZoneLangResources.pauseServiceConfirmation, dangerZoneLangResources.unPauseServiceConfirmation, handlePauseModalOkClick, props.service.paused]);
 
   const handleDeleteClick = useCallback(() => {
     const text = props.service.deleted ? dangerZoneLangResources.unDeleteServiceConfirmation : dangerZoneLangResources.deleteServiceConfirmation;
-    confirm(<p>{text}</p>, handleDeleteModalOkClick);
+    confirm(text, handleDeleteModalOkClick);
   }, [confirm, dangerZoneLangResources.deleteServiceConfirmation, dangerZoneLangResources.unDeleteServiceConfirmation, handleDeleteModalOkClick, props.service.deleted]);
 
   return <>

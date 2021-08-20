@@ -1,5 +1,5 @@
 import { DeleteOutlined } from '@ant-design/icons';
-import { Button, List } from 'antd';
+import { Button, List, Modal } from 'antd';
 import React, { useCallback, useState } from 'react';
 
 import { useCurrentLanguageResources } from '../../../../hooks';
@@ -17,9 +17,23 @@ export const ApiKeyList = () => {
 
   const [apiKeys, setApiKeys] = useState(defaultData);
 
-  const handleRemoveItem = useCallback((key: string) => {
-    setApiKeys(apiKeys.filter(i => i.apiKey !== key));
-  }, [apiKeys]);
+  const confirm = useCallback((text: string, onOk: () => void) => {
+    Modal.confirm({
+      title: 'Confirm Operation',
+      onOk,
+      content: <p>{text}</p>,
+      okText: 'Confirm',
+      cancelText: 'Cancel',
+      centered: true,
+      transitionName: '',
+      maskTransitionName: ''
+    });
+  }, []);
+
+  const handleRemoveItem = useCallback((item: { name: string; apiKey: string; }) => {
+    const text = `${servicesLangResources.devZone.deleteKeyConfirmation}: ${item.name}`;
+    confirm(text, () => setApiKeys(apiKeys.filter(i => i.apiKey !== item.apiKey)));
+  }, [apiKeys, confirm, servicesLangResources.devZone.deleteKeyConfirmation]);
 
   return <List size="small" bordered>
     {apiKeys.length
@@ -27,7 +41,7 @@ export const ApiKeyList = () => {
         <span>{i.name}</span>
         <div>
           <span className="api-keys__item-key">{i.apiKey}</span>
-          <Button onClick={() => handleRemoveItem(i.apiKey)} icon={<DeleteOutlined />} danger type="link"></Button>
+          <Button onClick={() => handleRemoveItem(i)} icon={<DeleteOutlined />} danger type="link"></Button>
         </div>
       </List.Item>
       ) :

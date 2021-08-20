@@ -36,6 +36,7 @@ export const services = {
     title: 'API Keys',
     addKey: 'Add Key',
     noApiKeysAddedYet: 'No API keys added yet',
+    deleteKeyConfirmation: 'Are you sure you want to delete the API key',
   },
   editing: {
     editService: 'Edit Service',
