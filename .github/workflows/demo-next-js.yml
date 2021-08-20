@@ -46,7 +46,7 @@ jobs:
         run: npm ci
 
       - name: Build the demo app
-        run: npm run build -w @tezospayments/demo-next-js
+        run: npm run export -w @tezospayments/demo-next-js
 
       - name: Upload the demo app build as an artifact
         uses: actions/upload-artifact@v2
