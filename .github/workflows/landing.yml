@@ -69,10 +69,11 @@ jobs:
 
       - name: Push to the ${{ env.publish-branch }} branch
         env:
-          publish-branch: dist/landing
+          publish-branch: dist
         uses: peaceiris/actions-gh-pages@068dc23d9710f1ba62e86896f84735d869951305 # v3.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: 'src/landing/dist'
+          publish_dir: src/landing/dist
+          destination_dir: apps/landing
           exclude_assets: '**/*.LICENSE,**/*.LICENSE.txt'
           publish_branch: ${{ env.publish-branch }}
