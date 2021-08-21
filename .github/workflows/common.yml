@@ -6,6 +6,9 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/common.yml'
+    branches:
+      - master
+      - dev
   pull_request:
     paths:
       - 'src/common/**'

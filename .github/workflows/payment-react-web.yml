@@ -8,7 +8,8 @@ on:
       - 'package-lock.json'
       - '.github/workflows/payment-react-web.yml'
     branches:
-      - '**'
+      - master
+      - dev
   pull_request:
     paths:
       - 'src/common/**'
