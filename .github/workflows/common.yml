@@ -147,3 +147,13 @@ jobs:
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Push to the ${{ env.publish-branch }} branch
+        env:
+          publish-branch: dist
+        uses: peaceiris/actions-gh-pages@068dc23d9710f1ba62e86896f84735d869951305 # v3.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: './'
+          destination_dir: packages/npm/@tezospayments/common
+          publish_branch: ${{ env.publish-branch }}
