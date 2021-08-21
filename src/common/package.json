@@ -1,6 +1,7 @@
 {
   "name": "@tezospayments/common",
   "version": "0.1.0",
+  "description": "Shared code for the Tezos Payments service.",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "browser": "dist/index.esm.js",
@@ -40,5 +41,24 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "license": "MIT",
+  "homepage": "https://tezospayments.com/",
+  "author": "Fast Water Bear",
+  "keywords": [
+    "tezos",
+    "payments",
+    "tezospayments"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fastwaterbear/tezospayments.git",
+    "directory": "src/common"
+  },
+  "bugs": {
+    "url": "https://github.com/fastwaterbear/tezospayments/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }
