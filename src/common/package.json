@@ -1,20 +1,26 @@
 {
   "name": "@tezospayments/common",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Shared code for the Tezos Payments service.",
   "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
+  "module": "dist/index.mjs",
   "browser": "dist/index.esm.js",
   "umd": "dist/index.umd.js",
   "types": "dist/types/index.d.ts",
   "exports": {
-    "esnext": {
-      "import": "./dist/esnext/index.esnext.esm.js",
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs.js",
+      "browser": "./dist/index.esm.js",
+      "umd": "./dist/index.umd.js"
+    },
+    "./esnext": {
+      "import": "./dist/esnext/index.esnext.mjs",
       "require": "./dist/esnext/index.esnext.cjs.js",
       "browser": "./dist/esnext/index.esnext.esm.js"
     },
-    "es5": {
-      "import": "./dist/es5/index.es5.esm.js",
+    "./es5": {
+      "import": "./dist/es5/index.es5.mjs",
       "require": "./dist/es5/index.es5.cjs.js",
       "browser": "./dist/es5/index.es5.esm.js",
       "umd": "./dist/es5/index.es5.umd.js"
@@ -38,6 +44,16 @@
     "watch": "rollup --config --watch",
     "test-watch": "jest --watchAll",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
+  },
+  "typesVersions": {
+    "*": {
+      "es5": [
+        "dist/types/index.d.ts"
+      ],
+      "esnext": [
+        "dist/types/index.d.ts"
+      ]
+    }
   },
   "files": [
     "dist"
