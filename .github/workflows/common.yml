@@ -132,5 +132,18 @@ jobs:
         with:
           name: common
 
+      - name: Set up Node.js ${{ env.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          registry-url: 'https://registry.npmjs.org'
+          node-version: ${{ env.node-version }}
+
+      - name: Print environment info
+        run: |
+          node --version
+          npm --version
+
       - name: Publish
-        run: npm publish --dry-run
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
