@@ -9,6 +9,9 @@ on:
     branches:
       - master
       - dev
+    tags:
+      - 'npm/@tezospayments/common@*.*.*'
+      - 'npm/@tezospayments/common@*.*.*-*'
   pull_request:
     paths:
       - 'src/common/**'
