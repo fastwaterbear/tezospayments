@@ -1,7 +1,8 @@
-name: packages/tezospayments
+name: packages/tezospayments [npm]
 on:
   push:
     paths:
+      - 'src/common/**'
       - 'src/tezospayments/**'
       - 'package.json'
       - 'package-lock.json'
@@ -14,6 +15,7 @@ on:
       - 'npm/tezospayments@*.*.*-*'
   pull_request:
     paths:
+      - 'src/common/**'
       - 'src/tezospayments/**'
       - 'package.json'
       - 'package-lock.json'
