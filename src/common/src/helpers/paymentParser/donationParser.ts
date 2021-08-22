@@ -1,4 +1,4 @@
-import { BigNumber } from 'bignumber.js';
+import BigNumber from 'bignumber.js';
 
 import type { Donation } from '../../models/payment/donation';
 import { PaymentType } from '../../models/payment/paymentBase';

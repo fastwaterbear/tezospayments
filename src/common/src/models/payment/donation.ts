@@ -1,4 +1,4 @@
-import { BigNumber } from 'bignumber.js';
+import BigNumber from 'bignumber.js';
 
 import { DonationParser, NonIncludedDonationFields, DonationValidator } from '../../helpers';
 import { URL } from '../../native';

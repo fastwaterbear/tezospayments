@@ -1,17 +1,17 @@
 /* eslint-disable max-len */
-import { BigNumber } from 'bignumber.js';
+import { URL } from 'url';
 
-import type { NonIncludedPaymentFields, RawPayment } from '../../../../src/helpers/paymentParser/paymentParser';
-import type { Payment } from '../../../../src/models/payment';
-import { URL } from '../../../../src/native';
+import BigNumber from 'bignumber.js';
+
+import { LegacySerializedPayment, NonSerializedPaymentSlice, Payment, PaymentType } from '../../../../src';
 
 const createdDate = new Date('2021-06-26T00:37:03.930Z');
 const expiredDate = new Date('2021-06-26T00:57:03.930Z');
 
-const cases: ReadonlyArray<readonly [
+const legacyPaymentDeserializerPositiveTestCases: ReadonlyArray<readonly [
   message: string | null,
-  rawPayment: readonly [obj: RawPayment, serialized: string],
-  expectedPaymentFactory: (nonIncludedPaymentFields: NonIncludedPaymentFields) => Payment
+  serializedPayment: readonly [serializedPayment: LegacySerializedPayment, serializedPaymentBase64: string],
+  expectedPaymentFactory: (nonSerializedPaymentSlice: NonSerializedPaymentSlice) => Payment
 ]> = [
     [
       'simple payment',
@@ -30,6 +30,7 @@ const cases: ReadonlyArray<readonly [
         'eyJhbW91bnQiOiIzODQ4MDMuMzgzMjAyIiwiZGF0YSI6eyJwdWJsaWMiOnsib3JkZXJJZCI6IjBhNmQyZGIxODFmYTRlYzdhN2RiZmI3YjcyODIwMWY2In19LCJzdWNjZXNzVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9zdWNjZXNzIiwiY2FuY2VsVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9jYW5jZWwiLCJjcmVhdGVkIjoxNjI0NjY3ODIzOTMwfQ==',
       ],
       nonIncludedFields => ({
+        type: PaymentType.Payment,
         amount: new BigNumber('384803.383202'),
         data: {
           public: {
@@ -62,6 +63,7 @@ const cases: ReadonlyArray<readonly [
         'eyJhbW91bnQiOiI4MzgzLjM4MzIwMjI4MzgyMjgzMjIzMiIsImRhdGEiOnsicHVibGljIjp7Im9yZGVySWQiOiIwYTZkMmRiMTgxZmE0ZWM3YTdkYmZiN2I3MjgyMDFmNiJ9fSwiYXNzZXQiOiJLVDFLOWdDUmdhTFJGS1RFcll0MXdWeEEzRnJiOUZqYXNqVFYiLCJzdWNjZXNzVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9zdWNjZXNzIiwiY2FuY2VsVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9jYW5jZWwiLCJjcmVhdGVkIjoxNjI0NjY3ODIzOTMwfQ==',
       ],
       nonIncludedFields => ({
+        type: PaymentType.Payment,
         amount: new BigNumber('8383.383202283822832232'),
         data: {
           public: {
@@ -94,6 +96,7 @@ const cases: ReadonlyArray<readonly [
         'eyJhbW91bnQiOiIzOTM5NDM5NDMwNDAzIiwiZGF0YSI6eyJwdWJsaWMiOnsib3JkZXJJZCI6IjBhNmQyZGIxODFmYTRlYzdhN2RiZmI3YjcyODIwMWY2In19LCJzdWNjZXNzVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9zdWNjZXNzIiwiY2FuY2VsVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9jYW5jZWwiLCJjcmVhdGVkIjoxNjI0NjY3ODIzOTMwLCJleHBpcmVkIjoxNjI0NjY5MDIzOTMwfQ==',
       ],
       nonIncludedFields => ({
+        type: PaymentType.Payment,
         amount: new BigNumber('3939439430403'),
         data: {
           public: {
@@ -107,7 +110,36 @@ const cases: ReadonlyArray<readonly [
         expired: expiredDate,
         ...nonIncludedFields
       })
-    ]
+    ],
+    [
+      'payment without optional urls',
+      [
+        {
+          amount: '747.23834',
+          data: {
+            public: {
+              orderId: '0a6d2db181fa4ec7a7dbfb7b728201f6'
+            }
+          },
+          created: createdDate.getTime(),
+          expired: expiredDate.getTime()
+        },
+        'eyJhbW91bnQiOiI3NDcuMjM4MzQiLCJkYXRhIjp7InB1YmxpYyI6eyJvcmRlcklkIjoiMGE2ZDJkYjE4MWZhNGVjN2E3ZGJmYjdiNzI4MjAxZjYifX0sImNyZWF0ZWQiOjE2MjQ2Njc4MjM5MzAsImV4cGlyZWQiOjE2MjQ2NjkwMjM5MzB9',
+      ],
+      nonIncludedFields => ({
+        type: PaymentType.Payment,
+        amount: new BigNumber('747.23834'),
+        data: {
+          public: {
+            orderId: '0a6d2db181fa4ec7a7dbfb7b728201f6',
+          }
+        },
+        asset: undefined,
+        created: createdDate,
+        expired: expiredDate,
+        ...nonIncludedFields
+      })
+    ],
   ];
 
-export default cases;
+export default legacyPaymentDeserializerPositiveTestCases;

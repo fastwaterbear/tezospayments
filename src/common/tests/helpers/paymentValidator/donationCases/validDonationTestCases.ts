@@ -1,7 +1,8 @@
-import { BigNumber } from 'bignumber.js';
+import { URL } from 'url';
+
+import BigNumber from 'bignumber.js';
 
 import { Donation, PaymentType } from '../../../../src/models/payment';
-import { URL } from '../../../../src/native';
 
 export default [
   {

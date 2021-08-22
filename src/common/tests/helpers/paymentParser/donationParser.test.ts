@@ -1,6 +1,7 @@
+import { URL } from 'url';
+
 import { NonIncludedDonationFields, DonationParser } from '../../../src/helpers';
 import { PaymentType } from '../../../src/models/payment';
-import { URL } from '../../../src/native';
 import { invalidRawDonationTestCases, validRawDonationTestCases } from './donationCases';
 
 describe('Donation Parser', () => {

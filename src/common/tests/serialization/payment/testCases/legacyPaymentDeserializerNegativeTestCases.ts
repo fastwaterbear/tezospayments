@@ -1,12 +1,12 @@
 /* eslint-disable max-len */
-import type { RawPayment } from '../../../../src/helpers/paymentParser/paymentParser';
+import { LegacySerializedPayment } from '../../../../src';
 
 const createdDate = new Date('2021-06-26T00:37:03.930Z');
 const expiredDate = new Date('2021-06-26T00:57:03.930Z');
 
-const cases: ReadonlyArray<readonly [
+const legacyPaymentDeserializerNegativeTestCases: ReadonlyArray<readonly [
   message: string | null,
-  rawPayment: readonly [obj: RawPayment, serialized: string]
+  serializedPayment: readonly [serializedPayment: LegacySerializedPayment, serializedPaymentBase64: string]
 ]> = [
     [
       'payment without some required fields',
@@ -109,4 +109,4 @@ const cases: ReadonlyArray<readonly [
     ]
   ];
 
-export default cases;
+export default legacyPaymentDeserializerNegativeTestCases;

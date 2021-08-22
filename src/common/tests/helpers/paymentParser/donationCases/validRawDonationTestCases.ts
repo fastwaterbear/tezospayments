@@ -1,9 +1,10 @@
 /* eslint-disable max-len */
-import { BigNumber } from 'bignumber.js';
+import { URL } from 'url';
+
+import BigNumber from 'bignumber.js';
 
 import type { NonIncludedDonationFields, RawDonation } from '../../../../src/helpers/paymentParser/donationParser';
 import type { Donation } from '../../../../src/models/payment';
-import { URL } from '../../../../src/native';
 
 const cases: ReadonlyArray<readonly [
   message: string | null,

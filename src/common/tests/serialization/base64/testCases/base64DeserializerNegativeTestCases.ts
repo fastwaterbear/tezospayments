@@ -15,7 +15,7 @@ const validTestObject: TestType = {
 
 const negativeTestCases: ReadonlyArray<readonly [
   message: string | null,
-  testValue: [obj: Partial<TestType> | null, serialized: string]
+  testValue: readonly [obj: Partial<TestType> | null, serialized: string]
 ]> = [
     [
       'invalid serialized value',
