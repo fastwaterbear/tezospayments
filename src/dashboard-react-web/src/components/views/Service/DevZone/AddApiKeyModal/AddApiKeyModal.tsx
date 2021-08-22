@@ -1,5 +1,7 @@
-import { Divider, Input, Modal, Radio } from 'antd';
-import React from 'react';
+import { CopyOutlined } from '@ant-design/icons';
+import { Button, Divider, Input, Modal, Radio } from 'antd';
+import Search from 'antd/lib/input/Search';
+import React, { useCallback, useRef } from 'react';
 
 import { useCurrentLanguageResources } from '../../../../hooks';
 
@@ -23,17 +25,28 @@ export const AddApiKeyModal = (props: AddApiKeyModalProps) => {
   const publicKey = 'edpkvQXtVcy8YrBLmMhn8EDt4Zb46TWZX1QUxxepFzJgsWU6YKadJP';
   const secretKey = 'edskRwse4Z8ZZNCC7xzCEUrTBtCeEPhv8gfBiWrE8cysRQpz45HCQjChdDckNEBZZMCxjPMkHhmGkUnwBs22cKr2nrwiGfQHsP';
 
-  return <Modal className="api-key-modal" title={servicesLangResources.devZone.addKey} centered visible={props.visible} onCancel={props.onCancel} okText={'Add'}>
+  const publicKeyRef = useRef<Input>(null);
+  const secretKeyRef = useRef<Input>(null);
+
+  const handleCopyClick = useCallback((ref: React.RefObject<Input>) => {
+    const input = ref.current;
+    if (input) {
+      input.select();
+      navigator.clipboard.writeText(input.state.value);
+    }
+  }, []);
+
+  return <Modal className="api-key-modal" title={servicesLangResources.devZone.addKey} centered destroyOnClose visible={props.visible} onCancel={props.onCancel} okText={'Add'} >
     <span className="api-key-modal__label">Name:</span>
-    <Input />
+    <Input autoFocus />
     <span className="api-key-modal__label">Algorithm:</span>
     <Radio.Group options={algorithmOptions} value={algorithmOptions[0]?.value} />
     <Divider />
     <span className="api-key-modal__label">Public Key:</span>
-    <Input.TextArea autoSize readOnly value={publicKey} />
+    <Search ref={publicKeyRef} readOnly value={publicKey} enterButton={<Button icon={<CopyOutlined />} />} onSearch={() => handleCopyClick(publicKeyRef)} />
     <span className="api-key-modal__label">Secret Key:</span>
-    <Input.TextArea autoSize readOnly value={secretKey} />
-    <span className="api-key-modal__warning-hint">Store the secret key, we will never show it again</span>
+    <Search ref={secretKeyRef} readOnly value={secretKey} enterButton={<Button icon={<CopyOutlined />} />} onSearch={() => handleCopyClick(secretKeyRef)} />
+    <span className="api-key-modal__warning-hint">Save the secret key, we will never show it again</span>
   </Modal>;
 };
 
