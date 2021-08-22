@@ -3,13 +3,15 @@ import { URL } from 'url';
 
 import BigNumber from 'bignumber.js';
 
-import type { NonIncludedDonationFields, RawDonation } from '../../../../src/helpers/paymentParser/donationParser';
-import type { Donation } from '../../../../src/models/payment';
+import { LegacySerializedDonation, NonSerializedDonationSlice, Donation, PaymentType } from '../../../../src';
 
-const cases: ReadonlyArray<readonly [
+const createdDate = new Date('2021-06-26T00:37:03.930Z');
+const expiredDate = new Date('2021-06-26T00:57:03.930Z');
+
+const legacyDonationDeserializerPositiveTestCases: ReadonlyArray<readonly [
   message: string | null,
-  rawDonation: readonly [obj: RawDonation, serialized: string],
-  expectedDonationFactory: (nonIncludedDonationFields: NonIncludedDonationFields) => Donation
+  serializedDonation: readonly [serializedDonation: LegacySerializedDonation, serializedDonationBase64: string],
+  expectedDonationFactory: (nonSerializedDonationSlice: NonSerializedDonationSlice) => Donation
 ]> = [
     [
       'simple donation',
@@ -17,12 +19,13 @@ const cases: ReadonlyArray<readonly [
         {},
         '',
       ],
-      nonIncludedFields => ({
+      nonSerializedSlice => ({
+        type: PaymentType.Donation,
         desiredAmount: undefined,
         desiredAsset: undefined,
         successUrl: undefined,
         cancelUrl: undefined,
-        ...nonIncludedFields
+        ...nonSerializedSlice
       })
     ],
     [
@@ -33,12 +36,13 @@ const cases: ReadonlyArray<readonly [
         },
         'eyJkZXNpcmVkQW1vdW50IjoiMzg0ODAzLjM4MzIwMiJ9',
       ],
-      nonIncludedFields => ({
+      nonSerializedSlice => ({
+        type: PaymentType.Donation,
         desiredAmount: new BigNumber(384803.383202),
         desiredAsset: undefined,
         successUrl: undefined,
         cancelUrl: undefined,
-        ...nonIncludedFields
+        ...nonSerializedSlice
       })
     ],
     [
@@ -49,12 +53,13 @@ const cases: ReadonlyArray<readonly [
         },
         'eyJkZXNpcmVkQXNzZXQiOiJLVDFLOWdDUmdhTFJGS1RFcll0MXdWeEEzRnJiOUZqYXNqVFYifQ==',
       ],
-      nonIncludedFields => ({
+      nonSerializedSlice => ({
+        type: PaymentType.Donation,
         desiredAmount: undefined,
         desiredAsset: 'KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV',
         successUrl: undefined,
         cancelUrl: undefined,
-        ...nonIncludedFields
+        ...nonSerializedSlice
       })
     ],
     [
@@ -66,14 +71,15 @@ const cases: ReadonlyArray<readonly [
         },
         'eyJzdWNjZXNzVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvZG9uYXRpb24vc3VjY2VzcyIsImNhbmNlbFVybCI6Imh0dHBzOi8vZmFzdHdhdGVyYmVhci5jb20vdGV6b3NwYXltZW50cy90ZXN0L2RvbmF0aW9uL2NhbmNlbCJ9',
       ],
-      nonIncludedFields => ({
+      nonSerializedSlice => ({
+        type: PaymentType.Donation,
         desiredAmount: undefined,
         desiredAsset: undefined,
         successUrl: new URL('https://fastwaterbear.com/tezospayments/test/donation/success'),
         cancelUrl: new URL('https://fastwaterbear.com/tezospayments/test/donation/cancel'),
-        ...nonIncludedFields
+        ...nonSerializedSlice
       })
     ]
   ];
 
-export default cases;
+export default legacyDonationDeserializerPositiveTestCases;

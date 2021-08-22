@@ -1,9 +1,11 @@
 import BigNumber from 'bignumber.js';
 
-import { DonationParser, NonIncludedDonationFields, DonationValidator } from '../../helpers';
+import { DonationValidator } from '../../helpers';
 import { URL } from '../../native';
+import { LegacyDonationSerializer } from '../../serialization';
 import { StateModel } from '../core';
 import { PaymentBase, PaymentType } from './paymentBase';
+import { NonSerializedDonationSlice } from './serializedDonation';
 
 export interface Donation extends PaymentBase {
   readonly type: PaymentType.Donation;
@@ -14,15 +16,15 @@ export interface Donation extends PaymentBase {
 }
 
 export class Donation extends StateModel {
-  static readonly defaultParser: DonationParser = new DonationParser();
+  static readonly defaultLegacySerializer: LegacyDonationSerializer = new LegacyDonationSerializer();
   static readonly defaultValidator: DonationValidator = new DonationValidator();
 
   static validate(donation: Donation) {
     return this.defaultValidator.validate(donation);
   }
 
-  static parse(donationBase64: string, nonIncludedFields: NonIncludedDonationFields, parser = Donation.defaultParser): Donation | null {
-    return parser.parse(donationBase64, nonIncludedFields);
+  static deserialize(donationBase64: string, nonSerializedDonationSlice: NonSerializedDonationSlice): Donation | null {
+    return Donation.defaultLegacySerializer.deserialize(donationBase64, nonSerializedDonationSlice);
   }
 }
 

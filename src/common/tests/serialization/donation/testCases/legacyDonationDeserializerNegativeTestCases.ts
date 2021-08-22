@@ -1,9 +1,9 @@
 /* eslint-disable max-len */
-import type { RawDonation } from '../../../../src/helpers/paymentParser/donationParser';
+import { LegacySerializedDonation } from '../../../../src';
 
-const cases: ReadonlyArray<readonly [
+const legacyDonationDeserializerNegativeTestCases: ReadonlyArray<readonly [
   message: string | null,
-  rawDonation: readonly [obj: RawDonation, serialized: string]
+  serializedDonation: readonly [serializedDonation: LegacySerializedDonation, serializedDonationBase64: string]
 ]> = [
     [
       'donation with excess fields (a fields count is greater than the maximum)',
@@ -55,4 +55,4 @@ const cases: ReadonlyArray<readonly [
     ]
   ];
 
-export default cases;
+export default legacyDonationDeserializerNegativeTestCases;
