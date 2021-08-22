@@ -23,14 +23,14 @@ export class LegacyPaymentSerializer {
     try {
       const serializedPayment = LegacyPaymentSerializer.serializedPaymentBase64Deserializer.deserialize(serializedPaymentBase64);
 
-      return serializedPayment ? this.mapDeserializePaymentToPayment(serializedPayment, nonSerializedPaymentSlice) : null;
+      return serializedPayment ? this.mapDeserializedPaymentToPayment(serializedPayment, nonSerializedPaymentSlice) : null;
     }
     catch {
       return null;
     }
   }
 
-  protected mapDeserializePaymentToPayment(serializedPayment: LegacySerializedPayment, nonSerializedPaymentSlice: NonSerializedPaymentSlice): Payment {
+  protected mapDeserializedPaymentToPayment(serializedPayment: LegacySerializedPayment, nonSerializedPaymentSlice: NonSerializedPaymentSlice): Payment {
     return {
       type: PaymentType.Payment,
       amount: new BigNumber(serializedPayment.amount),
