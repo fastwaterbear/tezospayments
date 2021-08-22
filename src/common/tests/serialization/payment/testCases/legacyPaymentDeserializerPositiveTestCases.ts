@@ -29,7 +29,7 @@ const legacyPaymentDeserializerPositiveTestCases: ReadonlyArray<readonly [
         },
         'eyJhbW91bnQiOiIzODQ4MDMuMzgzMjAyIiwiZGF0YSI6eyJwdWJsaWMiOnsib3JkZXJJZCI6IjBhNmQyZGIxODFmYTRlYzdhN2RiZmI3YjcyODIwMWY2In19LCJzdWNjZXNzVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9zdWNjZXNzIiwiY2FuY2VsVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9jYW5jZWwiLCJjcmVhdGVkIjoxNjI0NjY3ODIzOTMwfQ==',
       ],
-      nonIncludedFields => ({
+      nonSerializedSlice => ({
         type: PaymentType.Payment,
         amount: new BigNumber('384803.383202'),
         data: {
@@ -42,7 +42,7 @@ const legacyPaymentDeserializerPositiveTestCases: ReadonlyArray<readonly [
         cancelUrl: new URL('https://fastwaterbear.com/tezospayments/test/payment/cancel'),
         created: createdDate,
         expired: undefined,
-        ...nonIncludedFields
+        ...nonSerializedSlice
       })
     ],
     [
@@ -62,7 +62,7 @@ const legacyPaymentDeserializerPositiveTestCases: ReadonlyArray<readonly [
         },
         'eyJhbW91bnQiOiI4MzgzLjM4MzIwMjI4MzgyMjgzMjIzMiIsImRhdGEiOnsicHVibGljIjp7Im9yZGVySWQiOiIwYTZkMmRiMTgxZmE0ZWM3YTdkYmZiN2I3MjgyMDFmNiJ9fSwiYXNzZXQiOiJLVDFLOWdDUmdhTFJGS1RFcll0MXdWeEEzRnJiOUZqYXNqVFYiLCJzdWNjZXNzVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9zdWNjZXNzIiwiY2FuY2VsVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9jYW5jZWwiLCJjcmVhdGVkIjoxNjI0NjY3ODIzOTMwfQ==',
       ],
-      nonIncludedFields => ({
+      nonSerializedSlice => ({
         type: PaymentType.Payment,
         amount: new BigNumber('8383.383202283822832232'),
         data: {
@@ -75,7 +75,7 @@ const legacyPaymentDeserializerPositiveTestCases: ReadonlyArray<readonly [
         cancelUrl: new URL('https://fastwaterbear.com/tezospayments/test/payment/cancel'),
         created: createdDate,
         expired: undefined,
-        ...nonIncludedFields
+        ...nonSerializedSlice
       })
     ],
     [
@@ -95,7 +95,7 @@ const legacyPaymentDeserializerPositiveTestCases: ReadonlyArray<readonly [
         },
         'eyJhbW91bnQiOiIzOTM5NDM5NDMwNDAzIiwiZGF0YSI6eyJwdWJsaWMiOnsib3JkZXJJZCI6IjBhNmQyZGIxODFmYTRlYzdhN2RiZmI3YjcyODIwMWY2In19LCJzdWNjZXNzVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9zdWNjZXNzIiwiY2FuY2VsVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9jYW5jZWwiLCJjcmVhdGVkIjoxNjI0NjY3ODIzOTMwLCJleHBpcmVkIjoxNjI0NjY5MDIzOTMwfQ==',
       ],
-      nonIncludedFields => ({
+      nonSerializedSlice => ({
         type: PaymentType.Payment,
         amount: new BigNumber('3939439430403'),
         data: {
@@ -108,7 +108,7 @@ const legacyPaymentDeserializerPositiveTestCases: ReadonlyArray<readonly [
         cancelUrl: new URL('https://fastwaterbear.com/tezospayments/test/payment/cancel'),
         created: createdDate,
         expired: expiredDate,
-        ...nonIncludedFields
+        ...nonSerializedSlice
       })
     ],
     [
@@ -126,7 +126,7 @@ const legacyPaymentDeserializerPositiveTestCases: ReadonlyArray<readonly [
         },
         'eyJhbW91bnQiOiI3NDcuMjM4MzQiLCJkYXRhIjp7InB1YmxpYyI6eyJvcmRlcklkIjoiMGE2ZDJkYjE4MWZhNGVjN2E3ZGJmYjdiNzI4MjAxZjYifX0sImNyZWF0ZWQiOjE2MjQ2Njc4MjM5MzAsImV4cGlyZWQiOjE2MjQ2NjkwMjM5MzB9',
       ],
-      nonIncludedFields => ({
+      nonSerializedSlice => ({
         type: PaymentType.Payment,
         amount: new BigNumber('747.23834'),
         data: {
@@ -137,7 +137,7 @@ const legacyPaymentDeserializerPositiveTestCases: ReadonlyArray<readonly [
         asset: undefined,
         created: createdDate,
         expired: expiredDate,
-        ...nonIncludedFields
+        ...nonSerializedSlice
       })
     ],
   ];

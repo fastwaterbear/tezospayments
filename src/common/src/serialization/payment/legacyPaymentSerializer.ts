@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js';
 
-import { NonSerializedPaymentSlice, Payment, PaymentType, LegacySerializedPayment } from '../../models';
+import type { NonSerializedPaymentSlice, Payment, LegacySerializedPayment } from '../../models';
+import { PaymentType } from '../../models/payment/paymentBase';
 import { URL } from '../../native';
 import { Base64Deserializer, SerializedFieldType } from '../base64';
 
