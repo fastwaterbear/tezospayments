@@ -5,13 +5,13 @@
   "main": "dist/index.js",
   "dependencies": {
     "bignumber.js": "^9.0.1",
-    "@tezospayments/common": "0.0.0"
+    "@tezospayments/common": "0.1.1"
   },
   "scripts": {
     "build": "tsc -p ."
   },
   "license": "MIT",
-  "homepage": "https://tezospayments.com/",
+  "homepage": "https://tezospayments.com",
   "author": "Fast Water Bear",
   "keywords": [
     "tezos",

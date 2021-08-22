@@ -72,11 +72,10 @@ const getResolvePlugins = format => format === 'umd'
     nodeResolve({ resolveOnly: ['*'] }),
   ];
 
-const getDefaultES = (format, outputFileName, declarationEnabled = false, watchEnabled = false) => ({
+const getDefaultES = (format, outputFileNameOrNames, declarationEnabled = false, watchEnabled = false) => ({
   input: entryPointFilePath,
-  output: [
-    getBaseOutputOptions({ fileName: outputFileName, format })
-  ],
+  output: (Array.isArray(outputFileNameOrNames) ? outputFileNameOrNames : [outputFileNameOrNames])
+    .map(fileName => getBaseOutputOptions({ fileName, format })),
   external: externalPackageNames,
   watch: watchEnabled && { include: watchPaths },
   plugins: [
@@ -101,11 +100,10 @@ const getDefaultESUmd = (format, outputFileName, globalName) => ({
   ]
 });
 
-const getESNext = (format, outputFileName, declarationEnabled = false) => ({
+const getESNext = (format, outputFileNameOrNames, declarationEnabled = false) => ({
   input: entryPointFilePath,
-  output: [
-    getBaseOutputOptions({ fileName: outputFileName, format })
-  ],
+  output: (Array.isArray(outputFileNameOrNames) ? outputFileNameOrNames : [outputFileNameOrNames])
+    .map(fileName => getBaseOutputOptions({ fileName, format })),
   external: externalPackageNames,
   plugins: [
     ...getResolvePlugins(format),
@@ -113,11 +111,10 @@ const getESNext = (format, outputFileName, declarationEnabled = false) => ({
   ]
 });
 
-const getES5 = (format, outputFileName, declarationEnabled = false) => ({
+const getES5 = (format, outputFileNameOrNames, declarationEnabled = false) => ({
   input: entryPointFilePath,
-  output: [
-    getBaseOutputOptions({ fileName: outputFileName, format })
-  ],
+  output: (Array.isArray(outputFileNameOrNames) ? outputFileNameOrNames : [outputFileNameOrNames])
+    .map(fileName => getBaseOutputOptions({ fileName, format })),
   external: externalPackageNames,
   plugins: [
     ...getResolvePlugins(format),
@@ -152,14 +149,14 @@ console.log('Is the Watch mode:', isWatchMode);
 export default isWatchMode
   ? getDefaultES('es', 'index.esm.js', true, true)
   : [
-    getDefaultES('es', 'index.esm.js', true),
+    getDefaultES('es', ['index.esm.js', 'index.mjs'], true),
     getDefaultES('cjs', 'index.cjs.js'),
     getDefaultESUmd('umd', 'index.umd.js', 'tezosPaymentsCommon'),
 
-    getESNext('es', 'esnext/index.esnext.esm.js'),
+    getESNext('es', ['esnext/index.esnext.esm.js', 'esnext/index.esnext.mjs']),
     getESNext('cjs', 'esnext/index.esnext.cjs.js'),
 
-    getES5('es', 'es5/index.es5.esm.js'),
+    getES5('es', ['es5/index.es5.esm.js', 'es5/index.es5.mjs']),
     getES5('cjs', 'es5/index.es5.cjs.js'),
     getES5Umd('umd', 'es5/index.es5.umd.js', 'tezosPaymentsCommon'),
   ];

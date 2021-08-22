@@ -7,6 +7,9 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/dashboard-react-web.yml'
+    branches:
+      - master
+      - dev
   pull_request:
     paths:
       - 'src/common/**'
