@@ -25,13 +25,14 @@ export const DangerZone = (props: DangerZoneProps) => {
     dispatch(setDeleted({ service: props.service, deleted: !props.service.deleted }));
   }, [dispatch, props.service]);
 
-  const confirm = useCallback((text: string, onOk: () => void) => {
+  const confirm = useCallback((text: string, isDanger: boolean, onOk: () => void) => {
     Modal.confirm({
       title: 'Confirm Operation',
       onOk,
       content: <p>{text}</p>,
-      okText: 'Confirm',
-      cancelText: 'Cancel',
+      okText: 'Yes',
+      okType: isDanger ? 'danger' : 'primary',
+      cancelText: 'No',
       centered: true,
       transitionName: '',
       maskTransitionName: ''
@@ -40,12 +41,12 @@ export const DangerZone = (props: DangerZoneProps) => {
 
   const handlePauseClick = useCallback(() => {
     const text = props.service.paused ? dangerZoneLangResources.unPauseServiceConfirmation : dangerZoneLangResources.pauseServiceConfirmation;
-    confirm(text, handlePauseModalOkClick);
+    confirm(text, false, handlePauseModalOkClick);
   }, [confirm, dangerZoneLangResources.pauseServiceConfirmation, dangerZoneLangResources.unPauseServiceConfirmation, handlePauseModalOkClick, props.service.paused]);
 
   const handleDeleteClick = useCallback(() => {
     const text = props.service.deleted ? dangerZoneLangResources.unDeleteServiceConfirmation : dangerZoneLangResources.deleteServiceConfirmation;
-    confirm(text, handleDeleteModalOkClick);
+    confirm(text, !props.service.deleted, handleDeleteModalOkClick);
   }, [confirm, dangerZoneLangResources.deleteServiceConfirmation, dangerZoneLangResources.unDeleteServiceConfirmation, handleDeleteModalOkClick, props.service.deleted]);
 
   return <>

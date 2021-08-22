@@ -22,8 +22,9 @@ export const ApiKeyList = () => {
       title: 'Confirm Operation',
       onOk,
       content: <p>{text}</p>,
-      okText: 'Confirm',
-      cancelText: 'Cancel',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
       centered: true,
       transitionName: '',
       maskTransitionName: ''
