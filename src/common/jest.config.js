@@ -6,7 +6,11 @@
 
 module.exports = {
   clearMocks: true,
+  testEnvironment: "node",
   coverageDirectory: "coverage",
   coverageProvider: "v8",
-  testEnvironment: "node",
+  coveragePathIgnorePatterns: [
+    "/node_modules/",
+    "tests"
+  ]
 }
