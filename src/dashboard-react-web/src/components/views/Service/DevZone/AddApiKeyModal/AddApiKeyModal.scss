@@ -1,0 +1,14 @@
+@use '../../../../../styles/ant-colors.scss';
+
+.api-key-modal__label {
+  display: block;
+  margin-top: 24px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.api-key-modal__warning-hint {
+  background-color: ant-colors.$yellow-5;
+}
