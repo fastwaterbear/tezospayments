@@ -3,22 +3,12 @@ import BigNumber from 'bignumber.js';
 import type { NonSerializedDonationSlice, Donation, SerializedDonation } from '../../models';
 import { PaymentType } from '../../models/payment/paymentBase';
 import { URL } from '../../native';
-import { Base64Deserializer, SerializedFieldType } from '../base64';
+import { Base64Deserializer } from '../base64';
+import { serializedDonationFieldTypes } from './serializedDonationFieldTypes';
 
 export class DonationDeserializer {
-  protected static readonly serializedDonationFieldTypes: ReadonlyMap<
-    keyof SerializedDonation, SerializedFieldType | readonly SerializedFieldType[]
-  > = new Map<keyof SerializedDonation, SerializedFieldType | readonly SerializedFieldType[]>()
-    // desiredAmount
-    .set('da', ['string', 'undefined', 'null'])
-    // desiredAsset
-    .set('das', ['string', 'undefined', 'null'])
-    // successUrl
-    .set('su', ['string', 'undefined', 'null'])
-    // cancelUrl
-    .set('cu', ['string', 'undefined', 'null']);
   protected static readonly serializedDonationBase64Deserializer = new Base64Deserializer<SerializedDonation>(
-    DonationDeserializer.serializedDonationFieldTypes
+    serializedDonationFieldTypes
   );
 
   deserialize(serializedDonationBase64: string, nonSerializedDonationSlice: NonSerializedDonationSlice): Donation | null {
