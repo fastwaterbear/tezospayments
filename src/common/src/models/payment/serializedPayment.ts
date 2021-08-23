@@ -41,4 +41,4 @@ export type LegacySerializedPayment = {
   expired?: number;
 };
 
-export type NonSerializedPaymentSlice = Pick<Payment, 'targetAddress' | 'urls'>;
+export type NonSerializedPaymentSlice = Pick<Payment, 'targetAddress'>;

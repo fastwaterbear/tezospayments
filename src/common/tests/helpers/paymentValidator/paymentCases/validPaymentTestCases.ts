@@ -16,8 +16,7 @@ export default [
     },
     successUrl: new URL('https://fastwaterbear.com/tezospayments/test/payment/success'),
     cancelUrl: new URL('https://fastwaterbear.com/tezospayments/test/payment/cancel'),
-    created: new Date('2021-07-04T00:17:23.043Z'),
-    urls: []
+    created: new Date('2021-07-04T00:17:23.043Z')
   },
   {
     type: PaymentType.Payment,
@@ -31,8 +30,7 @@ export default [
     asset: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2',
     successUrl: new URL('https://fastwaterbear.com/tezospayments/test/payment/success'),
     cancelUrl: new URL('https://fastwaterbear.com/tezospayments/test/payment/cancel'),
-    created: new Date('2021-07-05T10:21:01.111Z'),
-    urls: []
+    created: new Date('2021-07-05T10:21:01.111Z')
   },
   {
     type: PaymentType.Payment,
@@ -50,7 +48,7 @@ export default [
     cancelUrl: new URL('https://fastwaterbear.com/tezospayments/test/payment/cancel'),
     created: new Date('2021-07-05T10:21:01.111Z'),
     expired: new Date('2021-07-05T10:41:01.111Z'),
-    urls: []
+
   },
   {
     type: PaymentType.Payment,
@@ -65,6 +63,6 @@ export default [
     cancelUrl: new URL('https://fastwaterbear.com/tezospayments/test/payment/cancel'),
     created: new Date('2021-07-05T10:21:01.111Z'),
     expired: new Date('2021-07-05T10:41:01.111Z'),
-    urls: []
+
   },
 ] as readonly Payment[];

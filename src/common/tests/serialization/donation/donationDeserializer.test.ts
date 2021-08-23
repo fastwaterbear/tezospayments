@@ -1,15 +1,10 @@
-import { URL } from 'url';
-
 import { DonationSerializer, NonSerializedDonationSlice } from '../../../src';
 import negativeTestCases from './testCases/donationDeserializerNegativeTestCases';
 import positiveTestCases from './testCases/donationDeserializerPositiveTestCases';
 
 describe('Donation Deserializer', () => {
   const nonSerializedDonationSlice: NonSerializedDonationSlice = {
-    targetAddress: 'KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x',
-    urls: [
-      { type: 'base64', url: new URL('https://payment.tezospayments.com/KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x/donation/#...') }
-    ]
+    targetAddress: 'KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x'
   };
 
   let donationSerializer: DonationSerializer;

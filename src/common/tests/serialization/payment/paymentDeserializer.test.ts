@@ -1,15 +1,10 @@
-import { URL } from 'url';
-
 import { PaymentSerializer, NonSerializedPaymentSlice } from '../../../src';
 import negativeTestCases from './testCases/paymentDeserializerNegativeTestCases';
 import positiveTestCases from './testCases/paymentDeserializerPositiveTestCases';
 
 describe('Payment Deserializer', () => {
   const nonSerializedPaymentSlice: NonSerializedPaymentSlice = {
-    targetAddress: 'KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x',
-    urls: [
-      { type: 'base64', url: new URL('https://payment.tezospayments.com/KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x/payment/#...') }
-    ]
+    targetAddress: 'KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x'
   };
 
   let paymentSerializer: PaymentSerializer;

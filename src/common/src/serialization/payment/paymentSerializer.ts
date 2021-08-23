@@ -48,8 +48,7 @@ export class PaymentSerializer {
       cancelUrl: serializedPayment.cu ? new URL(serializedPayment.cu) : undefined,
       created: new Date(serializedPayment.c),
       expired: serializedPayment.e ? new Date(serializedPayment.e) : undefined,
-      targetAddress: nonSerializedPaymentSlice.targetAddress,
-      urls: nonSerializedPaymentSlice.urls
+      targetAddress: nonSerializedPaymentSlice.targetAddress
     };
   }
 }

@@ -26,4 +26,4 @@ export type LegacySerializedDonation = {
   cancelUrl?: string;
 };
 
-export type NonSerializedDonationSlice = Pick<Donation, 'targetAddress' | 'urls'>;
+export type NonSerializedDonationSlice = Pick<Donation, 'targetAddress'>;

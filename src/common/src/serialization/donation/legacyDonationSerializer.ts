@@ -35,8 +35,7 @@ export class LegacyDonationSerializer {
       desiredAsset: serializedDonation.desiredAsset,
       successUrl: serializedDonation.successUrl ? new URL(serializedDonation.successUrl) : undefined,
       cancelUrl: serializedDonation.cancelUrl ? new URL(serializedDonation.cancelUrl) : undefined,
-      targetAddress: nonSerializedDonationSlice.targetAddress,
-      urls: nonSerializedDonationSlice.urls
+      targetAddress: nonSerializedDonationSlice.targetAddress
     };
   }
 }

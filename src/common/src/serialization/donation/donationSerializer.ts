@@ -39,8 +39,7 @@ export class DonationSerializer {
       desiredAsset: serializedDonation.das,
       successUrl: serializedDonation.su ? new URL(serializedDonation.su) : undefined,
       cancelUrl: serializedDonation.cu ? new URL(serializedDonation.cu) : undefined,
-      targetAddress: nonSerializedDonationSlice.targetAddress,
-      urls: nonSerializedDonationSlice.urls
+      targetAddress: nonSerializedDonationSlice.targetAddress
     };
   }
 }

@@ -41,8 +41,7 @@ export class LegacyPaymentSerializer {
       cancelUrl: serializedPayment.cancelUrl ? new URL(serializedPayment.cancelUrl) : undefined,
       created: new Date(serializedPayment.created),
       expired: serializedPayment.expired ? new Date(serializedPayment.expired) : undefined,
-      targetAddress: nonSerializedPaymentSlice.targetAddress,
-      urls: nonSerializedPaymentSlice.urls
+      targetAddress: nonSerializedPaymentSlice.targetAddress
     };
   }
 }
