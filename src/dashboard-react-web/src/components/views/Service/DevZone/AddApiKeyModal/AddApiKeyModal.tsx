@@ -36,17 +36,18 @@ export const AddApiKeyModal = (props: AddApiKeyModalProps) => {
     }
   }, []);
 
-  return <Modal className="api-key-modal" title={servicesLangResources.devZone.addKey} centered destroyOnClose visible={props.visible} onCancel={props.onCancel} okText={'Add'} >
-    <span className="api-key-modal__label">Name:</span>
+  return <Modal className="api-key-modal" title={servicesLangResources.devZone.addKey} centered destroyOnClose visible={props.visible}
+    onCancel={props.onCancel} okText={servicesLangResources.devZone.saveKeys} >
+    <span className="api-key-modal__label">{servicesLangResources.devZone.name}:</span>
     <Input autoFocus />
-    <span className="api-key-modal__label">Algorithm:</span>
+    <span className="api-key-modal__label">{servicesLangResources.devZone.algorithm}:</span>
     <Radio.Group options={algorithmOptions} value={algorithmOptions[0]?.value} />
     <Divider />
-    <span className="api-key-modal__label">Public Key:</span>
+    <span className="api-key-modal__label">{servicesLangResources.devZone.publicKey}:</span>
     <Search ref={publicKeyRef} readOnly value={publicKey} enterButton={<Button icon={<CopyOutlined />} />} onSearch={() => handleCopyClick(publicKeyRef)} />
-    <span className="api-key-modal__label">Secret Key:</span>
+    <span className="api-key-modal__label">{servicesLangResources.devZone.secretKey}:</span>
     <Search ref={secretKeyRef} readOnly value={secretKey} enterButton={<Button icon={<CopyOutlined />} />} onSearch={() => handleCopyClick(secretKeyRef)} />
-    <span className="api-key-modal__warning-hint">Save the secret key, we will never show it again</span>
+    <span className="api-key-modal__warning-hint">{servicesLangResources.devZone.saveSecretKeyWarning}</span>
   </Modal>;
 };
 

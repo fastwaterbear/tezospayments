@@ -35,6 +35,12 @@ export const services = {
   devZone: {
     title: 'API Keys',
     addKey: 'Add Key',
+    saveKeys: 'Save Keys',
+    name: 'Name',
+    algorithm: 'Algorithm',
+    publicKey: 'Public Key',
+    secretKey: 'Secret Key',
+    saveSecretKeyWarning: 'Save the secret key, we will never show it again',
     noApiKeysAddedYet: 'No API keys added yet',
     deleteKeyConfirmation: 'Are you sure you want to delete the API key',
   },
