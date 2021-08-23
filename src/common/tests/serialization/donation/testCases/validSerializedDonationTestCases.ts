@@ -3,15 +3,12 @@ import { URL } from 'url';
 
 import BigNumber from 'bignumber.js';
 
-import { LegacySerializedDonation, NonSerializedDonationSlice, Donation, PaymentType } from '../../../../src';
+import { SerializedDonation, NonSerializedDonationSlice, Donation, PaymentType } from '../../../../src';
 
-const createdDate = new Date('2021-06-26T00:37:03.930Z');
-const expiredDate = new Date('2021-06-26T00:57:03.930Z');
-
-const legacyDonationDeserializerPositiveTestCases: ReadonlyArray<readonly [
+const validSerializedDonationTestCases: ReadonlyArray<readonly [
   message: string | null,
-  serializedDonation: readonly [serializedDonation: LegacySerializedDonation, serializedDonationBase64: string],
-  expectedDonationFactory: (nonSerializedDonationSlice: NonSerializedDonationSlice) => Donation
+  testValue: readonly [serializedDonation: SerializedDonation, serializedDonationBase64: string],
+  donationFactory: (nonSerializedDonationSlice: NonSerializedDonationSlice) => Donation
 ]> = [
     [
       'simple donation',
@@ -32,9 +29,9 @@ const legacyDonationDeserializerPositiveTestCases: ReadonlyArray<readonly [
       'donation with the desired amount',
       [
         {
-          desiredAmount: '384803.383202',
+          da: '384803.383202',
         },
-        'eyJkZXNpcmVkQW1vdW50IjoiMzg0ODAzLjM4MzIwMiJ9',
+        'eyJkYSI6IjM4NDgwMy4zODMyMDIifQ==',
       ],
       nonSerializedSlice => ({
         type: PaymentType.Donation,
@@ -49,9 +46,9 @@ const legacyDonationDeserializerPositiveTestCases: ReadonlyArray<readonly [
       'donation with the desired asset (Kolibri USD)',
       [
         {
-          desiredAsset: 'KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV',
+          das: 'KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV',
         },
-        'eyJkZXNpcmVkQXNzZXQiOiJLVDFLOWdDUmdhTFJGS1RFcll0MXdWeEEzRnJiOUZqYXNqVFYifQ==',
+        'eyJkYXMiOiJLVDFLOWdDUmdhTFJGS1RFcll0MXdWeEEzRnJiOUZqYXNqVFYifQ==',
       ],
       nonSerializedSlice => ({
         type: PaymentType.Donation,
@@ -66,10 +63,10 @@ const legacyDonationDeserializerPositiveTestCases: ReadonlyArray<readonly [
       'donation with urls',
       [
         {
-          successUrl: 'https://fastwaterbear.com/tezospayments/test/donation/success',
-          cancelUrl: 'https://fastwaterbear.com/tezospayments/test/donation/cancel',
+          su: 'https://fastwaterbear.com/tezospayments/test/donation/success',
+          cu: 'https://fastwaterbear.com/tezospayments/test/donation/cancel',
         },
-        'eyJzdWNjZXNzVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvZG9uYXRpb24vc3VjY2VzcyIsImNhbmNlbFVybCI6Imh0dHBzOi8vZmFzdHdhdGVyYmVhci5jb20vdGV6b3NwYXltZW50cy90ZXN0L2RvbmF0aW9uL2NhbmNlbCJ9',
+        'eyJzdSI6Imh0dHBzOi8vZmFzdHdhdGVyYmVhci5jb20vdGV6b3NwYXltZW50cy90ZXN0L2RvbmF0aW9uL3N1Y2Nlc3MiLCJjdSI6Imh0dHBzOi8vZmFzdHdhdGVyYmVhci5jb20vdGV6b3NwYXltZW50cy90ZXN0L2RvbmF0aW9uL2NhbmNlbCJ9',
       ],
       nonSerializedSlice => ({
         type: PaymentType.Donation,
@@ -82,4 +79,4 @@ const legacyDonationDeserializerPositiveTestCases: ReadonlyArray<readonly [
     ]
   ];
 
-export default legacyDonationDeserializerPositiveTestCases;
+export default validSerializedDonationTestCases;

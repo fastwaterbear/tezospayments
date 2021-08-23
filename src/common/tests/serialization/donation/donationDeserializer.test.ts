@@ -1,6 +1,5 @@
 import { DonationDeserializer, NonSerializedDonationSlice } from '../../../src';
-import negativeTestCases from './testCases/donationDeserializerNegativeTestCases';
-import positiveTestCases from './testCases/donationDeserializerPositiveTestCases';
+import { validSerializedDonationTestCases, invalidSerializedDonationTestCases } from './testCases';
 
 describe('Donation Deserializer', () => {
   const nonSerializedDonationSlice: NonSerializedDonationSlice = {
@@ -13,11 +12,11 @@ describe('Donation Deserializer', () => {
     donationDeserializer = new DonationDeserializer();
   });
 
-  test.each(positiveTestCases)('deserialize the valid donation: %p', (_, [, serializedDonationBase64], expectedDonationFactory) => {
+  test.each(validSerializedDonationTestCases)('deserialize the valid donation: %p', (_, [, serializedDonationBase64], expectedDonationFactory) => {
     expect(donationDeserializer.deserialize(serializedDonationBase64, nonSerializedDonationSlice)).toEqual(expectedDonationFactory(nonSerializedDonationSlice));
   });
 
-  test.each(negativeTestCases)('deserialize the invalid donation: %p', (_, [, serializedDonationBase64]) => {
+  test.each(invalidSerializedDonationTestCases)('deserialize the invalid donation: %p', (_, [, serializedDonationBase64]) => {
     expect(donationDeserializer.deserialize(serializedDonationBase64, nonSerializedDonationSlice)).toBeNull();
   });
 });

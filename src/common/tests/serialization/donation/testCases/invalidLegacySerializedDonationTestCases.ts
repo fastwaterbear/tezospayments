@@ -1,9 +1,9 @@
 /* eslint-disable max-len */
 import { LegacySerializedDonation } from '../../../../src';
 
-const legacyDonationDeserializerNegativeTestCases: ReadonlyArray<readonly [
+const invalidLegacySerializedDonationTestCases: ReadonlyArray<readonly [
   message: string | null,
-  serializedDonation: readonly [serializedDonation: LegacySerializedDonation, serializedDonationBase64: string]
+  testValue: readonly [serializedDonation: LegacySerializedDonation, serializedDonationBase64: string]
 ]> = [
     [
       'donation with excess fields (a fields count is greater than the maximum)',
@@ -55,4 +55,4 @@ const legacyDonationDeserializerNegativeTestCases: ReadonlyArray<readonly [
     ]
   ];
 
-export default legacyDonationDeserializerNegativeTestCases;
+export default invalidLegacySerializedDonationTestCases;

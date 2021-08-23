@@ -10,8 +10,8 @@ const expiredDate = new Date('2021-06-26T00:57:03.930Z');
 
 const validLegacySerializedPaymentTestCases: ReadonlyArray<readonly [
   message: string | null,
-  serializedPayment: readonly [serializedPayment: LegacySerializedPayment, serializedPaymentBase64: string],
-  expectedPaymentFactory: (nonSerializedPaymentSlice: NonSerializedPaymentSlice) => Payment
+  testValue: readonly [serializedPayment: LegacySerializedPayment, serializedPaymentBase64: string],
+  paymentFactory: (nonSerializedPaymentSlice: NonSerializedPaymentSlice) => Payment
 ]> = [
     [
       'simple payment',
