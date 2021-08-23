@@ -15,23 +15,23 @@ const validTestObject: TestType = {
 
 const invalidValueTestCases: ReadonlyArray<readonly [
   message: string | null,
-  testValue: readonly [value: Partial<TestType> | null, serializedValue: string]
+  testValue: readonly [value: Partial<TestType>, serializedValue: string]
 ]> = [
     [
       'invalid serialized value',
-      [null, undefined as any]
+      [undefined as any, undefined as any]
     ],
     [
       'invalid serialized value',
-      [null, null as any]
+      [null as any, null as any]
     ],
     [
       'invalid serialized value',
-      [null, { a: 1, b: 2, c: 3 } as any]
+      [1111, { a: 1, b: 2, c: 3 } as any]
     ],
     [
       'invalid serialized value',
-      [null, 'kkjgjgre4']
+      [() => console.log('Test'), 'kkjgjgre4']
     ],
     [
       'empty serialized value',

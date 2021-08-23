@@ -8,10 +8,10 @@ import { SerializedPayment, NonSerializedPaymentSlice, Payment, PaymentType } fr
 const createdDate = new Date('2021-06-26T00:37:03.930Z');
 const expiredDate = new Date('2021-06-26T00:57:03.930Z');
 
-const paymentDeserializerPositiveTestCases: ReadonlyArray<readonly [
+const validSerializedPaymentTestCases: ReadonlyArray<readonly [
   message: string | null,
-  serializedPayment: readonly [serializedPayment: SerializedPayment, serializedPaymentBase64: string],
-  expectedPaymentFactory: (nonSerializedPaymentSlice: NonSerializedPaymentSlice) => Payment
+  testValue: readonly [serializedPayment: SerializedPayment, serializedPaymentBase64: string],
+  paymentFactory: (nonSerializedPaymentSlice: NonSerializedPaymentSlice) => Payment
 ]> = [
     [
       'simple payment',
@@ -142,4 +142,4 @@ const paymentDeserializerPositiveTestCases: ReadonlyArray<readonly [
     ],
   ];
 
-export default paymentDeserializerPositiveTestCases;
+export default validSerializedPaymentTestCases;

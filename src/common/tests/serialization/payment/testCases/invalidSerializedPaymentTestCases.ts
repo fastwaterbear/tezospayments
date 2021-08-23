@@ -4,9 +4,9 @@ import { SerializedPayment } from '../../../../src';
 const createdDate = new Date('2021-06-26T00:37:03.930Z');
 const expiredDate = new Date('2021-06-26T00:57:03.930Z');
 
-const paymentDeserializerNegativeTestCases: ReadonlyArray<readonly [
+const invalidSerializedPaymentTestCases: ReadonlyArray<readonly [
   message: string | null,
-  serializedPayment: readonly [serializedPayment: SerializedPayment, serializedPaymentBase64: string]
+  testValue: readonly [serializedPayment: SerializedPayment, serializedPaymentBase64: string]
 ]> = [
     [
       'payment without some required fields',
@@ -109,4 +109,4 @@ const paymentDeserializerNegativeTestCases: ReadonlyArray<readonly [
     ]
   ];
 
-export default paymentDeserializerNegativeTestCases;
+export default invalidSerializedPaymentTestCases;

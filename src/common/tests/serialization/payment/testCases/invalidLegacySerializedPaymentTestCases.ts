@@ -4,7 +4,7 @@ import { LegacySerializedPayment } from '../../../../src';
 const createdDate = new Date('2021-06-26T00:37:03.930Z');
 const expiredDate = new Date('2021-06-26T00:57:03.930Z');
 
-const legacyPaymentDeserializerNegativeTestCases: ReadonlyArray<readonly [
+const invalidLegacySerializedPaymentTestCases: ReadonlyArray<readonly [
   message: string | null,
   serializedPayment: readonly [serializedPayment: LegacySerializedPayment, serializedPaymentBase64: string]
 ]> = [
@@ -109,4 +109,4 @@ const legacyPaymentDeserializerNegativeTestCases: ReadonlyArray<readonly [
     ]
   ];
 
-export default legacyPaymentDeserializerNegativeTestCases;
+export default invalidLegacySerializedPaymentTestCases;

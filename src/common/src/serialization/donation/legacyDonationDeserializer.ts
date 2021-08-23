@@ -21,14 +21,14 @@ export class LegacyDonationDeserializer {
     try {
       const serializedDonation = LegacyDonationDeserializer.serializedDonationBase64Deserializer.deserialize(serializedDonationBase64);
 
-      return serializedDonation ? this.mapDeserializedDonationToDonation(serializedDonation, nonSerializedDonationSlice) : null;
+      return serializedDonation ? this.mapSerializedDonationToDonation(serializedDonation, nonSerializedDonationSlice) : null;
     }
     catch {
       return null;
     }
   }
 
-  protected mapDeserializedDonationToDonation(serializedDonation: LegacySerializedDonation, nonSerializedDonationSlice: NonSerializedDonationSlice): Donation {
+  protected mapSerializedDonationToDonation(serializedDonation: LegacySerializedDonation, nonSerializedDonationSlice: NonSerializedDonationSlice): Donation {
     return {
       type: PaymentType.Donation,
       desiredAmount: serializedDonation.desiredAmount ? new BigNumber(serializedDonation.desiredAmount) : undefined,
