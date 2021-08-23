@@ -3,21 +3,12 @@ import BigNumber from 'bignumber.js';
 import type { NonSerializedPaymentSlice, Payment, LegacySerializedPayment } from '../../models';
 import { PaymentType } from '../../models/payment/paymentBase';
 import { URL } from '../../native';
-import { Base64Deserializer, SerializedFieldType } from '../base64';
+import { Base64Deserializer } from '../base64';
+import { legacySerializedPaymentFieldTypes } from './serializedPaymentFieldTypes';
 
 export class LegacyPaymentDeserializer {
-  protected static readonly serializedPaymentFieldTypes: ReadonlyMap<
-    keyof LegacySerializedPayment, SerializedFieldType | readonly SerializedFieldType[]
-  > = new Map<keyof LegacySerializedPayment, SerializedFieldType | readonly SerializedFieldType[]>()
-    .set('amount', 'string')
-    .set('data', 'object')
-    .set('asset', ['string', 'undefined', 'null'])
-    .set('successUrl', ['string', 'undefined', 'null'])
-    .set('cancelUrl', ['string', 'undefined', 'null'])
-    .set('created', 'number')
-    .set('expired', ['number', 'undefined', 'null']);
   protected static readonly serializedPaymentBase64Deserializer = new Base64Deserializer<LegacySerializedPayment>(
-    LegacyPaymentDeserializer.serializedPaymentFieldTypes
+    legacySerializedPaymentFieldTypes
   );
 
   deserialize(serializedPaymentBase64: string, nonSerializedPaymentSlice: NonSerializedPaymentSlice): Payment | null {
