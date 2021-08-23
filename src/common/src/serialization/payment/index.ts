@@ -1,2 +1,2 @@
-export { PaymentSerializer } from './paymentSerializer';
-export { LegacyPaymentSerializer } from './legacyPaymentSerializer';
+export { PaymentDeserializer } from './paymentDeserializer';
+export { LegacyPaymentDeserializer } from './legacyPaymentDeserializer';

@@ -1,4 +1,4 @@
-import { LegacyPaymentSerializer, NonSerializedPaymentSlice } from '../../../src';
+import { LegacyPaymentDeserializer, NonSerializedPaymentSlice } from '../../../src';
 import negativeTestCases from './testCases/legacyPaymentDeserializerNegativeTestCases';
 import positiveTestCases from './testCases/legacyPaymentDeserializerPositiveTestCases';
 
@@ -7,17 +7,17 @@ describe('Legacy Payment Deserializer', () => {
     targetAddress: 'KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x'
   };
 
-  let paymentSerializer: LegacyPaymentSerializer;
+  let paymentDeserializer: LegacyPaymentDeserializer;
 
   beforeEach(() => {
-    paymentSerializer = new LegacyPaymentSerializer();
+    paymentDeserializer = new LegacyPaymentDeserializer();
   });
 
   test.each(positiveTestCases)('deserialize the valid payment: %p', (_, [, serializedPaymentBase64], expectedPaymentFactory) => {
-    expect(paymentSerializer.deserialize(serializedPaymentBase64, nonSerializedPaymentSlice)).toEqual(expectedPaymentFactory(nonSerializedPaymentSlice));
+    expect(paymentDeserializer.deserialize(serializedPaymentBase64, nonSerializedPaymentSlice)).toEqual(expectedPaymentFactory(nonSerializedPaymentSlice));
   });
 
   test.each(negativeTestCases)('deserialize the invalid payment: %p', (_, [, serializedPaymentBase64]) => {
-    expect(paymentSerializer.deserialize(serializedPaymentBase64, nonSerializedPaymentSlice)).toBeNull();
+    expect(paymentDeserializer.deserialize(serializedPaymentBase64, nonSerializedPaymentSlice)).toBeNull();
   });
 });

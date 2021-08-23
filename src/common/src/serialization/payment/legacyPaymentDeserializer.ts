@@ -5,7 +5,7 @@ import { PaymentType } from '../../models/payment/paymentBase';
 import { URL } from '../../native';
 import { Base64Deserializer, SerializedFieldType } from '../base64';
 
-export class LegacyPaymentSerializer {
+export class LegacyPaymentDeserializer {
   protected static readonly serializedPaymentFieldTypes: ReadonlyMap<
     keyof LegacySerializedPayment, SerializedFieldType | readonly SerializedFieldType[]
   > = new Map<keyof LegacySerializedPayment, SerializedFieldType | readonly SerializedFieldType[]>()
@@ -17,12 +17,12 @@ export class LegacyPaymentSerializer {
     .set('created', 'number')
     .set('expired', ['number', 'undefined', 'null']);
   protected static readonly serializedPaymentBase64Deserializer = new Base64Deserializer<LegacySerializedPayment>(
-    LegacyPaymentSerializer.serializedPaymentFieldTypes
+    LegacyPaymentDeserializer.serializedPaymentFieldTypes
   );
 
   deserialize(serializedPaymentBase64: string, nonSerializedPaymentSlice: NonSerializedPaymentSlice): Payment | null {
     try {
-      const serializedPayment = LegacyPaymentSerializer.serializedPaymentBase64Deserializer.deserialize(serializedPaymentBase64);
+      const serializedPayment = LegacyPaymentDeserializer.serializedPaymentBase64Deserializer.deserialize(serializedPaymentBase64);
 
       return serializedPayment ? this.mapDeserializedPaymentToPayment(serializedPayment, nonSerializedPaymentSlice) : null;
     }

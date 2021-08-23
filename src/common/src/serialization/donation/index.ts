@@ -1,2 +1,2 @@
-export { DonationSerializer } from './donationSerializer';
-export { LegacyDonationSerializer } from './legacyDonationSerializer';
+export { DonationDeserializer } from './donationDeserializer';
+export { LegacyDonationDeserializer } from './legacyDonationDeserializer';

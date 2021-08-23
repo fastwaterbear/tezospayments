@@ -5,7 +5,7 @@ import { PaymentType } from '../../models/payment/paymentBase';
 import { URL } from '../../native';
 import { Base64Deserializer, SerializedFieldType } from '../base64';
 
-export class LegacyDonationSerializer {
+export class LegacyDonationDeserializer {
   protected static readonly serializedDonationFieldTypes: ReadonlyMap<
     keyof LegacySerializedDonation, SerializedFieldType | readonly SerializedFieldType[]
   > = new Map<keyof LegacySerializedDonation, SerializedFieldType | readonly SerializedFieldType[]>()
@@ -14,12 +14,12 @@ export class LegacyDonationSerializer {
     .set('successUrl', ['string', 'undefined', 'null'])
     .set('cancelUrl', ['string', 'undefined', 'null']);
   protected static readonly serializedDonationBase64Deserializer = new Base64Deserializer<LegacySerializedDonation>(
-    LegacyDonationSerializer.serializedDonationFieldTypes
+    LegacyDonationDeserializer.serializedDonationFieldTypes
   );
 
   deserialize(serializedDonationBase64: string, nonSerializedDonationSlice: NonSerializedDonationSlice): Donation | null {
     try {
-      const serializedDonation = LegacyDonationSerializer.serializedDonationBase64Deserializer.deserialize(serializedDonationBase64);
+      const serializedDonation = LegacyDonationDeserializer.serializedDonationBase64Deserializer.deserialize(serializedDonationBase64);
 
       return serializedDonation ? this.mapDeserializedDonationToDonation(serializedDonation, nonSerializedDonationSlice) : null;
     }
