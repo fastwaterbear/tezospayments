@@ -1,5 +1,6 @@
 import { Buffer } from 'buffer';
 
+import { base64 } from '../../utils';
 import { ObjectSerializationValidator } from './objectSerializationValidator';
 import type { SerializedFieldType } from './serializedFieldType';
 
@@ -16,7 +17,7 @@ export class Base64Serializer<T extends Record<string | number, unknown>> {
         return null;
 
       const jsonString = JSON.stringify(value);
-      return Buffer.from(jsonString, 'utf8').toString('base64url');
+      return base64.encode(jsonString, 'base64url');
     }
     catch {
       return null;

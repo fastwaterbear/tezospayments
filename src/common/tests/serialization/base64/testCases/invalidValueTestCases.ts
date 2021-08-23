@@ -41,7 +41,7 @@ const invalidValueTestCases: ReadonlyArray<readonly [
       'serialized object without some required fields: field1',
       [
         copyObjectExcludingFields(validTestObject, ['field1']),
-        'eyJmaWVsZDIiOiJmaWVsZDJWYWx1ZSIsImZpZWxkMyI6ODAsImZpZWxkNCI6MTAwLCJmaWVsZDUiOiJmaWVsZDVWYWx1ZSIsImZpZWxkNiI6MTcsImZpZWxkNyI6bnVsbH0='
+        'eyJmaWVsZDIiOiJmaWVsZDJWYWx1ZSIsImZpZWxkMyI6ODAsImZpZWxkNCI6MTAwLCJmaWVsZDUiOiJmaWVsZDVWYWx1ZSIsImZpZWxkNiI6MTcsImZpZWxkNyI6bnVsbH0'
       ]
     ],
     [
@@ -49,7 +49,7 @@ const invalidValueTestCases: ReadonlyArray<readonly [
       [
 
         copyObjectExcludingFields(validTestObject, ['field3', 'field4']),
-        'eyJmaWVsZDEiOnsieCI6MTAwLCJ5IjoyMDB9LCJmaWVsZDIiOiJmaWVsZDJWYWx1ZSIsImZpZWxkNSI6ImZpZWxkNVZhbHVlIiwiZmllbGQ2IjoxNywiZmllbGQ3IjpudWxsfQ=='
+        'eyJmaWVsZDEiOnsieCI6MTAwLCJ5IjoyMDB9LCJmaWVsZDIiOiJmaWVsZDJWYWx1ZSIsImZpZWxkNSI6ImZpZWxkNVZhbHVlIiwiZmllbGQ2IjoxNywiZmllbGQ3IjpudWxsfQ'
       ]
     ],
     [
@@ -71,7 +71,7 @@ const invalidValueTestCases: ReadonlyArray<readonly [
             return obj;
           }, {})
         },
-        'eyJmaWVsZDEiOnsieCI6MTAwLCJ5IjoyMDB9LCJmaWVsZDIiOiJmaWVsZDJWYWx1ZSIsImZpZWxkMyI6ODAsImZpZWxkNCI6MTAwLCJmaWVsZDUiOiJmaWVsZDVWYWx1ZSIsImZpZWxkNiI6MTcsImZpZWxkNyI6bnVsbCwic29tZUV4dHJhRmllbGQwIjowLCJzb21lRXh0cmFGaWVsZDEiOjEwMCwic29tZUV4dHJhRmllbGQyIjoyMDAsInNvbWVFeHRyYUZpZWxkMyI6MzAwLCJzb21lRXh0cmFGaWVsZDQiOjQwMCwic29tZUV4dHJhRmllbGQ1Ijo1MDAsInNvbWVFeHRyYUZpZWxkNiI6NjAwLCJzb21lRXh0cmFGaWVsZDciOjcwMCwic29tZUV4dHJhRmllbGQ4Ijo4MDAsInNvbWVFeHRyYUZpZWxkOSI6OTAwLCJzb21lRXh0cmFGaWVsZDEwIjoxMDAwLCJzb21lRXh0cmFGaWVsZDExIjoxMTAwLCJzb21lRXh0cmFGaWVsZDEyIjoxMjAwLCJzb21lRXh0cmFGaWVsZDEzIjoxMzAwLCJzb21lRXh0cmFGaWVsZDE0IjoxNDAwLCJzb21lRXh0cmFGaWVsZDE1IjoxNTAwLCJzb21lRXh0cmFGaWVsZDE2IjoxNjAwLCJzb21lRXh0cmFGaWVsZDE3IjoxNzAwLCJzb21lRXh0cmFGaWVsZDE4IjoxODAwLCJzb21lRXh0cmFGaWVsZDE5IjoxOTAwLCJzb21lRXh0cmFGaWVsZDIwIjoyMDAwLCJzb21lRXh0cmFGaWVsZDIxIjoyMTAwLCJzb21lRXh0cmFGaWVsZDIyIjoyMjAwLCJzb21lRXh0cmFGaWVsZDIzIjoyMzAwLCJzb21lRXh0cmFGaWVsZDI0IjoyNDAwLCJzb21lRXh0cmFGaWVsZDI1IjoyNTAwLCJzb21lRXh0cmFGaWVsZDI2IjoyNjAwLCJzb21lRXh0cmFGaWVsZDI3IjoyNzAwLCJzb21lRXh0cmFGaWVsZDI4IjoyODAwLCJzb21lRXh0cmFGaWVsZDI5IjoyOTAwfQ=='
+        'eyJmaWVsZDEiOnsieCI6MTAwLCJ5IjoyMDB9LCJmaWVsZDIiOiJmaWVsZDJWYWx1ZSIsImZpZWxkMyI6ODAsImZpZWxkNCI6MTAwLCJmaWVsZDUiOiJmaWVsZDVWYWx1ZSIsImZpZWxkNiI6MTcsImZpZWxkNyI6bnVsbCwic29tZUV4dHJhRmllbGQwIjowLCJzb21lRXh0cmFGaWVsZDEiOjEwMCwic29tZUV4dHJhRmllbGQyIjoyMDAsInNvbWVFeHRyYUZpZWxkMyI6MzAwLCJzb21lRXh0cmFGaWVsZDQiOjQwMCwic29tZUV4dHJhRmllbGQ1Ijo1MDAsInNvbWVFeHRyYUZpZWxkNiI6NjAwLCJzb21lRXh0cmFGaWVsZDciOjcwMCwic29tZUV4dHJhRmllbGQ4Ijo4MDAsInNvbWVFeHRyYUZpZWxkOSI6OTAwLCJzb21lRXh0cmFGaWVsZDEwIjoxMDAwLCJzb21lRXh0cmFGaWVsZDExIjoxMTAwLCJzb21lRXh0cmFGaWVsZDEyIjoxMjAwLCJzb21lRXh0cmFGaWVsZDEzIjoxMzAwLCJzb21lRXh0cmFGaWVsZDE0IjoxNDAwLCJzb21lRXh0cmFGaWVsZDE1IjoxNTAwLCJzb21lRXh0cmFGaWVsZDE2IjoxNjAwLCJzb21lRXh0cmFGaWVsZDE3IjoxNzAwLCJzb21lRXh0cmFGaWVsZDE4IjoxODAwLCJzb21lRXh0cmFGaWVsZDE5IjoxOTAwLCJzb21lRXh0cmFGaWVsZDIwIjoyMDAwLCJzb21lRXh0cmFGaWVsZDIxIjoyMTAwLCJzb21lRXh0cmFGaWVsZDIyIjoyMjAwLCJzb21lRXh0cmFGaWVsZDIzIjoyMzAwLCJzb21lRXh0cmFGaWVsZDI0IjoyNDAwLCJzb21lRXh0cmFGaWVsZDI1IjoyNTAwLCJzb21lRXh0cmFGaWVsZDI2IjoyNjAwLCJzb21lRXh0cmFGaWVsZDI3IjoyNzAwLCJzb21lRXh0cmFGaWVsZDI4IjoyODAwLCJzb21lRXh0cmFGaWVsZDI5IjoyOTAwfQ'
       ]
     ],
     [
@@ -81,7 +81,7 @@ const invalidValueTestCases: ReadonlyArray<readonly [
           ...validTestObject,
           field2: 132
         },
-        'eyJmaWVsZDEiOnsieCI6MTAwLCJ5IjoyMDB9LCJmaWVsZDIiOjEzMiwiZmllbGQzIjo4MCwiZmllbGQ0IjoxMDAsImZpZWxkNSI6ImZpZWxkNVZhbHVlIiwiZmllbGQ2IjoxNywiZmllbGQ3IjpudWxsfQ=='
+        'eyJmaWVsZDEiOnsieCI6MTAwLCJ5IjoyMDB9LCJmaWVsZDIiOjEzMiwiZmllbGQzIjo4MCwiZmllbGQ0IjoxMDAsImZpZWxkNSI6ImZpZWxkNVZhbHVlIiwiZmllbGQ2IjoxNywiZmllbGQ3IjpudWxsfQ'
       ],
     ],
     [

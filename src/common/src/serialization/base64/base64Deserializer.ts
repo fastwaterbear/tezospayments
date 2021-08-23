@@ -1,5 +1,6 @@
 import { Buffer } from 'buffer';
 
+import { base64 } from '../../utils';
 import { ObjectSerializationValidator } from './objectSerializationValidator';
 import type { SerializedFieldType } from './serializedFieldType';
 
@@ -15,7 +16,7 @@ export class Base64Deserializer<T extends Record<string | number, unknown>> {
       let value: T;
 
       if (serializedValue) {
-        const serializedValueString = Buffer.from(serializedValue, 'base64url').toString('utf8');
+        const serializedValueString = base64.decode(serializedValue, 'base64url');
         value = JSON.parse(serializedValueString);
       }
       else
