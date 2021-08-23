@@ -15,7 +15,7 @@ export class Base64Deserializer<T extends Record<string | number, unknown>> {
       let value: T;
 
       if (serializedValue) {
-        const serializedValueString = Buffer.from(serializedValue, 'base64').toString('utf8');
+        const serializedValueString = Buffer.from(serializedValue, 'base64url').toString('utf8');
         value = JSON.parse(serializedValueString);
       }
       else

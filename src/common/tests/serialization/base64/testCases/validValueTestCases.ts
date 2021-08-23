@@ -21,7 +21,7 @@ const validValueTestCases: ReadonlyArray<readonly [
       'simple serialized object',
       [
         validTestObject,
-        'eyJmaWVsZDEiOnsieCI6MTAwLCJ5IjoyMDB9LCJmaWVsZDIiOiJmaWVsZDJWYWx1ZSIsImZpZWxkMyI6ODAsImZpZWxkNCI6MTAwLCJmaWVsZDUiOiJmaWVsZDVWYWx1ZSIsImZpZWxkNiI6MTcsImZpZWxkNyI6bnVsbH0=',
+        'eyJmaWVsZDEiOnsieCI6MTAwLCJ5IjoyMDB9LCJmaWVsZDIiOiJmaWVsZDJWYWx1ZSIsImZpZWxkMyI6ODAsImZpZWxkNCI6MTAwLCJmaWVsZDUiOiJmaWVsZDVWYWx1ZSIsImZpZWxkNiI6MTcsImZpZWxkNyI6bnVsbH0',
       ]
     ],
     [

@@ -45,7 +45,7 @@ const invalidSerializedDonationTestCases: ReadonlyArray<readonly [
           da: '8383.383202283822832232',
           das: { value: 3333333 }
         },
-        'eyJkYSI6IjgzODMuMzgzMjAyMjgzODIyODMyMjMyIiwiZGFzIjp7InZhbHVlIjozMzMzMzMzfX0=',
+        'eyJkYSI6IjgzODMuMzgzMjAyMjgzODIyODMyMjMyIiwiZGFzIjp7InZhbHVlIjozMzMzMzMzfX0',
       ]
     ],
     [

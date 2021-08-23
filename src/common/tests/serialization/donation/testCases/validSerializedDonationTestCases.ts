@@ -31,7 +31,7 @@ const validSerializedDonationTestCases: ReadonlyArray<readonly [
         {
           da: '384803.383202',
         },
-        'eyJkYSI6IjM4NDgwMy4zODMyMDIifQ==',
+        'eyJkYSI6IjM4NDgwMy4zODMyMDIifQ',
       ],
       nonSerializedSlice => ({
         type: PaymentType.Donation,
@@ -48,7 +48,7 @@ const validSerializedDonationTestCases: ReadonlyArray<readonly [
         {
           das: 'KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV',
         },
-        'eyJkYXMiOiJLVDFLOWdDUmdhTFJGS1RFcll0MXdWeEEzRnJiOUZqYXNqVFYifQ==',
+        'eyJkYXMiOiJLVDFLOWdDUmdhTFJGS1RFcll0MXdWeEEzRnJiOUZqYXNqVFYifQ',
       ],
       nonSerializedSlice => ({
         type: PaymentType.Donation,

@@ -48,7 +48,7 @@ const validLegacySerializedDonationTestCases: ReadonlyArray<readonly [
         {
           desiredAsset: 'KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV',
         },
-        'eyJkZXNpcmVkQXNzZXQiOiJLVDFLOWdDUmdhTFJGS1RFcll0MXdWeEEzRnJiOUZqYXNqVFYifQ==',
+        'eyJkZXNpcmVkQXNzZXQiOiJLVDFLOWdDUmdhTFJGS1RFcll0MXdWeEEzRnJiOUZqYXNqVFYifQ',
       ],
       nonSerializedSlice => ({
         type: PaymentType.Donation,

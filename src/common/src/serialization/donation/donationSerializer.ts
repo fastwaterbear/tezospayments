@@ -2,7 +2,7 @@ import type { Donation, SerializedDonation } from '../../models';
 import { Base64Serializer } from '../base64';
 import { serializedDonationFieldTypes } from './serializedDonationFieldTypes';
 
-const serializedEmptyObjectBase64 = 'e30=';
+const serializedEmptyObjectBase64 = 'e30';
 export class DonationSerializer {
   protected static readonly serializedDonationBase64Serializer = new Base64Serializer<SerializedDonation>(
     serializedDonationFieldTypes

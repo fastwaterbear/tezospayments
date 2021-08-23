@@ -24,7 +24,7 @@ const invalidLegacySerializedDonationTestCases: ReadonlyArray<readonly [
         {
           desiredAmount: 35039
         },
-        'eyJkZXNpcmVkQW1vdW50IjozNTAzOX0=',
+        'eyJkZXNpcmVkQW1vdW50IjozNTAzOX0',
       ],
     ],
     [
@@ -35,7 +35,7 @@ const invalidLegacySerializedDonationTestCases: ReadonlyArray<readonly [
           successUrl: '<script>alert(1)</script>',
           cancelUrl: 'https://fastwaterbear.com/tezospayments/test/donation/cancel',
         },
-        'eyJkZXNpcmVkQW1vdW50IjoiMzkzOTQzOTQzMDQwMyIsInN1Y2Nlc3NVcmwiOiI8c2NyaXB0PmFsZXJ0KDEpPC9zY3JpcHQ+IiwiY2FuY2VsVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvZG9uYXRpb24vY2FuY2VsIn0=',
+        'eyJkZXNpcmVkQW1vdW50IjoiMzkzOTQzOTQzMDQwMyIsInN1Y2Nlc3NVcmwiOiI8c2NyaXB0PmFsZXJ0KDEpPC9zY3JpcHQ+IiwiY2FuY2VsVXJsIjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvZG9uYXRpb24vY2FuY2VsIn0',
       ]
     ],
     [
@@ -45,7 +45,7 @@ const invalidLegacySerializedDonationTestCases: ReadonlyArray<readonly [
           desiredAmount: '8383.383202283822832232',
           desiredAsset: { value: 3333333 }
         },
-        'eyJkZXNpcmVkQW1vdW50IjoiODM4My4zODMyMDIyODM4MjI4MzIyMzIiLCJkZXNpcmVkQXNzZXQiOnsidmFsdWUiOjMzMzMzMzN9fQ==',
+        'eyJkZXNpcmVkQW1vdW50IjoiODM4My4zODMyMDIyODM4MjI4MzIyMzIiLCJkZXNpcmVkQXNzZXQiOnsidmFsdWUiOjMzMzMzMzN9fQ',
       ]
     ],
     [
