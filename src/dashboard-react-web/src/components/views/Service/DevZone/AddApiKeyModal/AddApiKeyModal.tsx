@@ -1,5 +1,5 @@
 import { CopyOutlined } from '@ant-design/icons';
-import { Button, Divider, Input, Modal, Radio, RadioChangeEvent } from 'antd';
+import { Button, Divider, Input, Modal, Radio, RadioChangeEvent, Typography, Popconfirm } from 'antd';
 import Search from 'antd/lib/input/Search';
 import React, { useCallback, useRef, useState } from 'react';
 
@@ -14,6 +14,7 @@ interface AddApiKeyModalProps {
 
 export const AddApiKeyModal = (props: AddApiKeyModalProps) => {
   const langResources = useCurrentLanguageResources();
+  const commonLangResources = langResources.common;
   const servicesLangResources = langResources.views.services;
 
   const algorithmOptions = [
@@ -47,7 +48,23 @@ export const AddApiKeyModal = (props: AddApiKeyModalProps) => {
   }, []);
 
   return <Modal className="api-key-modal" title={servicesLangResources.devZone.addKey} centered destroyOnClose visible={props.visible}
-    onCancel={props.onCancel} okText={servicesLangResources.devZone.saveKeys} okButtonProps={{ disabled: !name }}>
+    onCancel={props.onCancel}
+    footer={[
+      <Button key="back" onClick={props.onCancel}>
+        {commonLangResources.cancel}
+      </Button>,
+      <Popconfirm
+        title={servicesLangResources.devZone.saveSecretKeyConfirm}
+        placement="topRight"
+        okText={commonLangResources.yes}
+        cancelText={commonLangResources.no}
+      >
+        <Button key="submit" type="primary" disabled={!name}>
+          {servicesLangResources.devZone.saveKeys}
+        </Button>
+      </Popconfirm>
+    ]}
+  >
     <span className="api-key-modal__label">{servicesLangResources.devZone.name}:</span>
     <Input autoFocus value={name} onChange={handleNameChanged} />
     <span className="api-key-modal__label">{servicesLangResources.devZone.algorithm}:</span>
@@ -57,7 +74,7 @@ export const AddApiKeyModal = (props: AddApiKeyModalProps) => {
     <Search ref={publicKeyRef} readOnly value={publicKey} enterButton={<Button icon={<CopyOutlined />} />} onSearch={() => handleCopyClick(publicKeyRef)} />
     <span className="api-key-modal__label">{servicesLangResources.devZone.secretKey}:</span>
     <Search ref={secretKeyRef} readOnly value={secretKey} enterButton={<Button icon={<CopyOutlined />} />} onSearch={() => handleCopyClick(secretKeyRef)} />
-    <span className="api-key-modal__warning-hint">{servicesLangResources.devZone.saveSecretKeyWarning}</span>
+    <Typography.Text mark>{servicesLangResources.devZone.saveSecretKeyWarning}</Typography.Text>
   </Modal>;
 };
 

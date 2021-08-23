@@ -5,5 +5,7 @@ export const common = {
   open: 'Open',
   new: 'New',
   cancel: 'Cancel',
-  save: 'Save'
+  save: 'Save',
+  yes: 'Yes',
+  no: 'No'
 };
