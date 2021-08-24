@@ -1,4 +1,6 @@
-export type Payment = import('@tezospayments/common').Payment;
+export type Payment = import('@tezospayments/common').Payment & {
+  readonly urls: string;
+};
 
 export const enum PaymentUrlType {
   MinifiedBase64 = 0,

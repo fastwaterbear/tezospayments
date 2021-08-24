@@ -25,7 +25,7 @@ interface DefaultPaymentParameters {
 export interface TezosPaymentsOptions {
   signing: TezosPaymentsSigningOptions;
   serviceContractAddress: string;
-  defaultPaymentParameters: Partial<DefaultPaymentParameters>;
+  defaultPaymentParameters?: Partial<DefaultPaymentParameters>;
 }
 
 interface PaymentCreateParametersBase {
