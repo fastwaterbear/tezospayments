@@ -197,7 +197,11 @@ export class ServicesService {
 
         owner: serviceDto.owner,
         paused: serviceDto.paused,
-        deleted: serviceDto.deleted
+        deleted: serviceDto.deleted,
+        signingKeys: {
+          'SHA256:4T5E9yJjajhHazEUPHAYMa97bg7m6SxpInoxtX+XLPg': { publicKey: 'SHA256:4T5E9yJjajhHazEUPHAYMa97bg7m6SxpInoxtX+XLPg', name: 'Home PC' },
+          'SHA256:Q0TPyOEbRpCZyoYRFyeGmzb4yg/ujidrRRoRnyJiuqo': { publicKey: 'SHA256:Q0TPyOEbRpCZyoYRFyeGmzb4yg/ujidrRRoRnyJiuqo', name: 'Work' },
+        },
       }
       : null;
   }

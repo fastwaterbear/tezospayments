@@ -20,6 +20,7 @@ export interface Service {
   readonly owner: string;
   readonly paused: boolean;
   readonly deleted: boolean;
+  readonly signingKeys: { [key: string]: { publicKey: string; name: string } };
 }
 
 export const emptyService: Service = {
@@ -38,4 +39,5 @@ export const emptyService: Service = {
   paused: false,
   deleted: false,
   network: networks.edo2net,
+  signingKeys: {}
 };

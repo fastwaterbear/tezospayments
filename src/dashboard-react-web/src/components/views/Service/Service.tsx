@@ -44,7 +44,7 @@ export const Service = (props: ServiceProps) => {
         : <>
           <HeaderPure service={service} />
           <ViewZonePure service={service} />
-          <DevZonePure />
+          <DevZonePure service={service} />
           <DangerZonePure service={service} />
         </>}
   </View>;
