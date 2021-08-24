@@ -1,4 +1,4 @@
-import { guards } from '../../common';
+import { guards } from '@tezospayments/common';
 
 export abstract class TezosPaymentsError extends Error {
   readonly name: string;
