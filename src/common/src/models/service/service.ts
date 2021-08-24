@@ -1,4 +1,5 @@
 import { Network, networks } from '../blockchain/network';
+import { ServiceSigningKey } from './ServiceSigningKey';
 import { ServiceOperationType } from './serviceOperationType';
 
 export interface Service {
@@ -20,7 +21,7 @@ export interface Service {
   readonly owner: string;
   readonly paused: boolean;
   readonly deleted: boolean;
-  readonly signingKeys: { [key: string]: { publicKey: string; name: string } };
+  readonly signingKeys: { [key: string]: ServiceSigningKey };
 }
 
 export const emptyService: Service = {

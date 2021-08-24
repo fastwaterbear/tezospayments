@@ -6,7 +6,7 @@ import {
   tezosMeta, Network,
   Service, ServiceOperation, ServiceOperationDirection,
   ServiceOperationStatus, ServiceDto, ServicesBigMapKeyValuePair,
-  converters, guards, optimization
+  converters, guards, optimization, wait, ServiceSigningKey
 } from '@tezospayments/common';
 
 import { config } from '../../config';
@@ -120,6 +120,14 @@ export class ServicesService {
     }
 
     return null;
+  }
+
+  async addApiKey(_service: Service, _signingKey: ServiceSigningKey): Promise<void> {
+    await wait(1000);
+  }
+
+  async deleteApiKey(_service: Service, _publicKey: string): Promise<void> {
+    await wait(1000);
   }
 
   async getOperations(network: Network, contractAddress: string): Promise<ServiceOperation[]> {

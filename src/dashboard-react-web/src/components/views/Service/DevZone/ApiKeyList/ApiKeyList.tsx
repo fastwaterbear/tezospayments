@@ -1,9 +1,11 @@
 import { DeleteOutlined } from '@ant-design/icons';
 import { Button, List, Modal } from 'antd';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { Service } from '@tezospayments/common/src';
 
+import { deleteApiKey } from '../../../../../store/services/slice';
 import { useCurrentLanguageResources } from '../../../../hooks';
 
 import './ApiKeyList.scss';
@@ -15,13 +17,12 @@ interface ApiKeyListProps {
 export const ApiKeyList = (props: ApiKeyListProps) => {
   const langResources = useCurrentLanguageResources();
   const servicesLangResources = langResources.views.services;
+  const dispatch = useDispatch();
 
-  const defaultData = Object.entries(props.service.signingKeys).map(([_k, v]) => ({
+  const apiKeys = Object.entries(props.service.signingKeys).map(([_k, v]) => ({
     name: v.name,
     publicKey: v.publicKey
   }));
-
-  const [apiKeys, setApiKeys] = useState(defaultData);
 
   const confirm = useCallback((text: string, onOk: () => void) => {
     Modal.confirm({
@@ -39,8 +40,10 @@ export const ApiKeyList = (props: ApiKeyListProps) => {
 
   const handleRemoveItem = useCallback((item: { name: string; publicKey: string; }) => {
     const text = `${servicesLangResources.devZone.deleteKeyConfirmation}: ${item.name}`;
-    confirm(text, () => setApiKeys(apiKeys.filter(i => i.publicKey !== item.publicKey)));
-  }, [apiKeys, confirm, servicesLangResources.devZone.deleteKeyConfirmation]);
+    confirm(text, () => {
+      dispatch(deleteApiKey({ service: props.service, publicKey: item.publicKey }));
+    });
+  }, [confirm, dispatch, props.service, servicesLangResources.devZone.deleteKeyConfirmation]);
 
   return <List size="small" bordered>
     {apiKeys.length

@@ -9,3 +9,13 @@
     margin-top: 0;
   }
 }
+
+.api-key-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.api-key-modal__ok-button {
+  margin-left: 0 !important;
+}

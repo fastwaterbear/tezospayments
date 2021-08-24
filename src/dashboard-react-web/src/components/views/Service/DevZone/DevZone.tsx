@@ -30,7 +30,7 @@ export const DevZone = (props: DevZoneProps) => {
       </Button>
     </div>
     <ApiKeyListPure service={props.service} />
-    <AddApiKeyModalPure visible={addKeyModalVisible} onCancel={handleClosePopupClick} />
+    <AddApiKeyModalPure service={props.service} visible={addKeyModalVisible} onCancel={handleClosePopupClick} />
   </>;
 };
 

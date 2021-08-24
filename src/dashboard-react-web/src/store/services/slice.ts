@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TransactionWalletOperation } from '@taquito/taquito';
 
-import { Service, optimization } from '@tezospayments/common';
+import { Service, optimization, ServiceSigningKey } from '@tezospayments/common';
 
 import { AppDispatch, AppState } from '..';
 import { Account } from '../../models/blockchain';
@@ -88,6 +88,22 @@ export const setDeleted = createAsyncThunk<void, { service: Service, deleted: bo
   },
 );
 
+export const addApiKey = createAsyncThunk<void, { service: Service, signingKey: ServiceSigningKey }, AppThunkAPI>(
+  `${namespace}/addApiKey`,
+  async ({ service, signingKey }, { extra: app, dispatch, getState }) => {
+    await app.services.servicesService.addApiKey(service, signingKey);
+    getWaitOperationCallback(dispatch, getState);
+  },
+);
+
+export const deleteApiKey = createAsyncThunk<void, { service: Service, publicKey: string }, AppThunkAPI>(
+  `${namespace}/deleteApiKey`,
+  async ({ service, publicKey }, { extra: app, dispatch, getState }) => {
+    await app.services.servicesService.deleteApiKey(service, publicKey);
+    getWaitOperationCallback(dispatch, getState);
+  },
+);
+
 export const clearServices = createAsyncThunk<void, void, AppThunkAPI>(
   `${namespace}/clearServices`,
   async (_, { dispatch }) => {
@@ -131,7 +147,7 @@ export const servicesSlice = createSlice({
       state.initialized = false;
     });
 
-    for (const action of [createService, updateService, setPaused, setDeleted]) {
+    for (const action of [createService, updateService, setPaused, setDeleted, addApiKey, deleteApiKey]) {
       builder.addCase(action.pending, state => {
         state.initialized = false;
       });

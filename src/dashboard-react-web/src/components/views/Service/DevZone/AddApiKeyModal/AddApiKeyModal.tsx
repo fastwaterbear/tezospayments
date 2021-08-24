@@ -2,12 +2,17 @@ import { CopyOutlined } from '@ant-design/icons';
 import { Button, Divider, Input, Modal, Radio, RadioChangeEvent, Typography, Popconfirm } from 'antd';
 import Search from 'antd/lib/input/Search';
 import React, { useCallback, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
+import { Service } from '@tezospayments/common/src';
+
+import { addApiKey } from '../../../../../store/services/slice';
 import { useCurrentLanguageResources } from '../../../../hooks';
 
 import './AddApiKeyModal.scss';
 
 interface AddApiKeyModalProps {
+  service: Service;
   visible: boolean;
   onCancel: () => void;
 }
@@ -16,6 +21,7 @@ export const AddApiKeyModal = (props: AddApiKeyModalProps) => {
   const langResources = useCurrentLanguageResources();
   const commonLangResources = langResources.common;
   const servicesLangResources = langResources.views.services;
+  const dispatch = useDispatch();
 
   const algorithmOptions = [
     { label: 'Ed25519', value: 'Ed25519' },
@@ -47,23 +53,29 @@ export const AddApiKeyModal = (props: AddApiKeyModalProps) => {
     }
   }, []);
 
+  const handleAddKeyConfirm = useCallback(() => {
+    dispatch(addApiKey({ service: props.service, signingKey: { name, publicKey } }));
+  }, [dispatch, name, props.service, publicKey]);
+
   return <Modal className="api-key-modal" title={servicesLangResources.devZone.addKey} centered destroyOnClose visible={props.visible}
     onCancel={props.onCancel}
-    footer={[
+    footer={<div className="api-key-modal__footer">
       <Button key="back" onClick={props.onCancel}>
         {commonLangResources.cancel}
-      </Button>,
+      </Button>
       <Popconfirm
+        disabled={!name}
         title={servicesLangResources.devZone.saveSecretKeyConfirm}
         placement="topRight"
+        onConfirm={handleAddKeyConfirm}
         okText={commonLangResources.yes}
         cancelText={commonLangResources.no}
       >
-        <Button key="submit" type="primary" disabled={!name}>
+        <Button key="submit" className="api-key-modal__ok-button" type="primary" disabled={!name}>
           {servicesLangResources.devZone.saveKeys}
         </Button>
       </Popconfirm>
-    ]}
+    </div>}
   >
     <span className="api-key-modal__label">{servicesLangResources.devZone.name}:</span>
     <Input autoFocus value={name} onChange={handleNameChanged} />
@@ -80,7 +92,7 @@ export const AddApiKeyModal = (props: AddApiKeyModalProps) => {
 
 export const AddApiKeyModalPure = React.memo(AddApiKeyModal);
 
-const getKeys = (type: string) => {
+const getKeys = (type: string): [string, string] => {
   switch (type) {
     case 'Ed25519':
       return ['edpkvQXtVcy8YrBLmMhn8EDt4Zb46TWZX1QUxxepFzJgsWU6YKadJP', 'edskRwse4Z8ZZNCC7xzCEUrTBtCeEPhv8gfBiWrE8cysRQpz45HCQjChdDckNEBZZMCxjPMkHhmGkUnwBs22cKr2nrwiGfQHsP'];
