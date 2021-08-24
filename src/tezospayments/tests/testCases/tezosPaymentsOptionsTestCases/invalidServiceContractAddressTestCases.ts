@@ -1,13 +1,13 @@
 import { TezosPaymentsOptions } from '../../../src';
 import { tezosPaymentsErrors } from '../../testHelpers';
 import { NegativeTestCases } from './testCase';
-import validServiceContractAddressTestCases from './validTezosPaymentsOptionsTestCases';
+import validTezosPaymentsOptionsTestCases from './validTezosPaymentsOptionsTestCases';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type InvalidTezosPaymentsOptionsSlice = { serviceContractAddress: any };
 
 const tezosPaymentsOptionsBase: TezosPaymentsOptions & InvalidTezosPaymentsOptionsSlice = {
-  ...validServiceContractAddressTestCases[0]![1]
+  ...validTezosPaymentsOptionsTestCases[0]![1]
 };
 delete tezosPaymentsOptionsBase.serviceContractAddress;
 
