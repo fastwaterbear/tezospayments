@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "lib": [
+      "ESNext"
+    ],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "allowJs": false,
+    "sourceMap": true,
+    "declaration": true,
+    "declarationDir": "dist/types",
+    "isolatedModules": true,
+    "composite": true,
+    "tsBuildInfoFile": "temp/tsconfig.tsbuildinfo",
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true
+  },
+  "references": [
+    {
+      "path": "../common"
+    }
+  ]
+}

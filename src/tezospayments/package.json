@@ -1,14 +1,55 @@
 {
   "name": "tezospayments",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Package for payment generation in the Tezos Payments system.",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.mjs",
+  "browser": "dist/index.esm.js",
+  "umd": "dist/index.umd.js",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs.js",
+      "browser": "./dist/index.esm.js",
+      "umd": "./dist/index.umd.js"
+    },
+    "./esnext": {
+      "import": "./dist/esnext/index.esnext.mjs",
+      "require": "./dist/esnext/index.esnext.cjs.js",
+      "browser": "./dist/esnext/index.esnext.esm.js"
+    },
+    "./es5": {
+      "import": "./dist/es5/index.es5.mjs",
+      "require": "./dist/es5/index.es5.cjs.js",
+      "browser": "./dist/es5/index.es5.esm.js",
+      "umd": "./dist/es5/index.es5.umd.js"
+    }
+  },
   "dependencies": {
-    "bignumber.js": "^9.0.1",
     "@tezospayments/common": "^0.2.0"
   },
+  "devDependencies": {
+    "@types/jest": "^27.0.1",
+    "babel-jest": "^27.0.6",
+    "jest": "^27.0.6"
+  },
   "scripts": {
-    "build": "tsc -p ."
+    "build": "rollup --config",
+    "test": "jest --coverage",
+    "watch": "rollup --config --watch",
+    "test-watch": "jest --watchAll",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
+  },
+  "typesVersions": {
+    "*": {
+      "es5": [
+        "dist/types/index.d.ts"
+      ],
+      "esnext": [
+        "dist/types/index.d.ts"
+      ]
+    }
   },
   "files": [
     "dist"

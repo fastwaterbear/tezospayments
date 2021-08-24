@@ -1,4 +1,5 @@
 import type { Network } from '@tezospayments/common';
+
 import type { Payment, PaymentUrlType, SigningType } from './models';
 
 interface TezosPaymentsApiSigningOptions {

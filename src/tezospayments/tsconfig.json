@@ -1,22 +1,8 @@
 {
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "lib": [
-      "ESNext"
-    ],
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "allowJs": false,
-    "sourceMap": true,
-    "declaration": true,
-    "composite": true,
-    "tsBuildInfoFile": "temp/tsconfig.tsbuildinfo",
-    "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true,
     "rootDir": "./src",
-    "outDir": "./dist"
+    "outDir": "./build"
   },
   "include": [
     "src"
@@ -24,11 +10,7 @@
   "exclude": [
     "node_modules",
     "dist",
+    "build",
     "tests"
-  ],
-  "references": [
-    {
-      "path": "../common"
-    }
   ]
 }
