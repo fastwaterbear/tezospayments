@@ -1,5 +1,3 @@
-import { Buffer } from 'buffer';
-
 import { base64 } from '../../utils';
 import { ObjectSerializationValidator } from './objectSerializationValidator';
 import type { SerializedFieldType } from './serializedFieldType';

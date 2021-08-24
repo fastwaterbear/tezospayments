@@ -1,6 +1,7 @@
 export type SerializedFieldType =
-  | 'object'
-  | 'string'
-  | 'number'
   | 'undefined'
-  | 'null';
+  | 'null'
+  | 'boolean'
+  | 'number'
+  | 'string'
+  | 'object';

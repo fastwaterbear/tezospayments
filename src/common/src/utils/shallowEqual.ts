@@ -1,6 +1,7 @@
 const is = (x: unknown, y: unknown) => {
     return (x === y)
         ? x !== 0 || y !== 0 || (1 / x) === (1 / y)
+        // eslint-disable-next-line no-self-compare
         : x !== x && y !== y;
 };
 
