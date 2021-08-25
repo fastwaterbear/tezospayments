@@ -19,7 +19,7 @@ on:
       - 'package-lock.json'
       - '.github/workflows/common.yml'
 env:
-  node-version: 15
+  node-version: 16
 
 jobs:
   build:
