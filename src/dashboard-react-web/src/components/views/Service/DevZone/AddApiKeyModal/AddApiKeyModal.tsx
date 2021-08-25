@@ -3,7 +3,7 @@ import { Button, Divider, Input, Modal, Radio, RadioChangeEvent, Typography, Pop
 import React, { useCallback, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { Service } from '@tezospayments/common/src';
+import { KeyType, Service } from '@tezospayments/common';
 
 import { addApiKey } from '../../../../../store/services/slice';
 import { useCurrentLanguageResources } from '../../../../hooks';
@@ -24,13 +24,9 @@ export const AddApiKeyModal = (props: AddApiKeyModalProps) => {
   const servicesLangResources = langResources.views.services;
   const dispatch = useDispatch();
 
-  const algorithmOptions = [
-    { label: 'Ed25519', value: 'Ed25519' },
-    { label: 'Secp256k1', value: 'Secp256k1' },
-    { label: 'P256', value: 'P256' },
-  ];
+  const algorithmOptions = Object.values(KeyType).map(v => ({ label: v, value: v }));
 
-  const [algorithType, setAlgorithType] = useState(algorithmOptions[0]?.value || '');
+  const [algorithType, setAlgorithType] = useState(algorithmOptions[0]?.value || KeyType.Ed25519);
   const handleAlgorithTypeChanges = useCallback((e: RadioChangeEvent) => {
     setAlgorithType(e.target.value);
   }, []);
@@ -93,13 +89,13 @@ export const AddApiKeyModal = (props: AddApiKeyModalProps) => {
 
 export const AddApiKeyModalPure = React.memo(AddApiKeyModal);
 
-const getKeys = (type: string): [string, string] => {
+const getKeys = (type: KeyType): [string, string] => {
   switch (type) {
-    case 'Ed25519':
+    case KeyType.Ed25519:
       return ['edpkvQXtVcy8YrBLmMhn8EDt4Zb46TWZX1QUxxepFzJgsWU6YKadJP', 'edskRwse4Z8ZZNCC7xzCEUrTBtCeEPhv8gfBiWrE8cysRQpz45HCQjChdDckNEBZZMCxjPMkHhmGkUnwBs22cKr2nrwiGfQHsP'];
-    case 'Secp256k1':
+    case KeyType.Secp256k1:
       return ['sppk7cjayJkatAA6Kzd9w6DSRrRDq6JoRAfugi1fqahpyjCBRCLGfob', 'spsk1VyxSVYfX3CfNpSNDxBdR97LnAdQA59jWpc4HYXtYg1cX53V6Y'];
-    case 'P256':
+    case KeyType.P256:
       return ['p2pk65H621C6fgfcuhiUcQmx3GRz8iNxjzMB1BG2WQKAYKEcbVzyJMD', 'p2sk2yHAwhsLaRCm8zAfN4K1Py7fBhxgR1kAB5SCYn9yGWofkjqNTN'];
 
     default:
