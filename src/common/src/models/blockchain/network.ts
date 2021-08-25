@@ -27,6 +27,13 @@ type Networks = {
 };
 
 export type Network = Networks[keyof Networks];
+export interface CustomNetwork {
+  readonly id?: string;
+  readonly name: string;
+}
 
 export const networks: Networks = networksInternal;
 export const networksCollection = Object.values(networksInternal);
+
+export const networkIdRegExp = /^[a-zA-Z]\w*$/;
+export const networkNameRegExp = networkIdRegExp;
