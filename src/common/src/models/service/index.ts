@@ -6,4 +6,4 @@ export { ServiceOperationType } from './serviceOperationType';
 export { ServiceOperationDirection } from './serviceOperationDirection';
 export { ServiceOperationStatus } from './serviceOperationStatus';
 export type { ServicesBigMapKeyValuePair } from './servicesBigMapKeyValuePair';
-export type { ServiceSigningKey } from './serviceSigningKeyTemp';
+export type { ServiceSigningKey } from './serviceSigningKey';
