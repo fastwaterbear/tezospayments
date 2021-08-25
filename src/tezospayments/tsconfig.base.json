@@ -17,10 +17,5 @@
     "tsBuildInfoFile": "temp/tsconfig.tsbuildinfo",
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true
-  },
-  "references": [
-    {
-      "path": "../common"
-    }
-  ]
+  }
 }

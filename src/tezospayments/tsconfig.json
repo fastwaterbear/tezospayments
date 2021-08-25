@@ -12,5 +12,10 @@
     "dist",
     "build",
     "tests"
+  ],
+  "references": [
+    {
+      "path": "../common"
+    }
   ]
 }
