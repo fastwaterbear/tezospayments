@@ -57,8 +57,8 @@ Usage: React, Ant Design, Redux Toolkit, Taquito, Beacon SDK, TypeScript;
 ## Run Locally
 
 ### Prerequisites
-* [Node.js](https://nodejs.org) version 15.14.0 or later  
-* [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) version 7.7.6 or later  
+* [Node.js](https://nodejs.org) version 16.7.0 or later  
+* [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) version 7.20.3 or later  
 
 ### Install dependencies
 Open the root directory of the repository and launch the following command:

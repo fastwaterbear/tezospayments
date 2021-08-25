@@ -18,7 +18,7 @@ on:
       - 'package-lock.json'
       - '.github/workflows/dashboard-react-web.yml'
 env:
-  node-version: 15
+  node-version: 16
 
 jobs:
   build:
