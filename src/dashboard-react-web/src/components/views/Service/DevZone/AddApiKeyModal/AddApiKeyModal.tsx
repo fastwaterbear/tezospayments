@@ -1,6 +1,5 @@
 import { CopyOutlined } from '@ant-design/icons';
 import { Button, Divider, Input, Modal, Radio, RadioChangeEvent, Typography, Popconfirm } from 'antd';
-import Search from 'antd/lib/input/Search';
 import React, { useCallback, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -10,6 +9,8 @@ import { addApiKey } from '../../../../../store/services/slice';
 import { useCurrentLanguageResources } from '../../../../hooks';
 
 import './AddApiKeyModal.scss';
+
+const Search = Input.Search;
 
 interface AddApiKeyModalProps {
   service: Service;

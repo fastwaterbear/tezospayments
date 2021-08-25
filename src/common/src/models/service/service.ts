@@ -1,5 +1,5 @@
 import { Network, networks } from '../blockchain/network';
-import { ServiceSigningKey } from './ServiceSigningKey';
+import { ServiceSigningKey } from './serviceSigningKeyTemp';
 import { ServiceOperationType } from './serviceOperationType';
 
 export interface Service {
