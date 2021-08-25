@@ -1,5 +1,5 @@
 import { ContractProvider, Wallet, TransactionWalletOperation, TransactionOperation } from '@taquito/taquito';
-import { BigNumber } from 'bignumber.js';
+import BigNumber from 'bignumber.js';
 
 interface SendParams {
   fee?: number;

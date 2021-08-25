@@ -1,6 +1,6 @@
 {
   "name": "@tezospayments/common",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Shared code for the Tezos Payments service.",
   "main": "dist/index.cjs.js",
   "module": "dist/index.mjs",
@@ -33,10 +33,10 @@
     "lodash.isplainobject": "^4.0.6"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.23",
+    "@types/jest": "^27.0.1",
     "@types/lodash.isplainobject": "^4.0.6",
-    "babel-jest": "^27.0.5",
-    "jest": "^27.0.5"
+    "babel-jest": "^27.0.6",
+    "jest": "^27.0.6"
   },
   "scripts": {
     "build": "rollup --config",

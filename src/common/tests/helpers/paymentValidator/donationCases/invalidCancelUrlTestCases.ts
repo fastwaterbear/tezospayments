@@ -1,5 +1,5 @@
 import { DonationValidator } from '../../../../src/helpers';
-import { URL } from '../../../../src/native';
+import { URL } from 'url';
 import type { NegativeTestCases } from '../testCase';
 import validDonationTestCases from './validDonationTestCases';
 

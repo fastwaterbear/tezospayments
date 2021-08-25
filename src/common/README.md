@@ -7,4 +7,4 @@
 
 [![packages/common](https://github.com/fastwaterbear/tezospayments/actions/workflows/common.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/common.yml)  
 
-Shared code for the Tezos Payments service
+Shared code for the Tezos Payments service.

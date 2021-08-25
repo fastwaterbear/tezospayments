@@ -1,0 +1,23 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "types": [
+      "jest",
+      "node"
+    ],
+    "rootDir": "../",
+  },
+  "include": [
+    "../src",
+    "../tests"
+  ],
+  "exclude": [
+    "../node_modules",
+    "../dist"
+  ],
+  "references": [
+    {
+      "path": "../../common"
+    }
+  ]
+}
