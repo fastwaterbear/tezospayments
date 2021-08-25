@@ -18,13 +18,13 @@ interface AddApiKeyModalProps {
   onCancel: () => void;
 }
 
+const algorithmOptions = Object.values(KeyType).map(v => ({ label: v, value: v }));
+
 export const AddApiKeyModal = (props: AddApiKeyModalProps) => {
   const langResources = useCurrentLanguageResources();
   const commonLangResources = langResources.common;
   const servicesLangResources = langResources.views.services;
   const dispatch = useDispatch();
-
-  const algorithmOptions = Object.values(KeyType).map(v => ({ label: v, value: v }));
 
   const [algorithType, setAlgorithType] = useState(algorithmOptions[0]?.value || KeyType.Ed25519);
   const handleAlgorithTypeChanges = useCallback((e: RadioChangeEvent) => {
