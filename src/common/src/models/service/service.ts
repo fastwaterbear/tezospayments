@@ -1,5 +1,6 @@
 import { Network, networks } from '../blockchain/network';
 import { ServiceOperationType } from './serviceOperationType';
+import { ServiceSigningKey } from './serviceSigningKey';
 
 export interface Service {
   readonly name: string;
@@ -20,6 +21,7 @@ export interface Service {
   readonly owner: string;
   readonly paused: boolean;
   readonly deleted: boolean;
+  readonly signingKeys: { readonly [key: string]: ServiceSigningKey };
 }
 
 export const emptyService: Service = {
@@ -38,4 +40,5 @@ export const emptyService: Service = {
   paused: false,
   deleted: false,
   network: networks.edo2net,
+  signingKeys: {}
 };

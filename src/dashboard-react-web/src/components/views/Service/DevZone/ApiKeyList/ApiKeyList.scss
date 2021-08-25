@@ -1,0 +1,13 @@
+.api-keys__item {
+  display: flex;
+}
+
+.api-keys__item_empty {
+  display: block !important;
+  text-align: center;
+}
+
+.api-keys__item-key {
+  display: inline-block;
+  margin-right: 6px;
+}

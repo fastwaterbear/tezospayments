@@ -8,6 +8,7 @@ import { selectServicesState } from '../../../store/services/selectors';
 import { useAppSelector, useQuery } from '../../hooks';
 import { View } from '../View';
 import { DangerZonePure } from './DangerZone';
+import { DevZonePure } from './DevZone';
 import { HeaderPure } from './Header';
 import { ServiceEditFormPure } from './ServiceEditForm';
 import { ViewZonePure } from './ViewZone';
@@ -43,6 +44,7 @@ export const Service = (props: ServiceProps) => {
         : <>
           <HeaderPure service={service} />
           <ViewZonePure service={service} />
+          <DevZonePure service={service} />
           <DangerZonePure service={service} />
         </>}
   </View>;

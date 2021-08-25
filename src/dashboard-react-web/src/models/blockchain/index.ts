@@ -1,3 +1,3 @@
 export { Account } from './account';
 export type { CurrentAccountInfo } from './currentAccountInfo';
-export type { ServicesBigMapKeyValuePair } from '@tezospayments/common/src/models/service/servicesBigMapKeyValuePair';
+export type { ServicesBigMapKeyValuePair } from '@tezospayments/common';

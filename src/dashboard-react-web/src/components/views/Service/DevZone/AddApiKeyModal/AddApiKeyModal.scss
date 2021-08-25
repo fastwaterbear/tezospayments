@@ -1,0 +1,21 @@
+@use '../../../../../styles/ant-colors.scss';
+
+.api-key-modal__label {
+  display: block;
+  margin-top: 24px;
+  margin-bottom: 8px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.api-key-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.api-key-modal__ok-button {
+  margin-left: 0 !important;
+}

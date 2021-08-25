@@ -52,7 +52,8 @@ export abstract class IndexerServiceProvider implements ServiceProvider {
 
         owner: serviceDto.owner,
         paused: serviceDto.paused,
-        deleted: serviceDto.deleted
+        deleted: serviceDto.deleted,
+        signingKeys: {}
       }
       : null;
   }

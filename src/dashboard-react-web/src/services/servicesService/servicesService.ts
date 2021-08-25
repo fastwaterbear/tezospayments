@@ -6,7 +6,7 @@ import {
   tezosMeta, Network,
   Service, ServiceOperation, ServiceOperationDirection,
   ServiceOperationStatus, ServiceDto, ServicesBigMapKeyValuePair,
-  converters, guards, optimization
+  converters, guards, optimization, wait, ServiceSigningKey
 } from '@tezospayments/common';
 
 import { config } from '../../config';
@@ -122,6 +122,14 @@ export class ServicesService {
     return null;
   }
 
+  async addApiKey(_service: Service, _signingKey: ServiceSigningKey): Promise<void> {
+    await wait(1000);
+  }
+
+  async deleteApiKey(_service: Service, _publicKey: string): Promise<void> {
+    await wait(1000);
+  }
+
   async getOperations(network: Network, contractAddress: string): Promise<ServiceOperation[]> {
     const networkConfig = config.tezos.networks[network.name];
     const indexerUrl = networkConfig.indexerUrls[networkConfig.default.indexer];
@@ -197,7 +205,11 @@ export class ServicesService {
 
         owner: serviceDto.owner,
         paused: serviceDto.paused,
-        deleted: serviceDto.deleted
+        deleted: serviceDto.deleted,
+        signingKeys: {
+          'SHA256:4T5E9yJjajhHazEUPHAYMa97bg7m6SxpInoxtX+XLPg': { publicKey: 'SHA256:4T5E9yJjajhHazEUPHAYMa97bg7m6SxpInoxtX+XLPg', name: 'Home PC' },
+          'SHA256:Q0TPyOEbRpCZyoYRFyeGmzb4yg/ujidrRRoRnyJiuqo': { publicKey: 'SHA256:Q0TPyOEbRpCZyoYRFyeGmzb4yg/ujidrRRoRnyJiuqo', name: 'Work' },
+        },
       }
       : null;
   }
