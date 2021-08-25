@@ -1,4 +1,4 @@
-import { BigNumber } from 'bignumber.js';
+import BigNumber from 'bignumber.js';
 
 import { DonationValidator } from '../../../../src/helpers';
 import type { NegativeTestCases } from '../testCase';

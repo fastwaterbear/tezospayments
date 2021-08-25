@@ -1,30 +1,31 @@
-import type { Network } from '@tezospayments/common';
-import type { Payment, PaymentUrlType, SigningType } from './models';
+import type { CustomNetwork, Network } from '@tezospayments/common';
 
-interface TezosPaymentsApiSigningOptions {
+import type { Payment, PaymentUrlType } from './models';
+
+export interface TezosPaymentsApiSigningOptions {
   apiSecretKey: string;
 }
 
-interface TezosPaymentsWalletSigningOptions {
+export interface TezosPaymentsWalletSigningOptions {
   walletSigning: (dataBytes: string) => Promise<string>;
 }
+
+export type TezosPaymentsCustomSigning = (payment: Omit<Payment, 'url'>) => Promise<string>;
 
 type TezosPaymentsSigningOptions =
   | TezosPaymentsApiSigningOptions
   | TezosPaymentsWalletSigningOptions
-  | (TezosPaymentsApiSigningOptions & TezosPaymentsWalletSigningOptions)
-  | ((payment: Payment, signingType: SigningType) => Promise<string>);
+  | TezosPaymentsCustomSigning;
 
-interface DefaultPaymentParameters {
-  network: Network;
-  signingType: SigningType;
+export interface DefaultPaymentParameters {
+  network: Network | CustomNetwork;
   urlType: PaymentUrlType;
 }
 
 export interface TezosPaymentsOptions {
-  signing: TezosPaymentsSigningOptions;
   serviceContractAddress: string;
-  defaultPaymentParameters: Partial<DefaultPaymentParameters>;
+  signing: TezosPaymentsSigningOptions;
+  defaultPaymentParameters?: Partial<DefaultPaymentParameters>;
 }
 
 interface PaymentCreateParametersBase {

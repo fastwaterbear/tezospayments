@@ -35,7 +35,7 @@ const socialMediaLinkInfoProvider = (link: string, baseUrl: string, icon: IconId
     return false;
 
   const formattedLink = prepareFormattedLink(link);
-  if (formattedLink == baseUrl)
+  if (formattedLink === baseUrl)
     return false;
 
   return {

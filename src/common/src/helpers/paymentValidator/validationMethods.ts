@@ -1,4 +1,4 @@
-import { BigNumber } from 'bignumber.js';
+import BigNumber from 'bignumber.js';
 
 import { tezosInfo } from '../../models/blockchain';
 import { Payment } from '../../models/payment';

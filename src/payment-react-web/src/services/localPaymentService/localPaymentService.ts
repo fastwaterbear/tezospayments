@@ -1,12 +1,9 @@
 import { RequestPermissionInput, AbortedBeaconError } from '@airgap/beacon-sdk';
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit, TransactionWalletOperation, Wallet } from '@taquito/taquito';
-import { BigNumber } from 'bignumber.js';
+import BigNumber from 'bignumber.js';
 
-import {
-  Donation, Payment, PaymentType, PaymentBase,
-  Service, ServiceOperationType, Network, converters, memoize
-} from '@tezospayments/common';
+import { Donation, Payment, Service, ServiceOperationType, Network, converters, memoize } from '@tezospayments/common';
 
 import { config } from '../../config';
 import { TezosPaymentsServiceContract } from '../../models/contracts';
@@ -65,8 +62,8 @@ export class LocalPaymentService {
       return currentRawPaymentInfoResult;
 
     return currentRawPaymentInfoResult.operationType === 'payment'
-      ? this.parsePayment(currentRawPaymentInfoResult.serializedPayment, currentRawPaymentInfoResult.targetAddress, [])
-      : this.parseDonation(currentRawPaymentInfoResult.serializedPayment || '', currentRawPaymentInfoResult.targetAddress, []);
+      ? this.parsePayment(currentRawPaymentInfoResult.serializedPayment, currentRawPaymentInfoResult.targetAddress)
+      : this.parseDonation(currentRawPaymentInfoResult.serializedPayment || '', currentRawPaymentInfoResult.targetAddress);
   }
 
   async getCurrentService(): Promise<ServiceResult<Service, LocalPaymentServiceError>> {
@@ -170,11 +167,9 @@ export class LocalPaymentService {
       throw new Error('Unknown service provider');
   }
 
-  private parsePayment(paymentBase64: string, targetAddress: string, urls: PaymentBase['urls']): ServiceResult<Payment, LocalPaymentServiceError> {
-    const payment = Payment.parse(paymentBase64, {
-      type: PaymentType.Payment,
+  private parsePayment(serializedPayment: string, targetAddress: string): ServiceResult<Payment, LocalPaymentServiceError> {
+    const payment = Payment.deserialize(serializedPayment, {
       targetAddress,
-      urls
     });
 
     return payment && Payment.validate(payment) === undefined
@@ -182,11 +177,9 @@ export class LocalPaymentService {
       : { isServiceError: true, error: errors.invalidPayment };
   }
 
-  private parseDonation(donationBase64: string, targetAddress: string, urls: PaymentBase['urls']): ServiceResult<Donation, LocalPaymentServiceError> {
-    const donation = Donation.parse(donationBase64, {
-      type: PaymentType.Donation,
-      targetAddress,
-      urls
+  private parseDonation(serializedDonation: string, targetAddress: string): ServiceResult<Donation, LocalPaymentServiceError> {
+    const donation = Donation.deserialize(serializedDonation, {
+      targetAddress
     });
 
     return donation && Donation.validate(donation) === undefined

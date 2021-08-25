@@ -1,6 +1,6 @@
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit, TransactionWalletOperation } from '@taquito/taquito';
-import { BigNumber } from 'bignumber.js';
+import BigNumber from 'bignumber.js';
 
 import {
   tezosMeta, Network,

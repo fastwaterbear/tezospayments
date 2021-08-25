@@ -1,5 +1,6 @@
 import combineClassNames from 'clsx';
 
+import * as base64 from './base64';
 import * as converters from './converters';
 import * as guards from './guards';
 import { memoize } from './memoize';
@@ -14,6 +15,7 @@ export {
   combineClassNames,
   memoize,
   shallowEqual,
+  base64,
   optimization,
   guards,
   text,

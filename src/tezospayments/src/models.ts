@@ -1,11 +1,13 @@
-export type Payment = import('@tezospayments/common').Payment;
+export type Payment = import('@tezospayments/common').Payment & {
+  readonly url: string;
+};
 
-export const enum PaymentUrlType {
-  MinifiedBase64 = 0,
-  Base64 = 1
+export enum PaymentUrlType {
+  Base64 = 0
 }
 
-export const enum SigningType {
+export enum SigningType {
   ApiSecretKey = 0,
-  Wallet = 1
+  Wallet = 1,
+  Custom = 2,
 }
