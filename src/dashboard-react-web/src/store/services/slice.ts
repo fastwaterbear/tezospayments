@@ -42,7 +42,7 @@ export const updateService = createAsyncThunk<void, Service, AppThunkAPI>(
     const operation = await app.services.servicesService.updateService(service);
 
     if (operation) {
-      dispatch(setOperation({ operation, callback: () => getWaitOperationCallback(dispatch, getState) }));
+      dispatch(setOperation({ operation, callback: () => reloadServices(dispatch, getState) }));
     } else {
       return rejectWithValue(null);
     }
@@ -55,7 +55,7 @@ export const createService = createAsyncThunk<void, Service, AppThunkAPI>(
     const operation = await app.services.servicesService.createService(service);
 
     if (operation) {
-      dispatch(setOperation({ operation, callback: () => getWaitOperationCallback(dispatch, getState) }));
+      dispatch(setOperation({ operation, callback: () => reloadServices(dispatch, getState) }));
     } else {
       return rejectWithValue(null);
     }
@@ -68,7 +68,7 @@ export const setPaused = createAsyncThunk<void, { service: Service, paused: bool
     const operation = await app.services.servicesService.setPaused(service, isPaused);
 
     if (operation) {
-      dispatch(setOperation({ operation, callback: () => getWaitOperationCallback(dispatch, getState) }));
+      dispatch(setOperation({ operation, callback: () => reloadServices(dispatch, getState) }));
     } else {
       return rejectWithValue(null);
     }
@@ -81,7 +81,7 @@ export const setDeleted = createAsyncThunk<void, { service: Service, deleted: bo
     const operation = await app.services.servicesService.setDeleted(service, deleted);
 
     if (operation) {
-      dispatch(setOperation({ operation, callback: () => getWaitOperationCallback(dispatch, getState) }));
+      dispatch(setOperation({ operation, callback: () => reloadServices(dispatch, getState) }));
     } else {
       return rejectWithValue(null);
     }
@@ -92,7 +92,7 @@ export const addApiKey = createAsyncThunk<void, { service: Service, signingKey: 
   `${namespace}/addApiKey`,
   async ({ service, signingKey }, { extra: app, dispatch, getState }) => {
     await app.services.servicesService.addApiKey(service, signingKey);
-    getWaitOperationCallback(dispatch, getState);
+    reloadServices(dispatch, getState);
   },
 );
 
@@ -100,7 +100,7 @@ export const deleteApiKey = createAsyncThunk<void, { service: Service, publicKey
   `${namespace}/deleteApiKey`,
   async ({ service, publicKey }, { extra: app, dispatch, getState }) => {
     await app.services.servicesService.deleteApiKey(service, publicKey);
-    getWaitOperationCallback(dispatch, getState);
+    reloadServices(dispatch, getState);
   },
 );
 
@@ -111,7 +111,7 @@ export const clearServices = createAsyncThunk<void, void, AppThunkAPI>(
   }
 );
 
-const getWaitOperationCallback = (dispatch: AppDispatch, getState: () => AppState) => {
+const reloadServices = (dispatch: AppDispatch, getState: () => AppState) => {
   const account = getCurrentAccount(getState());
   if (account) {
     dispatch(loadServices(account));
