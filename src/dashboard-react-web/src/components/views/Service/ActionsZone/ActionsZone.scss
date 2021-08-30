@@ -1,0 +1,9 @@
+@use '../common.scss';
+
+.service-actions-zone__header {
+  @include common.zone-header;
+}
+
+.service-actions-zone__button-container {
+  @include common.zone-button-container;
+}

@@ -1,5 +1,6 @@
 @use '../../../../styles/ant-colors.scss';
 @use '../../../../styles/fonts.scss';
+@use '../common.scss';
 
 .service-view-zone__description {
   margin-top: 16px;
@@ -14,11 +15,7 @@
 }
 
 .service-view-zone__button-container {
-  display: flex;
-  width: 100%;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: baseline;
+  @include common.zone-button-container;
 }
 
 .service-view-zone__list-container {

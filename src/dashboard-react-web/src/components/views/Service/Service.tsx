@@ -7,6 +7,7 @@ import { emptyService, Service as ServiceInterface, combineClassNames } from '@t
 import { selectServicesState } from '../../../store/services/selectors';
 import { useAppSelector, useQuery } from '../../hooks';
 import { View } from '../View';
+import { ActionsZonePure } from './ActionsZone';
 import { DangerZonePure } from './DangerZone';
 import { DevZonePure } from './DevZone';
 import { HeaderPure } from './Header';
@@ -44,6 +45,7 @@ export const Service = (props: ServiceProps) => {
         : <>
           <HeaderPure service={service} />
           <ViewZonePure service={service} />
+          <ActionsZonePure service={service} />
           <DevZonePure service={service} />
           <DangerZonePure service={service} />
         </>}

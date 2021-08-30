@@ -23,7 +23,7 @@ export const DevZone = (props: DevZoneProps) => {
   const handleClosePopupClick = useCallback(() => setAddKeyModalVisible(false), []);
 
   return <>
-    <div className="service-danger-zone__button-container">
+    <div className="service-dev-zone__button-container">
       <span className="service-dev-zone__header">{`${servicesLangResources.devZone.title} (${langResources.common.comingSoon.toLowerCase()}`})</span>
       <Button className="service-button" type="default" onClick={handleAddKeyButtonClick}>
         {servicesLangResources.devZone.addKey}

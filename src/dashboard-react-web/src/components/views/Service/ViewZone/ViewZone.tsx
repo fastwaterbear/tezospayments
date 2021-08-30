@@ -1,10 +1,7 @@
-import { Button } from 'antd';
-import React, { useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import React from 'react';
 
 import { Service } from '@tezospayments/common';
 
-import { config } from '../../../../config';
 import { ServiceLinks } from '../../../common/ServiceLinks';
 import { useCurrentLanguageResources } from '../../../hooks';
 import { TokensPure } from '../Tokens';
@@ -18,11 +15,6 @@ interface ViewZoneProps {
 export const ViewZone = ({ service }: ViewZoneProps) => {
   const langResources = useCurrentLanguageResources();
   const servicesLangResources = langResources.views.services;
-  const history = useHistory();
-
-  const handleAcceptPaymentsClick = useCallback(() => {
-    history.push(`${config.routers.acceptPayments}/${service.contractAddress}`);
-  }, [history, service.contractAddress]);
 
   return <div className="service-view-zone">
     <p className="service-view-zone__description">{service.description}</p>
@@ -35,10 +27,6 @@ export const ViewZone = ({ service }: ViewZoneProps) => {
         <span className="service-view-zone__list-header">{servicesLangResources.links}</span>
         <ServiceLinks className="service-info__links" links={service.links} />
       </div>
-    </div>
-    <div className="service-view-zone__button-container">
-      <p>{servicesLangResources.acceptPaymentsDescription}</p>
-      <Button onClick={handleAcceptPaymentsClick} className="service-button" type="primary">{servicesLangResources.acceptPayments}</Button>
     </div>
   </div>;
 };

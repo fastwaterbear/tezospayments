@@ -1,8 +1,10 @@
 @use '../../../../styles/ant-colors.scss';
+@use '../common.scss';
 
 .service-dev-zone__header {
-  display: block;
-  font-size: 16px;
-  margin-top: 64px;
-  margin-bottom: 16px;
+  @include common.zone-header;
+}
+
+.service-dev-zone__button-container {
+  @include common.zone-button-container;
 }
