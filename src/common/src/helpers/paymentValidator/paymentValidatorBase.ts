@@ -11,15 +11,14 @@ export abstract class PaymentValidatorBase<TPayment extends PaymentBase> {
     if (!guards.isPlainObject(payment))
       return [this.invalidPaymentObjectError];
 
-    const failedValidationResults: FailedValidationResults = bail ? [] : undefined;
+    let failedValidationResults: FailedValidationResults;
     for (const validationMethod of this.validationMethods) {
       const currentFailedValidationResults = validationMethod(payment);
       if (currentFailedValidationResults) {
         if (!bail)
           return currentFailedValidationResults;
 
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        failedValidationResults!.concat(currentFailedValidationResults);
+        (failedValidationResults || (failedValidationResults = [])).concat(currentFailedValidationResults);
       }
     }
 
