@@ -26,18 +26,18 @@ export const validateTargetAddress = (
 
 export const validateAmount = (
   amount: BigNumber,
-  errors: Errors<'invalidAmount' | 'amountIsNegative'>
+  errors: Errors<'invalidAmount' | 'amountIsNonPositive'>
 ): FailedValidationResults => {
   if (!BigNumber.isBigNumber(amount) || amount.isNaN() || !amount.isFinite())
     return [errors.invalidAmount];
 
-  if (amount.isNegative())
-    return [errors.amountIsNegative];
+  if (amount.isZero() || amount.isNegative())
+    return [errors.amountIsNonPositive];
 };
 
 export const validateDesiredAmount = (
   desiredAmount: BigNumber | undefined,
-  errors: Errors<'invalidAmount' | 'amountIsNegative'>
+  errors: Errors<'invalidAmount' | 'amountIsNonPositive'>
 ): FailedValidationResults => {
   return desiredAmount === undefined ? undefined : validateAmount(desiredAmount, errors);
 };

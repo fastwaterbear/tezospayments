@@ -9,12 +9,12 @@ export type PositiveTestCase = readonly [
 export type PositiveTestCases = readonly PositiveTestCase[];
 
 export type NegativeTestCase<
-  InvalidPaymentCreateParametersSlice = Record<string, never>,
-  InvalidTezosPaymentsOptionsSlice = Record<string, never>
+  InvalidPaymentCreateParametersSlice = unknown,
+  InvalidTezosPaymentsOptionsSlice = unknown
   > = readonly [
     message: string,
     tezosPaymentsOptions: Omit<TezosPaymentsOptions, keyof InvalidTezosPaymentsOptionsSlice> & InvalidTezosPaymentsOptionsSlice,
     paymentCreateParameters: Omit<PaymentCreateParameters, keyof InvalidPaymentCreateParametersSlice> & InvalidPaymentCreateParametersSlice,
-    expectedErrors: readonly string[]
+    expectedErrorType: (new (message?: string) => Error)
   ];
 export type NegativeTestCases<InvalidTezosPaymentsOptionsSlice> = ReadonlyArray<NegativeTestCase<InvalidTezosPaymentsOptionsSlice>>;

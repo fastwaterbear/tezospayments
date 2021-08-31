@@ -39,8 +39,15 @@ export default [
   [
     {
       ...validDonationBase,
+      desiredAmount: new BigNumber(0)
+    },
+    [DonationValidator.errors.amountIsNonPositive]
+  ],
+  [
+    {
+      ...validDonationBase,
       desiredAmount: new BigNumber(-1)
     },
-    [DonationValidator.errors.amountIsNegative]
+    [DonationValidator.errors.amountIsNonPositive]
   ]
 ] as NegativeTestCases;

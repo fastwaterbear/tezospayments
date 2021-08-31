@@ -12,7 +12,7 @@ export class PaymentValidator extends PaymentValidatorBase<Payment> {
     invalidPaymentObject: 'Payment is undefined or not object',
     invalidType: 'Payment type is invalid',
     invalidAmount: 'Amount is invalid',
-    amountIsNegative: 'Amount is less than zero',
+    amountIsNonPositive: 'Amount is less than or equal to zero',
     invalidTargetAddress: 'Target address is invalid',
     targetAddressIsNotNetworkAddress: 'Target address isn\'t a network address',
     targetAddressHasInvalidLength: 'Target address has an invalid address',

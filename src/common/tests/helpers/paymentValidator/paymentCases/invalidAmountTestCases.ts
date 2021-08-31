@@ -43,8 +43,15 @@ export default [
   [
     {
       ...validPaymentBase,
+      amount: new BigNumber(0)
+    },
+    [PaymentValidator.errors.amountIsNonPositive]
+  ],
+  [
+    {
+      ...validPaymentBase,
       amount: new BigNumber(-1)
     },
-    [PaymentValidator.errors.amountIsNegative]
+    [PaymentValidator.errors.amountIsNonPositive]
   ]
 ] as NegativeTestCases;

@@ -1,7 +1,9 @@
 import { TezosPayments } from '../src';
 import { InvalidTezosPaymentsOptionsError } from '../src/errors';
-import { invalidTezosPaymentsOptionsTestCases, validTezosPaymentsOptionsTestCases } from './testCases';
-import { validPaymentTestCases } from './testCases/createPaymentTestCases';
+import {
+  invalidTezosPaymentsOptionsTestCases, validTezosPaymentsOptionsTestCases,
+  invalidPaymentTestCases, validPaymentTestCases
+} from './testCases';
 import { getSigningType } from './testHelpers';
 
 describe('TezosPayments', () => {
@@ -39,6 +41,17 @@ describe('TezosPayments', () => {
       expect(payment).toEqual(expectedPayment);
 
       !paymentCreateParameters.created && jest.useRealTimers();
+    }
+  );
+
+  test.each(invalidPaymentTestCases)(
+    'creating a new payment with invalid payment parameters: %p',
+    async (_, tezosPaymentsOptions, paymentCreateParameters, expectedErrorType) => {
+      const tezosPayments = new TezosPayments(tezosPaymentsOptions);
+
+      await expect(() => tezosPayments.createPayment(paymentCreateParameters))
+        .rejects
+        .toThrow(expectedErrorType);
     }
   );
 });
