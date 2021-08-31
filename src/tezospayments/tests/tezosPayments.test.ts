@@ -1,11 +1,12 @@
 import { TezosPayments } from '../src';
 import { InvalidTezosPaymentsOptionsError } from '../src/errors';
 import { invalidTezosPaymentsOptionsTestCases, validTezosPaymentsOptionsTestCases } from './testCases';
+import { validPaymentTestCases } from './testCases/createPaymentTestCases';
 import { getSigningType } from './testHelpers';
 
 describe('TezosPayments', () => {
   test.each(validTezosPaymentsOptionsTestCases)(
-    'create a new instance of the TezosPayments with valid options: %p',
+    'creating a new instance of the TezosPayments with valid options: %p',
     (_, tezosPaymentsOptions) => {
       const tezosPayments = new TezosPayments(tezosPaymentsOptions);
 
@@ -21,9 +22,23 @@ describe('TezosPayments', () => {
   );
 
   test.each(invalidTezosPaymentsOptionsTestCases)(
-    'create a new instance of the TezosPayments with invalid options: %p',
+    'creating a new instance of the TezosPayments with invalid options: %p',
     (_, tezosPaymentsOptions, expectedErrors) => {
       expect(() => new TezosPayments(tezosPaymentsOptions)).toThrow(new InvalidTezosPaymentsOptionsError(expectedErrors));
+    }
+  );
+
+  test.each(validPaymentTestCases)(
+    'creating a new payment with valid payment parameters: %p',
+    async (_, tezosPaymentsOptions, paymentCreateParameters, expectedPayment) => {
+      !paymentCreateParameters.created && jest.useFakeTimers().setSystemTime(expectedPayment.created);
+
+      const tezosPayments = new TezosPayments(tezosPaymentsOptions);
+      const payment = await tezosPayments.createPayment(paymentCreateParameters);
+
+      expect(payment).toEqual(expectedPayment);
+
+      !paymentCreateParameters.created && jest.useRealTimers();
     }
   );
 });
