@@ -3,7 +3,7 @@ import { URL } from 'url';
 
 import BigNumber from 'bignumber.js';
 
-import { PaymentType } from '@tezospayments/common/src';
+import { PaymentType } from '@tezospayments/common';
 
 import { PositiveTestCases } from './testCase';
 
