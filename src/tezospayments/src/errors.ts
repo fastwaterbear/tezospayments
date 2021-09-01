@@ -53,3 +53,6 @@ export class UnsupportedPaymentUrlTypeError extends TezosPaymentsError {
 
 export class PaymentUrlError extends TezosPaymentsError {
 }
+
+export class DonationUrlError extends TezosPaymentsError {
+}
