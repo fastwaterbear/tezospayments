@@ -180,7 +180,7 @@ export class TezosPayments {
 
     if ('network' in defaultPaymentParameters) {
       if (typeof defaultPaymentParameters.network !== 'object')
-        return [TezosPayments.optionsValidationErrors.invalidNetworkName];
+        return [TezosPayments.optionsValidationErrors.invalidNetwork];
 
       if (defaultPaymentParameters.network.name === undefined || defaultPaymentParameters.network.name === '')
         return [TezosPayments.optionsValidationErrors.emptyNetworkName];
