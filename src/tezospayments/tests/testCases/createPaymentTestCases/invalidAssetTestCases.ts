@@ -4,85 +4,79 @@ import type { NegativeTestCases } from './testCase';
 import validPaymentTestCases from './validPaymentTestCases';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type InvalidPaymentCreateParametersSlice = { amount: any };
+type InvalidPaymentCreateParametersSlice = { asset?: any };
 
 const validPaymentTestCase = validPaymentTestCases[0]!;
 const tezosPaymentsOptions = validPaymentTestCase[1];
 const paymentCreateParametersBase: PaymentCreateParameters & InvalidPaymentCreateParametersSlice = {
   ...validPaymentTestCase[2]
 };
-delete paymentCreateParametersBase.amount;
+delete paymentCreateParametersBase.asset;
 
-export const invalidAmountTestCases: NegativeTestCases<InvalidPaymentCreateParametersSlice> = [
+export const invalidAssetTestCases: NegativeTestCases<InvalidPaymentCreateParametersSlice> = [
   [
-    'The amount field is missed',
-    tezosPaymentsOptions,
-    paymentCreateParametersBase,
-    InvalidPaymentError
-  ],
-  [
-    'Amount is equal to 0',
+    'Asset has an invalid type, function',
     tezosPaymentsOptions,
     {
       ...paymentCreateParametersBase,
-      amount: '0'
+      asset: () => 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2'
     },
     InvalidPaymentError
   ],
   [
-    'Amount has an excess point',
+    'Asset has an invalid type, empty object',
     tezosPaymentsOptions,
     {
       ...paymentCreateParametersBase,
-      amount: '383.343.30'
+      asset: {}
     },
     InvalidPaymentError
   ],
   [
-    'The amount value is invalid',
+    'Asset has an invalid type, array',
     tezosPaymentsOptions,
     {
       ...paymentCreateParametersBase,
-      amount: 'amount'
+      asset: ['KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2']
     },
     InvalidPaymentError
   ],
   [
-    'The amount value is Infinity (string)',
+    'The length of the asset contract address is less than normal',
     tezosPaymentsOptions,
     {
       ...paymentCreateParametersBase,
-      amount: 'Infinity'
+      asset: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL'
     },
     InvalidPaymentError
   ],
   [
-    'The amount value is NaN',
+    'The length of the asset contract address is more than normal',
     tezosPaymentsOptions,
     {
       ...paymentCreateParametersBase,
-      amount: NaN
+      asset: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2Z'
     },
     InvalidPaymentError
   ],
   [
-    'The amount value is Infinity',
+    'The asset contract address is an implicit account',
     tezosPaymentsOptions,
     {
       ...paymentCreateParametersBase,
-      amount: Infinity
+      asset: 'tz1UtQYueaXRV3MfLj4XHaHZziijHRwF31a5'
     },
     InvalidPaymentError
   ],
   [
-    'Amount is negative',
+    'The asset contract address has an invalid prefix',
     tezosPaymentsOptions,
     {
       ...paymentCreateParametersBase,
-      amount: '-10'
+      asset: 'CT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2'
     },
     InvalidPaymentError
   ]
 ];
 
-export default invalidAmountTestCases;
+export default invalidAssetTestCases;
