@@ -22,7 +22,7 @@ export const AcceptPayments = () => {
   const { address: addressFromUrl } = useParams<{ address: string }>();
   const [serviceAddress, setServiceAddress] = useState<string | undefined>(addressFromUrl);
   const [paymentType, setPaymentType] = useState<PaymentType>(PaymentType.Payment);
-  const [amount, setAmount] = useState<number>(1);
+  const [amount, setAmount] = useState<string>('1');
   const [publicData, setPublicData] = useState<string>('');
   const [donationData, setDonationData] = useState<string>('');
 
@@ -35,10 +35,7 @@ export const AcceptPayments = () => {
   }, []);
 
   const handleAmountChange = useCallback((rawValue: string) => {
-    const numberValue = +rawValue;
-    if (!isNaN(numberValue) && numberValue > 0) {
-      setAmount(numberValue);
-    }
+    setAmount(rawValue);
   }, []);
 
   const handlePublicDataChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
