@@ -63,7 +63,7 @@ export const validateCreatedDate = (
   date: Date,
   errors: Errors<'invalidCreatedDate'>
 ): FailedValidationResults => {
-  if (!(date instanceof Date))
+  if (!(date instanceof Date) || isNaN(date.getTime()))
     return [errors.invalidCreatedDate];
 };
 
@@ -90,7 +90,7 @@ export const validateExpiredDate = (
   if (expiredDate === undefined)
     return;
 
-  if (!(expiredDate instanceof Date))
+  if (!(expiredDate instanceof Date) || isNaN(expiredDate.getTime()))
     return [errors.invalidExpiredDate];
 
   if (expiredDate.getTime() - createdDate.getTime() < minimumPaymentLifetime) {

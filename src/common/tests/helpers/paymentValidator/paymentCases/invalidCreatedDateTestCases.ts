@@ -37,5 +37,12 @@ export default [
       created: '2021-07-05T00:12:11.327Z'
     },
     [PaymentValidator.errors.invalidCreatedDate]
+  ],
+  [
+    {
+      ...validPaymentBase,
+      created: new Date(NaN)
+    },
+    [PaymentValidator.errors.invalidCreatedDate]
   ]
 ] as NegativeTestCases;

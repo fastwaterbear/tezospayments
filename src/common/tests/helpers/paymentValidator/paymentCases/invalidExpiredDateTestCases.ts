@@ -37,6 +37,13 @@ export default [
   [
     {
       ...validPaymentBase,
+      expired: new Date(NaN)
+    },
+    [PaymentValidator.errors.invalidExpiredDate]
+  ],
+  [
+    {
+      ...validPaymentBase,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       expired: new Date(validPaymentBase.created!.getTime() + PaymentValidator.minimumPaymentLifetime - 1)
     },
