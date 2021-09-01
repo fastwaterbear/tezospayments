@@ -15,6 +15,6 @@ export type NegativeTestCase<
     message: string,
     tezosPaymentsOptions: Omit<TezosPaymentsOptions, keyof InvalidTezosPaymentsOptionsSlice> & InvalidTezosPaymentsOptionsSlice,
     paymentCreateParameters: Omit<PaymentCreateParameters, keyof InvalidPaymentCreateParametersSlice> & InvalidPaymentCreateParametersSlice,
-    expectedErrorType: (new (message?: string) => Error)
+    expectedErrors: string | (new (message?: string) => Error)
   ];
 export type NegativeTestCases<InvalidTezosPaymentsOptionsSlice> = ReadonlyArray<NegativeTestCase<InvalidTezosPaymentsOptionsSlice>>;
