@@ -45,8 +45,15 @@ export class TezosPayments {
   }
 
   async createPayment(createParameters: PaymentCreateParameters): Promise<Payment> {
+    let errors: FailedValidationResults;
+    if (createParameters.urlType || createParameters.network) {
+      errors = this.validateDefaultPaymentParameters(createParameters);
+      if (errors)
+        throw new InvalidPaymentError(errors);
+    }
+
     const paymentWithoutUrl = this.createPaymentByCreateParameters(createParameters);
-    const errors = this.paymentValidator.validate(paymentWithoutUrl, true);
+    errors = this.paymentValidator.validate(paymentWithoutUrl, true);
     if (errors)
       throw new InvalidPaymentError(errors);
 
