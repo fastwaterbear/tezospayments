@@ -1,7 +1,7 @@
-import invalidDefaultPaymentParameters from './invalidDefaultPaymentParameters';
+import invalidDefaultPaymentParametersTestCases from './invalidDefaultPaymentParameters';
 import invalidServiceContractAddressTestCases from './invalidServiceContractAddressTestCases';
 import invalidSigningTestCases from './invalidSigningTestCases';
 
 export default invalidServiceContractAddressTestCases
   .concat(invalidSigningTestCases)
-  .concat(invalidDefaultPaymentParameters);
+  .concat(invalidDefaultPaymentParametersTestCases);
