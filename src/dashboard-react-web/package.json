@@ -8,7 +8,6 @@
     "@reduxjs/toolkit": "^1.5.1",
     "@taquito/beacon-wallet": "^10.0.0",
     "@taquito/taquito": "^10.0.0",
-    "@tezospayments/common": "^0.2.0",
     "antd": "^4.16.0",
     "bignumber.js": "^9.0.1",
     "history": "^4.10.1",
@@ -16,6 +15,7 @@
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.4",
     "react-router-dom": "^5.2.0",
+    "tezospayments": "^0.1.0",
     "web-vitals": "^1.1.2"
   },
   "devDependencies": {
