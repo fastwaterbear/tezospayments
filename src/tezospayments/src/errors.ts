@@ -29,6 +29,9 @@ export class InvalidTezosPaymentsOptionsError extends TezosPaymentsError {
   }
 }
 
+export class InvalidPaymentCreateParametersError extends TezosPaymentsError {
+}
+
 export class InvalidPaymentError extends TezosPaymentsError {
   constructor(message?: string);
   constructor(validationErrors: readonly string[]);

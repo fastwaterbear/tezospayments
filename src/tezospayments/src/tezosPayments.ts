@@ -6,7 +6,7 @@ import {
   PaymentType, PaymentValidator, Mutable
 } from '@tezospayments/common';
 
-import { InvalidPaymentError, InvalidTezosPaymentsOptionsError, UnsupportedPaymentUrlTypeError } from './errors';
+import { InvalidPaymentCreateParametersError, InvalidPaymentError, InvalidTezosPaymentsOptionsError, UnsupportedPaymentUrlTypeError } from './errors';
 import { Payment, PaymentUrlType } from './models';
 import type { DefaultPaymentParameters, PaymentCreateParameters, TezosPaymentsOptions } from './options';
 import { Base64PaymentUrlFactory, PaymentUrlFactory } from './paymentUrlFactories';
@@ -45,6 +45,9 @@ export class TezosPayments {
   }
 
   async createPayment(createParameters: PaymentCreateParameters): Promise<Payment> {
+    if (!createParameters)
+      throw new InvalidPaymentCreateParametersError(createParameters);
+
     let errors: FailedValidationResults;
     if (createParameters.urlType || createParameters.network) {
       errors = this.validateDefaultPaymentParameters(createParameters);
