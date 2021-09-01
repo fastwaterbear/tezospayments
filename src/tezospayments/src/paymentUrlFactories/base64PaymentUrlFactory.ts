@@ -1,11 +1,10 @@
 import {
-  native,
-  PaymentSerializer, CustomNetwork, Network, Payment, Donation, DonationSerializer, PaymentType
+  native, PaymentUrlType,
+  PaymentSerializer, CustomNetwork, Network, Payment, Donation, DonationSerializer, PaymentType, getEncodedPaymentUrlType
 } from '@tezospayments/common';
 
 import constants from '../constants';
 import { DonationUrlError, PaymentUrlError } from '../errors';
-import { PaymentUrlType } from '../models';
 import { PaymentUrlFactory } from './paymentUrlFactory';
 
 export class Base64PaymentUrlFactory extends PaymentUrlFactory {
@@ -57,7 +56,7 @@ export class Base64PaymentUrlFactory extends PaymentUrlFactory {
     const url = new native.URL(`${targetAddress}/${isPayment ? 'payment' : 'donation'}`, this.baseUrl);
 
     if (serializedPaymentOrDonationBase64 !== '')
-      url.hash = this.urlTypePrefix + serializedPaymentOrDonationBase64;
+      url.hash = getEncodedPaymentUrlType(this.urlType) + serializedPaymentOrDonationBase64;
     if (network.name !== constants.defaultNetworkName)
       url.searchParams.append('network', network.name);
 

@@ -1,13 +1,13 @@
 import BigNumber from 'bignumber.js';
 
 import {
-  native, networks, tezosInfo, networkNameRegExp, networkIdRegExp,
+  native, networks, tezosInfo, networkNameRegExp, networkIdRegExp, PaymentUrlType,
   DeepReadonly, FailedValidationResults, Payment as CommonPaymentModel,
   PaymentType, PaymentValidator, Mutable
 } from '@tezospayments/common';
 
 import { InvalidPaymentCreateParametersError, InvalidPaymentError, InvalidTezosPaymentsOptionsError, UnsupportedPaymentUrlTypeError } from './errors';
-import { Payment, PaymentUrlType } from './models';
+import { Payment } from './models';
 import type { DefaultPaymentParameters, PaymentCreateParameters, TezosPaymentsOptions } from './options';
 import { Base64PaymentUrlFactory, PaymentUrlFactory } from './paymentUrlFactories';
 import { ApiSecretKeySigner, CustomSigner, TezosPaymentsSigner, WalletSigner } from './signers';
