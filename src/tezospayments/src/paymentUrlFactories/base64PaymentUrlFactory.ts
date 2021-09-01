@@ -1,5 +1,5 @@
 import {
-  native, text,
+  native,
   PaymentSerializer, CustomNetwork, Network, Payment, Donation, DonationSerializer, PaymentType
 } from '@tezospayments/common';
 
@@ -16,10 +16,6 @@ export class Base64PaymentUrlFactory extends PaymentUrlFactory {
 
   constructor(readonly baseUrl: string = Base64PaymentUrlFactory.baseUrl) {
     super(PaymentUrlType.Base64);
-  }
-
-  private get urlTypePrefix() {
-    return text.padStart(this.urlType.toString(), 2, '0');
   }
 
   createPaymentUrl(paymentOrDonation: Payment | Donation, network: Network | CustomNetwork): string {
