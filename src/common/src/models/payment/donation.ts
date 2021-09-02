@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 
 import { DonationValidator } from '../../helpers';
 import { URL } from '../../native';
-import { LegacyDonationDeserializer } from '../../serialization';
+import { DonationDeserializer, LegacyDonationDeserializer } from '../../serialization';
 import { StateModel } from '../core';
 import { PaymentBase, PaymentType } from './paymentBase';
 import { NonSerializedDonationSlice } from './serializedDonation';
@@ -16,6 +16,7 @@ export interface Donation extends PaymentBase {
 }
 
 export class Donation extends StateModel {
+  static readonly defaultDeserializer: DonationDeserializer = new DonationDeserializer();
   static readonly defaultLegacyDeserializer: LegacyDonationDeserializer = new LegacyDonationDeserializer();
   static readonly defaultValidator: DonationValidator = new DonationValidator();
 
@@ -23,8 +24,10 @@ export class Donation extends StateModel {
     return this.defaultValidator.validate(donation);
   }
 
-  static deserialize(donationBase64: string, nonSerializedDonationSlice: NonSerializedDonationSlice): Donation | null {
-    return Donation.defaultLegacyDeserializer.deserialize(donationBase64, nonSerializedDonationSlice);
+  static deserialize(serializedDonation: string, nonSerializedDonationSlice: NonSerializedDonationSlice, isLegacy = false): Donation | null {
+    return !isLegacy
+      ? Donation.defaultDeserializer.deserialize(serializedDonation, nonSerializedDonationSlice)
+      : Donation.defaultLegacyDeserializer.deserialize(serializedDonation, nonSerializedDonationSlice);
   }
 }
 

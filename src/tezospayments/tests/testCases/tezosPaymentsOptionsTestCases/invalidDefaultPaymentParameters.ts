@@ -11,7 +11,7 @@ const tezosPaymentsOptionsBase: TezosPaymentsOptions & InvalidTezosPaymentsOptio
 };
 delete tezosPaymentsOptionsBase.defaultPaymentParameters;
 
-export const invalidDefaultPaymentParameters: NegativeTestCases<InvalidTezosPaymentsOptionsSlice> = [
+export const invalidDefaultPaymentParametersTestCases: NegativeTestCases<InvalidTezosPaymentsOptionsSlice> = [
   [
     'Default payment parameters has an invalid type, string',
     {
@@ -215,4 +215,4 @@ export const invalidDefaultPaymentParameters: NegativeTestCases<InvalidTezosPaym
   ]
 ];
 
-export default invalidDefaultPaymentParameters;
+export default invalidDefaultPaymentParametersTestCases;

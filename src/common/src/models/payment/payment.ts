@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 
 import { PaymentValidator } from '../../helpers';
 import { URL } from '../../native';
-import { LegacyPaymentDeserializer } from '../../serialization';
+import { LegacyPaymentDeserializer, PaymentDeserializer } from '../../serialization';
 import { StateModel } from '../core';
 import { PaymentBase, PaymentType } from './paymentBase';
 import { NonSerializedPaymentSlice } from './serializedPayment';
@@ -32,6 +32,7 @@ export interface Payment extends PaymentBase {
 }
 
 export class Payment extends StateModel {
+  static readonly defaultDeserializer: PaymentDeserializer = new PaymentDeserializer();
   static readonly defaultLegacyDeserializer: LegacyPaymentDeserializer = new LegacyPaymentDeserializer();
   static readonly defaultValidator: PaymentValidator = new PaymentValidator();
 
@@ -39,8 +40,10 @@ export class Payment extends StateModel {
     return this.defaultValidator.validate(payment);
   }
 
-  static deserialize(serializedPayment: string, nonSerializedPaymentSlice: NonSerializedPaymentSlice): Payment | null {
-    return Payment.defaultLegacyDeserializer.deserialize(serializedPayment, nonSerializedPaymentSlice);
+  static deserialize(serializedPayment: string, nonSerializedPaymentSlice: NonSerializedPaymentSlice, isLegacy = false): Payment | null {
+    return !isLegacy
+      ? Payment.defaultDeserializer.deserialize(serializedPayment, nonSerializedPaymentSlice)
+      : Payment.defaultLegacyDeserializer.deserialize(serializedPayment, nonSerializedPaymentSlice);
   }
 
   static publicDataExists(payment: Payment): payment is Payment & { readonly data: PublicPaymentData };

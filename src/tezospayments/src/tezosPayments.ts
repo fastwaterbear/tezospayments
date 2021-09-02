@@ -1,11 +1,15 @@
+import BigNumber from 'bignumber.js';
+
 import {
-  DeepReadonly, FailedValidationResults,
-  networks, tezosInfo, networkNameRegExp, networkIdRegExp
+  native, networks, tezosInfo, networkNameRegExp, networkIdRegExp, PaymentUrlType,
+  DeepReadonly, FailedValidationResults, Payment as CommonPaymentModel,
+  PaymentType, PaymentValidator, Mutable
 } from '@tezospayments/common';
 
-import { InvalidTezosPaymentsOptionsError } from './errors';
-import { Payment, PaymentUrlType } from './models';
+import { InvalidPaymentCreateParametersError, InvalidPaymentError, InvalidTezosPaymentsOptionsError, UnsupportedPaymentUrlTypeError } from './errors';
+import { Payment } from './models';
 import type { DefaultPaymentParameters, PaymentCreateParameters, TezosPaymentsOptions } from './options';
+import { Base64PaymentUrlFactory, PaymentUrlFactory } from './paymentUrlFactories';
 import { ApiSecretKeySigner, CustomSigner, TezosPaymentsSigner, WalletSigner } from './signers';
 import { tezosPaymentsOptionsValidationErrors } from './validationErrors';
 
@@ -14,12 +18,14 @@ export class TezosPayments {
     network: networks.granadanet,
     urlType: PaymentUrlType.Base64
   };
+  protected static readonly optionsValidationErrors = tezosPaymentsOptionsValidationErrors;
 
+  protected readonly paymentValidator: PaymentValidator = new PaymentValidator();
   protected readonly serviceContractAddress: string;
   protected readonly signer: TezosPaymentsSigner;
   protected readonly defaultPaymentParameters: DeepReadonly<DefaultPaymentParameters>;
 
-  protected static readonly optionsValidationErrors = tezosPaymentsOptionsValidationErrors;
+  private paymentUrlFactories: Map<PaymentUrlType, PaymentUrlFactory> = new Map();
 
   constructor(options: DeepReadonly<TezosPaymentsOptions>) {
     const errors = this.validateOptions(options);
@@ -27,17 +33,100 @@ export class TezosPayments {
       throw new InvalidTezosPaymentsOptionsError(errors);
 
     this.serviceContractAddress = options.serviceContractAddress;
-    this.signer = this.createSigner(options.signing);
     this.defaultPaymentParameters = options.defaultPaymentParameters
       ? {
         network: options.defaultPaymentParameters.network || TezosPayments.defaultPaymentParameters.network,
         urlType: options.defaultPaymentParameters.urlType || TezosPayments.defaultPaymentParameters.urlType
       }
       : TezosPayments.defaultPaymentParameters;
+
+    this.signer = this.createSigner(options.signing);
+    this.getPaymentUrlFactory(this.defaultPaymentParameters.urlType);
   }
 
-  async createPayment(_createParameters: PaymentCreateParameters): Promise<Payment> {
-    throw new Error('Method not implemented.');
+  async createPayment(createParameters: PaymentCreateParameters): Promise<Payment> {
+    if (!createParameters)
+      throw new InvalidPaymentCreateParametersError(createParameters);
+
+    let errors: FailedValidationResults;
+    if (createParameters.urlType || createParameters.network) {
+      errors = this.validateDefaultPaymentParameters(createParameters);
+      if (errors)
+        throw new InvalidPaymentError(errors);
+    }
+
+    const paymentWithoutUrl = this.createPaymentByCreateParameters(createParameters);
+    errors = this.paymentValidator.validate(paymentWithoutUrl, true);
+    if (errors)
+      throw new InvalidPaymentError(errors);
+
+    const paymentUrl = await this.getPaymentUrl(paymentWithoutUrl, createParameters.urlType, createParameters.network);
+    const payment = this.applyPaymentUrl(paymentWithoutUrl, paymentUrl);
+
+    return payment;
+  }
+
+  protected getPaymentUrl(
+    payment: CommonPaymentModel,
+    urlType = this.defaultPaymentParameters.urlType,
+    network = this.defaultPaymentParameters.network
+  ): string | Promise<string> {
+    return this.getPaymentUrlFactory(urlType).createPaymentUrl(payment, network);
+  }
+
+  protected applyPaymentUrl(payment: CommonPaymentModel, url: string): Payment {
+    (payment as Mutable<Payment>).url = url;
+
+    return (payment as Payment);
+  }
+
+  protected getPaymentUrlFactory(paymentUrlType: PaymentUrlType): PaymentUrlFactory {
+    let paymentUrlFactory = this.paymentUrlFactories.get(paymentUrlType);
+    if (!paymentUrlFactory) {
+      paymentUrlFactory = this.createPaymentUrlFactory(paymentUrlType);
+      this.paymentUrlFactories.set(paymentUrlType, paymentUrlFactory);
+    }
+
+    return paymentUrlFactory;
+  }
+
+  protected createSigner(signingOptions: TezosPaymentsOptions['signing']): TezosPaymentsSigner {
+    if ('apiSecretKey' in signingOptions)
+      return new ApiSecretKeySigner(signingOptions.apiSecretKey);
+    if ('walletSigning' in signingOptions)
+      return new WalletSigner(signingOptions.walletSigning);
+
+    return new CustomSigner(signingOptions);
+  }
+
+  protected createPaymentUrlFactory(paymentUrlType: PaymentUrlType): PaymentUrlFactory {
+    switch (paymentUrlType) {
+      case PaymentUrlType.Base64:
+        return new Base64PaymentUrlFactory();
+      default:
+        throw new UnsupportedPaymentUrlTypeError(`This payment url type is not supported: ${paymentUrlType}`);
+    }
+  }
+
+  protected createPaymentByCreateParameters(createParameters: PaymentCreateParameters): CommonPaymentModel {
+    const payment: Mutable<CommonPaymentModel> = {
+      type: PaymentType.Payment,
+      targetAddress: this.serviceContractAddress,
+      amount: new BigNumber(createParameters.amount),
+      data: createParameters.data,
+      created: createParameters.created ? new Date(createParameters.created) : new Date(),
+    };
+
+    if (createParameters.asset)
+      payment.asset = createParameters.asset;
+    if (createParameters.expired)
+      payment.expired = new Date(createParameters.expired);
+    if (createParameters.successUrl)
+      payment.successUrl = new native.URL(createParameters.successUrl);
+    if (createParameters.cancelUrl)
+      payment.cancelUrl = new native.URL(createParameters.cancelUrl);
+
+    return payment;
   }
 
   protected validateOptions(options: DeepReadonly<TezosPaymentsOptions>): FailedValidationResults {
@@ -49,15 +138,6 @@ export class TezosPayments {
       (result, currentErrors) => currentErrors ? (result || []).concat(currentErrors) : result,
       undefined
     );
-  }
-
-  protected createSigner(signingOptions: TezosPaymentsOptions['signing']): TezosPaymentsSigner {
-    if ('apiSecretKey' in signingOptions)
-      return new ApiSecretKeySigner(signingOptions.apiSecretKey);
-    if ('walletSigning' in signingOptions)
-      return new WalletSigner(signingOptions.walletSigning);
-
-    return new CustomSigner(signingOptions);
   }
 
   private validateServiceContractAddress(serviceContractAddress: string): FailedValidationResults {
@@ -100,7 +180,7 @@ export class TezosPayments {
 
     if ('network' in defaultPaymentParameters) {
       if (typeof defaultPaymentParameters.network !== 'object')
-        return [TezosPayments.optionsValidationErrors.invalidNetworkName];
+        return [TezosPayments.optionsValidationErrors.invalidNetwork];
 
       if (defaultPaymentParameters.network.name === undefined || defaultPaymentParameters.network.name === '')
         return [TezosPayments.optionsValidationErrors.emptyNetworkName];

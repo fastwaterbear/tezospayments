@@ -12,6 +12,7 @@ export const tezosPaymentsOptionsValidationErrors = {
   invalidDefaultPaymentParameters: 'The default payment parameters are invalid',
   // defaultPaymentParameters.network
   emptyNetworkName: 'The network name is empty',
+  invalidNetwork: 'The network is invalid',
   invalidNetworkName: 'The network name is invalid',
   invalidNetworkId: 'The network id is invalid',
   // defaultPaymentParameters.urlType

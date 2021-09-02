@@ -7,7 +7,7 @@ import './PaymentAmount.scss';
 
 interface DonationAmountProps {
   onChange: (rawValue: string) => void;
-  value: number;
+  value: string;
 }
 
 export const PaymentAmount = (props: DonationAmountProps) => {

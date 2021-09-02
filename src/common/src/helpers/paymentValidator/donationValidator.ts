@@ -9,7 +9,7 @@ export class DonationValidator extends PaymentValidatorBase<Donation> {
     invalidDonationObject: 'Donation is undefined or not object',
     invalidType: 'Donation type is invalid',
     invalidAmount: 'Desired amount is invalid',
-    amountIsNegative: 'Desired amount is less than zero',
+    amountIsNonPositive: 'Desired amount is less than or equal to zero',
     invalidTargetAddress: 'Target address is invalid',
     targetAddressIsNotNetworkAddress: 'Target address isn\'t a network address',
     targetAddressHasInvalidLength: 'Target address has an invalid address',

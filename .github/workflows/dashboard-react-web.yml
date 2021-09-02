@@ -52,6 +52,9 @@ jobs:
       - name: Build the @tezospayments/common package
         run: npm run build -w @tezospayments/common
 
+      - name: Build the tezospayments package
+        run: npm run build -w tezospayments
+
       - name: Build the Dashboard app
         run: npm run build -w @tezospayments/dashboard-react-web
 

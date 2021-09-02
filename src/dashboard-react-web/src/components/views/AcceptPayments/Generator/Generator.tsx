@@ -12,7 +12,7 @@ import './Generator.scss';
 interface GeneratorProps {
   serviceAddress: string | undefined;
   paymentType: PaymentType;
-  amount: number;
+  amount: string;
   publicData: string;
   donationData: string;
 }
@@ -27,17 +27,15 @@ export const Generator = (props: GeneratorProps) => {
 
   const paymentOrDonation = props.paymentType === PaymentType.Payment
     ? {
-      created: new Date(),
-      targetAddress: props.serviceAddress,
       type: props.paymentType,
+      targetAddress: props.serviceAddress,
       amount: new BigNumber(props.amount),
       data: props.publicData ? { public: { orderId: props.publicData } } : undefined,
-      urls: []
+      created: new Date(),
     } as Payment
     : {
-      targetAddress: props.serviceAddress,
       type: props.paymentType,
-      urls: []
+      targetAddress: props.serviceAddress,
     } as Donation;
 
   const failedValidationResults = paymentOrDonation.type === PaymentType.Payment

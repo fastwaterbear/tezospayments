@@ -17,7 +17,7 @@ interface AcceptPaymentsSettingsProps {
   paymentType: PaymentType;
   onPaymentTypeChange: (e: RadioChangeEvent) => void;
 
-  amount: number;
+  amount: string;
   onAmountChange: (rawValue: string) => void;
 
   publicData: string;

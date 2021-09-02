@@ -3,4 +3,4 @@ export { default as invalidTezosPaymentsOptionsTestCases } from './invalidTezosP
 
 export { default as invalidServiceContractAddressTestCases } from './invalidServiceContractAddressTestCases';
 export { default as invalidSigningTestCases } from './invalidSigningTestCases';
-export { default as invalidDefaultPaymentParameters } from './invalidDefaultPaymentParameters';
+export { default as invalidDefaultPaymentParametersTestCases } from './invalidDefaultPaymentParameters';

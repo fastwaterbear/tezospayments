@@ -26,18 +26,18 @@ export const validateTargetAddress = (
 
 export const validateAmount = (
   amount: BigNumber,
-  errors: Errors<'invalidAmount' | 'amountIsNegative'>
+  errors: Errors<'invalidAmount' | 'amountIsNonPositive'>
 ): FailedValidationResults => {
   if (!BigNumber.isBigNumber(amount) || amount.isNaN() || !amount.isFinite())
     return [errors.invalidAmount];
 
-  if (amount.isNegative())
-    return [errors.amountIsNegative];
+  if (amount.isZero() || amount.isNegative())
+    return [errors.amountIsNonPositive];
 };
 
 export const validateDesiredAmount = (
   desiredAmount: BigNumber | undefined,
-  errors: Errors<'invalidAmount' | 'amountIsNegative'>
+  errors: Errors<'invalidAmount' | 'amountIsNonPositive'>
 ): FailedValidationResults => {
   return desiredAmount === undefined ? undefined : validateAmount(desiredAmount, errors);
 };
@@ -63,7 +63,7 @@ export const validateCreatedDate = (
   date: Date,
   errors: Errors<'invalidCreatedDate'>
 ): FailedValidationResults => {
-  if (!(date instanceof Date))
+  if (!(date instanceof Date) || isNaN(date.getTime()))
     return [errors.invalidCreatedDate];
 };
 
@@ -90,7 +90,7 @@ export const validateExpiredDate = (
   if (expiredDate === undefined)
     return;
 
-  if (!(expiredDate instanceof Date))
+  if (!(expiredDate instanceof Date) || isNaN(expiredDate.getTime()))
     return [errors.invalidExpiredDate];
 
   if (expiredDate.getTime() - createdDate.getTime() < minimumPaymentLifetime) {

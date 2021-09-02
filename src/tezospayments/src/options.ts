@@ -1,6 +1,6 @@
-import type { CustomNetwork, Network } from '@tezospayments/common';
+import type { CustomNetwork, Network, PaymentUrlType } from '@tezospayments/common';
 
-import type { Payment, PaymentUrlType } from './models';
+import type { Payment } from './models';
 
 export interface TezosPaymentsApiSigningOptions {
   apiSecretKey: string;

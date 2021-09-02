@@ -1,8 +1,9 @@
 import { CopyOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import React, { useCallback } from 'react';
+import { internal as tezosPaymentsInternal } from 'tezospayments';
 
-import { Donation, Payment, PaymentType, Network, networks } from '@tezospayments/common';
+import { Donation, Payment, PaymentType, networks, Network } from '@tezospayments/common';
 
 import { config } from '../../../../../config';
 import { getCurrentAccount } from '../../../../../store/accounts/selectors';
@@ -15,12 +16,26 @@ interface DirectLinkGeneratorProps {
   paymentOrDonation: Payment | Donation;
 }
 
+const base64PaymentUrlFactory = new tezosPaymentsInternal.paymentUrlFactories.Base64PaymentUrlFactory(
+  config.links.tezosPayments.paymentsApp
+);
+
+const getPaymentLink = (paymentOrDonation: Payment | Donation, network: Network) => {
+  try {
+    return base64PaymentUrlFactory.createPaymentUrl(paymentOrDonation, network);
+  }
+  catch {
+    return '';
+  }
+};
+
 export const DirectLinkGenerator = ({ paymentOrDonation }: DirectLinkGeneratorProps) => {
   const langResources = useCurrentLanguageResources();
   const commonLangResources = langResources.common;
   const acceptPaymentsLangResources = langResources.views.acceptPayments;
   const currentAccount = useAppSelector(getCurrentAccount);
 
+  // TODO: handle errors
   const url = getPaymentLink(paymentOrDonation, currentAccount?.network || networks[config.tezos.defaultNetwork]);
 
   const helpText = paymentOrDonation.type === PaymentType.Payment
@@ -41,22 +56,3 @@ export const DirectLinkGenerator = ({ paymentOrDonation }: DirectLinkGeneratorPr
 };
 
 export const DirectLinkGeneratorPure = React.memo(DirectLinkGenerator);
-
-//TODO: move to common package
-const getPaymentLink = (paymentOrDonation: Payment | Donation, network: Network) => {
-  const isPayment = paymentOrDonation.type === PaymentType.Payment;
-
-  const rawPayment = isPayment ? {
-    created: +new Date(),
-    amount: (paymentOrDonation as Payment).amount.toString(10),
-    data: (paymentOrDonation as Payment).data
-  } : null;
-
-  const baseUrl = config.links.tezosPayments.paymentsApp;
-  const address = paymentOrDonation.targetAddress;
-  const operation = isPayment ? 'payment' : 'donation';
-  const networkSegment = network.name === config.tezos.defaultNetwork ? '' : `?network=${network.name}`;
-  const base64 = rawPayment ? Buffer.from(JSON.stringify(rawPayment), 'utf8').toString('base64') : null;
-
-  return `${baseUrl}/${address}/${operation}${networkSegment ? networkSegment : ''}${base64 ? `#${base64}` : ''}`;
-};
