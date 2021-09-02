@@ -17,7 +17,7 @@ export interface Donation extends PaymentBase {
 
 export type SignedDonation = Donation & {
   readonly signature: {
-    readonly application?: string;
+    readonly client?: string;
   }
 };
 

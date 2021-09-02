@@ -35,7 +35,7 @@ export interface Payment extends PaymentBase {
 export type SignedPayment = Payment & {
   readonly signature: {
     readonly contract: string;
-    readonly application?: string;
+    readonly client?: string;
   };
 };
 
