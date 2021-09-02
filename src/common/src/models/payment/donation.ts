@@ -15,6 +15,12 @@ export interface Donation extends PaymentBase {
   readonly cancelUrl?: URL;
 }
 
+export type SignedDonation = Donation & {
+  readonly signature: {
+    readonly application?: string;
+  }
+};
+
 export class Donation extends StateModel {
   static readonly defaultDeserializer: DonationDeserializer = new DonationDeserializer();
   static readonly defaultLegacyDeserializer: LegacyDonationDeserializer = new LegacyDonationDeserializer();

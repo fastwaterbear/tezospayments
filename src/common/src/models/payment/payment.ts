@@ -32,6 +32,13 @@ export interface Payment extends PaymentBase {
   readonly cancelUrl?: URL;
 }
 
+export type SignedPayment = Payment & {
+  readonly signature: {
+    readonly contract: string;
+    readonly application?: string;
+  };
+};
+
 export class Payment extends StateModel {
   static readonly defaultDeserializer: PaymentDeserializer = new PaymentDeserializer();
   static readonly defaultLegacyDeserializer: LegacyPaymentDeserializer = new LegacyPaymentDeserializer();
