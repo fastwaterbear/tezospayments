@@ -9,9 +9,28 @@ const invalidSerializedPaymentTestCases: ReadonlyArray<readonly [
   testValue: readonly [serializedPayment: SerializedPayment, serializedPaymentBase64: string]
 ]> = [
     [
-      'payment without some required fields',
+      'payment without some required fields, i (id)',
       [
         {
+          // i: ,
+          a: '3939439430403',
+          d: {
+            public: {
+              orderId: '0a6d2db181fa4ec7a7dbfb7b728201f6',
+            }
+          },
+          c: createdDate.getTime(),
+          cu: 'https://fastwaterbear.com/tezospayments/test/payment/cancel',
+          e: expiredDate.getTime()
+        },
+        'eyJhIjoiMzkzOTQzOTQzMDQwMyIsImQiOnsicHVibGljIjp7Im9yZGVySWQiOiIwYTZkMmRiMTgxZmE0ZWM3YTdkYmZiN2I3MjgyMDFmNiJ9fSwiY3UiOiJodHRwczovL2Zhc3R3YXRlcmJlYXIuY29tL3Rlem9zcGF5bWVudHMvdGVzdC9wYXltZW50L2NhbmNlbCIsImUiOjE2MjQ2NjkwMjM5MzB9',
+      ]
+    ],
+    [
+      'payment without some required fields, c (created)',
+      [
+        {
+          i: '4ab68d1d14f1404782398e1a3777b2e0',
           a: '3939439430403',
           d: {
             public: {
@@ -29,6 +48,7 @@ const invalidSerializedPaymentTestCases: ReadonlyArray<readonly [
       'payment with excess fields (a fields count is greater than the maximum)',
       [
         {
+          i: 'e0322ce969454336b369eccfbf5f7066',
           a: '3939439430403',
           d: {
             public: {
@@ -49,9 +69,29 @@ const invalidSerializedPaymentTestCases: ReadonlyArray<readonly [
       ]
     ],
     [
+      'payment with invalid field types (id)',
+      [
+        {
+          i: Infinity,
+          a: '3939439430403',
+          d: {
+            public: {
+              orderId: '0a6d2db181fa4ec7a7dbfb7b728201f6',
+            }
+          },
+          su: 'https://fastwaterbear.com/tezospayments/test/payment/success',
+          cu: 'https://fastwaterbear.com/tezospayments/test/payment/cancel',
+          c: createdDate.getTime(),
+          e: expiredDate.getTime()
+        },
+        '',
+      ],
+    ],
+    [
       'payment with invalid field types (amount)',
       [
         {
+          i: '1034394',
           a: 35039,
           d: {
             public: {
@@ -70,6 +110,7 @@ const invalidSerializedPaymentTestCases: ReadonlyArray<readonly [
       'payment with invalid field types (success link)',
       [
         {
+          i: 'a85f43e5-21d8-4e87-bf8c-3af1435a1088',
           a: '3939439430403',
           d: {
             public: {
@@ -88,6 +129,7 @@ const invalidSerializedPaymentTestCases: ReadonlyArray<readonly [
       'payment with invalid field types (asset)',
       [
         {
+          i: '32793899-d3f8-4352-a61c-f0ec50987dc2',
           a: '8383.383202283822832232',
           d: {
             public: {

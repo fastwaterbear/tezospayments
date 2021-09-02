@@ -2,6 +2,10 @@ import type { Payment } from './payment';
 
 export type SerializedPayment = {
   /**
+   * id
+   */
+  i: string;
+  /**
    * amount
    */
   a: string;

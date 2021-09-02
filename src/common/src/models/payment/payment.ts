@@ -22,6 +22,7 @@ type PaymentData =
 
 export interface Payment extends PaymentBase {
   readonly type: PaymentType.Payment;
+  readonly id: string;
   readonly amount: BigNumber;
   readonly asset?: string;
   readonly data: PaymentData;

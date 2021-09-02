@@ -151,6 +151,7 @@ describe('Service Link Helper', () => {
   });
 
   const invalidLinks: readonly string[] = [
+    // eslint-disable-next-line no-script-url
     'javascript:alert(111)',
     'test.test@tezospayment.com@test',
     '192.168.1.1',

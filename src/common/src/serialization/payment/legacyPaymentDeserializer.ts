@@ -25,6 +25,7 @@ export class LegacyPaymentDeserializer {
   protected mapSerializedPaymentToPayment(serializedPayment: LegacySerializedPayment, nonSerializedPaymentSlice: NonSerializedPaymentSlice): Payment {
     return {
       type: PaymentType.Payment,
+      id: 'legacy-payment',
       amount: new BigNumber(serializedPayment.amount),
       data: serializedPayment.data,
       asset: serializedPayment.asset,

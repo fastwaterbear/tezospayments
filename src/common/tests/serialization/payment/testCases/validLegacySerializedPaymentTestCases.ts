@@ -31,6 +31,7 @@ const validLegacySerializedPaymentTestCases: ReadonlyArray<readonly [
       ],
       nonSerializedSlice => ({
         type: PaymentType.Payment,
+        id: 'legacy-payment',
         amount: new BigNumber('384803.383202'),
         data: {
           public: {
@@ -64,6 +65,7 @@ const validLegacySerializedPaymentTestCases: ReadonlyArray<readonly [
       ],
       nonSerializedSlice => ({
         type: PaymentType.Payment,
+        id: 'legacy-payment',
         amount: new BigNumber('8383.383202283822832232'),
         data: {
           public: {
@@ -97,6 +99,7 @@ const validLegacySerializedPaymentTestCases: ReadonlyArray<readonly [
       ],
       nonSerializedSlice => ({
         type: PaymentType.Payment,
+        id: 'legacy-payment',
         amount: new BigNumber('3939439430403'),
         data: {
           public: {
@@ -128,6 +131,7 @@ const validLegacySerializedPaymentTestCases: ReadonlyArray<readonly [
       ],
       nonSerializedSlice => ({
         type: PaymentType.Payment,
+        id: 'legacy-payment',
         amount: new BigNumber('747.23834'),
         data: {
           public: {
