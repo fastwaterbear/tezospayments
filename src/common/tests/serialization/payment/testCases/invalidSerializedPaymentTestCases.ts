@@ -23,7 +23,7 @@ const invalidSerializedPaymentTestCases: ReadonlyArray<readonly [
           cu: 'https://fastwaterbear.com/tezospayments/test/payment/cancel',
           e: expiredDate.getTime()
         },
-        'eyJhIjoiMzkzOTQzOTQzMDQwMyIsImQiOnsicHVibGljIjp7Im9yZGVySWQiOiIwYTZkMmRiMTgxZmE0ZWM3YTdkYmZiN2I3MjgyMDFmNiJ9fSwiY3UiOiJodHRwczovL2Zhc3R3YXRlcmJlYXIuY29tL3Rlem9zcGF5bWVudHMvdGVzdC9wYXltZW50L2NhbmNlbCIsImUiOjE2MjQ2NjkwMjM5MzB9',
+        'eyJhIjoiMzkzOTQzOTQzMDQwMyIsImQiOnsicHVibGljIjp7Im9yZGVySWQiOiIwYTZkMmRiMTgxZmE0ZWM3YTdkYmZiN2I3MjgyMDFmNiJ9fSwiYyI6MTYyNDY2NzgyMzkzMCwiY3UiOiJodHRwczovL2Zhc3R3YXRlcmJlYXIuY29tL3Rlem9zcGF5bWVudHMvdGVzdC9wYXltZW50L2NhbmNlbCIsImUiOjE2MjQ2NjkwMjM5MzB9',
       ]
     ],
     [
@@ -84,7 +84,7 @@ const invalidSerializedPaymentTestCases: ReadonlyArray<readonly [
           c: createdDate.getTime(),
           e: expiredDate.getTime()
         },
-        '',
+        'eyJpIjpudWxsLCJhIjoiMzkzOTQzOTQzMDQwMyIsImQiOnsicHVibGljIjp7Im9yZGVySWQiOiIwYTZkMmRiMTgxZmE0ZWM3YTdkYmZiN2I3MjgyMDFmNiJ9fSwic3UiOiJodHRwczovL2Zhc3R3YXRlcmJlYXIuY29tL3Rlem9zcGF5bWVudHMvdGVzdC9wYXltZW50L3N1Y2Nlc3MiLCJjdSI6Imh0dHBzOi8vZmFzdHdhdGVyYmVhci5jb20vdGV6b3NwYXltZW50cy90ZXN0L3BheW1lbnQvY2FuY2VsIiwiYyI6MTYyNDY2NzgyMzkzMCwiZSI6MTYyNDY2OTAyMzkzMH0',
       ],
     ],
     [
