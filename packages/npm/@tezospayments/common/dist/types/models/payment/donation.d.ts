@@ -1,8 +1,10 @@
-import { BigNumber } from 'bignumber.js';
-import { DonationParser, NonIncludedDonationFields, DonationValidator } from '../../helpers';
+import BigNumber from 'bignumber.js';
+import { DonationValidator } from '../../helpers';
 import { URL } from '../../native';
+import { DonationDeserializer, LegacyDonationDeserializer } from '../../serialization';
 import { StateModel } from '../core';
 import { PaymentBase, PaymentType } from './paymentBase';
+import { NonSerializedDonationSlice } from './serializedDonation';
 export interface Donation extends PaymentBase {
     readonly type: PaymentType.Donation;
     readonly desiredAmount?: BigNumber;
@@ -11,8 +13,9 @@ export interface Donation extends PaymentBase {
     readonly cancelUrl?: URL;
 }
 export declare class Donation extends StateModel {
-    static readonly defaultParser: DonationParser;
+    static readonly defaultDeserializer: DonationDeserializer;
+    static readonly defaultLegacyDeserializer: LegacyDonationDeserializer;
     static readonly defaultValidator: DonationValidator;
     static validate(donation: Donation): import("..").FailedValidationResults;
-    static parse(donationBase64: string, nonIncludedFields: NonIncludedDonationFields, parser?: DonationParser): Donation | null;
+    static deserialize(serializedDonation: string, nonSerializedDonationSlice: NonSerializedDonationSlice, isLegacy?: boolean): Donation | null;
 }

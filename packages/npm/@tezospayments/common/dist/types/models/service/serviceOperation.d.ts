@@ -1,4 +1,4 @@
-import { BigNumber } from 'bignumber.js';
+import BigNumber from 'bignumber.js';
 import { StateModel } from '../core';
 import { ServiceOperationDirection } from './serviceOperationDirection';
 import { ServiceOperationStatus } from './serviceOperationStatus';

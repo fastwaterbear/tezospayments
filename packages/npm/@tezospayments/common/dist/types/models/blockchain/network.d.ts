@@ -18,6 +18,10 @@ declare type Networks = {
     } ? (typeof networksInternal)[P] : never;
 };
 export declare type Network = Networks[keyof Networks];
+export interface CustomNetwork {
+    readonly id?: string;
+    readonly name: string;
+}
 export declare const networks: Networks;
 export declare const networksCollection: ({
     readonly id: "NetXz969SFaFn8k";
@@ -26,4 +30,6 @@ export declare const networksCollection: ({
     readonly id: "NetXSgo1ZT2DRUG";
     readonly name: "edo2net";
 })[];
+export declare const networkIdRegExp: RegExp;
+export declare const networkNameRegExp: RegExp;
 export {};

@@ -6,7 +6,7 @@ export declare class DonationValidator extends PaymentValidatorBase<Donation> {
         readonly invalidDonationObject: "Donation is undefined or not object";
         readonly invalidType: "Donation type is invalid";
         readonly invalidAmount: "Desired amount is invalid";
-        readonly amountIsNegative: "Desired amount is less than zero";
+        readonly amountIsNonPositive: "Desired amount is less than or equal to zero";
         readonly invalidTargetAddress: "Target address is invalid";
         readonly targetAddressIsNotNetworkAddress: "Target address isn't a network address";
         readonly targetAddressHasInvalidLength: "Target address has an invalid address";

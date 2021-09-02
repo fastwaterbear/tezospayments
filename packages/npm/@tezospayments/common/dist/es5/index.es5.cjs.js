@@ -13,7 +13,7 @@ var _assertThisInitialized = require('@babel/runtime/helpers/assertThisInitializ
 var _inherits = require('@babel/runtime/helpers/inherits');
 var _possibleConstructorReturn = require('@babel/runtime/helpers/possibleConstructorReturn');
 var _getPrototypeOf = require('@babel/runtime/helpers/getPrototypeOf');
-var bignumber_js = require('bignumber.js');
+var BigNumber = require('bignumber.js');
 var url = require('url');
 var _slicedToArray = require('@babel/runtime/helpers/slicedToArray');
 
@@ -29,7 +29,58 @@ var _assertThisInitialized__default = /*#__PURE__*/_interopDefaultLegacy(_assert
 var _inherits__default = /*#__PURE__*/_interopDefaultLegacy(_inherits);
 var _possibleConstructorReturn__default = /*#__PURE__*/_interopDefaultLegacy(_possibleConstructorReturn);
 var _getPrototypeOf__default = /*#__PURE__*/_interopDefaultLegacy(_getPrototypeOf);
+var BigNumber__default = /*#__PURE__*/_interopDefaultLegacy(BigNumber);
 var _slicedToArray__default = /*#__PURE__*/_interopDefaultLegacy(_slicedToArray);
+
+// Node.js < 15
+var isBase64UrlFormatSupported = Buffer.isEncoding('base64url');
+var decode = function decode(base64String) {
+  var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'base64';
+  if (format !== 'base64' && format !== 'base64url') return '';
+
+  if (!isBase64UrlFormatSupported) {
+    format = 'base64';
+    base64String = base64UrlPreprocessor.prepareValueForDecoding(base64String);
+  }
+
+  return Buffer.from(base64String, format).toString('utf8');
+};
+var encode = function encode(value) {
+  var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'base64';
+  if (format !== 'base64' && format !== 'base64url') return '';
+  if (isBase64UrlFormatSupported) return Buffer.from(value, 'utf8').toString(format);
+  var encodedValue = Buffer.from(value, 'utf8').toString('base64');
+  return base64UrlPreprocessor.prepareEncodedValue(encodedValue);
+};
+var base64UrlPreprocessor = {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  prepareEncodedValue: function prepareEncodedValue(base64value) {
+    return base64value.split('=')[0].replace(/\+/g, '-').replace(/\//g, '_');
+  },
+  prepareValueForDecoding: function prepareValueForDecoding(base64value) {
+    base64value = base64value.replace(/-/g, '+').replace(/_/g, '/');
+
+    switch (base64value.length % 4) {
+      case 0:
+        return base64value;
+
+      case 2:
+        return base64value + '==';
+
+      case 3:
+        return base64value + '=';
+
+      default:
+        throw new Error('Invalid base64url value');
+    }
+  }
+};
+
+var base64 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  decode: decode,
+  encode: encode
+});
 
 var stringToUint8Array = function stringToUint8Array(hex) {
   var _hex$match;
@@ -148,7 +199,8 @@ var optimization = {
 };
 
 var is = function is(x, y) {
-  return x === y ? x !== 0 || y !== 0 || 1 / x === 1 / y : x !== x && y !== y;
+  return x === y ? x !== 0 || y !== 0 || 1 / x === 1 / y // eslint-disable-next-line no-self-compare
+  : x !== x && y !== y;
 };
 
 function shallowEqual(objA, objB) {
@@ -195,10 +247,33 @@ var getAvatarText = function getAvatarText(value) {
   return result;
 };
 
+var stringPad = function stringPad(string, isStart, maxLength) {
+  var fillString = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : ' ';
+  if (String.prototype.padStart !== undefined) return string.padStart(maxLength, fillString);
+  var stringLength = string.length; // eslint-disable-next-line eqeqeq
+
+  if (maxLength <= stringLength || fillString == '') return string;
+  var fillLength = maxLength - stringLength;
+  var filler = fillString.repeat(Math.ceil(fillLength / fillString.length));
+  if (filler.length > fillLength) filler = filler.slice(0, fillLength);
+  return isStart ? filler + string : string + filler;
+};
+
+var padStart = function padStart(string, maxLength) {
+  var fillString = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ' ';
+  return String.prototype.padStart !== undefined ? string.padStart(maxLength, fillString) : stringPad(string, true, maxLength, fillString);
+};
+var padEnd = function padEnd(string, maxLength) {
+  var fillString = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ' ';
+  return String.prototype.padEnd !== undefined ? string.padEnd(maxLength, fillString) : stringPad(string, false, maxLength, fillString);
+};
+
 var text = /*#__PURE__*/Object.freeze({
   __proto__: null,
   capitalize: capitalize,
-  getAvatarText: getAvatarText
+  getAvatarText: getAvatarText,
+  padStart: padStart,
+  padEnd: padEnd
 });
 
 var wait = function wait(ms) {
@@ -244,7 +319,7 @@ var prepareDisplayLink = memoize(function (link) {
 var socialMediaLinkInfoProvider = function socialMediaLinkInfoProvider(link, baseUrl, icon) {
   if (!link.startsWith(baseUrl)) return false;
   var formattedLink = prepareFormattedLink(link);
-  if (formattedLink == baseUrl) return false;
+  if (formattedLink === baseUrl) return false;
   return {
     rawLink: link,
     formattedLink: formattedLink,
@@ -367,219 +442,11 @@ exports.PaymentType = void 0;
   PaymentType[PaymentType["Donation"] = 2] = "Donation";
 })(exports.PaymentType || (exports.PaymentType = {}));
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-var URL = url.URL || globalThis.URL;
-
 function _createForOfIteratorHelper$2(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray$2(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray$2(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$2(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$2(o, minLen); }
 
 function _arrayLikeToArray$2(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-var PaymentParserBase = /*#__PURE__*/function () {
-  function PaymentParserBase() {
-    _classCallCheck__default['default'](this, PaymentParserBase);
-  }
-
-  _createClass__default['default'](PaymentParserBase, [{
-    key: "minPaymentFieldsCount",
-    get: function get() {
-      if (!this._minPaymentFieldsCount) {
-        var count = 0;
-
-        var _iterator = _createForOfIteratorHelper$2(this.paymentFieldTypes),
-            _step;
-
-        try {
-          for (_iterator.s(); !(_step = _iterator.n()).done;) {
-            var info = _step.value;
-            if (typeof info[1] === 'string' ? info[1] !== 'undefined' : info[1].every(function (type) {
-              return type !== 'undefined';
-            })) count++;
-          }
-        } catch (err) {
-          _iterator.e(err);
-        } finally {
-          _iterator.f();
-        }
-
-        this._minPaymentFieldsCount = count;
-      }
-
-      return this._minPaymentFieldsCount;
-    }
-  }, {
-    key: "maxPaymentFieldsCount",
-    get: function get() {
-      return this.paymentFieldTypes.size;
-    }
-  }, {
-    key: "parse",
-    value: function parse(paymentBase64, nonIncludedFields) {
-      try {
-        var rawPayment;
-
-        if (paymentBase64) {
-          var paymentString = buffer.Buffer.from(paymentBase64, 'base64').toString('utf8');
-          rawPayment = JSON.parse(paymentString);
-        } else rawPayment = {};
-
-        return this.validateAndMapRawPaymentToPayment(rawPayment, nonIncludedFields);
-      } catch (_unused) {
-        return null;
-      }
-    }
-  }, {
-    key: "validateAndMapRawPaymentToPayment",
-    value: function validateAndMapRawPaymentToPayment(rawPayment, nonIncludedFields) {
-      return this.validateRawPayment(rawPayment) ? this.mapRawPaymentToPayment(rawPayment, nonIncludedFields) : null;
-    }
-  }, {
-    key: "validateRawPayment",
-    value: function validateRawPayment(rawPayment) {
-      var rawPaymentFieldNames = Object.getOwnPropertyNames(rawPayment); // Prevent the field checking if the rawPayment has an invalid number of fields
-
-      if (rawPaymentFieldNames.length < this.minPaymentFieldsCount || rawPaymentFieldNames.length > this.maxPaymentFieldsCount) return false;
-
-      var _iterator2 = _createForOfIteratorHelper$2(this.paymentFieldTypes),
-          _step2;
-
-      try {
-        var _loop = function _loop() {
-          var _step2$value = _slicedToArray__default['default'](_step2.value, 2),
-              rawPaymentFieldName = _step2$value[0],
-              expectedPaymentFieldType = _step2$value[1];
-
-          var actualPaymentFieldType = _typeof__default['default'](rawPayment[rawPaymentFieldName]);
-
-          if (Array.isArray(expectedPaymentFieldType) ? !expectedPaymentFieldType.some(function (expectedType) {
-            return actualPaymentFieldType === expectedType;
-          }) : actualPaymentFieldType !== expectedPaymentFieldType) {
-            return {
-              v: false
-            };
-          }
-        };
-
-        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-          var _ret = _loop();
-
-          if (_typeof__default['default'](_ret) === "object") return _ret.v;
-        }
-      } catch (err) {
-        _iterator2.e(err);
-      } finally {
-        _iterator2.f();
-      }
-
-      return true;
-    }
-  }]);
-
-  return PaymentParserBase;
-}();
-
-function _createSuper$6(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$6(); return function _createSuperInternal() { var Super = _getPrototypeOf__default['default'](Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf__default['default'](this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn__default['default'](this, result); }; }
-
-function _isNativeReflectConstruct$6() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-var PaymentParser = /*#__PURE__*/function (_PaymentParserBase) {
-  _inherits__default['default'](PaymentParser, _PaymentParserBase);
-
-  var _super = _createSuper$6(PaymentParser);
-
-  function PaymentParser() {
-    var _this;
-
-    _classCallCheck__default['default'](this, PaymentParser);
-
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    _this = _super.call.apply(_super, [this].concat(args));
-
-    _defineProperty__default['default'](_assertThisInitialized__default['default'](_this), "_paymentFieldTypes", new Map().set('amount', 'string').set('data', 'object').set('asset', ['string', 'undefined', 'null']).set('successUrl', ['string', 'undefined', 'null']).set('cancelUrl', ['string', 'undefined', 'null']).set('created', 'number').set('expired', ['number', 'undefined', 'null']));
-
-    return _this;
-  }
-
-  _createClass__default['default'](PaymentParser, [{
-    key: "paymentFieldTypes",
-    get: function get() {
-      return this._paymentFieldTypes;
-    }
-  }, {
-    key: "mapRawPaymentToPayment",
-    value: function mapRawPaymentToPayment(rawPayment, nonIncludedFields) {
-      return {
-        type: exports.PaymentType.Payment,
-        amount: new bignumber_js.BigNumber(rawPayment.amount),
-        data: rawPayment.data,
-        asset: rawPayment.asset,
-        successUrl: rawPayment.successUrl ? new URL(rawPayment.successUrl) : undefined,
-        cancelUrl: rawPayment.cancelUrl ? new URL(rawPayment.cancelUrl) : undefined,
-        created: new Date(rawPayment.created),
-        expired: rawPayment.expired ? new Date(rawPayment.expired) : undefined,
-        targetAddress: nonIncludedFields.targetAddress,
-        urls: nonIncludedFields.urls
-      };
-    }
-  }]);
-
-  return PaymentParser;
-}(PaymentParserBase);
-
-function _createSuper$5(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$5(); return function _createSuperInternal() { var Super = _getPrototypeOf__default['default'](Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf__default['default'](this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn__default['default'](this, result); }; }
-
-function _isNativeReflectConstruct$5() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-var DonationParser = /*#__PURE__*/function (_PaymentParserBase) {
-  _inherits__default['default'](DonationParser, _PaymentParserBase);
-
-  var _super = _createSuper$5(DonationParser);
-
-  function DonationParser() {
-    var _this;
-
-    _classCallCheck__default['default'](this, DonationParser);
-
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    _this = _super.call.apply(_super, [this].concat(args));
-
-    _defineProperty__default['default'](_assertThisInitialized__default['default'](_this), "_paymentFieldTypes", new Map().set('desiredAmount', ['string', 'undefined', 'null']).set('desiredAsset', ['string', 'undefined', 'null']).set('successUrl', ['string', 'undefined', 'null']).set('cancelUrl', ['string', 'undefined', 'null']));
-
-    return _this;
-  }
-
-  _createClass__default['default'](DonationParser, [{
-    key: "paymentFieldTypes",
-    get: function get() {
-      return this._paymentFieldTypes;
-    }
-  }, {
-    key: "mapRawPaymentToPayment",
-    value: function mapRawPaymentToPayment(rawDonation, nonIncludedFields) {
-      return {
-        type: exports.PaymentType.Donation,
-        desiredAmount: rawDonation.desiredAmount ? new bignumber_js.BigNumber(rawDonation.desiredAmount) : undefined,
-        desiredAsset: rawDonation.desiredAsset,
-        successUrl: rawDonation.successUrl ? new URL(rawDonation.successUrl) : undefined,
-        cancelUrl: rawDonation.cancelUrl ? new URL(rawDonation.cancelUrl) : undefined,
-        targetAddress: nonIncludedFields.targetAddress,
-        urls: nonIncludedFields.urls
-      };
-    }
-  }]);
-
-  return DonationParser;
-}(PaymentParserBase);
-
-function _createForOfIteratorHelper$1(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray$1(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-
-function _unsupportedIterableToArray$1(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$1(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$1(o, minLen); }
-
-function _arrayLikeToArray$1(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 var PaymentValidatorBase = /*#__PURE__*/function () {
   function PaymentValidatorBase() {
     _classCallCheck__default['default'](this, PaymentValidatorBase);
@@ -590,9 +457,9 @@ var PaymentValidatorBase = /*#__PURE__*/function () {
     value: function validate(payment) {
       var bail = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
       if (!isPlainObject(payment)) return [this.invalidPaymentObjectError];
-      var failedValidationResults = bail ? [] : undefined;
+      var failedValidationResults;
 
-      var _iterator = _createForOfIteratorHelper$1(this.validationMethods),
+      var _iterator = _createForOfIteratorHelper$2(this.validationMethods),
           _step;
 
       try {
@@ -601,9 +468,8 @@ var PaymentValidatorBase = /*#__PURE__*/function () {
           var currentFailedValidationResults = validationMethod(payment);
 
           if (currentFailedValidationResults) {
-            if (!bail) return currentFailedValidationResults; // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-
-            failedValidationResults.concat(currentFailedValidationResults);
+            if (!bail) return currentFailedValidationResults;
+            (failedValidationResults || (failedValidationResults = [])).concat(currentFailedValidationResults);
           }
         }
       } catch (err) {
@@ -635,13 +501,14 @@ var networksInternal = {
 };
 var networks = networksInternal;
 var networksCollection = Object.values(networksInternal);
+var networkIdRegExp = /^[a-zA-Z]\w*$/;
+var networkNameRegExp = networkIdRegExp;
 
 var tezosMeta = {
   symbol: 'XTZ',
   name: 'Tezos',
   decimals: 6,
-  // eslint-disable-next-line max-len
-  thumbnailUri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAABC1BMVEUAAABCfe5LcORAfetCffBDfe9CffBCfe9Cf/BBfe9Df/JBe+xDeu5Df/JCfvBCfO9Cfe9Cfe9DfvBDfvBBfe9BffA+eu9Df/JCfe8+eeVCfvFCfe9Cfe9Cfu5BffBCffBBfu8+fO9CffJEf/JEfe9CfvFDfu////9Ff+/8/f8+e+87eO9FgvdGg/rr8f5EgPRWjPFTifFAfO9Ghfz0+P5gk/I4d+5Hhv+vyPg3du7n7/1Ef/BIgvD5+v+hv/dOhvBomPNajvHP3vu50PpvnPPv9P7d6PzW5PyMsfbn7v3H2fvB1fp5pPTj7P1ml/KIrfWCqfWow/irxvi0zPmzyvmZufeStPaWt/Ywce7hqexUAAAAJnRSTlMA/QMTxv6QilFW0DQM9a9K8d7WwrYuB/nqHJnL4l4ooHMXQ9p0cw375J8AAAlzSURBVHja1VsHe9JAGE7CHqWD2ta21h2uGQQCJEZWyxbtcv//X+J3hMuJwh2XxEf9nhaoIO9737z1SUKiKIunRCH3LF1KHpzsyarc3js/SJbSr3OFBPnMH5LFFx9dZNPJ/T3LNQ3DardVkLZlGUbDNfb2y+ncxVH8HOi4EtnTM7nRMA1L9kVdiP86ZRmm2ZDP0rsJyiFO+KPc0xOrYbYpMhXKo202rJPTXJFoLDbdP8rsG67lY7MEf8Byjf30o9goKPCTPZRd4ydwLgmjIR/u4v8Zy+izZaPRBnQBAVs0rHJWiewLCsAnDZMxeIYaTKu8C18RDb5QMk1ADyWYwmGBUAiFX8wcE/hwFFKNnUxCUsIOfzcPtlcjCfjCS2IH8eFbBh+ebwfDOC1Kijh+Ie8ytC9kB/esIM7gyY5B8SMrYeeJ4PCVjEmsHwsFy8wIOIIiJUo85xePyBKNBi7+86R7DPjxMnCThAEX/3HeJPBxUjDzjwkDDv4BwY+ZQeMAGMQ7/vh1AP6Xb1D82HWQf85jkEgyxo+IhNdBMsFRQMlljF8jEpqC7JYUhYWfYdkf1a9rC6nrekgGKbmRAZiN+E/MlLwR3u4Pqr68G7acsCpImU8AaAP+ox1LVhkEqhUi3V5HReEYWDuPNjEo5lnlF/DeVy4X8PDUrGkopA6MfHGDAk5ZDohV0JlXiLyraeEdEdxgHf6uwSkASEOBDqoRCBwbu+sYFPexATgM6tVKZAJghIPiugjkZ0Bk19/FQEAlsbg6A6MRwNLA21gIpIJIoAQOqQLECYir4FBRfvFAK0XfFycg7gbZVRUcMWrQHyFgJpUVBWSZDhA/ATW1qgKlbEYjEEkFwOQFSwGIik0JXNuII9urQFGYIaDpGhGnH+SBuqP9JvqKIF4gAAFSBY9VRhW8bgVyPSKZcDwK/pnK7VUgt1ctpo0AkOQCeEy78maz126aP0mFSHONXP4szZmHuDWJXwWAwLgSTi5nHtsJ9otLBeSMFItA9bJLx0W/fpOQj8DzVxsxNECSkSI9dRkeoF13w2qg8t5m2+Cpb4PECSsI7f7DGyqfiBN0h2/Wy8MNxUc2Yk7OThJ+GeDMA3QqXicIw76nrxHte2sc4KsYn8kAbIBjgCaByInI7t/wx09tcArwjDoknIoR0mDO5uMPYfzcdHyG99YvjtXYCDjfCP5HXWXhk1x0AQRyYIF4CCB9BPA+vkbw2ek4BwTSZkwEwAH8d+n4uTZIA4FyXARUew7YGP+B4HMJlCELnBvxEEBOb4nfI/j8idl5QirsWbEQQM4HDI/xnW1X77K1V4BCIEciQN8aL/F1Lj4tB1ZOegaFIBYTDABcDB+noleQB+MggLyPYvg0DEpGDASQc3/p4zsC8NgLS1IyBgJIvx4T+6sikrKS0oEVgwY6U0DH41fFCMjWgXTejkwAeZ+wAyzsL0igfSLtRSaAvNkCf/YdTwiEKMDJt9SG50gEkH7bXGxbXd99vRvVNM8WigMJHiIRQHZnghXQnPrrhfd3HUdk1RadgD4k+0bLGfG7Xt3b3hklORoB5H0FfMJg+TueadsqoR3RCZEz6i7G3W02u0t4/DCv62hLJzyJQgBp/QlGnN+1Ov3Wh49vAwoTnyCXwHnERGQPYfCfWpqj2bbmeP2v1YBBXUNbJaKklQpNAP7udj+3wOtBVPi1vfqAMBjY29SCpGgxugnWBZiA3e/dOjoAI20Bh5DeCRh88dAWxUigHNOYB+m2dLQIQoCHyVB12LGXUUk2Uy/HfDeQG2nplSuLxOGcjO/eQf6YAbMGmPfL8SLnjsTkG4dLwH0m5SxZQAXeQ7Dy0YNU3J9WupUZVfh0qaUmmIl3qJwTmpQC2CjYIbn1Ogvf82oAeNm91RGtTXR6yp2UCk3LQWwyvMpNy9M13bPvIfJgKaojuqNN9lQmHZs/LZe2W5vSyTchUBn3Rq3RbFBZlKKWhqia/ECAN3gbVWaZLM0E3PANYQDSJS/vQAGUQI985M7hEEiTxamAQPLDOqeJH28GUSCqJRwHHuIvTi92VCEVqPaX6s+bVFB/7wk+maGQRfKcVZIA9hgvz4/OwAZCDLz6lwHdMKw+1Al+sK81XhKYdjj7xUeMwzJWQvTU69Gs93k4/NT7UPc0tLZiAIGbvo3YeVAhW/VCAtGP94UdkDXTUKRtebIkW3B6xtim4+5cdbBg+I0EcDlgb9MxNir5vqB7nqcTHYtqgG5Ugg3C3BiCAjz68tD70KGO/rsTThg+IKegEChkszoljl8b+On2ig7ytzAcMPPwfjE4sxS3gV2f+LmAZOG1iWjosSwAMRAc26uikeiRjEwLM9XAN5KKv3mIkYXwgQU9tRR0wPYkKAlNYuiAQHDEfaUj/tml74YpUQ+o0m35X72gT9676diMIHwBwEQUqMmRCVAXIMZ5cBCjElN4cRXgXfHABN26vUqOWOASLMDeqpfCq0AfbHBCpF9VaC1k16EVFQgS8L4QDYxXwhDZ6pQQGG0mkPLLAAj77JJ1lNT0YQa3K/iq9pngDzVWCFD8IBekhBg4fiKoXn9HIKRA6epnkoSqdQ1tvspTAEiBKxyM6yTVe9XTFwszW3O00ZTgNxkGWH+dqnhgCDHQP1z6YFOYlHQArFO7n1covoOYVUD8Gg8VugAhjti9mc4Hky7dJLkBfMFrPOI1CTmzLtQj/EMEXuG/up/6oH/mYRnjKpcIg9vBApaKf6Z5pWsMfOPsiHmZTcgP1Lv5Lye7015L0xESvcxGr/OJTtHt2v3H+WSCL/lNBp9nrY6jATznOh/nQqMYBU33HNTH1xw7Og5IxFmNQQSyumlKrhxifgw5QNNs/JJ7Wlsi+JxLrcIsmOA0AyUT3Gvdf/Zab0JS/u2Lzf7VbqKDuPEPAP/fv9yOGSSSrizHDH/sJuFa919scGiUEiItFpCRrFhbPIyMIin/T5OLf8n0zE3J8eC7+UKYRqPiqRGHEmTDyhQJvmir18s4Wr3yL6TQ3WaJzE4jih1k2TzGw4/S7ndoRWn3M0qFyB2Hu2UrbMOjkcwS+Cj9tkoWKIRo+TTKAB9P16myeyg3xJpeXfkwp8TYdysV0rjtV+WSkEGshrGfeRR753Exd7pV47NrnTzNHf2R3mspsZuG1m/TNKzU763fkO/NBrR+n2YTf7L9/Ogily6T5nfLb35vW4YBA8fN71lofhfTfaT2/3N88i3vneD2/2ch2/9/ABtem2hAUcJLAAAAAElFTkSuQmCC'
+  thumbnailUri: 'https://dashboard.tezospayments.com/tokens/tezos.png'
 };
 var tokenWhitelist = [// {
 //   network: networks.mainnet,
@@ -675,7 +542,7 @@ var tokenWhitelist = [// {
     decimals: 0,
     symbol: 'MBRG',
     name: 'MAX BURGER',
-    thumbnailUri: 'https://quipuswap.com/tokens/stably.png'
+    thumbnailUri: 'https://dashboard.tezospayments.com/tokens/unknown.png'
   }
 }];
 var tokenWhitelistMap = new Map(tokenWhitelist.map(function (token) {
@@ -692,11 +559,27 @@ var tezosInfo = {
   addressPrefixes: addressPrefixes
 };
 
-function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+exports.KeyType = void 0;
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+(function (KeyType) {
+  KeyType["Ed25519"] = "Ed25519";
+  KeyType["Secp256k1"] = "Secp256k1";
+  KeyType["P256"] = "P256";
+})(exports.KeyType || (exports.KeyType = {}));
 
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+/* eslint-disable @typescript-eslint/no-redeclare */
+var URL = url.URL || globalThis.URL;
+
+var index = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  URL: URL
+});
+
+function _createForOfIteratorHelper$1(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray$1(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray$1(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$1(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$1(o, minLen); }
+
+function _arrayLikeToArray$1(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 var validateTargetAddress = function validateTargetAddress(targetAddress, errors) {
   if (typeof targetAddress !== 'string') return [errors.invalidTargetAddress];
   if (targetAddress.length !== tezosInfo.addressLength) return [errors.targetAddressHasInvalidLength];
@@ -705,8 +588,8 @@ var validateTargetAddress = function validateTargetAddress(targetAddress, errors
   })) return [errors.targetAddressIsNotNetworkAddress];
 };
 var validateAmount = function validateAmount(amount, errors) {
-  if (!bignumber_js.BigNumber.isBigNumber(amount) || amount.isNaN() || !amount.isFinite()) return [errors.invalidAmount];
-  if (amount.isNegative()) return [errors.amountIsNegative];
+  if (!BigNumber__default['default'].isBigNumber(amount) || amount.isNaN() || !amount.isFinite()) return [errors.invalidAmount];
+  if (amount.isZero() || amount.isNegative()) return [errors.amountIsNonPositive];
 };
 var validateDesiredAmount = function validateDesiredAmount(desiredAmount, errors) {
   return desiredAmount === undefined ? undefined : validateAmount(desiredAmount, errors);
@@ -720,7 +603,7 @@ var validateAsset = function validateAsset(asset, errors) {
   })) return [errors.assetIsNotContractAddress];
 };
 var validateCreatedDate = function validateCreatedDate(date, errors) {
-  if (!(date instanceof Date)) return [errors.invalidCreatedDate];
+  if (!(date instanceof Date) || isNaN(date.getTime())) return [errors.invalidCreatedDate];
 };
 var validateUrl = function validateUrl(url, errors) {
   if (url === undefined) return;
@@ -729,7 +612,7 @@ var validateUrl = function validateUrl(url, errors) {
 };
 var validateExpiredDate = function validateExpiredDate(expiredDate, createdDate, minimumPaymentLifetime, errors) {
   if (expiredDate === undefined) return;
-  if (!(expiredDate instanceof Date)) return [errors.invalidExpiredDate];
+  if (!(expiredDate instanceof Date) || isNaN(expiredDate.getTime())) return [errors.invalidExpiredDate];
 
   if (expiredDate.getTime() - createdDate.getTime() < minimumPaymentLifetime) {
     return [errors.paymentLifetimeIsShort];
@@ -755,7 +638,7 @@ var validateData = function validateData(data, errors) {
 };
 
 var isFlatObject = function isFlatObject(obj) {
-  var _iterator = _createForOfIteratorHelper(Object.getOwnPropertyNames(obj)),
+  var _iterator = _createForOfIteratorHelper$1(Object.getOwnPropertyNames(obj)),
       _step;
 
   try {
@@ -824,7 +707,7 @@ _defineProperty__default['default'](PaymentValidator, "errors", {
   invalidPaymentObject: 'Payment is undefined or not object',
   invalidType: 'Payment type is invalid',
   invalidAmount: 'Amount is invalid',
-  amountIsNegative: 'Amount is less than zero',
+  amountIsNonPositive: 'Amount is less than or equal to zero',
   invalidTargetAddress: 'Target address is invalid',
   targetAddressIsNotNetworkAddress: 'Target address isn\'t a network address',
   targetAddressHasInvalidLength: 'Target address has an invalid address',
@@ -902,7 +785,7 @@ _defineProperty__default['default'](DonationValidator, "errors", {
   invalidDonationObject: 'Donation is undefined or not object',
   invalidType: 'Donation type is invalid',
   invalidAmount: 'Desired amount is invalid',
-  amountIsNegative: 'Desired amount is less than zero',
+  amountIsNonPositive: 'Desired amount is less than or equal to zero',
   invalidTargetAddress: 'Target address is invalid',
   targetAddressIsNotNetworkAddress: 'Target address isn\'t a network address',
   targetAddressHasInvalidLength: 'Target address has an invalid address',
@@ -930,6 +813,381 @@ var StateModel = function StateModel() {// All derived classes should be static
   _classCallCheck__default['default'](this, StateModel);
 };
 
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+var ObjectSerializationValidator = /*#__PURE__*/function () {
+  function ObjectSerializationValidator(objectFieldTypes) {
+    _classCallCheck__default['default'](this, ObjectSerializationValidator);
+
+    this.objectFieldTypes = objectFieldTypes;
+  }
+
+  _createClass__default['default'](ObjectSerializationValidator, [{
+    key: "minObjectFieldsCount",
+    get: function get() {
+      if (!this._minObjectFieldsCount) {
+        var count = 0;
+
+        var _iterator = _createForOfIteratorHelper(this.objectFieldTypes),
+            _step;
+
+        try {
+          for (_iterator.s(); !(_step = _iterator.n()).done;) {
+            var info = _step.value;
+            if (typeof info[1] === 'string' ? info[1] !== 'undefined' : info[1].every(function (type) {
+              return type !== 'undefined';
+            })) count++;
+          }
+        } catch (err) {
+          _iterator.e(err);
+        } finally {
+          _iterator.f();
+        }
+
+        this._minObjectFieldsCount = count;
+      }
+
+      return this._minObjectFieldsCount;
+    }
+  }, {
+    key: "maxObjectFieldsCount",
+    get: function get() {
+      return this.objectFieldTypes.size;
+    }
+  }, {
+    key: "validate",
+    value: function validate(value) {
+      if (!value) return false;
+      var fieldNames = Object.getOwnPropertyNames(value); // Prevent the field checking if the deserializedValue has an invalid number of fields
+
+      if (fieldNames.length < this.minObjectFieldsCount || fieldNames.length > this.maxObjectFieldsCount) return false;
+
+      var _iterator2 = _createForOfIteratorHelper(this.objectFieldTypes),
+          _step2;
+
+      try {
+        var _loop = function _loop() {
+          var _step2$value = _slicedToArray__default['default'](_step2.value, 2),
+              fieldName = _step2$value[0],
+              expectedFieldType = _step2$value[1];
+
+          var fieldValue = value[fieldName];
+          var actualFieldType = fieldValue === null ? 'null' : _typeof__default['default'](fieldValue);
+
+          if (Array.isArray(expectedFieldType) ? !expectedFieldType.some(function (expectedType) {
+            return actualFieldType === expectedType;
+          }) : actualFieldType !== expectedFieldType) {
+            return {
+              v: false
+            };
+          }
+        };
+
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var _ret = _loop();
+
+          if (_typeof__default['default'](_ret) === "object") return _ret.v;
+        }
+      } catch (err) {
+        _iterator2.e(err);
+      } finally {
+        _iterator2.f();
+      }
+
+      return true;
+    }
+  }]);
+
+  return ObjectSerializationValidator;
+}();
+
+var Base64Serializer = /*#__PURE__*/function () {
+  function Base64Serializer(fieldTypes) {
+    _classCallCheck__default['default'](this, Base64Serializer);
+
+    this.objectSerializationValidator = new ObjectSerializationValidator(fieldTypes);
+  }
+
+  _createClass__default['default'](Base64Serializer, [{
+    key: "serialize",
+    value: function serialize(value) {
+      try {
+        if (!this.objectSerializationValidator.validate(value)) return null;
+        var jsonString = JSON.stringify(value);
+        return encode(jsonString, 'base64url');
+      } catch (_unused) {
+        return null;
+      }
+    }
+  }]);
+
+  return Base64Serializer;
+}();
+
+var Base64Deserializer = /*#__PURE__*/function () {
+  function Base64Deserializer(fieldTypes) {
+    _classCallCheck__default['default'](this, Base64Deserializer);
+
+    this.objectSerializationValidator = new ObjectSerializationValidator(fieldTypes);
+  }
+
+  _createClass__default['default'](Base64Deserializer, [{
+    key: "deserialize",
+    value: function deserialize(serializedValue) {
+      try {
+        var value;
+
+        if (serializedValue) {
+          var serializedValueString = decode(serializedValue, 'base64url');
+          value = JSON.parse(serializedValueString);
+        } else value = {};
+
+        return this.objectSerializationValidator.validate(value) ? value : null;
+      } catch (_unused) {
+        return null;
+      }
+    }
+  }]);
+
+  return Base64Deserializer;
+}();
+
+var serializedPaymentFieldTypes = new Map() // amount
+.set('a', 'string') // data
+.set('d', 'object') // asset
+.set('as', ['string', 'undefined', 'null']) // successUrl
+.set('su', ['string', 'undefined', 'null']) // cancelUrl
+.set('cu', ['string', 'undefined', 'null']) // created
+.set('c', 'number') // expired
+.set('e', ['number', 'undefined', 'null']);
+var legacySerializedPaymentFieldTypes = new Map().set('amount', 'string').set('data', 'object').set('asset', ['string', 'undefined', 'null']).set('successUrl', ['string', 'undefined', 'null']).set('cancelUrl', ['string', 'undefined', 'null']).set('created', 'number').set('expired', ['number', 'undefined', 'null']);
+
+var PaymentSerializer = /*#__PURE__*/function () {
+  function PaymentSerializer() {
+    _classCallCheck__default['default'](this, PaymentSerializer);
+  }
+
+  _createClass__default['default'](PaymentSerializer, [{
+    key: "serialize",
+    value: function serialize(payment) {
+      try {
+        var serializedPayment = this.mapPaymentToSerializedPayment(payment);
+        return PaymentSerializer.serializedPaymentBase64Serializer.serialize(serializedPayment);
+      } catch (_unused) {
+        return null;
+      }
+    }
+  }, {
+    key: "mapPaymentToSerializedPayment",
+    value: function mapPaymentToSerializedPayment(payment) {
+      var _payment$successUrl, _payment$cancelUrl, _payment$expired;
+
+      return {
+        a: payment.amount.toString(),
+        d: payment.data,
+        as: payment.asset,
+        su: (_payment$successUrl = payment.successUrl) === null || _payment$successUrl === void 0 ? void 0 : _payment$successUrl.toString(),
+        cu: (_payment$cancelUrl = payment.cancelUrl) === null || _payment$cancelUrl === void 0 ? void 0 : _payment$cancelUrl.toString(),
+        c: payment.created.getTime(),
+        e: (_payment$expired = payment.expired) === null || _payment$expired === void 0 ? void 0 : _payment$expired.getTime()
+      };
+    }
+  }]);
+
+  return PaymentSerializer;
+}();
+
+_defineProperty__default['default'](PaymentSerializer, "serializedPaymentBase64Serializer", new Base64Serializer(serializedPaymentFieldTypes));
+
+var PaymentDeserializer = /*#__PURE__*/function () {
+  function PaymentDeserializer() {
+    _classCallCheck__default['default'](this, PaymentDeserializer);
+  }
+
+  _createClass__default['default'](PaymentDeserializer, [{
+    key: "deserialize",
+    value: function deserialize(serializedPaymentBase64, nonSerializedPaymentSlice) {
+      try {
+        var serializedPayment = PaymentDeserializer.serializedPaymentBase64Deserializer.deserialize(serializedPaymentBase64);
+        return serializedPayment ? this.mapSerializedPaymentToPayment(serializedPayment, nonSerializedPaymentSlice) : null;
+      } catch (_unused) {
+        return null;
+      }
+    }
+  }, {
+    key: "mapSerializedPaymentToPayment",
+    value: function mapSerializedPaymentToPayment(serializedPayment, nonSerializedPaymentSlice) {
+      return {
+        type: exports.PaymentType.Payment,
+        amount: new BigNumber__default['default'](serializedPayment.a),
+        data: serializedPayment.d,
+        asset: serializedPayment.as,
+        successUrl: serializedPayment.su ? new URL(serializedPayment.su) : undefined,
+        cancelUrl: serializedPayment.cu ? new URL(serializedPayment.cu) : undefined,
+        created: new Date(serializedPayment.c),
+        expired: serializedPayment.e ? new Date(serializedPayment.e) : undefined,
+        targetAddress: nonSerializedPaymentSlice.targetAddress
+      };
+    }
+  }]);
+
+  return PaymentDeserializer;
+}();
+
+_defineProperty__default['default'](PaymentDeserializer, "serializedPaymentBase64Deserializer", new Base64Deserializer(serializedPaymentFieldTypes));
+
+var LegacyPaymentDeserializer = /*#__PURE__*/function () {
+  function LegacyPaymentDeserializer() {
+    _classCallCheck__default['default'](this, LegacyPaymentDeserializer);
+  }
+
+  _createClass__default['default'](LegacyPaymentDeserializer, [{
+    key: "deserialize",
+    value: function deserialize(serializedPaymentBase64, nonSerializedPaymentSlice) {
+      try {
+        var serializedPayment = LegacyPaymentDeserializer.serializedPaymentBase64Deserializer.deserialize(serializedPaymentBase64);
+        return serializedPayment ? this.mapSerializedPaymentToPayment(serializedPayment, nonSerializedPaymentSlice) : null;
+      } catch (_unused) {
+        return null;
+      }
+    }
+  }, {
+    key: "mapSerializedPaymentToPayment",
+    value: function mapSerializedPaymentToPayment(serializedPayment, nonSerializedPaymentSlice) {
+      return {
+        type: exports.PaymentType.Payment,
+        amount: new BigNumber__default['default'](serializedPayment.amount),
+        data: serializedPayment.data,
+        asset: serializedPayment.asset,
+        successUrl: serializedPayment.successUrl ? new URL(serializedPayment.successUrl) : undefined,
+        cancelUrl: serializedPayment.cancelUrl ? new URL(serializedPayment.cancelUrl) : undefined,
+        created: new Date(serializedPayment.created),
+        expired: serializedPayment.expired ? new Date(serializedPayment.expired) : undefined,
+        targetAddress: nonSerializedPaymentSlice.targetAddress
+      };
+    }
+  }]);
+
+  return LegacyPaymentDeserializer;
+}();
+
+_defineProperty__default['default'](LegacyPaymentDeserializer, "serializedPaymentBase64Deserializer", new Base64Deserializer(legacySerializedPaymentFieldTypes));
+
+var serializedDonationFieldTypes = new Map() // desiredAmount
+.set('da', ['string', 'undefined', 'null']) // desiredAsset
+.set('das', ['string', 'undefined', 'null']) // successUrl
+.set('su', ['string', 'undefined', 'null']) // cancelUrl
+.set('cu', ['string', 'undefined', 'null']);
+var legacySerializedDonationFieldTypes = new Map().set('desiredAmount', ['string', 'undefined', 'null']).set('desiredAsset', ['string', 'undefined', 'null']).set('successUrl', ['string', 'undefined', 'null']).set('cancelUrl', ['string', 'undefined', 'null']);
+
+var serializedEmptyObjectBase64 = 'e30';
+var DonationSerializer = /*#__PURE__*/function () {
+  function DonationSerializer() {
+    _classCallCheck__default['default'](this, DonationSerializer);
+  }
+
+  _createClass__default['default'](DonationSerializer, [{
+    key: "serialize",
+    value: function serialize(donation) {
+      try {
+        var serializedDonation = this.mapDonationToSerializedDonation(donation);
+        var serializedDonationBase64 = DonationSerializer.serializedDonationBase64Serializer.serialize(serializedDonation);
+        return serializedDonationBase64 === serializedEmptyObjectBase64 ? '' : serializedDonationBase64;
+      } catch (_unused) {
+        return null;
+      }
+    }
+  }, {
+    key: "mapDonationToSerializedDonation",
+    value: function mapDonationToSerializedDonation(donation) {
+      var _donation$desiredAmou, _donation$successUrl, _donation$cancelUrl;
+
+      return {
+        da: (_donation$desiredAmou = donation.desiredAmount) === null || _donation$desiredAmou === void 0 ? void 0 : _donation$desiredAmou.toString(),
+        das: donation.desiredAsset,
+        su: (_donation$successUrl = donation.successUrl) === null || _donation$successUrl === void 0 ? void 0 : _donation$successUrl.toString(),
+        cu: (_donation$cancelUrl = donation.cancelUrl) === null || _donation$cancelUrl === void 0 ? void 0 : _donation$cancelUrl.toString()
+      };
+    }
+  }]);
+
+  return DonationSerializer;
+}();
+
+_defineProperty__default['default'](DonationSerializer, "serializedDonationBase64Serializer", new Base64Serializer(serializedDonationFieldTypes));
+
+var DonationDeserializer = /*#__PURE__*/function () {
+  function DonationDeserializer() {
+    _classCallCheck__default['default'](this, DonationDeserializer);
+  }
+
+  _createClass__default['default'](DonationDeserializer, [{
+    key: "deserialize",
+    value: function deserialize(serializedDonationBase64, nonSerializedDonationSlice) {
+      try {
+        var serializedDonation = DonationDeserializer.serializedDonationBase64Deserializer.deserialize(serializedDonationBase64);
+        return serializedDonation ? this.mapSerializedDonationToDonation(serializedDonation, nonSerializedDonationSlice) : null;
+      } catch (_unused) {
+        return null;
+      }
+    }
+  }, {
+    key: "mapSerializedDonationToDonation",
+    value: function mapSerializedDonationToDonation(serializedDonation, nonSerializedDonationSlice) {
+      return {
+        type: exports.PaymentType.Donation,
+        desiredAmount: serializedDonation.da ? new BigNumber__default['default'](serializedDonation.da) : undefined,
+        desiredAsset: serializedDonation.das,
+        successUrl: serializedDonation.su ? new URL(serializedDonation.su) : undefined,
+        cancelUrl: serializedDonation.cu ? new URL(serializedDonation.cu) : undefined,
+        targetAddress: nonSerializedDonationSlice.targetAddress
+      };
+    }
+  }]);
+
+  return DonationDeserializer;
+}();
+
+_defineProperty__default['default'](DonationDeserializer, "serializedDonationBase64Deserializer", new Base64Deserializer(serializedDonationFieldTypes));
+
+var LegacyDonationDeserializer = /*#__PURE__*/function () {
+  function LegacyDonationDeserializer() {
+    _classCallCheck__default['default'](this, LegacyDonationDeserializer);
+  }
+
+  _createClass__default['default'](LegacyDonationDeserializer, [{
+    key: "deserialize",
+    value: function deserialize(serializedDonationBase64, nonSerializedDonationSlice) {
+      try {
+        var serializedDonation = LegacyDonationDeserializer.serializedDonationBase64Deserializer.deserialize(serializedDonationBase64);
+        return serializedDonation ? this.mapSerializedDonationToDonation(serializedDonation, nonSerializedDonationSlice) : null;
+      } catch (_unused) {
+        return null;
+      }
+    }
+  }, {
+    key: "mapSerializedDonationToDonation",
+    value: function mapSerializedDonationToDonation(serializedDonation, nonSerializedDonationSlice) {
+      return {
+        type: exports.PaymentType.Donation,
+        desiredAmount: serializedDonation.desiredAmount ? new BigNumber__default['default'](serializedDonation.desiredAmount) : undefined,
+        desiredAsset: serializedDonation.desiredAsset,
+        successUrl: serializedDonation.successUrl ? new URL(serializedDonation.successUrl) : undefined,
+        cancelUrl: serializedDonation.cancelUrl ? new URL(serializedDonation.cancelUrl) : undefined,
+        targetAddress: nonSerializedDonationSlice.targetAddress
+      };
+    }
+  }]);
+
+  return LegacyDonationDeserializer;
+}();
+
+_defineProperty__default['default'](LegacyDonationDeserializer, "serializedDonationBase64Deserializer", new Base64Deserializer(legacySerializedDonationFieldTypes));
+
 function _createSuper$2(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$2(); return function _createSuperInternal() { var Super = _getPrototypeOf__default['default'](Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf__default['default'](this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn__default['default'](this, result); }; }
 
 function _isNativeReflectConstruct$2() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
@@ -950,10 +1208,10 @@ var Payment = /*#__PURE__*/function (_StateModel) {
       return this.defaultValidator.validate(payment);
     }
   }, {
-    key: "parse",
-    value: function parse(payment64, nonIncludedFields) {
-      var parser = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : Payment.defaultParser;
-      return parser.parse(payment64, nonIncludedFields);
+    key: "deserialize",
+    value: function deserialize(serializedPayment, nonSerializedPaymentSlice) {
+      var isLegacy = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+      return !isLegacy ? Payment.defaultDeserializer.deserialize(serializedPayment, nonSerializedPaymentSlice) : Payment.defaultLegacyDeserializer.deserialize(serializedPayment, nonSerializedPaymentSlice);
     }
   }, {
     key: "publicDataExists",
@@ -980,7 +1238,9 @@ var Payment = /*#__PURE__*/function (_StateModel) {
   return Payment;
 }(StateModel);
 
-_defineProperty__default['default'](Payment, "defaultParser", new PaymentParser());
+_defineProperty__default['default'](Payment, "defaultDeserializer", new PaymentDeserializer());
+
+_defineProperty__default['default'](Payment, "defaultLegacyDeserializer", new LegacyPaymentDeserializer());
 
 _defineProperty__default['default'](Payment, "defaultValidator", new PaymentValidator());
 
@@ -1004,19 +1264,36 @@ var Donation = /*#__PURE__*/function (_StateModel) {
       return this.defaultValidator.validate(donation);
     }
   }, {
-    key: "parse",
-    value: function parse(donationBase64, nonIncludedFields) {
-      var parser = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : Donation.defaultParser;
-      return parser.parse(donationBase64, nonIncludedFields);
+    key: "deserialize",
+    value: function deserialize(serializedDonation, nonSerializedDonationSlice) {
+      var isLegacy = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+      return !isLegacy ? Donation.defaultDeserializer.deserialize(serializedDonation, nonSerializedDonationSlice) : Donation.defaultLegacyDeserializer.deserialize(serializedDonation, nonSerializedDonationSlice);
     }
   }]);
 
   return Donation;
 }(StateModel);
 
-_defineProperty__default['default'](Donation, "defaultParser", new DonationParser());
+_defineProperty__default['default'](Donation, "defaultDeserializer", new DonationDeserializer());
+
+_defineProperty__default['default'](Donation, "defaultLegacyDeserializer", new LegacyDonationDeserializer());
 
 _defineProperty__default['default'](Donation, "defaultValidator", new DonationValidator());
+
+exports.PaymentUrlType = void 0;
+
+(function (PaymentUrlType) {
+  PaymentUrlType[PaymentUrlType["Base64"] = 0] = "Base64";
+})(exports.PaymentUrlType || (exports.PaymentUrlType = {}));
+
+var encodedPaymentUrlTypeMap = new Map(Object.keys(exports.PaymentUrlType).filter(function (value) {
+  return !isNaN(+value);
+}).map(function (value) {
+  return [+value, padStart(value, 2, '0')];
+}));
+var getEncodedPaymentUrlType = function getEncodedPaymentUrlType(paymentUrlType) {
+  return encodedPaymentUrlTypeMap.get(paymentUrlType) || '';
+};
 
 var getParameterizedRoute = function getParameterizedRoute(factory, template) {
   factory.template = template;
@@ -1046,7 +1323,8 @@ var emptyService = {
   owner: '',
   paused: false,
   deleted: false,
-  network: networks.edo2net
+  network: networks.edo2net,
+  signingKeys: {}
 };
 
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf__default['default'](Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf__default['default'](this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn__default['default'](this, result); }; }
@@ -1122,20 +1400,31 @@ Object.defineProperty(exports, 'combineClassNames', {
     return clsx__default['default'];
   }
 });
+exports.Base64Deserializer = Base64Deserializer;
+exports.Base64Serializer = Base64Serializer;
 exports.Donation = Donation;
-exports.DonationParser = DonationParser;
+exports.DonationDeserializer = DonationDeserializer;
+exports.DonationSerializer = DonationSerializer;
 exports.DonationValidator = DonationValidator;
+exports.LegacyDonationDeserializer = LegacyDonationDeserializer;
+exports.LegacyPaymentDeserializer = LegacyPaymentDeserializer;
 exports.Payment = Payment;
-exports.PaymentParser = PaymentParser;
+exports.PaymentDeserializer = PaymentDeserializer;
+exports.PaymentSerializer = PaymentSerializer;
 exports.PaymentValidator = PaymentValidator;
 exports.ServiceLinkHelper = ServiceLinkHelper;
 exports.ServiceOperation = ServiceOperation;
 exports.StateModel = StateModel;
+exports.base64 = base64;
 exports.converters = converters;
 exports.emptyService = emptyService;
+exports.getEncodedPaymentUrlType = getEncodedPaymentUrlType;
 exports.getParameterizedRoute = getParameterizedRoute;
 exports.guards = guards;
 exports.memoize = memoize;
+exports.native = index;
+exports.networkIdRegExp = networkIdRegExp;
+exports.networkNameRegExp = networkNameRegExp;
 exports.networks = networks;
 exports.networksCollection = networksCollection;
 exports.optimization = optimization;

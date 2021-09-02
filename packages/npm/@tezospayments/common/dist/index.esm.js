@@ -1,9 +1,55 @@
 import _defineProperty from '@babel/runtime/helpers/defineProperty';
 export { default as combineClassNames } from 'clsx';
-import { Buffer } from 'buffer';
+import { Buffer as Buffer$1 } from 'buffer';
 import isPlainObjectLodashFunction from 'lodash.isplainobject';
-import { BigNumber } from 'bignumber.js';
+import BigNumber from 'bignumber.js';
 import { URL as URL$1 } from 'url';
+
+// Node.js < 15
+const isBase64UrlFormatSupported = Buffer.isEncoding('base64url');
+const decode = (base64String, format = 'base64') => {
+  if (format !== 'base64' && format !== 'base64url') return '';
+
+  if (!isBase64UrlFormatSupported) {
+    format = 'base64';
+    base64String = base64UrlPreprocessor.prepareValueForDecoding(base64String);
+  }
+
+  return Buffer.from(base64String, format).toString('utf8');
+};
+const encode = (value, format = 'base64') => {
+  if (format !== 'base64' && format !== 'base64url') return '';
+  if (isBase64UrlFormatSupported) return Buffer.from(value, 'utf8').toString(format);
+  const encodedValue = Buffer.from(value, 'utf8').toString('base64');
+  return base64UrlPreprocessor.prepareEncodedValue(encodedValue);
+};
+const base64UrlPreprocessor = {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  prepareEncodedValue: base64value => base64value.split('=')[0].replace(/\+/g, '-').replace(/\//g, '_'),
+  prepareValueForDecoding: base64value => {
+    base64value = base64value.replace(/-/g, '+').replace(/_/g, '/');
+
+    switch (base64value.length % 4) {
+      case 0:
+        return base64value;
+
+      case 2:
+        return base64value + '==';
+
+      case 3:
+        return base64value + '=';
+
+      default:
+        throw new Error('Invalid base64url value');
+    }
+  }
+};
+
+var base64 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  decode: decode,
+  encode: encode
+});
 
 const stringToUint8Array = hex => {
   var _hex$match;
@@ -12,8 +58,8 @@ const stringToUint8Array = hex => {
 
   return new Uint8Array(integers);
 };
-const stringToBytes = value => Buffer.from(value, 'utf8').toString('hex');
-const bytesToString = value => Buffer.from(stringToUint8Array(value)).toString('utf8');
+const stringToBytes = value => Buffer$1.from(value, 'utf8').toString('hex');
+const bytesToString = value => Buffer$1.from(stringToUint8Array(value)).toString('utf8');
 const objectToBytes = value => stringToBytes(JSON.stringify(value));
 const bytesToObject = value => {
   try {
@@ -111,7 +157,8 @@ var optimization = {
 };
 
 const is = (x, y) => {
-  return x === y ? x !== 0 || y !== 0 || 1 / x === 1 / y : x !== x && y !== y;
+  return x === y ? x !== 0 || y !== 0 || 1 / x === 1 / y // eslint-disable-next-line no-self-compare
+  : x !== x && y !== y;
 };
 
 function shallowEqual(objA, objB) {
@@ -157,10 +204,26 @@ const getAvatarText = (value, maxLength = 2) => {
   return result;
 };
 
+const stringPad = (string, isStart, maxLength, fillString = ' ') => {
+  if (String.prototype.padStart !== undefined) return string.padStart(maxLength, fillString);
+  const stringLength = string.length; // eslint-disable-next-line eqeqeq
+
+  if (maxLength <= stringLength || fillString == '') return string;
+  const fillLength = maxLength - stringLength;
+  let filler = fillString.repeat(Math.ceil(fillLength / fillString.length));
+  if (filler.length > fillLength) filler = filler.slice(0, fillLength);
+  return isStart ? filler + string : string + filler;
+};
+
+const padStart = (string, maxLength, fillString = ' ') => String.prototype.padStart !== undefined ? string.padStart(maxLength, fillString) : stringPad(string, true, maxLength, fillString);
+const padEnd = (string, maxLength, fillString = ' ') => String.prototype.padEnd !== undefined ? string.padEnd(maxLength, fillString) : stringPad(string, false, maxLength, fillString);
+
 var text = /*#__PURE__*/Object.freeze({
   __proto__: null,
   capitalize: capitalize,
-  getAvatarText: getAvatarText
+  getAvatarText: getAvatarText,
+  padStart: padStart,
+  padEnd: padEnd
 });
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -191,7 +254,7 @@ const prepareDisplayLink = memoize(link => link.trim().replace(/\/$/, ''));
 const socialMediaLinkInfoProvider = (link, baseUrl, icon) => {
   if (!link.startsWith(baseUrl)) return false;
   const formattedLink = prepareFormattedLink(link);
-  if (formattedLink == baseUrl) return false;
+  if (formattedLink === baseUrl) return false;
   return {
     rawLink: link,
     formattedLink,
@@ -279,130 +342,17 @@ var PaymentType;
   PaymentType[PaymentType["Donation"] = 2] = "Donation";
 })(PaymentType || (PaymentType = {}));
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-const URL = URL$1 || globalThis.URL;
-
-class PaymentParserBase {
-  get minPaymentFieldsCount() {
-    if (!this._minPaymentFieldsCount) {
-      let count = 0;
-
-      for (const info of this.paymentFieldTypes) {
-        if (typeof info[1] === 'string' ? info[1] !== 'undefined' : info[1].every(type => type !== 'undefined')) count++;
-      }
-
-      this._minPaymentFieldsCount = count;
-    }
-
-    return this._minPaymentFieldsCount;
-  }
-
-  get maxPaymentFieldsCount() {
-    return this.paymentFieldTypes.size;
-  }
-
-  parse(paymentBase64, nonIncludedFields) {
-    try {
-      let rawPayment;
-
-      if (paymentBase64) {
-        const paymentString = Buffer.from(paymentBase64, 'base64').toString('utf8');
-        rawPayment = JSON.parse(paymentString);
-      } else rawPayment = {};
-
-      return this.validateAndMapRawPaymentToPayment(rawPayment, nonIncludedFields);
-    } catch {
-      return null;
-    }
-  }
-
-  validateAndMapRawPaymentToPayment(rawPayment, nonIncludedFields) {
-    return this.validateRawPayment(rawPayment) ? this.mapRawPaymentToPayment(rawPayment, nonIncludedFields) : null;
-  }
-
-  validateRawPayment(rawPayment) {
-    const rawPaymentFieldNames = Object.getOwnPropertyNames(rawPayment); // Prevent the field checking if the rawPayment has an invalid number of fields
-
-    if (rawPaymentFieldNames.length < this.minPaymentFieldsCount || rawPaymentFieldNames.length > this.maxPaymentFieldsCount) return false;
-
-    for (const [rawPaymentFieldName, expectedPaymentFieldType] of this.paymentFieldTypes) {
-      const actualPaymentFieldType = typeof rawPayment[rawPaymentFieldName];
-
-      if (Array.isArray(expectedPaymentFieldType) ? !expectedPaymentFieldType.some(expectedType => actualPaymentFieldType === expectedType) : actualPaymentFieldType !== expectedPaymentFieldType) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-}
-
-class PaymentParser extends PaymentParserBase {
-  constructor(...args) {
-    super(...args);
-
-    _defineProperty(this, "_paymentFieldTypes", new Map().set('amount', 'string').set('data', 'object').set('asset', ['string', 'undefined', 'null']).set('successUrl', ['string', 'undefined', 'null']).set('cancelUrl', ['string', 'undefined', 'null']).set('created', 'number').set('expired', ['number', 'undefined', 'null']));
-  }
-
-  get paymentFieldTypes() {
-    return this._paymentFieldTypes;
-  }
-
-  mapRawPaymentToPayment(rawPayment, nonIncludedFields) {
-    return {
-      type: PaymentType.Payment,
-      amount: new BigNumber(rawPayment.amount),
-      data: rawPayment.data,
-      asset: rawPayment.asset,
-      successUrl: rawPayment.successUrl ? new URL(rawPayment.successUrl) : undefined,
-      cancelUrl: rawPayment.cancelUrl ? new URL(rawPayment.cancelUrl) : undefined,
-      created: new Date(rawPayment.created),
-      expired: rawPayment.expired ? new Date(rawPayment.expired) : undefined,
-      targetAddress: nonIncludedFields.targetAddress,
-      urls: nonIncludedFields.urls
-    };
-  }
-
-}
-
-class DonationParser extends PaymentParserBase {
-  constructor(...args) {
-    super(...args);
-
-    _defineProperty(this, "_paymentFieldTypes", new Map().set('desiredAmount', ['string', 'undefined', 'null']).set('desiredAsset', ['string', 'undefined', 'null']).set('successUrl', ['string', 'undefined', 'null']).set('cancelUrl', ['string', 'undefined', 'null']));
-  }
-
-  get paymentFieldTypes() {
-    return this._paymentFieldTypes;
-  }
-
-  mapRawPaymentToPayment(rawDonation, nonIncludedFields) {
-    return {
-      type: PaymentType.Donation,
-      desiredAmount: rawDonation.desiredAmount ? new BigNumber(rawDonation.desiredAmount) : undefined,
-      desiredAsset: rawDonation.desiredAsset,
-      successUrl: rawDonation.successUrl ? new URL(rawDonation.successUrl) : undefined,
-      cancelUrl: rawDonation.cancelUrl ? new URL(rawDonation.cancelUrl) : undefined,
-      targetAddress: nonIncludedFields.targetAddress,
-      urls: nonIncludedFields.urls
-    };
-  }
-
-}
-
 class PaymentValidatorBase {
   validate(payment, bail = false) {
     if (!isPlainObject(payment)) return [this.invalidPaymentObjectError];
-    const failedValidationResults = bail ? [] : undefined;
+    let failedValidationResults;
 
     for (const validationMethod of this.validationMethods) {
       const currentFailedValidationResults = validationMethod(payment);
 
       if (currentFailedValidationResults) {
-        if (!bail) return currentFailedValidationResults; // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-
-        failedValidationResults.concat(currentFailedValidationResults);
+        if (!bail) return currentFailedValidationResults;
+        (failedValidationResults || (failedValidationResults = [])).concat(currentFailedValidationResults);
       }
     }
 
@@ -427,13 +377,14 @@ const networksInternal = {
 };
 const networks = networksInternal;
 const networksCollection = Object.values(networksInternal);
+const networkIdRegExp = /^[a-zA-Z]\w*$/;
+const networkNameRegExp = networkIdRegExp;
 
 const tezosMeta = {
   symbol: 'XTZ',
   name: 'Tezos',
   decimals: 6,
-  // eslint-disable-next-line max-len
-  thumbnailUri: 'data:image/png;base64,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'
+  thumbnailUri: 'https://dashboard.tezospayments.com/tokens/tezos.png'
 };
 const tokenWhitelist = [// {
 //   network: networks.mainnet,
@@ -467,7 +418,7 @@ const tokenWhitelist = [// {
     decimals: 0,
     symbol: 'MBRG',
     name: 'MAX BURGER',
-    thumbnailUri: 'https://quipuswap.com/tokens/stably.png'
+    thumbnailUri: 'https://dashboard.tezospayments.com/tokens/unknown.png'
   }
 }];
 const tokenWhitelistMap = new Map(tokenWhitelist.map(token => [token.contractAddress, token]));
@@ -482,6 +433,22 @@ const tezosInfo = {
   addressPrefixes
 };
 
+var KeyType;
+
+(function (KeyType) {
+  KeyType["Ed25519"] = "Ed25519";
+  KeyType["Secp256k1"] = "Secp256k1";
+  KeyType["P256"] = "P256";
+})(KeyType || (KeyType = {}));
+
+/* eslint-disable @typescript-eslint/no-redeclare */
+const URL = URL$1 || globalThis.URL;
+
+var index = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  URL: URL
+});
+
 const validateTargetAddress = (targetAddress, errors) => {
   if (typeof targetAddress !== 'string') return [errors.invalidTargetAddress];
   if (targetAddress.length !== tezosInfo.addressLength) return [errors.targetAddressHasInvalidLength];
@@ -489,7 +456,7 @@ const validateTargetAddress = (targetAddress, errors) => {
 };
 const validateAmount = (amount, errors) => {
   if (!BigNumber.isBigNumber(amount) || amount.isNaN() || !amount.isFinite()) return [errors.invalidAmount];
-  if (amount.isNegative()) return [errors.amountIsNegative];
+  if (amount.isZero() || amount.isNegative()) return [errors.amountIsNonPositive];
 };
 const validateDesiredAmount = (desiredAmount, errors) => {
   return desiredAmount === undefined ? undefined : validateAmount(desiredAmount, errors);
@@ -501,7 +468,7 @@ const validateAsset = (asset, errors) => {
   if (!tezosInfo.contractAddressPrefixes.some(prefix => asset.startsWith(prefix))) return [errors.assetIsNotContractAddress];
 };
 const validateCreatedDate = (date, errors) => {
-  if (!(date instanceof Date)) return [errors.invalidCreatedDate];
+  if (!(date instanceof Date) || isNaN(date.getTime())) return [errors.invalidCreatedDate];
 };
 const validateUrl = (url, errors) => {
   if (url === undefined) return;
@@ -510,7 +477,7 @@ const validateUrl = (url, errors) => {
 };
 const validateExpiredDate = (expiredDate, createdDate, minimumPaymentLifetime, errors) => {
   if (expiredDate === undefined) return;
-  if (!(expiredDate instanceof Date)) return [errors.invalidExpiredDate];
+  if (!(expiredDate instanceof Date) || isNaN(expiredDate.getTime())) return [errors.invalidExpiredDate];
 
   if (expiredDate.getTime() - createdDate.getTime() < minimumPaymentLifetime) {
     return [errors.paymentLifetimeIsShort];
@@ -557,7 +524,7 @@ _defineProperty(PaymentValidator, "errors", {
   invalidPaymentObject: 'Payment is undefined or not object',
   invalidType: 'Payment type is invalid',
   invalidAmount: 'Amount is invalid',
-  amountIsNegative: 'Amount is less than zero',
+  amountIsNonPositive: 'Amount is less than or equal to zero',
   invalidTargetAddress: 'Target address is invalid',
   targetAddressIsNotNetworkAddress: 'Target address isn\'t a network address',
   targetAddressHasInvalidLength: 'Target address has an invalid address',
@@ -605,7 +572,7 @@ _defineProperty(DonationValidator, "errors", {
   invalidDonationObject: 'Donation is undefined or not object',
   invalidType: 'Donation type is invalid',
   invalidAmount: 'Desired amount is invalid',
-  amountIsNegative: 'Desired amount is less than zero',
+  amountIsNonPositive: 'Desired amount is less than or equal to zero',
   invalidTargetAddress: 'Target address is invalid',
   targetAddressIsNotNetworkAddress: 'Target address isn\'t a network address',
   targetAddressHasInvalidLength: 'Target address has an invalid address',
@@ -634,13 +601,273 @@ class StateModel {
 
 }
 
+class ObjectSerializationValidator {
+  constructor(objectFieldTypes) {
+    this.objectFieldTypes = objectFieldTypes;
+  }
+
+  get minObjectFieldsCount() {
+    if (!this._minObjectFieldsCount) {
+      let count = 0;
+
+      for (const info of this.objectFieldTypes) {
+        if (typeof info[1] === 'string' ? info[1] !== 'undefined' : info[1].every(type => type !== 'undefined')) count++;
+      }
+
+      this._minObjectFieldsCount = count;
+    }
+
+    return this._minObjectFieldsCount;
+  }
+
+  get maxObjectFieldsCount() {
+    return this.objectFieldTypes.size;
+  }
+
+  validate(value) {
+    if (!value) return false;
+    const fieldNames = Object.getOwnPropertyNames(value); // Prevent the field checking if the deserializedValue has an invalid number of fields
+
+    if (fieldNames.length < this.minObjectFieldsCount || fieldNames.length > this.maxObjectFieldsCount) return false;
+
+    for (const [fieldName, expectedFieldType] of this.objectFieldTypes) {
+      const fieldValue = value[fieldName];
+      const actualFieldType = fieldValue === null ? 'null' : typeof fieldValue;
+
+      if (Array.isArray(expectedFieldType) ? !expectedFieldType.some(expectedType => actualFieldType === expectedType) : actualFieldType !== expectedFieldType) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+}
+
+class Base64Serializer {
+  constructor(fieldTypes) {
+    this.objectSerializationValidator = new ObjectSerializationValidator(fieldTypes);
+  }
+
+  serialize(value) {
+    try {
+      if (!this.objectSerializationValidator.validate(value)) return null;
+      const jsonString = JSON.stringify(value);
+      return encode(jsonString, 'base64url');
+    } catch {
+      return null;
+    }
+  }
+
+}
+
+class Base64Deserializer {
+  constructor(fieldTypes) {
+    this.objectSerializationValidator = new ObjectSerializationValidator(fieldTypes);
+  }
+
+  deserialize(serializedValue) {
+    try {
+      let value;
+
+      if (serializedValue) {
+        const serializedValueString = decode(serializedValue, 'base64url');
+        value = JSON.parse(serializedValueString);
+      } else value = {};
+
+      return this.objectSerializationValidator.validate(value) ? value : null;
+    } catch {
+      return null;
+    }
+  }
+
+}
+
+const serializedPaymentFieldTypes = new Map() // amount
+.set('a', 'string') // data
+.set('d', 'object') // asset
+.set('as', ['string', 'undefined', 'null']) // successUrl
+.set('su', ['string', 'undefined', 'null']) // cancelUrl
+.set('cu', ['string', 'undefined', 'null']) // created
+.set('c', 'number') // expired
+.set('e', ['number', 'undefined', 'null']);
+const legacySerializedPaymentFieldTypes = new Map().set('amount', 'string').set('data', 'object').set('asset', ['string', 'undefined', 'null']).set('successUrl', ['string', 'undefined', 'null']).set('cancelUrl', ['string', 'undefined', 'null']).set('created', 'number').set('expired', ['number', 'undefined', 'null']);
+
+class PaymentSerializer {
+  serialize(payment) {
+    try {
+      const serializedPayment = this.mapPaymentToSerializedPayment(payment);
+      return PaymentSerializer.serializedPaymentBase64Serializer.serialize(serializedPayment);
+    } catch {
+      return null;
+    }
+  }
+
+  mapPaymentToSerializedPayment(payment) {
+    var _payment$successUrl, _payment$cancelUrl, _payment$expired;
+
+    return {
+      a: payment.amount.toString(),
+      d: payment.data,
+      as: payment.asset,
+      su: (_payment$successUrl = payment.successUrl) === null || _payment$successUrl === void 0 ? void 0 : _payment$successUrl.toString(),
+      cu: (_payment$cancelUrl = payment.cancelUrl) === null || _payment$cancelUrl === void 0 ? void 0 : _payment$cancelUrl.toString(),
+      c: payment.created.getTime(),
+      e: (_payment$expired = payment.expired) === null || _payment$expired === void 0 ? void 0 : _payment$expired.getTime()
+    };
+  }
+
+}
+
+_defineProperty(PaymentSerializer, "serializedPaymentBase64Serializer", new Base64Serializer(serializedPaymentFieldTypes));
+
+class PaymentDeserializer {
+  deserialize(serializedPaymentBase64, nonSerializedPaymentSlice) {
+    try {
+      const serializedPayment = PaymentDeserializer.serializedPaymentBase64Deserializer.deserialize(serializedPaymentBase64);
+      return serializedPayment ? this.mapSerializedPaymentToPayment(serializedPayment, nonSerializedPaymentSlice) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  mapSerializedPaymentToPayment(serializedPayment, nonSerializedPaymentSlice) {
+    return {
+      type: PaymentType.Payment,
+      amount: new BigNumber(serializedPayment.a),
+      data: serializedPayment.d,
+      asset: serializedPayment.as,
+      successUrl: serializedPayment.su ? new URL(serializedPayment.su) : undefined,
+      cancelUrl: serializedPayment.cu ? new URL(serializedPayment.cu) : undefined,
+      created: new Date(serializedPayment.c),
+      expired: serializedPayment.e ? new Date(serializedPayment.e) : undefined,
+      targetAddress: nonSerializedPaymentSlice.targetAddress
+    };
+  }
+
+}
+
+_defineProperty(PaymentDeserializer, "serializedPaymentBase64Deserializer", new Base64Deserializer(serializedPaymentFieldTypes));
+
+class LegacyPaymentDeserializer {
+  deserialize(serializedPaymentBase64, nonSerializedPaymentSlice) {
+    try {
+      const serializedPayment = LegacyPaymentDeserializer.serializedPaymentBase64Deserializer.deserialize(serializedPaymentBase64);
+      return serializedPayment ? this.mapSerializedPaymentToPayment(serializedPayment, nonSerializedPaymentSlice) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  mapSerializedPaymentToPayment(serializedPayment, nonSerializedPaymentSlice) {
+    return {
+      type: PaymentType.Payment,
+      amount: new BigNumber(serializedPayment.amount),
+      data: serializedPayment.data,
+      asset: serializedPayment.asset,
+      successUrl: serializedPayment.successUrl ? new URL(serializedPayment.successUrl) : undefined,
+      cancelUrl: serializedPayment.cancelUrl ? new URL(serializedPayment.cancelUrl) : undefined,
+      created: new Date(serializedPayment.created),
+      expired: serializedPayment.expired ? new Date(serializedPayment.expired) : undefined,
+      targetAddress: nonSerializedPaymentSlice.targetAddress
+    };
+  }
+
+}
+
+_defineProperty(LegacyPaymentDeserializer, "serializedPaymentBase64Deserializer", new Base64Deserializer(legacySerializedPaymentFieldTypes));
+
+const serializedDonationFieldTypes = new Map() // desiredAmount
+.set('da', ['string', 'undefined', 'null']) // desiredAsset
+.set('das', ['string', 'undefined', 'null']) // successUrl
+.set('su', ['string', 'undefined', 'null']) // cancelUrl
+.set('cu', ['string', 'undefined', 'null']);
+const legacySerializedDonationFieldTypes = new Map().set('desiredAmount', ['string', 'undefined', 'null']).set('desiredAsset', ['string', 'undefined', 'null']).set('successUrl', ['string', 'undefined', 'null']).set('cancelUrl', ['string', 'undefined', 'null']);
+
+const serializedEmptyObjectBase64 = 'e30';
+class DonationSerializer {
+  serialize(donation) {
+    try {
+      const serializedDonation = this.mapDonationToSerializedDonation(donation);
+      const serializedDonationBase64 = DonationSerializer.serializedDonationBase64Serializer.serialize(serializedDonation);
+      return serializedDonationBase64 === serializedEmptyObjectBase64 ? '' : serializedDonationBase64;
+    } catch {
+      return null;
+    }
+  }
+
+  mapDonationToSerializedDonation(donation) {
+    var _donation$desiredAmou, _donation$successUrl, _donation$cancelUrl;
+
+    return {
+      da: (_donation$desiredAmou = donation.desiredAmount) === null || _donation$desiredAmou === void 0 ? void 0 : _donation$desiredAmou.toString(),
+      das: donation.desiredAsset,
+      su: (_donation$successUrl = donation.successUrl) === null || _donation$successUrl === void 0 ? void 0 : _donation$successUrl.toString(),
+      cu: (_donation$cancelUrl = donation.cancelUrl) === null || _donation$cancelUrl === void 0 ? void 0 : _donation$cancelUrl.toString()
+    };
+  }
+
+}
+
+_defineProperty(DonationSerializer, "serializedDonationBase64Serializer", new Base64Serializer(serializedDonationFieldTypes));
+
+class DonationDeserializer {
+  deserialize(serializedDonationBase64, nonSerializedDonationSlice) {
+    try {
+      const serializedDonation = DonationDeserializer.serializedDonationBase64Deserializer.deserialize(serializedDonationBase64);
+      return serializedDonation ? this.mapSerializedDonationToDonation(serializedDonation, nonSerializedDonationSlice) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  mapSerializedDonationToDonation(serializedDonation, nonSerializedDonationSlice) {
+    return {
+      type: PaymentType.Donation,
+      desiredAmount: serializedDonation.da ? new BigNumber(serializedDonation.da) : undefined,
+      desiredAsset: serializedDonation.das,
+      successUrl: serializedDonation.su ? new URL(serializedDonation.su) : undefined,
+      cancelUrl: serializedDonation.cu ? new URL(serializedDonation.cu) : undefined,
+      targetAddress: nonSerializedDonationSlice.targetAddress
+    };
+  }
+
+}
+
+_defineProperty(DonationDeserializer, "serializedDonationBase64Deserializer", new Base64Deserializer(serializedDonationFieldTypes));
+
+class LegacyDonationDeserializer {
+  deserialize(serializedDonationBase64, nonSerializedDonationSlice) {
+    try {
+      const serializedDonation = LegacyDonationDeserializer.serializedDonationBase64Deserializer.deserialize(serializedDonationBase64);
+      return serializedDonation ? this.mapSerializedDonationToDonation(serializedDonation, nonSerializedDonationSlice) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  mapSerializedDonationToDonation(serializedDonation, nonSerializedDonationSlice) {
+    return {
+      type: PaymentType.Donation,
+      desiredAmount: serializedDonation.desiredAmount ? new BigNumber(serializedDonation.desiredAmount) : undefined,
+      desiredAsset: serializedDonation.desiredAsset,
+      successUrl: serializedDonation.successUrl ? new URL(serializedDonation.successUrl) : undefined,
+      cancelUrl: serializedDonation.cancelUrl ? new URL(serializedDonation.cancelUrl) : undefined,
+      targetAddress: nonSerializedDonationSlice.targetAddress
+    };
+  }
+
+}
+
+_defineProperty(LegacyDonationDeserializer, "serializedDonationBase64Deserializer", new Base64Deserializer(legacySerializedDonationFieldTypes));
+
 class Payment extends StateModel {
   static validate(payment) {
     return this.defaultValidator.validate(payment);
   }
 
-  static parse(payment64, nonIncludedFields, parser = Payment.defaultParser) {
-    return parser.parse(payment64, nonIncludedFields);
+  static deserialize(serializedPayment, nonSerializedPaymentSlice, isLegacy = false) {
+    return !isLegacy ? Payment.defaultDeserializer.deserialize(serializedPayment, nonSerializedPaymentSlice) : Payment.defaultLegacyDeserializer.deserialize(serializedPayment, nonSerializedPaymentSlice);
   }
 
   static publicDataExists(paymentOrPaymentDataOrPaymentData) {
@@ -661,7 +888,9 @@ class Payment extends StateModel {
 
 }
 
-_defineProperty(Payment, "defaultParser", new PaymentParser());
+_defineProperty(Payment, "defaultDeserializer", new PaymentDeserializer());
+
+_defineProperty(Payment, "defaultLegacyDeserializer", new LegacyPaymentDeserializer());
 
 _defineProperty(Payment, "defaultValidator", new PaymentValidator());
 
@@ -670,15 +899,26 @@ class Donation extends StateModel {
     return this.defaultValidator.validate(donation);
   }
 
-  static parse(donationBase64, nonIncludedFields, parser = Donation.defaultParser) {
-    return parser.parse(donationBase64, nonIncludedFields);
+  static deserialize(serializedDonation, nonSerializedDonationSlice, isLegacy = false) {
+    return !isLegacy ? Donation.defaultDeserializer.deserialize(serializedDonation, nonSerializedDonationSlice) : Donation.defaultLegacyDeserializer.deserialize(serializedDonation, nonSerializedDonationSlice);
   }
 
 }
 
-_defineProperty(Donation, "defaultParser", new DonationParser());
+_defineProperty(Donation, "defaultDeserializer", new DonationDeserializer());
+
+_defineProperty(Donation, "defaultLegacyDeserializer", new LegacyDonationDeserializer());
 
 _defineProperty(Donation, "defaultValidator", new DonationValidator());
+
+var PaymentUrlType;
+
+(function (PaymentUrlType) {
+  PaymentUrlType[PaymentUrlType["Base64"] = 0] = "Base64";
+})(PaymentUrlType || (PaymentUrlType = {}));
+
+const encodedPaymentUrlTypeMap = new Map(Object.keys(PaymentUrlType).filter(value => !isNaN(+value)).map(value => [+value, padStart(value, 2, '0')]));
+const getEncodedPaymentUrlType = paymentUrlType => encodedPaymentUrlTypeMap.get(paymentUrlType) || '';
 
 const getParameterizedRoute = (factory, template) => {
   factory.template = template;
@@ -708,7 +948,8 @@ const emptyService = {
   owner: '',
   paused: false,
   deleted: false,
-  network: networks.edo2net
+  network: networks.edo2net,
+  signingKeys: {}
 };
 
 class ServiceOperation extends StateModel {
@@ -758,5 +999,5 @@ var ServiceOperationStatus;
   ServiceOperationStatus[ServiceOperationStatus["Cancelled"] = 2] = "Cancelled";
 })(ServiceOperationStatus || (ServiceOperationStatus = {}));
 
-export { Donation, DonationParser, DonationValidator, IconId, Payment, PaymentParser, PaymentType, PaymentValidator, ServiceLinkHelper, ServiceOperation, ServiceOperationDirection, ServiceOperationStatus, ServiceOperationType, StateModel, converters, emptyService, getParameterizedRoute, guards, memoize, networks, networksCollection, optimization, shallowEqual, text, tezosInfo, tezosMeta, tokenWhitelist, tokenWhitelistMap, wait };
+export { Base64Deserializer, Base64Serializer, Donation, DonationDeserializer, DonationSerializer, DonationValidator, IconId, KeyType, LegacyDonationDeserializer, LegacyPaymentDeserializer, Payment, PaymentDeserializer, PaymentSerializer, PaymentType, PaymentUrlType, PaymentValidator, ServiceLinkHelper, ServiceOperation, ServiceOperationDirection, ServiceOperationStatus, ServiceOperationType, StateModel, base64, converters, emptyService, getEncodedPaymentUrlType, getParameterizedRoute, guards, memoize, index as native, networkIdRegExp, networkNameRegExp, networks, networksCollection, optimization, shallowEqual, text, tezosInfo, tezosMeta, tokenWhitelist, tokenWhitelistMap, wait };
 //# sourceMappingURL=index.esm.js.map
