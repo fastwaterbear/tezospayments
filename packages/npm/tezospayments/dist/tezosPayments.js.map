@@ -1,1 +1,0 @@
-{"version":3,"file":"tezosPayments.js","sourceRoot":"","sources":["../src/tezosPayments.ts"],"names":[],"mappings":"AAGA,MAAM,OAAO,aAAa;IACxB,YAAY,OAA6B;QACvC,MAAM,IAAI,KAAK,CAAC,kBAAkB,CAAC,CAAC;IACtC,CAAC;IAED,KAAK,CAAC,aAAa,CAAC,gBAAyC;QAC3D,MAAM,IAAI,KAAK,CAAC,yBAAyB,CAAC,CAAC;IAC7C,CAAC;CACF"}
