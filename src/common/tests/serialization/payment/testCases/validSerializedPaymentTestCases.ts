@@ -17,6 +17,7 @@ const validSerializedPaymentTestCases: ReadonlyArray<readonly [
       'simple payment',
       [
         {
+          i: 'eccda1db05c04ded9201f1b114b55efe',
           a: '384803.383202',
           d: {
             public: {
@@ -27,10 +28,11 @@ const validSerializedPaymentTestCases: ReadonlyArray<readonly [
           cu: 'https://fastwaterbear.com/tezospayments/test/payment/cancel',
           c: createdDate.getTime(),
         },
-        'eyJhIjoiMzg0ODAzLjM4MzIwMiIsImQiOnsicHVibGljIjp7Im9yZGVySWQiOiIwYTZkMmRiMTgxZmE0ZWM3YTdkYmZiN2I3MjgyMDFmNiJ9fSwic3UiOiJodHRwczovL2Zhc3R3YXRlcmJlYXIuY29tL3Rlem9zcGF5bWVudHMvdGVzdC9wYXltZW50L3N1Y2Nlc3MiLCJjdSI6Imh0dHBzOi8vZmFzdHdhdGVyYmVhci5jb20vdGV6b3NwYXltZW50cy90ZXN0L3BheW1lbnQvY2FuY2VsIiwiYyI6MTYyNDY2NzgyMzkzMH0',
+        'eyJpIjoiZWNjZGExZGIwNWMwNGRlZDkyMDFmMWIxMTRiNTVlZmUiLCJhIjoiMzg0ODAzLjM4MzIwMiIsImQiOnsicHVibGljIjp7Im9yZGVySWQiOiIwYTZkMmRiMTgxZmE0ZWM3YTdkYmZiN2I3MjgyMDFmNiJ9fSwic3UiOiJodHRwczovL2Zhc3R3YXRlcmJlYXIuY29tL3Rlem9zcGF5bWVudHMvdGVzdC9wYXltZW50L3N1Y2Nlc3MiLCJjdSI6Imh0dHBzOi8vZmFzdHdhdGVyYmVhci5jb20vdGV6b3NwYXltZW50cy90ZXN0L3BheW1lbnQvY2FuY2VsIiwiYyI6MTYyNDY2NzgyMzkzMH0',
       ],
       nonSerializedSlice => ({
         type: PaymentType.Payment,
+        id: 'eccda1db05c04ded9201f1b114b55efe',
         amount: new BigNumber('384803.383202'),
         data: {
           public: {
@@ -49,6 +51,7 @@ const validSerializedPaymentTestCases: ReadonlyArray<readonly [
       'payment in Kolibri USD',
       [
         {
+          i: '2e743b62-2526-4630-9754-64bba8081e7d',
           a: '8383.383202283822832232',
           d: {
             public: {
@@ -60,10 +63,11 @@ const validSerializedPaymentTestCases: ReadonlyArray<readonly [
           cu: 'https://fastwaterbear.com/tezospayments/test/payment/cancel',
           c: createdDate.getTime(),
         },
-        'eyJhIjoiODM4My4zODMyMDIyODM4MjI4MzIyMzIiLCJkIjp7InB1YmxpYyI6eyJvcmRlcklkIjoiMGE2ZDJkYjE4MWZhNGVjN2E3ZGJmYjdiNzI4MjAxZjYifX0sImFzIjoiS1QxSzlnQ1JnYUxSRktURXJZdDF3VnhBM0ZyYjlGamFzalRWIiwic3UiOiJodHRwczovL2Zhc3R3YXRlcmJlYXIuY29tL3Rlem9zcGF5bWVudHMvdGVzdC9wYXltZW50L3N1Y2Nlc3MiLCJjdSI6Imh0dHBzOi8vZmFzdHdhdGVyYmVhci5jb20vdGV6b3NwYXltZW50cy90ZXN0L3BheW1lbnQvY2FuY2VsIiwiYyI6MTYyNDY2NzgyMzkzMH0',
+        'eyJpIjoiMmU3NDNiNjItMjUyNi00NjMwLTk3NTQtNjRiYmE4MDgxZTdkIiwiYSI6IjgzODMuMzgzMjAyMjgzODIyODMyMjMyIiwiZCI6eyJwdWJsaWMiOnsib3JkZXJJZCI6IjBhNmQyZGIxODFmYTRlYzdhN2RiZmI3YjcyODIwMWY2In19LCJhcyI6IktUMUs5Z0NSZ2FMUkZLVEVyWXQxd1Z4QTNGcmI5Rmphc2pUViIsInN1IjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9zdWNjZXNzIiwiY3UiOiJodHRwczovL2Zhc3R3YXRlcmJlYXIuY29tL3Rlem9zcGF5bWVudHMvdGVzdC9wYXltZW50L2NhbmNlbCIsImMiOjE2MjQ2Njc4MjM5MzB9',
       ],
       nonSerializedSlice => ({
         type: PaymentType.Payment,
+        id: '2e743b62-2526-4630-9754-64bba8081e7d',
         amount: new BigNumber('8383.383202283822832232'),
         data: {
           public: {
@@ -82,6 +86,7 @@ const validSerializedPaymentTestCases: ReadonlyArray<readonly [
       'expired payment',
       [
         {
+          i: '4393438',
           a: '3939439430403',
           d: {
             public: {
@@ -93,10 +98,11 @@ const validSerializedPaymentTestCases: ReadonlyArray<readonly [
           c: createdDate.getTime(),
           e: expiredDate.getTime()
         },
-        'eyJhIjoiMzkzOTQzOTQzMDQwMyIsImQiOnsicHVibGljIjp7Im9yZGVySWQiOiIwYTZkMmRiMTgxZmE0ZWM3YTdkYmZiN2I3MjgyMDFmNiJ9fSwic3UiOiJodHRwczovL2Zhc3R3YXRlcmJlYXIuY29tL3Rlem9zcGF5bWVudHMvdGVzdC9wYXltZW50L3N1Y2Nlc3MiLCJjdSI6Imh0dHBzOi8vZmFzdHdhdGVyYmVhci5jb20vdGV6b3NwYXltZW50cy90ZXN0L3BheW1lbnQvY2FuY2VsIiwiYyI6MTYyNDY2NzgyMzkzMCwiZSI6MTYyNDY2OTAyMzkzMH0',
+        'eyJpIjoiNDM5MzQzOCIsImEiOiIzOTM5NDM5NDMwNDAzIiwiZCI6eyJwdWJsaWMiOnsib3JkZXJJZCI6IjBhNmQyZGIxODFmYTRlYzdhN2RiZmI3YjcyODIwMWY2In19LCJzdSI6Imh0dHBzOi8vZmFzdHdhdGVyYmVhci5jb20vdGV6b3NwYXltZW50cy90ZXN0L3BheW1lbnQvc3VjY2VzcyIsImN1IjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9jYW5jZWwiLCJjIjoxNjI0NjY3ODIzOTMwLCJlIjoxNjI0NjY5MDIzOTMwfQ',
       ],
       nonSerializedSlice => ({
         type: PaymentType.Payment,
+        id: '4393438',
         amount: new BigNumber('3939439430403'),
         data: {
           public: {
@@ -115,6 +121,7 @@ const validSerializedPaymentTestCases: ReadonlyArray<readonly [
       'payment without optional urls',
       [
         {
+          i: 'wU2QjHEQpk6nYCv555qZXQ==',
           a: '747.23834',
           d: {
             public: {
@@ -124,10 +131,11 @@ const validSerializedPaymentTestCases: ReadonlyArray<readonly [
           c: createdDate.getTime(),
           e: expiredDate.getTime()
         },
-        'eyJhIjoiNzQ3LjIzODM0IiwiZCI6eyJwdWJsaWMiOnsib3JkZXJJZCI6IjBhNmQyZGIxODFmYTRlYzdhN2RiZmI3YjcyODIwMWY2In19LCJjIjoxNjI0NjY3ODIzOTMwLCJlIjoxNjI0NjY5MDIzOTMwfQ',
+        'eyJpIjoid1UyUWpIRVFwazZuWUN2NTU1cVpYUT09IiwiYSI6Ijc0Ny4yMzgzNCIsImQiOnsicHVibGljIjp7Im9yZGVySWQiOiIwYTZkMmRiMTgxZmE0ZWM3YTdkYmZiN2I3MjgyMDFmNiJ9fSwiYyI6MTYyNDY2NzgyMzkzMCwiZSI6MTYyNDY2OTAyMzkzMH0',
       ],
       nonSerializedSlice => ({
         type: PaymentType.Payment,
+        id: 'wU2QjHEQpk6nYCv555qZXQ==',
         amount: new BigNumber('747.23834'),
         data: {
           public: {

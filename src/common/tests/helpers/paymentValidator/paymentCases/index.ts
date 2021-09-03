@@ -1,6 +1,7 @@
 export { default as validPaymentTestCases } from './validPaymentTestCases';
 
 export { default as invalidAmountTestCases } from './invalidAmountTestCases';
+export { default as invalidIdTestCases } from './invalidIdTestCases';
 export { default as invalidAssetTestCases } from './invalidAssetTestCases';
 export { default as invalidCancelUrlTestCases } from './invalidCancelUrlTestCases';
 export { default as invalidCreatedDateTestCases } from './invalidCreatedDateTestCases';

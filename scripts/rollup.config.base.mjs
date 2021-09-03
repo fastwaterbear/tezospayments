@@ -66,6 +66,7 @@ export const getResolvePlugins = format => format === 'umd'
     nodeResolve({
       extensions: ['.mjs', '.js', '.json', '.node', '.ts', '.tsx'],
       preferBuiltins: false,
+      browser: true
     }),
   ]
   : [

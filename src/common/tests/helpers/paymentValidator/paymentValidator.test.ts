@@ -2,7 +2,7 @@ import { PaymentValidator } from '../../../src/helpers';
 import { Payment } from '../../../src/models/payment';
 import {
   invalidAmountTestCases, invalidAssetTestCases, invalidCancelUrlTestCases, invalidCreatedDateTestCases, invalidDataTestCases,
-  invalidExpiredDateTestCases, invalidPaymentObjectTestCases, invalidSuccessUrlTestCases, invalidTargetAddressTestCases,
+  invalidExpiredDateTestCases, invalidIdTestCases, invalidPaymentObjectTestCases, invalidSuccessUrlTestCases, invalidTargetAddressTestCases,
   invalidTypeTestCases, validPaymentTestCases
 } from './paymentCases';
 import { NegativeTestCases } from './testCase';
@@ -20,8 +20,9 @@ describe('Payment Validator', () => {
 
   const invalidPaymentTestCases: NegativeTestCases = invalidPaymentObjectTestCases
     .concat(invalidTypeTestCases)
-    .concat(invalidAmountTestCases)
     .concat(invalidTargetAddressTestCases)
+    .concat(invalidIdTestCases)
+    .concat(invalidAmountTestCases)
     .concat(invalidDataTestCases)
     .concat(invalidAssetTestCases)
     .concat(invalidSuccessUrlTestCases)

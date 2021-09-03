@@ -29,6 +29,7 @@ const validPaymentTestCases: PositiveTestCases = [
     {
       type: PaymentType.Payment,
       targetAddress: 'KT1ECFaVQDnA5vYnaVkFc7RdfQVjxvjPHuQn',
+      id: 'NqOzqsdqBQ_ajB0Hh2p7L',
       amount: new BigNumber(17.17),
       data: {
         public: {
@@ -36,7 +37,7 @@ const validPaymentTestCases: PositiveTestCases = [
         }
       },
       created: new Date('2021-08-31T11:20:23.017Z'),
-      url: 'https://payment.tezospayments.com/KT1ECFaVQDnA5vYnaVkFc7RdfQVjxvjPHuQn/payment?network=granadanet#00eyJhIjoiMTcuMTciLCJkIjp7InB1YmxpYyI6eyJvcmRlcklkIjoiMTAzNDM4NDM2In19LCJjIjoxNjMwNDA4ODIzMDE3fQ'
+      url: 'https://payment.tezospayments.com/KT1ECFaVQDnA5vYnaVkFc7RdfQVjxvjPHuQn/payment?network=granadanet#00eyJpIjoiTnFPenFzZHFCUV9hakIwSGgycDdMIiwiYSI6IjE3LjE3IiwiZCI6eyJwdWJsaWMiOnsib3JkZXJJZCI6IjEwMzQzODQzNiJ9fSwiYyI6MTYzMDQwODgyMzAxN30'
     }
   ],
   [
@@ -60,6 +61,7 @@ const validPaymentTestCases: PositiveTestCases = [
     {
       type: PaymentType.Payment,
       targetAddress: 'KT1ECFaVQDnA5vYnaVkFc7RdfQVjxvjPHuQn',
+      id: 'NqOzqsdqBQ_ajB0Hh2p7L',
       amount: new BigNumber(500),
       data: {
         public: {
@@ -69,7 +71,7 @@ const validPaymentTestCases: PositiveTestCases = [
       created: new Date('2021-08-31T11:40:01.000Z'),
       successUrl: new URL('https://fastwaterbear.com/tezospayments/test/payment/success'),
       cancelUrl: new URL('https://fastwaterbear.com/tezospayments/test/payment/cancel'),
-      url: 'https://payment.tezospayments.com/KT1ECFaVQDnA5vYnaVkFc7RdfQVjxvjPHuQn/payment?network=granadanet#00eyJhIjoiNTAwIiwiZCI6eyJwdWJsaWMiOnsib3JkZXJJZCI6ImQ3NWZlMDZiLTkyODgtNDEyZC04MjFiLWNhMDZjZDljN2UzOCJ9fSwic3UiOiJodHRwczovL2Zhc3R3YXRlcmJlYXIuY29tL3Rlem9zcGF5bWVudHMvdGVzdC9wYXltZW50L3N1Y2Nlc3MiLCJjdSI6Imh0dHBzOi8vZmFzdHdhdGVyYmVhci5jb20vdGV6b3NwYXltZW50cy90ZXN0L3BheW1lbnQvY2FuY2VsIiwiYyI6MTYzMDQxMDAwMTAwMH0'
+      url: 'https://payment.tezospayments.com/KT1ECFaVQDnA5vYnaVkFc7RdfQVjxvjPHuQn/payment?network=granadanet#00eyJpIjoiTnFPenFzZHFCUV9hakIwSGgycDdMIiwiYSI6IjUwMCIsImQiOnsicHVibGljIjp7Im9yZGVySWQiOiJkNzVmZTA2Yi05Mjg4LTQxMmQtODIxYi1jYTA2Y2Q5YzdlMzgifX0sInN1IjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9zdWNjZXNzIiwiY3UiOiJodHRwczovL2Zhc3R3YXRlcmJlYXIuY29tL3Rlem9zcGF5bWVudHMvdGVzdC9wYXltZW50L2NhbmNlbCIsImMiOjE2MzA0MTAwMDEwMDB9'
     }
   ],
   [
@@ -81,6 +83,7 @@ const validPaymentTestCases: PositiveTestCases = [
       }
     },
     {
+      id: '2mcIVPiQ9zLnlZ-AFORvD',
       amount: '2323232443343433743.4393343544',
       data: {
         public: {
@@ -92,6 +95,7 @@ const validPaymentTestCases: PositiveTestCases = [
     {
       type: PaymentType.Payment,
       targetAddress: 'KT1UmBbUKwsuHwmjGJ2GHSYbVLoJXVcvjMCa',
+      id: '2mcIVPiQ9zLnlZ-AFORvD',
       amount: new BigNumber('2323232443343433743.4393343544'),
       asset: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2',
       data: {
@@ -100,7 +104,7 @@ const validPaymentTestCases: PositiveTestCases = [
         }
       },
       created: new Date('2021-09-03T10:18:23.017Z'),
-      url: 'https://payment.tezospayments.com/KT1UmBbUKwsuHwmjGJ2GHSYbVLoJXVcvjMCa/payment?network=granadanet#00eyJhIjoiMjMyMzIzMjQ0MzM0MzQzMzc0My40MzkzMzQzNTQ0IiwiZCI6eyJwdWJsaWMiOnsib3JkZXJJZCI6ImFlOTA4MTNkM2RlZjQ2YzFhYTY5NzUwZTUxM2I2MDNjIn19LCJhcyI6IktUMU1uMkhVVUtVUGc4d2lRaFVKOFo5alV0WkxhWm44RVdMMiIsImMiOjE2MzA2NjQzMDMwMTd9'
+      url: 'https://payment.tezospayments.com/KT1UmBbUKwsuHwmjGJ2GHSYbVLoJXVcvjMCa/payment?network=granadanet#00eyJpIjoiMm1jSVZQaVE5ekxubFotQUZPUnZEIiwiYSI6IjIzMjMyMzI0NDMzNDM0MzM3NDMuNDM5MzM0MzU0NCIsImQiOnsicHVibGljIjp7Im9yZGVySWQiOiJhZTkwODEzZDNkZWY0NmMxYWE2OTc1MGU1MTNiNjAzYyJ9fSwiYXMiOiJLVDFNbjJIVVVLVVBnOHdpUWhVSjhaOWpVdFpMYVpuOEVXTDIiLCJjIjoxNjMwNjY0MzAzMDE3fQ'
     }
   ],
   [
@@ -112,6 +116,7 @@ const validPaymentTestCases: PositiveTestCases = [
       }
     },
     {
+      id: '04b7a527-65b8-49ef-b8df-cb5d3ecdae07',
       amount: '0.232932843438438',
       data: {
         public: {
@@ -125,6 +130,7 @@ const validPaymentTestCases: PositiveTestCases = [
     {
       type: PaymentType.Payment,
       targetAddress: 'KT1UmBbUKwsuHwmjGJ2GHSYbVLoJXVcvjMCa',
+      id: '04b7a527-65b8-49ef-b8df-cb5d3ecdae07',
       amount: new BigNumber('0.232932843438438'),
       asset: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2',
       data: {
@@ -134,7 +140,7 @@ const validPaymentTestCases: PositiveTestCases = [
       },
       created: new Date('2021-09-03T23:23:00.000Z'),
       expired: new Date('2021-09-03T23:40:00.000Z'),
-      url: 'https://payment.tezospayments.com/KT1UmBbUKwsuHwmjGJ2GHSYbVLoJXVcvjMCa/payment?network=granadanet#00eyJhIjoiMC4yMzI5MzI4NDM0Mzg0MzgiLCJkIjp7InB1YmxpYyI6eyJvcmRlcklkIjoiMDI5MyJ9fSwiYXMiOiJLVDFNbjJIVVVLVVBnOHdpUWhVSjhaOWpVdFpMYVpuOEVXTDIiLCJjIjoxNjMwNzExMzgwMDAwLCJlIjoxNjMwNzEyNDAwMDAwfQ'
+      url: 'https://payment.tezospayments.com/KT1UmBbUKwsuHwmjGJ2GHSYbVLoJXVcvjMCa/payment?network=granadanet#00eyJpIjoiMDRiN2E1MjctNjViOC00OWVmLWI4ZGYtY2I1ZDNlY2RhZTA3IiwiYSI6IjAuMjMyOTMyODQzNDM4NDM4IiwiZCI6eyJwdWJsaWMiOnsib3JkZXJJZCI6IjAyOTMifX0sImFzIjoiS1QxTW4ySFVVS1VQZzh3aVFoVUo4WjlqVXRaTGFabjhFV0wyIiwiYyI6MTYzMDcxMTM4MDAwMCwiZSI6MTYzMDcxMjQwMDAwMH0'
     }
   ]
 ];

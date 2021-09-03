@@ -1,5 +1,6 @@
 import { Card } from 'antd';
 import BigNumber from 'bignumber.js';
+import { nanoid } from 'nanoid';
 import React from 'react';
 
 import { Donation, Payment, PaymentType } from '@tezospayments/common';
@@ -29,6 +30,7 @@ export const Generator = (props: GeneratorProps) => {
     ? {
       type: props.paymentType,
       targetAddress: props.serviceAddress,
+      id: nanoid(),
       amount: new BigNumber(props.amount),
       data: props.publicData ? { public: { orderId: props.publicData } } : undefined,
       created: new Date(),

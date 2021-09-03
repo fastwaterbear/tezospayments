@@ -4,6 +4,8 @@ import { SerializedFieldType } from '../base64';
 export const serializedPaymentFieldTypes: ReadonlyMap<
   keyof SerializedPayment, SerializedFieldType | readonly SerializedFieldType[]
 > = new Map<keyof SerializedPayment, SerializedFieldType | readonly SerializedFieldType[]>()
+  // id
+  .set('i', 'string')
   // amount
   .set('a', 'string')
   // data

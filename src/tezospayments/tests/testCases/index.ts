@@ -1,2 +1,2 @@
-export * from './tezosPaymentsOptionsTestCases';
-export * from './createPaymentTestCases';
+export { validTezosPaymentsOptionsTestCases, invalidTezosPaymentsOptionsTestCases } from './tezosPaymentsOptionsTestCases';
+export { validPaymentTestCases, invalidPaymentTestCases } from './createPaymentTestCases';

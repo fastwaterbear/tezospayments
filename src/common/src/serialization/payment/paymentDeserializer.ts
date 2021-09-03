@@ -25,6 +25,7 @@ export class PaymentDeserializer {
   protected mapSerializedPaymentToPayment(serializedPayment: SerializedPayment, nonSerializedPaymentSlice: NonSerializedPaymentSlice): Payment {
     return {
       type: PaymentType.Payment,
+      id: serializedPayment.i,
       amount: new BigNumber(serializedPayment.a),
       data: serializedPayment.d,
       asset: serializedPayment.as,

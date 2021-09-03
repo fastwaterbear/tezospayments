@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { nanoid } from 'nanoid';
 
 import {
   native, networks, tezosInfo, networkNameRegExp, networkIdRegExp, PaymentUrlType,
@@ -111,6 +112,7 @@ export class TezosPayments {
   protected createPaymentByCreateParameters(createParameters: PaymentCreateParameters): CommonPaymentModel {
     const payment: Mutable<CommonPaymentModel> = {
       type: PaymentType.Payment,
+      id: createParameters.id || nanoid(),
       targetAddress: this.serviceContractAddress,
       amount: new BigNumber(createParameters.amount),
       data: createParameters.data,

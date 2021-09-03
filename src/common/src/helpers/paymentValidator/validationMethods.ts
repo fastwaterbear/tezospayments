@@ -24,6 +24,17 @@ export const validateTargetAddress = (
     return [errors.targetAddressIsNotNetworkAddress];
 };
 
+export const validateId = (
+  id: string,
+  errors: Errors<'invalidId' | 'emptyId'>
+): FailedValidationResults => {
+  if (typeof id !== 'string')
+    return [errors.invalidId];
+
+  if (id === '')
+    return [errors.emptyId];
+};
+
 export const validateAmount = (
   amount: BigNumber,
   errors: Errors<'invalidAmount' | 'amountIsNonPositive'>

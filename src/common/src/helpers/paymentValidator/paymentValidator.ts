@@ -3,19 +3,21 @@ import { PaymentType } from '../../models/payment/paymentBase';
 import type { PaymentValidationMethod } from './paymentValidationMethod';
 import { PaymentValidatorBase } from './paymentValidatorBase';
 import {
-  validateTargetAddress, validateAmount, validateData, validateAsset, validateCreatedDate,
-  validateExpiredDate, validateUrl
+  validateTargetAddress, validateId, validateAmount, validateData, validateAsset,
+  validateCreatedDate, validateExpiredDate, validateUrl
 } from './validationMethods';
 
 export class PaymentValidator extends PaymentValidatorBase<Payment> {
   static readonly errors = {
     invalidPaymentObject: 'Payment is undefined or not object',
     invalidType: 'Payment type is invalid',
-    invalidAmount: 'Amount is invalid',
-    amountIsNonPositive: 'Amount is less than or equal to zero',
     invalidTargetAddress: 'Target address is invalid',
     targetAddressIsNotNetworkAddress: 'Target address isn\'t a network address',
     targetAddressHasInvalidLength: 'Target address has an invalid address',
+    invalidId: 'Id is invalid',
+    emptyId: 'Id is empty',
+    invalidAmount: 'Amount is invalid',
+    amountIsNonPositive: 'Amount is less than or equal to zero',
     invalidData: 'Payment data is invalid',
     invalidPublicData: 'Payment public data is invalid',
     invalidPrivateData: 'Payment private data is invalid',
@@ -37,6 +39,7 @@ export class PaymentValidator extends PaymentValidatorBase<Payment> {
   protected readonly validationMethods: ReadonlyArray<PaymentValidationMethod<Payment>> = [
     payment => payment.type !== PaymentType.Payment ? [PaymentValidator.errors.invalidType] : undefined,
     payment => validateTargetAddress(payment.targetAddress, PaymentValidator.errors),
+    payment => validateId(payment.id, PaymentValidator.errors),
     payment => validateAmount(payment.amount, PaymentValidator.errors),
     payment => validateData(payment.data, PaymentValidator.errors),
     payment => validateAsset(payment.asset, PaymentValidator.errors),
