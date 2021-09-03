@@ -18,7 +18,7 @@ export abstract class PaymentValidatorBase<TPayment extends PaymentBase> {
         if (!bail)
           return currentFailedValidationResults;
 
-        (failedValidationResults || (failedValidationResults = [])).concat(currentFailedValidationResults);
+        failedValidationResults = (failedValidationResults || []).concat(currentFailedValidationResults);
       }
     }
 

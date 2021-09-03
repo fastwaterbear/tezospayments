@@ -1,3 +1,5 @@
+import { Buffer } from 'buffer';
+
 type ValidBase64Format = 'base64' | 'base64url';
 
 // Node.js < 15
