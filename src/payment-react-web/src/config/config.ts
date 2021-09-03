@@ -19,7 +19,7 @@ export const config: AppConfig = {
         color: '#667eea',
         default: {
           rpc: 'smartpy',
-          indexer: 'betterCallDev',
+          indexer: 'tzKT',
           explorer: 'tzStats'
         },
         rpcUrls: {
