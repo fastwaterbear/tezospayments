@@ -14,7 +14,7 @@ export const App = () => {
   const payment = useAppSelector(state => state.currentPaymentState?.payment);
   const service = useAppSelector(state => state.currentPaymentState?.service);
   const operationHash = useAppSelector(state => state.currentPaymentState?.operation?.hash);
-  const paymentStatus = useAppSelector(state => state.currentPaymentState && state.currentPaymentState.status);
+  const paymentStatus = useAppSelector(state => state.currentPaymentState && state.currentPaymentState?.status);
   const error = useAppSelector(state => state.applicationError);
   const dispatch = useAppDispatch();
 
@@ -25,7 +25,7 @@ export const App = () => {
   return error
     ? <ErrorPure error={error} />
     : (payment && service && paymentStatus !== null)
-      ? <React.Fragment>
+      ? <>
         {paymentStatus !== PaymentStatus.Succeeded && paymentStatus !== PaymentStatus.NetworkProcessing && (
           payment.type === PaymentType.Payment
             ? <PaymentPure payment={payment} service={service} />
@@ -37,8 +37,6 @@ export const App = () => {
         {operationHash && paymentStatus === PaymentStatus.Succeeded && <SuccessPure operationHash={operationHash}
           network={service.network}
         />}
-      </React.Fragment>
-      : <React.Fragment>
-        {paymentStatus === PaymentStatus.Initial && <Spin size="large" />}
-      </React.Fragment>;
+      </>
+      : <Spin size="large" />;
 };
