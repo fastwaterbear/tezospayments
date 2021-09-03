@@ -12,6 +12,7 @@ import _typeof from '@babel/runtime/helpers/typeof';
 import _asyncToGenerator from '@babel/runtime/helpers/asyncToGenerator';
 import _regeneratorRuntime from '@babel/runtime/regenerator';
 import BigNumber from 'bignumber.js';
+import { nanoid } from 'nanoid';
 
 var constants = {
   defaultNetworkName: 'mainnet',
@@ -490,6 +491,7 @@ var TezosPayments = /*#__PURE__*/function () {
     value: function createPaymentByCreateParameters(createParameters) {
       var payment = {
         type: PaymentType.Payment,
+        id: createParameters.id || nanoid(),
         targetAddress: this.serviceContractAddress,
         amount: new BigNumber(createParameters.amount),
         data: createParameters.data,

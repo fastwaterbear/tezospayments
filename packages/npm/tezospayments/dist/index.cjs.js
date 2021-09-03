@@ -5,6 +5,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var common = require('@tezospayments/common');
 var _defineProperty = require('@babel/runtime/helpers/defineProperty');
 var BigNumber = require('bignumber.js');
+var nanoid = require('nanoid');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -275,6 +276,7 @@ class TezosPayments {
   createPaymentByCreateParameters(createParameters) {
     const payment = {
       type: common.PaymentType.Payment,
+      id: createParameters.id || nanoid.nanoid(),
       targetAddress: this.serviceContractAddress,
       amount: new BigNumber__default['default'](createParameters.amount),
       data: createParameters.data,

@@ -15,6 +15,7 @@ var _typeof = require('@babel/runtime/helpers/typeof');
 var _asyncToGenerator = require('@babel/runtime/helpers/asyncToGenerator');
 var _regeneratorRuntime = require('@babel/runtime/regenerator');
 var BigNumber = require('bignumber.js');
+var nanoid = require('nanoid');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -508,6 +509,7 @@ var TezosPayments = /*#__PURE__*/function () {
     value: function createPaymentByCreateParameters(createParameters) {
       var payment = {
         type: common.PaymentType.Payment,
+        id: createParameters.id || nanoid.nanoid(),
         targetAddress: this.serviceContractAddress,
         amount: new BigNumber__default['default'](createParameters.amount),
         data: createParameters.data,

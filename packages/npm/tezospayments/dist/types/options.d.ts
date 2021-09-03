@@ -19,6 +19,7 @@ export interface TezosPaymentsOptions {
 }
 interface PaymentCreateParametersBase {
     amount: string;
+    id?: string;
     asset?: string;
     data: Payment['data'];
     created?: number;

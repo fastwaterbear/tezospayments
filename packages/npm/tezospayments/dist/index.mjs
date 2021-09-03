@@ -2,6 +2,7 @@ import { guards, PaymentUrlType, PaymentSerializer, DonationSerializer, PaymentT
 export { PaymentUrlType } from '@tezospayments/common';
 import _defineProperty from '@babel/runtime/helpers/defineProperty';
 import BigNumber from 'bignumber.js';
+import { nanoid } from 'nanoid';
 
 var constants = {
   defaultNetworkName: 'mainnet',
@@ -267,6 +268,7 @@ class TezosPayments {
   createPaymentByCreateParameters(createParameters) {
     const payment = {
       type: PaymentType.Payment,
+      id: createParameters.id || nanoid(),
       targetAddress: this.serviceContractAddress,
       amount: new BigNumber(createParameters.amount),
       data: createParameters.data,
