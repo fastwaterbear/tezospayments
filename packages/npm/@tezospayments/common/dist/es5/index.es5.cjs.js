@@ -32,8 +32,7 @@ var _getPrototypeOf__default = /*#__PURE__*/_interopDefaultLegacy(_getPrototypeO
 var BigNumber__default = /*#__PURE__*/_interopDefaultLegacy(BigNumber);
 var _slicedToArray__default = /*#__PURE__*/_interopDefaultLegacy(_slicedToArray);
 
-// Node.js < 15
-var isBase64UrlFormatSupported = Buffer.isEncoding('base64url');
+var isBase64UrlFormatSupported = buffer.Buffer.isEncoding('base64url');
 var decode = function decode(base64String) {
   var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'base64';
   if (format !== 'base64' && format !== 'base64url') return '';
@@ -43,13 +42,13 @@ var decode = function decode(base64String) {
     base64String = base64UrlPreprocessor.prepareValueForDecoding(base64String);
   }
 
-  return Buffer.from(base64String, format).toString('utf8');
+  return buffer.Buffer.from(base64String, format).toString('utf8');
 };
 var encode = function encode(value) {
   var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'base64';
   if (format !== 'base64' && format !== 'base64url') return '';
-  if (isBase64UrlFormatSupported) return Buffer.from(value, 'utf8').toString(format);
-  var encodedValue = Buffer.from(value, 'utf8').toString('base64');
+  if (isBase64UrlFormatSupported) return buffer.Buffer.from(value, 'utf8').toString(format);
+  var encodedValue = buffer.Buffer.from(value, 'utf8').toString('base64');
   return base64UrlPreprocessor.prepareEncodedValue(encodedValue);
 };
 var base64UrlPreprocessor = {
@@ -469,7 +468,7 @@ var PaymentValidatorBase = /*#__PURE__*/function () {
 
           if (currentFailedValidationResults) {
             if (!bail) return currentFailedValidationResults;
-            (failedValidationResults || (failedValidationResults = [])).concat(currentFailedValidationResults);
+            failedValidationResults = (failedValidationResults || []).concat(currentFailedValidationResults);
           }
         }
       } catch (err) {
@@ -587,6 +586,10 @@ var validateTargetAddress = function validateTargetAddress(targetAddress, errors
     return targetAddress.startsWith(prefix);
   })) return [errors.targetAddressIsNotNetworkAddress];
 };
+var validateId = function validateId(id, errors) {
+  if (typeof id !== 'string') return [errors.invalidId];
+  if (id === '') return [errors.emptyId];
+};
 var validateAmount = function validateAmount(amount, errors) {
   if (!BigNumber__default['default'].isBigNumber(amount) || amount.isNaN() || !amount.isFinite()) return [errors.invalidAmount];
   if (amount.isZero() || amount.isNegative()) return [errors.amountIsNonPositive];
@@ -680,6 +683,8 @@ var PaymentValidator = /*#__PURE__*/function (_PaymentValidatorBase) {
     }, function (payment) {
       return validateTargetAddress(payment.targetAddress, PaymentValidator.errors);
     }, function (payment) {
+      return validateId(payment.id, PaymentValidator.errors);
+    }, function (payment) {
       return validateAmount(payment.amount, PaymentValidator.errors);
     }, function (payment) {
       return validateData(payment.data, PaymentValidator.errors);
@@ -706,11 +711,13 @@ var PaymentValidator = /*#__PURE__*/function (_PaymentValidatorBase) {
 _defineProperty__default['default'](PaymentValidator, "errors", {
   invalidPaymentObject: 'Payment is undefined or not object',
   invalidType: 'Payment type is invalid',
-  invalidAmount: 'Amount is invalid',
-  amountIsNonPositive: 'Amount is less than or equal to zero',
   invalidTargetAddress: 'Target address is invalid',
   targetAddressIsNotNetworkAddress: 'Target address isn\'t a network address',
   targetAddressHasInvalidLength: 'Target address has an invalid address',
+  invalidId: 'Id is invalid',
+  emptyId: 'Id is empty',
+  invalidAmount: 'Amount is invalid',
+  amountIsNonPositive: 'Amount is less than or equal to zero',
   invalidData: 'Payment data is invalid',
   invalidPublicData: 'Payment public data is invalid',
   invalidPrivateData: 'Payment private data is invalid',
@@ -956,7 +963,8 @@ var Base64Deserializer = /*#__PURE__*/function () {
   return Base64Deserializer;
 }();
 
-var serializedPaymentFieldTypes = new Map() // amount
+var serializedPaymentFieldTypes = new Map() // id
+.set('i', 'string') // amount
 .set('a', 'string') // data
 .set('d', 'object') // asset
 .set('as', ['string', 'undefined', 'null']) // successUrl
@@ -987,6 +995,7 @@ var PaymentSerializer = /*#__PURE__*/function () {
       var _payment$successUrl, _payment$cancelUrl, _payment$expired;
 
       return {
+        i: payment.id,
         a: payment.amount.toString(),
         d: payment.data,
         as: payment.asset,
@@ -1023,6 +1032,7 @@ var PaymentDeserializer = /*#__PURE__*/function () {
     value: function mapSerializedPaymentToPayment(serializedPayment, nonSerializedPaymentSlice) {
       return {
         type: exports.PaymentType.Payment,
+        id: serializedPayment.i,
         amount: new BigNumber__default['default'](serializedPayment.a),
         data: serializedPayment.d,
         asset: serializedPayment.as,
@@ -1060,6 +1070,7 @@ var LegacyPaymentDeserializer = /*#__PURE__*/function () {
     value: function mapSerializedPaymentToPayment(serializedPayment, nonSerializedPaymentSlice) {
       return {
         type: exports.PaymentType.Payment,
+        id: 'legacy-payment',
         amount: new BigNumber__default['default'](serializedPayment.amount),
         data: serializedPayment.data,
         asset: serializedPayment.asset,

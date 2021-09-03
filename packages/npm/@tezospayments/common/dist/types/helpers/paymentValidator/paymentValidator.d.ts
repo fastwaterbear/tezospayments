@@ -5,11 +5,13 @@ export declare class PaymentValidator extends PaymentValidatorBase<Payment> {
     static readonly errors: {
         readonly invalidPaymentObject: "Payment is undefined or not object";
         readonly invalidType: "Payment type is invalid";
-        readonly invalidAmount: "Amount is invalid";
-        readonly amountIsNonPositive: "Amount is less than or equal to zero";
         readonly invalidTargetAddress: "Target address is invalid";
         readonly targetAddressIsNotNetworkAddress: "Target address isn't a network address";
         readonly targetAddressHasInvalidLength: "Target address has an invalid address";
+        readonly invalidId: "Id is invalid";
+        readonly emptyId: "Id is empty";
+        readonly invalidAmount: "Amount is invalid";
+        readonly amountIsNonPositive: "Amount is less than or equal to zero";
         readonly invalidData: "Payment data is invalid";
         readonly invalidPublicData: "Payment public data is invalid";
         readonly invalidPrivateData: "Payment private data is invalid";

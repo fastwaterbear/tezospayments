@@ -2,7 +2,7 @@ import _classCallCheck from '@babel/runtime/helpers/classCallCheck';
 import _createClass from '@babel/runtime/helpers/createClass';
 import _defineProperty from '@babel/runtime/helpers/defineProperty';
 export { default as combineClassNames } from 'clsx';
-import { Buffer as Buffer$1 } from 'buffer';
+import { Buffer } from 'buffer';
 import isPlainObjectLodashFunction from 'lodash.isplainobject';
 import _typeof from '@babel/runtime/helpers/typeof';
 import _assertThisInitialized from '@babel/runtime/helpers/assertThisInitialized';
@@ -13,7 +13,6 @@ import BigNumber from 'bignumber.js';
 import { URL as URL$1 } from 'url';
 import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 
-// Node.js < 15
 var isBase64UrlFormatSupported = Buffer.isEncoding('base64url');
 var decode = function decode(base64String) {
   var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'base64';
@@ -73,10 +72,10 @@ var stringToUint8Array = function stringToUint8Array(hex) {
   return new Uint8Array(integers);
 };
 var stringToBytes = function stringToBytes(value) {
-  return Buffer$1.from(value, 'utf8').toString('hex');
+  return Buffer.from(value, 'utf8').toString('hex');
 };
 var bytesToString = function bytesToString(value) {
-  return Buffer$1.from(stringToUint8Array(value)).toString('utf8');
+  return Buffer.from(stringToUint8Array(value)).toString('utf8');
 };
 var objectToBytes = function objectToBytes(value) {
   return stringToBytes(JSON.stringify(value));
@@ -450,7 +449,7 @@ var PaymentValidatorBase = /*#__PURE__*/function () {
 
           if (currentFailedValidationResults) {
             if (!bail) return currentFailedValidationResults;
-            (failedValidationResults || (failedValidationResults = [])).concat(currentFailedValidationResults);
+            failedValidationResults = (failedValidationResults || []).concat(currentFailedValidationResults);
           }
         }
       } catch (err) {
@@ -568,6 +567,10 @@ var validateTargetAddress = function validateTargetAddress(targetAddress, errors
     return targetAddress.startsWith(prefix);
   })) return [errors.targetAddressIsNotNetworkAddress];
 };
+var validateId = function validateId(id, errors) {
+  if (typeof id !== 'string') return [errors.invalidId];
+  if (id === '') return [errors.emptyId];
+};
 var validateAmount = function validateAmount(amount, errors) {
   if (!BigNumber.isBigNumber(amount) || amount.isNaN() || !amount.isFinite()) return [errors.invalidAmount];
   if (amount.isZero() || amount.isNegative()) return [errors.amountIsNonPositive];
@@ -661,6 +664,8 @@ var PaymentValidator = /*#__PURE__*/function (_PaymentValidatorBase) {
     }, function (payment) {
       return validateTargetAddress(payment.targetAddress, PaymentValidator.errors);
     }, function (payment) {
+      return validateId(payment.id, PaymentValidator.errors);
+    }, function (payment) {
       return validateAmount(payment.amount, PaymentValidator.errors);
     }, function (payment) {
       return validateData(payment.data, PaymentValidator.errors);
@@ -687,11 +692,13 @@ var PaymentValidator = /*#__PURE__*/function (_PaymentValidatorBase) {
 _defineProperty(PaymentValidator, "errors", {
   invalidPaymentObject: 'Payment is undefined or not object',
   invalidType: 'Payment type is invalid',
-  invalidAmount: 'Amount is invalid',
-  amountIsNonPositive: 'Amount is less than or equal to zero',
   invalidTargetAddress: 'Target address is invalid',
   targetAddressIsNotNetworkAddress: 'Target address isn\'t a network address',
   targetAddressHasInvalidLength: 'Target address has an invalid address',
+  invalidId: 'Id is invalid',
+  emptyId: 'Id is empty',
+  invalidAmount: 'Amount is invalid',
+  amountIsNonPositive: 'Amount is less than or equal to zero',
   invalidData: 'Payment data is invalid',
   invalidPublicData: 'Payment public data is invalid',
   invalidPrivateData: 'Payment private data is invalid',
@@ -937,7 +944,8 @@ var Base64Deserializer = /*#__PURE__*/function () {
   return Base64Deserializer;
 }();
 
-var serializedPaymentFieldTypes = new Map() // amount
+var serializedPaymentFieldTypes = new Map() // id
+.set('i', 'string') // amount
 .set('a', 'string') // data
 .set('d', 'object') // asset
 .set('as', ['string', 'undefined', 'null']) // successUrl
@@ -968,6 +976,7 @@ var PaymentSerializer = /*#__PURE__*/function () {
       var _payment$successUrl, _payment$cancelUrl, _payment$expired;
 
       return {
+        i: payment.id,
         a: payment.amount.toString(),
         d: payment.data,
         as: payment.asset,
@@ -1004,6 +1013,7 @@ var PaymentDeserializer = /*#__PURE__*/function () {
     value: function mapSerializedPaymentToPayment(serializedPayment, nonSerializedPaymentSlice) {
       return {
         type: PaymentType.Payment,
+        id: serializedPayment.i,
         amount: new BigNumber(serializedPayment.a),
         data: serializedPayment.d,
         asset: serializedPayment.as,
@@ -1041,6 +1051,7 @@ var LegacyPaymentDeserializer = /*#__PURE__*/function () {
     value: function mapSerializedPaymentToPayment(serializedPayment, nonSerializedPaymentSlice) {
       return {
         type: PaymentType.Payment,
+        id: 'legacy-payment',
         amount: new BigNumber(serializedPayment.amount),
         data: serializedPayment.data,
         asset: serializedPayment.asset,

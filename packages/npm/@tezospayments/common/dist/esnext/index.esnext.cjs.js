@@ -15,7 +15,7 @@ var isPlainObjectLodashFunction__default = /*#__PURE__*/_interopDefaultLegacy(is
 var BigNumber__default = /*#__PURE__*/_interopDefaultLegacy(BigNumber);
 
 // Node.js < 15
-const isBase64UrlFormatSupported = Buffer.isEncoding('base64url');
+const isBase64UrlFormatSupported = buffer.Buffer.isEncoding('base64url');
 const decode = (base64String, format = 'base64') => {
     if (format !== 'base64' && format !== 'base64url')
         return '';
@@ -23,14 +23,14 @@ const decode = (base64String, format = 'base64') => {
         format = 'base64';
         base64String = base64UrlPreprocessor.prepareValueForDecoding(base64String);
     }
-    return Buffer.from(base64String, format).toString('utf8');
+    return buffer.Buffer.from(base64String, format).toString('utf8');
 };
 const encode = (value, format = 'base64') => {
     if (format !== 'base64' && format !== 'base64url')
         return '';
     if (isBase64UrlFormatSupported)
-        return Buffer.from(value, 'utf8').toString(format);
-    const encodedValue = Buffer.from(value, 'utf8').toString('base64');
+        return buffer.Buffer.from(value, 'utf8').toString(format);
+    const encodedValue = buffer.Buffer.from(value, 'utf8').toString('base64');
     return base64UrlPreprocessor.prepareEncodedValue(encodedValue);
 };
 const base64UrlPreprocessor = {
@@ -347,7 +347,7 @@ class PaymentValidatorBase {
             if (currentFailedValidationResults) {
                 if (!bail)
                     return currentFailedValidationResults;
-                (failedValidationResults || (failedValidationResults = [])).concat(currentFailedValidationResults);
+                failedValidationResults = (failedValidationResults || []).concat(currentFailedValidationResults);
             }
         }
         return failedValidationResults;
@@ -451,6 +451,12 @@ const validateTargetAddress = (targetAddress, errors) => {
     if (!tezosInfo.addressPrefixes.some(prefix => targetAddress.startsWith(prefix)))
         return [errors.targetAddressIsNotNetworkAddress];
 };
+const validateId = (id, errors) => {
+    if (typeof id !== 'string')
+        return [errors.invalidId];
+    if (id === '')
+        return [errors.emptyId];
+};
 const validateAmount = (amount, errors) => {
     if (!BigNumber__default['default'].isBigNumber(amount) || amount.isNaN() || !amount.isFinite())
         return [errors.invalidAmount];
@@ -524,11 +530,13 @@ class PaymentValidator extends PaymentValidatorBase {
     static errors = {
         invalidPaymentObject: 'Payment is undefined or not object',
         invalidType: 'Payment type is invalid',
-        invalidAmount: 'Amount is invalid',
-        amountIsNonPositive: 'Amount is less than or equal to zero',
         invalidTargetAddress: 'Target address is invalid',
         targetAddressIsNotNetworkAddress: 'Target address isn\'t a network address',
         targetAddressHasInvalidLength: 'Target address has an invalid address',
+        invalidId: 'Id is invalid',
+        emptyId: 'Id is empty',
+        invalidAmount: 'Amount is invalid',
+        amountIsNonPositive: 'Amount is less than or equal to zero',
         invalidData: 'Payment data is invalid',
         invalidPublicData: 'Payment public data is invalid',
         invalidPrivateData: 'Payment private data is invalid',
@@ -549,6 +557,7 @@ class PaymentValidator extends PaymentValidatorBase {
     validationMethods = [
         payment => payment.type !== exports.PaymentType.Payment ? [PaymentValidator.errors.invalidType] : undefined,
         payment => validateTargetAddress(payment.targetAddress, PaymentValidator.errors),
+        payment => validateId(payment.id, PaymentValidator.errors),
         payment => validateAmount(payment.amount, PaymentValidator.errors),
         payment => validateData(payment.data, PaymentValidator.errors),
         payment => validateAsset(payment.asset, PaymentValidator.errors),
@@ -693,6 +702,8 @@ class Base64Deserializer {
 }
 
 const serializedPaymentFieldTypes = new Map()
+    // id
+    .set('i', 'string')
     // amount
     .set('a', 'string')
     // data
@@ -729,6 +740,7 @@ class PaymentSerializer {
     }
     mapPaymentToSerializedPayment(payment) {
         return {
+            i: payment.id,
             a: payment.amount.toString(),
             d: payment.data,
             as: payment.asset,
@@ -754,6 +766,7 @@ class PaymentDeserializer {
     mapSerializedPaymentToPayment(serializedPayment, nonSerializedPaymentSlice) {
         return {
             type: exports.PaymentType.Payment,
+            id: serializedPayment.i,
             amount: new BigNumber__default['default'](serializedPayment.a),
             data: serializedPayment.d,
             asset: serializedPayment.as,
@@ -780,6 +793,7 @@ class LegacyPaymentDeserializer {
     mapSerializedPaymentToPayment(serializedPayment, nonSerializedPaymentSlice) {
         return {
             type: exports.PaymentType.Payment,
+            id: 'legacy-payment',
             amount: new BigNumber__default['default'](serializedPayment.amount),
             data: serializedPayment.data,
             asset: serializedPayment.asset,

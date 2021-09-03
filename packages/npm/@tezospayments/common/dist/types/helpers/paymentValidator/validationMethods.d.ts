@@ -6,6 +6,7 @@ declare type Errors<FieldNames extends string> = {
     readonly [P in FieldNames]: string;
 };
 export declare const validateTargetAddress: (targetAddress: string, errors: Errors<'invalidTargetAddress' | 'targetAddressHasInvalidLength' | 'targetAddressIsNotNetworkAddress'>) => FailedValidationResults;
+export declare const validateId: (id: string, errors: Errors<'invalidId' | 'emptyId'>) => FailedValidationResults;
 export declare const validateAmount: (amount: BigNumber, errors: Errors<'invalidAmount' | 'amountIsNonPositive'>) => FailedValidationResults;
 export declare const validateDesiredAmount: (desiredAmount: BigNumber | undefined, errors: Errors<'invalidAmount' | 'amountIsNonPositive'>) => FailedValidationResults;
 export declare const validateAsset: (asset: string | undefined, errors: Errors<'invalidAsset' | 'assetHasInvalidLength' | 'assetIsNotContractAddress'>) => FailedValidationResults;
