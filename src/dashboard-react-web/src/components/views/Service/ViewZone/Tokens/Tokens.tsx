@@ -3,9 +3,9 @@ import React from 'react';
 
 import { tezosMeta, Token, Service } from '@tezospayments/common';
 
-import { selectTokensState } from '../../../../store/services/selectors';
-import { TokenList } from '../../../common';
-import { useAppSelector } from '../../../hooks';
+import { selectTokensState } from '../../../../../store/services/selectors';
+import { TokenList } from '../../../../common';
+import { useAppSelector } from '../../../../hooks';
 
 import './Tokens.scss';
 

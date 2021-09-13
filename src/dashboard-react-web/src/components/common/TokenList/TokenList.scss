@@ -1,48 +1,4 @@
-@use '../../../styles/ant-colors.scss';
-
-$-icon-size: 32px;
-
 .token-list {
   margin: 0;
   padding: 0;
-}
-
-.token-list-item {
-  display: flex;
-  margin-top: 8px;
-  align-items: center;
-  height: 45px;
-
-  &:first-child {
-    margin-top: 0;
-  }
-}
-
-.token-list-item__icon {
-  height: $-icon-size;
-  width: $-icon-size;
-  margin-right: 8px;
-}
-
-.token-list-item__value {
-  font-size: 16px;
-}
-
-.token-list-item__value_positive {
-  color: ant-colors.$green-6;
-}
-
-.token-list-item__value_negative {
-  color: ant-colors.$red-6;
-}
-
-.token-list-item__name-container {
-  color: ant-colors.$gray-7;
-  padding-top: 4px;
-  line-height: 17px;
-}
-
-.token-list-item__ticker {
-  font-weight: 500;
-  margin-right: 4px;
 }

@@ -12,7 +12,7 @@ import { createService, updateService } from '../../../../store/services/slice';
 import { ServiceLinksEditor } from '../../../common/ServiceLinks';
 import { useAppDispatch, useAppSelector, useCurrentLanguageResources } from '../../../hooks';
 import { View } from '../../View';
-import { TokensPure } from '../Tokens';
+import { TokensPure } from '../ViewZone/Tokens';
 
 import './ServiceEditForm.scss';
 
