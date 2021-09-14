@@ -1,10 +1,9 @@
-import { PlusOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Input } from 'antd';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ServiceLinkHelper, Service, ServiceOperationType } from '@tezospayments/common';
+import { ServiceLinkHelper, Service, ServiceOperationType, } from '@tezospayments/common';
 
 import { config } from '../../../../config';
 import { getCurrentAccount } from '../../../../store/accounts/selectors';
@@ -12,7 +11,7 @@ import { createService, updateService } from '../../../../store/services/slice';
 import { ServiceLinksEditor } from '../../../common/ServiceLinks';
 import { useAppDispatch, useAppSelector, useCurrentLanguageResources } from '../../../hooks';
 import { View } from '../../View';
-import { TokensPure } from '../ViewZone/Tokens';
+import { TokensEditor } from './TokensEditor';
 
 import './ServiceEditForm.scss';
 
@@ -98,7 +97,6 @@ export const ServiceEditForm = (props: ServiceEditFormProps) => {
       network: props.isCreateMode && currentAccount ? currentAccount.network : props.service.network
     };
 
-
     if (props.isCreateMode) {
       dispatch(createService(updatedService));
     } else {
@@ -120,10 +118,7 @@ export const ServiceEditForm = (props: ServiceEditFormProps) => {
       <div className="service-edit__lists-container">
         <div className="service-edit__list-container">
           <span className="service-edit__list-header">{servicesLangResources.allowedCurrencies}</span>
-          <TokensPure service={props.service} />
-          <Button className="service-edit__button" disabled icon={<PlusOutlined />}>
-            {`${servicesLangResources.editing.addCurrency} (${commonLangResources.comingSoon})`}
-          </Button>
+          <TokensEditor service={props.service} />
         </div>
         <div className="service-edit__list-container">
           <span className="service-edit__list-header">{servicesLangResources.links}</span>

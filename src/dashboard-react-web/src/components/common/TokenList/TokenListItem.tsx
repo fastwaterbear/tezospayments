@@ -1,4 +1,5 @@
-import { Tooltip } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
+import { Button, Tooltip } from 'antd';
 
 import { combineClassNames } from '@tezospayments/common';
 
@@ -9,9 +10,10 @@ interface TokenListItemProps {
   ticker: string;
   iconSrc?: string;
   value?: number;
-  decimals: number;
+  decimals?: number;
   highlightSign?: boolean;
   className?: string;
+  handleDelete?: (ticker: string) => void;
 }
 
 export const TokenListItem = (props: TokenListItemProps) => {
@@ -28,9 +30,11 @@ export const TokenListItem = (props: TokenListItemProps) => {
         ? '−'
         : '';
 
+  const decimals = props.decimals !== undefined ? props.decimals : 2;
+
   const displayedDecimals = 6;
   const value = props.value && Math.abs(props.value);
-  const allDecimalsShown = displayedDecimals < props.decimals;
+  const allDecimalsShown = displayedDecimals < decimals;
   const valueSpan = value !== undefined && value !== null ? <span className={valueClassNames}>
     {`${sign}${value.toLocaleString(undefined, { minimumFractionDigits: displayedDecimals })}${allDecimalsShown ? '...' : ''}`}
   </span> : null;
@@ -41,9 +45,10 @@ export const TokenListItem = (props: TokenListItemProps) => {
       <div className="token-list-item__name-container">
         <span className="token-list-item__ticker">{props.ticker}</span>
         <span className="token-list-item__name">{props.name}</span>
+        {props.handleDelete && <Button className="service-link-editor__delete-button" type="text" danger icon={<DeleteOutlined />} onClick={() => props.handleDelete?.(props.ticker)} />}
       </div>
       {allDecimalsShown && value !== undefined && value !== null
-        ? <Tooltip title={value.toLocaleString(undefined, { minimumFractionDigits: props.decimals })}>
+        ? <Tooltip title={value.toLocaleString(undefined, { minimumFractionDigits: decimals })}>
           {valueSpan}
         </Tooltip>
         : valueSpan}
