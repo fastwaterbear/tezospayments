@@ -30,6 +30,13 @@ $-icon-size: 26px;
   height: 32px;
   margin-top: 16px;
 
+  .token-list-item__name-container {
+    display: flex;
+    align-items: center;
+    padding-top: 0;
+    line-height: normal;  
+  }
+
   .token-list-item__ticker,
   .token-list-item__name {
     font-size: 16px;
