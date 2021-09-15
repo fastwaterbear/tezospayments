@@ -3,7 +3,7 @@ import { SelectValue } from 'antd/lib/select';
 import React, { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { PaymentType } from '@tezospayments/common';
+import { PaymentType, tezosMeta } from '@tezospayments/common';
 
 import { selectServicesState } from '../../../store/services/selectors';
 import { NoServicesCreatedPure } from '../../common/NoServicesCreated';
@@ -23,6 +23,7 @@ export const AcceptPayments = () => {
   const [serviceAddress, setServiceAddress] = useState<string | undefined>(addressFromUrl);
   const [paymentType, setPaymentType] = useState<PaymentType>(PaymentType.Payment);
   const [amount, setAmount] = useState<string>('1');
+  const [ticker, setTicker] = useState<string>(tezosMeta.symbol);
   const [publicData, setPublicData] = useState<string>('');
   const [donationData, setDonationData] = useState<string>('');
 
@@ -36,6 +37,10 @@ export const AcceptPayments = () => {
 
   const handleAmountChange = useCallback((rawValue: string) => {
     setAmount(rawValue);
+  }, []);
+
+  const handleTickerChange = useCallback((rawValue: string) => {
+    setTicker(rawValue);
   }, []);
 
   const handlePublicDataChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,6 +63,7 @@ export const AcceptPayments = () => {
               serviceAddress={serviceAddress} onServiceAddressChange={handleServiceAddressChange}
               paymentType={paymentType} onPaymentTypeChange={handlePaymentTypeChange}
               amount={amount} onAmountChange={handleAmountChange}
+              ticker={ticker} onTickerChange={handleTickerChange}
               publicData={publicData} onPublicDataChange={handlePublicDataChange}
               donationData={donationData} onDonationDataChange={handleDonationDataChange}
             />
