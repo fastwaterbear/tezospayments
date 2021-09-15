@@ -2,7 +2,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Menu } from 'antd';
 import { useCallback, useState } from 'react';
 
-import { tezosMeta, Token, Service } from '@tezospayments/common';
+import { tezosMeta, Service } from '@tezospayments/common';
 
 import { selectTokensState } from '../../../../../store/services/selectors';
 import { TokenListItem } from '../../../../common/TokenList/TokenListItem';
@@ -25,17 +25,19 @@ export const TokensEditor = ({ service }: TokensEditorProps) => {
   const servicesLangResources = langResources.views.services;
 
   const tokens = useAppSelector(selectTokensState);
-  const allowedTokens: Token[] = [];
+  const allowedTokens = Array.from(tokens.values());
+  const defaultSelectedTickers: string[] = [];
+
   service?.allowedTokens.assets.forEach(a => {
     const token = tokens.get(a);
     if (token) {
-      allowedTokens.push(token);
+      defaultSelectedTickers.push(token.metadata?.symbol || '');
     }
   });
 
-  const items: TokenListEditorItemProps[] = [];
+  const items: Map<string, TokenListEditorItemProps> = new Map();
   if (service.allowedTokens.tez) {
-    items.push({
+    items.set(tezosMeta.symbol, {
       ticker: tezosMeta.symbol,
       name: tezosMeta.name,
       iconSrc: tezosMeta.thumbnailUri
@@ -43,14 +45,14 @@ export const TokensEditor = ({ service }: TokensEditorProps) => {
   }
 
   allowedTokens.forEach(t => {
-    items.push({
+    items.set(t.metadata?.symbol || 'unknown', {
       ticker: t.metadata?.symbol || 'unknown',
       name: t.metadata?.name || 'unknown',
       iconSrc: t.metadata?.thumbnailUri
     });
   });
 
-  const [selectedTickers, setSelectedTickers] = useState([tezosMeta.symbol, allowedTokens[0]?.metadata?.symbol || '']);
+  const [selectedTickers, setSelectedTickers] = useState([tezosMeta.symbol, ...defaultSelectedTickers]);
 
   const handleDelete = useCallback((ticker: string) => {
     setSelectedTickers(selectedTickers.filter(t => t !== ticker));
@@ -60,9 +62,8 @@ export const TokensEditor = ({ service }: TokensEditorProps) => {
     setSelectedTickers([...selectedTickers, ticker]);
   }, [selectedTickers]);
 
-
-  const selectedItems = items.filter(i => selectedTickers.some(t => t === i.ticker));
-  const unSelectedItems = items.filter(i => selectedTickers.every(t => t !== i.ticker));
+  const selectedItems = selectedTickers.map(t => items.get(t) as TokenListEditorItemProps);
+  const unSelectedItems = Array.from(items.values()).filter(i => selectedTickers.every(t => t !== i.ticker));
 
   const menu = <Menu>
     {unSelectedItems.map(i => <Menu.Item className="token-list-editor-menu-item" key={i.ticker} onClick={() => handleAdd(i.ticker)}>
