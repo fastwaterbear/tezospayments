@@ -3,7 +3,7 @@ import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ServiceLinkHelper, Service, ServiceOperationType, } from '@tezospayments/common';
+import { ServiceLinkHelper, Service, ServiceOperationType } from '@tezospayments/common';
 
 import { config } from '../../../../config';
 import { getCurrentAccount } from '../../../../store/accounts/selectors';
@@ -67,6 +67,12 @@ export const ServiceEditForm = (props: ServiceEditFormProps) => {
   const [acceptPayments, setAcceptPayments] = useState(props.service.allowedOperationType === ServiceOperationType.All || props.service.allowedOperationType === ServiceOperationType.Payment);
   const [acceptDonations, setAcceptDonations] = useState(props.service.allowedOperationType === ServiceOperationType.All || props.service.allowedOperationType === ServiceOperationType.Donation);
 
+  const [allowedTokens, setAllowedTokens] = useState(props.service.allowedTokens);
+  const handleAllowedTokensChange = useCallback((allowedTokens: Service['allowedTokens']) => {
+    setAllowedTokens(allowedTokens);
+    validate();
+  }, [validate]);
+
   const handleAcceptPaymentsChange = useCallback((e: CheckboxChangeEvent) => {
     setAcceptPayments(e.target.checked);
     if (!e.target.checked && !acceptDonations) {
@@ -118,7 +124,7 @@ export const ServiceEditForm = (props: ServiceEditFormProps) => {
       <div className="service-edit__lists-container">
         <div className="service-edit__list-container">
           <span className="service-edit__list-header">{servicesLangResources.allowedCurrencies}</span>
-          <TokensEditor service={props.service} />
+          <TokensEditor allowedTokens={allowedTokens} onChange={handleAllowedTokensChange} />
         </div>
         <div className="service-edit__list-container">
           <span className="service-edit__list-header">{servicesLangResources.links}</span>

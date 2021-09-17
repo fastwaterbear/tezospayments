@@ -11,62 +11,70 @@ import { useAppSelector, useCurrentLanguageResources } from '../../../../hooks';
 import './TokensEditor.scss';
 
 interface TokensEditorProps {
-  service: Service
+  allowedTokens: Service['allowedTokens'];
+  onChange: (allowedTokens: Service['allowedTokens']) => void;
 }
 
 interface TokenListEditorItemProps {
   name: string;
+  address: string;
   ticker: string;
   iconSrc?: string;
 }
 
-export const TokensEditor = ({ service }: TokensEditorProps) => {
+export const TokensEditor = (props: TokensEditorProps) => {
   const langResources = useCurrentLanguageResources();
   const servicesLangResources = langResources.views.services;
 
   const tokens = useAppSelector(selectTokensState);
-  const allowedTokens = Array.from(tokens.values());
-  const defaultSelectedTickers: string[] = [];
+  const selectedAddresses: string[] = [];
 
-  service?.allowedTokens.assets.forEach(a => {
+  if (props.allowedTokens.tez) {
+    selectedAddresses.push('');
+  }
+
+  props.allowedTokens.assets.forEach(a => {
     const token = tokens.get(a);
     if (token) {
-      defaultSelectedTickers.push(token.metadata?.symbol || '');
+      selectedAddresses.push(token.contractAddress);
     }
   });
 
-  const items: Map<string, TokenListEditorItemProps> = new Map();
-  if (service.allowedTokens.tez) {
-    items.set(tezosMeta.symbol, {
-      ticker: tezosMeta.symbol,
-      name: tezosMeta.name,
-      iconSrc: tezosMeta.thumbnailUri
-    });
-  }
-
-  allowedTokens.forEach(t => {
-    items.set(t.metadata?.symbol || 'unknown', {
-      ticker: t.metadata?.symbol || 'unknown',
-      name: t.metadata?.name || 'unknown',
-      iconSrc: t.metadata?.thumbnailUri
-    });
+  const allItems: Map<string, TokenListEditorItemProps> = new Map();
+  allItems.set('', {
+    ticker: tezosMeta.symbol,
+    address: '',
+    name: tezosMeta.name,
+    iconSrc: tezosMeta.thumbnailUri
   });
 
-  const [selectedTickers, setSelectedTickers] = useState([tezosMeta.symbol, ...defaultSelectedTickers]);
+  const allTokens = Array.from(tokens.values());
+  allTokens.forEach(t => {
+    if (t.metadata) {
+      allItems.set(t.contractAddress, {
+        ticker: t.metadata.symbol,
+        address: t.contractAddress,
+        name: t.metadata.name,
+        iconSrc: t.metadata.thumbnailUri
+      });
+    }
+  });
 
-  const handleDelete = useCallback((ticker: string) => {
-    setSelectedTickers(selectedTickers.filter(t => t !== ticker));
-  }, [selectedTickers]);
+  const handleTokensChanged = useCallback((addresses: string[]) => {
+    props.onChange({
+      tez: addresses.some(a => a === ''),
+      assets: addresses.filter(a => !!a)
+    });
+  }, [props]);
 
-  const handleAdd = useCallback((ticker: string) => {
-    setSelectedTickers([...selectedTickers, ticker]);
-  }, [selectedTickers]);
+  const handleAdd = useCallback((address: string) => handleTokensChanged([...selectedAddresses, address]), [handleTokensChanged, selectedAddresses]);
+  const handleDelete = useCallback((address: string) => handleTokensChanged(selectedAddresses.filter(a => a !== address)), [handleTokensChanged, selectedAddresses]);
 
-  const selectedItems = selectedTickers.map(t => items.get(t) as TokenListEditorItemProps);
-  const unSelectedItems = Array.from(items.values()).filter(i => selectedTickers.every(t => t !== i.ticker));
+  const selectedItems = selectedAddresses.map(t => allItems.get(t) as TokenListEditorItemProps);
+  const unSelectedItems = Array.from(allItems.values()).filter(i => selectedAddresses.every(t => t !== i.address));
 
   const menu = <Menu>
-    {unSelectedItems.map(i => <Menu.Item className="token-list-editor-menu-item" key={i.ticker} onClick={() => handleAdd(i.ticker)}>
+    {unSelectedItems.map(i => <Menu.Item className="token-list-editor-menu-item" key={i.ticker} onClick={() => handleAdd(i.address)}>
       <img className="token-list-editor-menu-item__icon" src={i.iconSrc} alt={i.name} />
       <span className="token-list-editor-menu-item__ticker">{i.ticker}</span>
       <span className="token-list-editor-menu-item__name">{i.name}</span>
@@ -75,8 +83,8 @@ export const TokensEditor = ({ service }: TokensEditorProps) => {
 
   return <>
     <ul className="token-list-editor">
-      {selectedItems.map(i => <TokenListItem className="token-list-editor__item" key={i.ticker} name={i.name}
-        ticker={i.ticker} iconSrc={i.iconSrc} handleDelete={i.ticker !== tezosMeta.symbol ? handleDelete : undefined} />)}
+      {selectedItems.map(i => <TokenListItem className="token-list-editor__item" key={i.address} name={i.name} contractAddress={i.address}
+        ticker={i.ticker} iconSrc={i.iconSrc} handleDelete={handleDelete} />)}
     </ul>
 
     {unSelectedItems.length > 0 && <Dropdown trigger={['click']} overlay={menu} placement="bottomCenter">
