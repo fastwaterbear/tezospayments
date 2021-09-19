@@ -1,11 +1,17 @@
 import { createSelector } from 'reselect';
 
-import { Token, tokenWhitelistMap } from '@tezospayments/common';
+import { optimization, Token, tokenWhitelistMap } from '@tezospayments/common';
 
+import { selectAccountsState } from '../accounts/selectors';
 import { AppState } from '../index';
 
-// TODO
-export const selectTokensState = (_state: AppState) => tokenWhitelistMap;
+export const selectTokensState = createSelector(
+  selectAccountsState,
+  accountsState => {
+    const network = accountsState.currentAccount?.network;
+    return (network && tokenWhitelistMap.get(network)) || optimization.emptyMap as Map<string, Token>;
+  }
+);
 
 export const selectServicesState = (state: AppState) => state.servicesState;
 export const getAllAcceptedTokens = createSelector(

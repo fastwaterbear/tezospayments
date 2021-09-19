@@ -1,4 +1,4 @@
-import { Network, networks } from './network';
+import { Network, networks, networksCollection } from './network';
 
 interface TokenBase {
   readonly network: Network;
@@ -69,6 +69,7 @@ export const tokenWhitelist: readonly Token[] = [
   }
 ];
 
-export const tokenWhitelistMap: ReadonlyMap<Token['contractAddress'], Token> = new Map<Token['contractAddress'], Token>(
-  tokenWhitelist.map(token => [token.contractAddress, token])
+
+export const tokenWhitelistMap: ReadonlyMap<Network, ReadonlyMap<Token['contractAddress'], Token>> = new Map(
+  networksCollection.map(nc => [nc, new Map(tokenWhitelist.filter(t => t.network === nc).map(t => [t.contractAddress, t]))])
 );
