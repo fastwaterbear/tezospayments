@@ -20,7 +20,7 @@ interface AcceptPaymentsSettingsProps {
   amount: string;
   onAmountChange: (rawValue: string) => void;
 
-  ticker: string;
+  ticker: string | null;
   onTickerChange: (rawValue: string) => void;
 
   publicData: string;
@@ -68,7 +68,8 @@ export const AcceptPaymentsSettings = (props: AcceptPaymentsSettingsProps) => {
     {props.paymentType === PaymentType.Payment
       ? <>
         <span className="accept-payments-settings__caption">{acceptPaymentsLangResources.amount}</span>
-        <PaymentAmountPure serviceAddress={props.serviceAddress} amount={props.amount} onAmountChange={props.onAmountChange} ticker={props.ticker} onTickerChange={props.onTickerChange} />
+        <PaymentAmountPure serviceAddress={props.serviceAddress} amount={props.amount} onAmountChange={props.onAmountChange}
+          ticker={props.ticker} onTickerChange={props.onTickerChange} />
         <span className="accept-payments-settings__header">{acceptPaymentsLangResources.paymentPublicData}</span>
         <span className="accept-payments-settings__caption">{acceptPaymentsLangResources.orderId}</span>
         <Input className="accept-payments-settings__order-id-input" value={props.publicData} onChange={props.onPublicDataChange} />

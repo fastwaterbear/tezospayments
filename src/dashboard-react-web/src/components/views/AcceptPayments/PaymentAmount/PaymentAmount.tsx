@@ -11,7 +11,7 @@ interface DonationAmountProps {
   serviceAddress: string | undefined;
   amount: string;
   onAmountChange: (rawValue: string) => void;
-  ticker: string;
+  ticker: string | null;
   onTickerChange: (ticker: string) => void;
 }
 
@@ -19,20 +19,24 @@ export const PaymentAmount = (props: DonationAmountProps) => {
   const services = useAppSelector(selectServicesState);
   const service = services.services.find(s => s.contractAddress === props.serviceAddress);
   const tokens = useAppSelector(selectTokensState);
+  const assets: Array<{ label: string, value: string, imageUrl: string }> = [];
 
-  const allowedTokens: Token[] = [];
-  service?.allowedTokens.assets.forEach(a => {
-    const token = tokens.get(a);
-    if (token) {
-      allowedTokens.push(token);
+  if (service) {
+    const allowedTokens: Token[] = [];
+    service.allowedTokens.assets.forEach(a => {
+      const token = tokens.get(a);
+      if (token) {
+        allowedTokens.push(token);
+      }
+    });
+
+    if (service.allowedTokens.tez) {
+      assets.push({ label: tezosMeta.symbol, value: tezosMeta.symbol, imageUrl: tezosMeta.thumbnailUri });
     }
-  });
+    allowedTokens.forEach(t => t.metadata && assets.push({ label: t.metadata.symbol, value: t.metadata.symbol, imageUrl: t.metadata.thumbnailUri }));
+  }
 
-  const assets = [
-    { label: tezosMeta.symbol, value: tezosMeta.symbol, imageUrl: tezosMeta.thumbnailUri },
-  ];
-
-  allowedTokens.forEach(t => assets.push({ label: t.metadata?.symbol || '', value: t.metadata?.symbol || '', imageUrl: t.metadata?.thumbnailUri || '' }));
+  const disabled = assets.length === 0;
 
   const options = assets.map(a => <Select.Option key={a.label} value={a.value} label={a.label}>
     <div className="payment-amount__select-option">
@@ -42,10 +46,10 @@ export const PaymentAmount = (props: DonationAmountProps) => {
   </Select.Option>);
 
   return <div className="payment-amount">
-    <Select className="payment-amount__select" value={props.ticker} onChange={props.onTickerChange}>
+    <Select className="payment-amount__select" value={props.ticker || undefined} onChange={props.onTickerChange} disabled={disabled}>
       {options}
     </Select>
-    <InputNumber className="payment-amount__input" min={'0'} value={props.amount.toString()} onChange={props.onAmountChange} />
+    <InputNumber className="payment-amount__input" min={'0'} value={props.amount.toString()} onChange={props.onAmountChange} disabled={disabled} />
   </div>;
 };
 

@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 
 import { PaymentType, tezosMeta } from '@tezospayments/common';
 
-import { selectServicesState } from '../../../store/services/selectors';
+import { selectServicesState, selectTokensState } from '../../../store/services/selectors';
 import { NoServicesCreatedPure } from '../../common/NoServicesCreated';
 import { useAppSelector, useCurrentLanguageResources } from '../../hooks';
 import { View } from '../View';
@@ -18,18 +18,35 @@ export const AcceptPayments = () => {
   const langResources = useCurrentLanguageResources();
   const acceptPaymentsLangResources = langResources.views.acceptPayments;
   const servicesState = useAppSelector(selectServicesState);
+  const tokens = useAppSelector(selectTokensState);
 
   const { address: addressFromUrl } = useParams<{ address: string }>();
   const [serviceAddress, setServiceAddress] = useState<string | undefined>(addressFromUrl);
   const [paymentType, setPaymentType] = useState<PaymentType>(PaymentType.Payment);
   const [amount, setAmount] = useState<string>('1');
-  const [ticker, setTicker] = useState<string>(tezosMeta.symbol);
+
+  const getDefaultTicker = useCallback((serviceAddress: string | undefined) => {
+    const service = servicesState.services.filter(s => s.contractAddress === serviceAddress)[0];
+
+    return service
+      ? service.allowedTokens.tez
+        ? tezosMeta.symbol
+        : service.allowedTokens.assets[0] && tokens.get(service.allowedTokens.assets[0])
+          ? tokens.get(service.allowedTokens.assets[0])?.metadata?.symbol || null
+          : null
+      : null;
+  }, [servicesState.services, tokens]);
+
+
+  const [ticker, setTicker] = useState<string | null>(getDefaultTicker(serviceAddress));
   const [publicData, setPublicData] = useState<string>('');
   const [donationData, setDonationData] = useState<string>('');
 
   const handleServiceAddressChange = useCallback((value: SelectValue) => {
-    setServiceAddress(value as string);
-  }, []);
+    const service = value as string;
+    setServiceAddress(service);
+    setTicker(getDefaultTicker(service));
+  }, [getDefaultTicker]);
 
   const handlePaymentTypeChange = useCallback((e: RadioChangeEvent) => {
     setPaymentType(e.target.value);
