@@ -39,13 +39,15 @@ export const ServiceEditForm = (props: ServiceEditFormProps) => {
   const [name, setName] = useState(props.service.name);
   const [description, setDescription] = useState(props.service.description);
   const [links, setLinks] = useState(props.service.links);
+  const [allowedTokens, setAllowedTokens] = useState(props.service.allowedTokens);
 
   const validate = useCallback(() => {
     const isValid = !!name
-      && links.every(l => !!serviceLinkHelper.getLinkInfo(l));
+      && links.every(l => !!serviceLinkHelper.getLinkInfo(l))
+      && (allowedTokens.tez || allowedTokens.assets.length > 0);
 
     setIsFormValid(isValid);
-  }, [links, name]);
+  }, [allowedTokens.assets.length, allowedTokens.tez, links, name]);
 
   useEffect(() => validate(), [validate]);
 
@@ -67,7 +69,6 @@ export const ServiceEditForm = (props: ServiceEditFormProps) => {
   const [acceptPayments, setAcceptPayments] = useState(props.service.allowedOperationType === ServiceOperationType.All || props.service.allowedOperationType === ServiceOperationType.Payment);
   const [acceptDonations, setAcceptDonations] = useState(props.service.allowedOperationType === ServiceOperationType.All || props.service.allowedOperationType === ServiceOperationType.Donation);
 
-  const [allowedTokens, setAllowedTokens] = useState(props.service.allowedTokens);
   const handleAllowedTokensChange = useCallback((allowedTokens: Service['allowedTokens']) => {
     setAllowedTokens(allowedTokens);
     validate();
