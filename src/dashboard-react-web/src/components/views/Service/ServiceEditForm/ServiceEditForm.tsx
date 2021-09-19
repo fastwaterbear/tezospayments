@@ -99,6 +99,7 @@ export const ServiceEditForm = (props: ServiceEditFormProps) => {
       name,
       description,
       allowedOperationType,
+      allowedTokens,
       links,
       network: props.isCreateMode && currentAccount ? currentAccount.network : props.service.network
     };
@@ -110,7 +111,7 @@ export const ServiceEditForm = (props: ServiceEditFormProps) => {
     }
 
     handleCancelClick();
-  }, [acceptDonations, acceptPayments, currentAccount, description, dispatch, handleCancelClick, links, name, props.isCreateMode, props.service]);
+  }, [acceptDonations, acceptPayments, allowedTokens, currentAccount, description, dispatch, handleCancelClick, links, name, props.isCreateMode, props.service]);
 
   const operationName = props.isCreateMode ? servicesLangResources.editing.createService : servicesLangResources.editing.updateService;
 
