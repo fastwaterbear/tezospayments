@@ -23,6 +23,7 @@ export const Balances = () => {
   if (acceptTezos) {
     items.push(<TokenList.Item
       key={tezosMeta.symbol}
+      contractAddress={''}
       ticker={tezosMeta.symbol}
       name={tezosMeta.name}
       decimals={tezosMeta.decimals}
@@ -31,13 +32,16 @@ export const Balances = () => {
   }
 
   tokens.forEach(t => {
-    items.push(<TokenList.Item
-      key={t.metadata?.symbol}
-      ticker={t.metadata?.symbol || 'unknown'}
-      name={t.metadata?.name || 'unknown'}
-      decimals={t.metadata ? t.metadata.decimals : 2}
-      value={balances.tokens[t.contractAddress] || 0}
-      iconSrc={t.metadata?.thumbnailUri} />);
+    if (t.metadata) {
+      items.push(<TokenList.Item
+        key={t.metadata.symbol}
+        contractAddress={''}
+        ticker={t.metadata.symbol}
+        name={t.metadata.name}
+        decimals={t.metadata.decimals}
+        value={balances.tokens[t.contractAddress] || 0}
+        iconSrc={t.metadata.thumbnailUri} />);
+    }
   });
 
   return <TokenList>

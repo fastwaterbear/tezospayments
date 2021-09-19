@@ -27,6 +27,7 @@ export const Tokens = ({ service }: TokensProps) => {
   if (service?.allowedTokens.tez) {
     tokenItems.push(<TokenList.Item
       key={tezosMeta.symbol}
+      contractAddress={''}
       className="service-token-list-item"
       ticker={tezosMeta.symbol}
       name={tezosMeta.name}
@@ -36,14 +37,17 @@ export const Tokens = ({ service }: TokensProps) => {
   }
 
   allowedTokens.forEach(t => {
-    tokenItems.push(<TokenList.Item
-      key={t.metadata?.symbol}
-      className="service-token-list-item"
-      ticker={t.metadata?.symbol || 'unknown'}
-      name={t.metadata?.name || 'unknown'}
-      decimals={t.metadata ? t.metadata.decimals : 2}
-      iconSrc={t.metadata?.thumbnailUri}
-      highlightSign />);
+    if (t.metadata) {
+      tokenItems.push(<TokenList.Item
+        key={t.metadata.symbol}
+        contractAddress={t.contractAddress}
+        className="service-token-list-item"
+        ticker={t.metadata.symbol}
+        name={t.metadata.name}
+        decimals={t.metadata.decimals}
+        iconSrc={t.metadata.thumbnailUri}
+        highlightSign />);
+    }
   });
 
   return <TokenList>

@@ -1,6 +1,6 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Menu } from 'antd';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { tezosMeta, Service } from '@tezospayments/common';
 
@@ -27,18 +27,22 @@ export const TokensEditor = (props: TokensEditorProps) => {
   const servicesLangResources = langResources.views.services;
 
   const tokens = useAppSelector(selectTokensState);
-  const selectedAddresses: string[] = [];
-
-  if (props.allowedTokens.tez) {
-    selectedAddresses.push('');
-  }
-
-  props.allowedTokens.assets.forEach(a => {
-    const token = tokens.get(a);
-    if (token) {
-      selectedAddresses.push(token.contractAddress);
+  const selectedAddresses = useMemo<string[]>(() => {
+    const result: string[] = [];
+    if (props.allowedTokens.tez) {
+      result.push('');
     }
-  });
+
+    props.allowedTokens.assets.forEach(a => {
+      const token = tokens.get(a);
+      if (token) {
+        result.push(token.contractAddress);
+      }
+    });
+
+    return result;
+  }, [props.allowedTokens.assets, props.allowedTokens.tez, tokens]);
+
 
   const allItems: Map<string, TokenListEditorItemProps> = new Map();
   allItems.set('', {
