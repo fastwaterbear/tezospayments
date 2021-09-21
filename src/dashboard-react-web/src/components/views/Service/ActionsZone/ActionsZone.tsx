@@ -2,7 +2,7 @@ import { Button } from 'antd';
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Service } from '@tezospayments/common/src';
+import { Service } from '@tezospayments/common';
 
 import { config } from '../../../../config';
 import { useCurrentLanguageResources } from '../../../hooks';
