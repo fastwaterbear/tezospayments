@@ -131,13 +131,23 @@ export class LocalPaymentService {
       if (!contract.methods.send_payment)
         return { isServiceError: true, error: errors.invalidContract };
 
-      const result = await contract.methods.send_payment(
-        assetTokenAddress as void,
-        serviceOperationType,
-        'public',
-        payload,
-      )
-        .send({ amount });
+      let result;
+      if (assetTokenAddress) {
+        result = await contract.methods.send_payment(
+          assetTokenAddress,
+          amount,
+          serviceOperationType,
+          'public',
+          payload,
+        ).send();
+      } else {
+        result = await contract.methods.send_payment(
+          assetTokenAddress as void,
+          serviceOperationType,
+          'public',
+          payload,
+        ).send({ amount });
+      }
 
       await this.waitConfirmation(result);
 
