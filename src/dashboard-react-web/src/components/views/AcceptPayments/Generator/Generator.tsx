@@ -13,6 +13,7 @@ import './Generator.scss';
 interface GeneratorProps {
   serviceAddress: string | undefined;
   paymentType: PaymentType;
+  asset: string | undefined;
   amount: string;
   publicData: string;
   donationData: string;
@@ -31,6 +32,7 @@ export const Generator = (props: GeneratorProps) => {
       type: props.paymentType,
       targetAddress: props.serviceAddress,
       id: nanoid(),
+      asset: props.asset,
       amount: new BigNumber(props.amount),
       data: props.publicData ? { public: { orderId: props.publicData } } : undefined,
       created: new Date(),

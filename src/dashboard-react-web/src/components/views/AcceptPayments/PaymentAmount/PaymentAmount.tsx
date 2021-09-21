@@ -11,8 +11,8 @@ interface DonationAmountProps {
   serviceAddress: string | undefined;
   amount: string;
   onAmountChange: (rawValue: string) => void;
-  ticker: string | null;
-  onTickerChange: (ticker: string) => void;
+  asset: string | undefined;
+  onAssetChange: (ticker: string) => void;
 }
 
 export const PaymentAmount = (props: DonationAmountProps) => {
@@ -31,9 +31,9 @@ export const PaymentAmount = (props: DonationAmountProps) => {
     });
 
     if (service.allowedTokens.tez) {
-      assets.push({ label: tezosMeta.symbol, value: tezosMeta.symbol, imageUrl: tezosMeta.thumbnailUri });
+      assets.push({ label: tezosMeta.symbol, value: '', imageUrl: tezosMeta.thumbnailUri });
     }
-    allowedTokens.forEach(t => t.metadata && assets.push({ label: t.metadata.symbol, value: t.metadata.symbol, imageUrl: t.metadata.thumbnailUri }));
+    allowedTokens.forEach(t => t.metadata && assets.push({ label: t.metadata.symbol, value: t.contractAddress, imageUrl: t.metadata.thumbnailUri }));
   }
 
   const disabled = assets.length === 0;
@@ -46,7 +46,7 @@ export const PaymentAmount = (props: DonationAmountProps) => {
   </Select.Option>);
 
   return <div className="payment-amount">
-    <Select className="payment-amount__select" value={props.ticker || undefined} onChange={props.onTickerChange} disabled={disabled}>
+    <Select className="payment-amount__select" value={props.asset || ''} onChange={props.onAssetChange} disabled={disabled}>
       {options}
     </Select>
     <InputNumber className="payment-amount__input" min={'0'} value={props.amount.toString()} onChange={props.onAmountChange} disabled={disabled} />
