@@ -211,10 +211,10 @@ export class ServicesService {
         owner: serviceDto.owner,
         paused: serviceDto.paused,
         deleted: serviceDto.deleted,
-        signingKeys: {
-          'SHA256:4T5E9yJjajhHazEUPHAYMa97bg7m6SxpInoxtX+XLPg': { publicKey: 'SHA256:4T5E9yJjajhHazEUPHAYMa97bg7m6SxpInoxtX+XLPg', name: 'Home PC' },
-          'SHA256:Q0TPyOEbRpCZyoYRFyeGmzb4yg/ujidrRRoRnyJiuqo': { publicKey: 'SHA256:Q0TPyOEbRpCZyoYRFyeGmzb4yg/ujidrRRoRnyJiuqo', name: 'Work' },
-        },
+        signingKeys: new Map<ServiceSigningKey['publicKey'], ServiceSigningKey>()
+          .set('edpkuFWLCVgmPckKaGXwMarRoiUaJMC9jL3brTnZ6oKSQpo6k6uUPa', { name: 'Home PC', publicKey: 'edpkuFWLCVgmPckKaGXwMarRoiUaJMC9jL3brTnZ6oKSQpo6k6uUPa' })
+          .set('sppk7ZY1nmx2xFWugyWSb8C96rh75nmynPb516HMAGCkuWBzXzBdppv', { name: 'Work', publicKey: 'sppk7ZY1nmx2xFWugyWSb8C96rh75nmynPb516HMAGCkuWBzXzBdppv' })
+          .set('p2pk656RZt7wm8AMfb1ihuwWoK5mYoZPjQQXTV1swTHaZoUpodGeGN5', { publicKey: 'p2pk656RZt7wm8AMfb1ihuwWoK5mYoZPjQQXTV1swTHaZoUpodGeGN5' })
       }
       : null;
   }

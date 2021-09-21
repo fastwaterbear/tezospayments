@@ -58,7 +58,7 @@ export class BetterCallDevServiceProvider implements ServiceProvider {
         owner: serviceStorage[0].children[4].value,
         paused: serviceStorage[0].children[5].value,
         deleted: serviceStorage[0].children[2].value,
-        signingKeys: {}
+        signingKeys: optimization.emptyMap
       }
       : null;
   }
