@@ -19,6 +19,7 @@ const zeroAmount = new BigNumber(0);
 export const Donation = (props: DonationProps) => {
   const [networkDonation, setNetworkDonation] = useState<NetworkDonation>({
     type: props.donation.type,
+    asset: props.service.allowedTokens.tez ? '' : props.service.allowedTokens.assets[0],
     targetAddress: props.donation.targetAddress,
     amount: props.donation.desiredAmount ? new BigNumber(props.donation.desiredAmount) : zeroAmount,
   });
@@ -31,12 +32,20 @@ export const Donation = (props: DonationProps) => {
     []
   );
 
+  const handleAssetChange = useCallback(
+    (asset: string) => {
+      setNetworkDonation(previousNetworkDonation => ({ ...previousNetworkDonation, asset: asset || undefined }));
+    },
+    []
+  );
+
   return <View className="donation-view">
     <View.Side isRight={false}>
       <ServiceInfoPure service={props.service} />
     </View.Side>
     <View.Side isRight={true}>
-      <DonationAmount desiredAmount={props.donation.desiredAmount} onChange={handleDonationAmountChange} />
+      <DonationAmount amount={props.donation.desiredAmount} onAmountChange={handleDonationAmountChange}
+        asset={networkDonation.asset} onAssetChange={handleAssetChange} service={props.service} />
       <PayButtonPure networkPayment={networkDonation} text="Donate" disabled={networkDonation.amount.isLessThanOrEqualTo(0)} />
       <FooterPure />
     </View.Side>

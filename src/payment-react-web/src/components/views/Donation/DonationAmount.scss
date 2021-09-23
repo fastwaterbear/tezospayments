@@ -4,6 +4,7 @@
 @use '../../../styles/mixins.scss';
 
 $-input-font-size: 24px;
+$-icon-size: 26px;
 
 .donation-amount {
   display: grid;
@@ -43,22 +44,50 @@ $-input-font-size: 24px;
   z-index: 1;
 }
 
-.donation-amount__currency {
+.donation-amount__container {
   grid-area: 1 / currency-start / 1 / currency-end;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
+  gap: 10px;
+  align-items: center;
   height: 100%;
   padding: 0 math.div(layout-variables.$element-spacing-small, 2);
   font-size: 14px;
   line-height: 1.1;
   border: 1px solid #d9d9d9;
-  border-left: none;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left-color: transparent;
   border-top-right-radius: 2px;
   border-bottom-right-radius: 2px;
+  color: colors.$character-primary !important;
   background-color: #fafafa;
+}
+
+.donation-amount__currency {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .donation-amount__currency-name {
   color: colors.$character-secondary;
+}
+
+.donation-amount-menu-item {
+  display: flex;
+  align-items: center;
+}
+
+.donation-amount-menu-item__icon {
+  height: $-icon-size;
+  width: $-icon-size;
+  margin-right: 8px;
+}
+
+.donation-amount-menu-item__ticker {
+  font-weight: 500;
+  margin-right: 4px;
 }

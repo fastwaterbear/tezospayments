@@ -19,7 +19,7 @@ export const PaymentAmount = (props: DonationAmountProps) => {
   const services = useAppSelector(selectServicesState);
   const service = services.services.find(s => s.contractAddress === props.serviceAddress);
   const tokens = useAppSelector(selectTokensState);
-  const assets: Array<{ label: string, value: string, imageUrl: string }> = [];
+  const assets: Array<{ label: string; value: string; imageUrl: string }> = [];
 
   if (service) {
     const allowedTokens: Token[] = [];
