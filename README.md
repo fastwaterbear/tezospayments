@@ -102,4 +102,3 @@ npm run start -w @tezospayments/payment-react-web
 * Services Factory 
   * Mainnet: Coming Soon
   * Granadanet: [KT1TsixZzkALSuJhzKkyCDgyJxQCbHsGoqda](https://better-call.dev/granadanet/KT1TsixZzkALSuJhzKkyCDgyJxQCbHsGoqda)
-  * Edo2net: [KT1PXyQ3wDpwm6J3r6iyLCWu5QKH5tef7ejU](https://better-call.dev/edo2net/KT1PXyQ3wDpwm6J3r6iyLCWu5QKH5tef7ejU)
