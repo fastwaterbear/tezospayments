@@ -1,7 +1,7 @@
-import { Dropdown, Menu } from 'antd';
+import { Button, Dropdown, Menu } from 'antd';
 import React, { useCallback } from 'react';
 
-import { networks, networksCollection } from '@tezospayments/common';
+import { Network, networks, networksCollection } from '@tezospayments/common';
 
 import { config } from '../../../../config';
 import { connectAccount } from '../../../../store/accounts/slice';
@@ -12,7 +12,7 @@ import './ConnectDropdown.scss';
 export const ConnectDropdown = () => {
   const dispatch = useAppDispatch();
   const handleConnectButtonClick = useCallback(() => {
-    dispatch(connectAccount(networks.edo2net));
+    dispatch(connectAccount(networks.granadanet));
   }, [dispatch]);
 
   const handleMenuItemButtonClick = useCallback((e: { key: string }) => {
@@ -25,7 +25,7 @@ export const ConnectDropdown = () => {
   const langResources = useCurrentLanguageResources();
   const connectLangResources = langResources.views.connect.actions.connect;
 
-  const networkTypes = [networks.granadanet];
+  const networkTypes: Network[] = [];
   const connectMenuItems = networkTypes.map(t => {
     const network = config.tezos.networks[t.name];
 
@@ -45,9 +45,13 @@ export const ConnectDropdown = () => {
     </Menu>
   );
 
-  return <Dropdown.Button className="connect-dropdown" type="primary" onClick={handleConnectButtonClick} overlay={connectMenu}>
-    {`${connectLangResources.connectTo} ${config.tezos.networks.edo2net.title}`}
-  </Dropdown.Button>;
+  const connectButtonTitle = `${connectLangResources.connectTo} ${config.tezos.networks.granadanet.title}`;
+
+  return connectMenuItems.length
+    ? <Dropdown.Button className="connect-dropdown" type="primary" onClick={handleConnectButtonClick} overlay={connectMenu}>
+      {connectButtonTitle}
+    </Dropdown.Button>
+    : <Button type="primary" onClick={handleConnectButtonClick}>{connectButtonTitle}</Button>;
 };
 
 export const ConnectDropdownPure = React.memo(ConnectDropdown);

@@ -55,18 +55,6 @@ export const tokenWhitelist: readonly Token[] = [
   //     thumbnailUri: 'https://quipuswap.com/tokens/stably.png',
   //   },
   // },
-  {
-    network: networks.edo2net,
-    type: 'fa2',
-    contractAddress: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2',
-    fa2TokenId: 0,
-    metadata: {
-      decimals: 0,
-      symbol: 'MBRG',
-      name: 'MAX BURGER',
-      thumbnailUri: 'https://dashboard.tezospayments.com/tokens/unknown.png',
-    },
-  }
 ];
 
 export const tokenWhitelistMap: ReadonlyMap<Token['contractAddress'], Token> = new Map<Token['contractAddress'], Token>(

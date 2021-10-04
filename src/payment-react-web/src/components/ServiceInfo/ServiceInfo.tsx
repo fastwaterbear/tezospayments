@@ -21,7 +21,7 @@ const defaultProps: DefaultServiceInfoProps = {
 
 export const ServiceInfo = (props: ServiceInfoProps & DefaultServiceInfoProps) => {
   const appContext = useContext(AppViewContext);
-  const urlExplorer = (props.service.network.name !== 'edo2net') ? appContext.betterCallDevBlockchainUrlExplorer : appContext.tzStatsUrlBlockchainExplorer;
+  const urlExplorer = appContext.betterCallDevBlockchainUrlExplorer;
   const contractUrl = urlExplorer.getContractUrl(props.service.contractAddress);
 
   return <div className="service-info">

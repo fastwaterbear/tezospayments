@@ -39,6 +39,6 @@ export const emptyService: Service = {
   owner: '',
   paused: false,
   deleted: false,
-  network: networks.edo2net,
+  network: networks.granadanet,
   signingKeys: {}
 };
