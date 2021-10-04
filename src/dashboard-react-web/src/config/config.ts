@@ -36,7 +36,7 @@ export const config: AppConfig = {
     }
   },
   tezos: {
-    defaultNetwork: 'edo2net',
+    defaultNetwork: 'granadanet',
     networks: {
       granadanet: {
         title: 'Granada Testnet',
@@ -56,25 +56,6 @@ export const config: AppConfig = {
           tzkt: { url: 'https://granadanet.tzkt.io/', title: 'TzKT' }
         },
         servicesFactoryContractAddress: 'KT1TsixZzkALSuJhzKkyCDgyJxQCbHsGoqda'
-      },
-      edo2net: {
-        title: 'Edo2 Testnet',
-        color: '#fbbf24',
-        default: {
-          rpc: 'smartpy',
-          indexer: 'tzkt',
-          explorer: 'tzkt'
-        },
-        rpcUrls: {
-          smartpy: 'https://edonet.smartpy.io/'
-        },
-        indexerUrls: {
-          tzkt: 'https://api.edo2net.tzkt.io/'
-        },
-        explorers: {
-          tzkt: { url: 'https://edo2net.tzkt.io/', title: 'TzKT' }
-        },
-        servicesFactoryContractAddress: 'KT1PXyQ3wDpwm6J3r6iyLCWu5QKH5tef7ejU'
       }
     }
   }

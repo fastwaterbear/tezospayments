@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 import { tezosMeta, Token, Service } from '@tezospayments/common';

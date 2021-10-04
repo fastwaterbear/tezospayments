@@ -12,7 +12,7 @@ export const config: AppConfig = {
   },
   tezos: {
     officialSiteUrl: 'https://tezos.com/',
-    defaultNetwork: 'edo2net',
+    defaultNetwork: 'granadanet',
     networks: {
       granadanet: {
         title: 'Granada Testnet',
@@ -35,28 +35,6 @@ export const config: AppConfig = {
           betterCallDev: { baseUrl: 'https://better-call.dev', title: 'Better Call Dev' }
         },
         servicesFactoryContractAddress: 'KT1TsixZzkALSuJhzKkyCDgyJxQCbHsGoqda'
-      },
-      edo2net: {
-        title: 'Edo2 Testnet',
-        color: '#fbbf24',
-        default: {
-          rpc: 'smartpy',
-          indexer: 'tzKT',
-          explorer: 'tzStats'
-        },
-        rpcUrls: {
-          smartpy: 'https://edonet.smartpy.io'
-        },
-        indexerUrls: {
-          betterCallDev: 'https://api.better-call.dev',
-          tzKT: 'https://api.edo2net.tzkt.io',
-          tzStats: 'https://api.edo.tzstats.com'
-        },
-        explorers: {
-          tzStats: { baseUrl: 'https://edo.tzstats.com', title: 'TzStats' },
-          betterCallDev: { baseUrl: 'https://better-call.dev', title: 'Better Call Dev' }
-        },
-        servicesFactoryContractAddress: 'KT1PXyQ3wDpwm6J3r6iyLCWu5QKH5tef7ejU'
       }
     }
   }
