@@ -1,5 +1,6 @@
 export default {
   mainSiteUrl: 'https://tezospayments.com',
   paymentBaseUrl: 'https://payment.tezospayments.com',
-  serviceContractAddress: 'KT1ECFxDVDgA2vYKaVkFcbRdfjVBxvjPHuQn'
+  networkName: 'granadanet',
+  serviceContractAddress: 'KT18hej3hVSu5ACzveeuJ69FiqaNtpPvWts6'
 };
