@@ -15,18 +15,19 @@ interface ProductProps {
 
 const getPaymentUrl = (orderId: string, price: Money) => {
   const payment = {
-    amount: price[0].toString(),
-    data: {
+    i: uuid(),
+    a: price[0].toString(),
+    d: {
       public: {
         orderId
       }
     },
-    created: Date.now(),
+    c: Date.now(),
   };
   const rawPayment = Buffer.from(JSON.stringify(payment), 'utf8').toString('base64');
 
   const url = new URL(`${config.serviceContractAddress}/payment`, config.paymentBaseUrl);
-  url.hash = rawPayment;
+  url.hash = '00' + rawPayment;
   if (config.networkName)
     url.searchParams.set('network', config.networkName);
 
