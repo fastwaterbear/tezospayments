@@ -1,5 +1,5 @@
 import { BeaconWallet } from '@taquito/beacon-wallet';
-import { TezosToolkit, TransactionWalletOperation } from '@taquito/taquito';
+import { MichelsonMap, TezosToolkit, TransactionWalletOperation } from '@taquito/taquito';
 import BigNumber from 'bignumber.js';
 
 import {
@@ -11,6 +11,7 @@ import {
 
 import { config } from '../../config';
 import { Account } from '../../models/blockchain';
+import type { ServiceFactoryStorage } from '../../models/contracts';
 import type { Operation } from './operation';
 
 export class ServicesService {
@@ -101,16 +102,20 @@ export class ServicesService {
     try {
       const networkConfig = config.tezos.networks[service.network.name];
       const tezosToolkit = this.getTezosToolKit(service.network);
-      const factoryContract = await tezosToolkit.wallet.at(networkConfig.servicesFactoryContractAddress);
+      const factoryContract = await tezosToolkit.contract.at(networkConfig.servicesFactoryContractAddress);
 
-      if (factoryContract.methods.create_service) {
+      const factoryStorage = await factoryContract.storage<ServiceFactoryStorage>();
+      const factoryImplementationContract = await tezosToolkit.wallet.at(factoryStorage.factory_implementation);
+
+      if (factoryImplementationContract.methods.create_service) {
         const encodedServiceMetadata = this.encodeMetadata(service);
 
-        const operation = await factoryContract.methods.create_service(
+        const operation = await factoryImplementationContract.methods.create_service(
           encodedServiceMetadata,
           service.allowedTokens.tez,
           service.allowedTokens.assets,
-          service.allowedOperationType
+          service.allowedOperationType,
+          new MichelsonMap()
         ).send();
 
         return operation;
