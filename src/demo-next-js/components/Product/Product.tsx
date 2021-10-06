@@ -25,7 +25,12 @@ const getPaymentUrl = (orderId: string, price: Money) => {
   };
   const rawPayment = Buffer.from(JSON.stringify(payment), 'utf8').toString('base64');
 
-  return `${config.paymentBaseUrl}/${config.serviceContractAddress}/payment#${rawPayment}`;
+  const url = new URL(`${config.serviceContractAddress}/payment`, config.paymentBaseUrl);
+  url.hash = rawPayment;
+  if (config.networkName)
+    url.searchParams.set('network', config.networkName);
+
+  return url.href;
 };
 
 export const Product = (props: ProductProps) => {
