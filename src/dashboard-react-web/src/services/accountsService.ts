@@ -3,10 +3,10 @@ import { TezosToolkit } from '@taquito/taquito';
 import BigNumber from 'bignumber.js';
 
 import { Token, TokenFA2, TokenFA12, Network } from '@tezospayments/common';
+import { converters } from '@tezospayments/react-web-core';
 
 import { config } from '../config';
 import { Account } from '../models/blockchain';
-import { getBeaconNetworkType, getNetwork } from './utils';
 
 export class AccountsService {
   private readonly dAppClient: DAppClient;
@@ -17,7 +17,7 @@ export class AccountsService {
   }
 
   async connect(network: Network): Promise<string | null> {
-    return this.dAppClient.requestPermissions({ network: { type: getBeaconNetworkType(network) } })
+    return this.dAppClient.requestPermissions({ network: { type: converters.networkToBeaconNetwork(network) } })
       .then(permissions => permissions.address)
       .catch(e => {
         console.error(e);
@@ -34,7 +34,7 @@ export class AccountsService {
     const activeAccount = await this.dAppClient.getActiveAccount();
 
     return activeAccount
-      ? { address: activeAccount.address, network: getNetwork(activeAccount.network.type) }
+      ? { address: activeAccount.address, network: converters.beaconNetworkToNetwork(activeAccount.network.type) }
       : undefined;
   }
 

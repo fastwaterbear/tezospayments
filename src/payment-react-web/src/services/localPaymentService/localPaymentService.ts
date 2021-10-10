@@ -3,7 +3,11 @@ import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit, TransactionWalletOperation, Wallet } from '@taquito/taquito';
 import BigNumber from 'bignumber.js';
 
-import { Donation, Payment, Service, ServiceOperationType, Network, converters, memoize } from '@tezospayments/common';
+import {
+  Donation, Payment, Service, ServiceOperationType, Network,
+  converters as commonConverters, memoize
+} from '@tezospayments/common';
+import { converters } from '@tezospayments/react-web-core';
 
 import { config } from '../../config';
 import { TezosPaymentsServiceContract } from '../../models/contracts';
@@ -16,7 +20,6 @@ import { errors, LocalPaymentServiceError } from './errors';
 import { PaymentProvider, SerializedPaymentBase64Provider } from './paymentProviders';
 import { BetterCallDevServiceProvider, ServiceProvider, TzKTServiceProvider, TzStatsServiceProvider } from './serviceProvider';
 import { RawPaymentInfo, UrlRawPaymentInfoParser } from './urlRawPaymentInfoParser';
-import { getBeaconNetworkType } from './utils';
 
 interface LocalPaymentServiceOptions {
   readonly store: AppStore;
@@ -89,7 +92,7 @@ export class LocalPaymentService {
         payment.targetAddress,
         payment.amount,
         payment.asset,
-        converters.objectToBytes(payment.data.public)
+        commonConverters.objectToBytes(payment.data.public)
       )
       : { isServiceError: true, error: errors.invalidPayment };
   }
@@ -123,7 +126,7 @@ export class LocalPaymentService {
   ): Promise<ServiceResult<boolean>> {
     try {
       await this.tezosWallet.client.clearActiveAccount();
-      const canceled = await this.requestPermissions({ network: { type: getBeaconNetworkType(this.network) } });
+      const canceled = await this.requestPermissions({ network: { type: converters.networkToBeaconNetwork(this.network) } });
       if (canceled)
         return false;
 
