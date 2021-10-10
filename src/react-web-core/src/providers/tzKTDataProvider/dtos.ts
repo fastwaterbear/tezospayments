@@ -1,4 +1,3 @@
-// TODO: delete
 export interface ServiceDto {
   allowed_operation_type: string;
   allowed_tokens: {
@@ -13,4 +12,9 @@ export interface ServiceDto {
   signing_keys?: {
     [publicKey: string]: { public_key: string; name: string | null }
   }
+}
+
+export interface ServicesBigMapKeyValuePairDto {
+  key: string;
+  value: string[]
 }
