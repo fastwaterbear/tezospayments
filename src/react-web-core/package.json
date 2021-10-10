@@ -1,0 +1,39 @@
+{
+  "name": "@tezospayments/react-web-core",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Shared code for the Tezos Payments react applications.",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "dependencies": {
+    "@airgap/beacon-sdk": "^2.3.4",
+    "@taquito/beacon-wallet": "^10.2.0",
+    "@taquito/taquito": "^10.2.0",
+    "@tezospayments/common": "^0.3.1",
+    "antd": "^4.16.13",
+    "history": "^5.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^5.3.0",
+    "web-vitals": "^2.1.1"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.1.2",
+    "@testing-library/user-event": "^13.3.0",
+    "@types/jest": "^27.0.2",
+    "@types/react": "^17.0.27",
+    "@types/react-dom": "^17.0.9",
+    "@types/react-router-dom": "^5.3.1",
+    "react-scripts": "4.0.3",
+    "sass": "^1.42.1",
+    "source-map-explorer": "^2.5.2"
+  },
+  "scripts": {
+    "build": "tsc -p .",
+    "test": "jest --coverage",
+    "watch": "npm run build -- -w",
+    "test-watch": "jest --watchAll",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
+  }
+}
