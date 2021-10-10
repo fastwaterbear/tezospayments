@@ -211,11 +211,22 @@ export class ServicesService {
         owner: serviceDto.owner,
         paused: serviceDto.paused,
         deleted: serviceDto.deleted,
-        signingKeys: new Map<ServiceSigningKey['publicKey'], ServiceSigningKey>()
-          .set('edpkuFWLCVgmPckKaGXwMarRoiUaJMC9jL3brTnZ6oKSQpo6k6uUPa', { name: 'Home PC', publicKey: 'edpkuFWLCVgmPckKaGXwMarRoiUaJMC9jL3brTnZ6oKSQpo6k6uUPa' })
-          .set('sppk7ZY1nmx2xFWugyWSb8C96rh75nmynPb516HMAGCkuWBzXzBdppv', { name: 'Work', publicKey: 'sppk7ZY1nmx2xFWugyWSb8C96rh75nmynPb516HMAGCkuWBzXzBdppv' })
-          .set('p2pk656RZt7wm8AMfb1ihuwWoK5mYoZPjQQXTV1swTHaZoUpodGeGN5', { publicKey: 'p2pk656RZt7wm8AMfb1ihuwWoK5mYoZPjQQXTV1swTHaZoUpodGeGN5' })
+        signingKeys: this.mapSigningKeyDtosToSigningKeys(serviceDto.signing_keys)
       }
       : null;
+  }
+
+  private mapSigningKeyDtosToSigningKeys(signingKeyDtos: ServiceDto['signing_keys']): Service['signingKeys'] {
+    const resultMap = new Map<ServiceSigningKey['publicKey'], ServiceSigningKey>();
+    if (!signingKeyDtos)
+      return resultMap;
+
+    return signingKeyDtos
+      ? Object.keys(signingKeyDtos)
+        .reduce(
+          (map, signingKey) => map.set(signingKey, { publicKey: signingKey, name: signingKeyDtos[signingKey]?.name || undefined }),
+          resultMap
+        )
+      : resultMap;
   }
 }

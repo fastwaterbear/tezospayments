@@ -9,4 +9,7 @@ export interface ServiceDto {
   owner: string;
   paused: boolean
   version: string;
+  signing_keys?: {
+    [publicKey: string]: { public_key: string; name: string | null }
+  }
 }
