@@ -3,11 +3,11 @@ import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit } from '@taquito/taquito';
 
 import { Network, networks } from '@tezospayments/common';
+import { BetterCallDevBlockchainUrlExplorer, TzStatsBlockchainUrlExplorer } from '@tezospayments/react-web-core';
 
 import { config } from '../config';
 import { LocalPaymentService } from '../services/localPaymentService';
 import { AppStore } from '../store';
-import { BetterCallDevBlockchainUrlExplorer, TzStatsBlockchainUrlExplorer } from './explorers';
 
 interface AppServices {
   readonly localPaymentService: LocalPaymentService;

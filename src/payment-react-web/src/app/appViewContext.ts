@@ -1,6 +1,6 @@
 import React from 'react';
 
-import type { BetterCallDevBlockchainUrlExplorer, TzStatsBlockchainUrlExplorer } from './explorers';
+import type { BetterCallDevBlockchainUrlExplorer, TzStatsBlockchainUrlExplorer } from '@tezospayments/react-web-core';
 
 interface AppView {
   readonly betterCallDevBlockchainUrlExplorer: BetterCallDevBlockchainUrlExplorer;
