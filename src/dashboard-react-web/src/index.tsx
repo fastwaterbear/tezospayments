@@ -18,6 +18,9 @@ enableMapSet();
 const webApp = new WebApp();
 const store = configureStore({
   reducer: appReducer,
+  devTools: {
+    serialize: true
+  },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       thunk: {
@@ -25,10 +28,16 @@ const store = configureStore({
       },
       serializableCheck: {
         isSerializable: (value: unknown) => isPlain(value)
+          || value instanceof Map
+          || value instanceof Set
           || BigNumber.isBigNumber(value)
-          || value instanceof Date
+          || value instanceof Date,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        getEntries: (value: any) => value instanceof Map || value instanceof Set
+          ? [...value.entries()]
+          : Object.entries(value)
       }
-    }),
+    })
 });
 
 ReactDOM.render(
