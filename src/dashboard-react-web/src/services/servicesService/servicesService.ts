@@ -5,8 +5,8 @@ import BigNumber from 'bignumber.js';
 import {
   tezosMeta, Network,
   Service, ServiceOperation, ServiceOperationDirection,
-  ServiceOperationStatus, ServiceDto, ServicesBigMapKeyValuePair,
-  converters, guards, optimization, wait, ServiceSigningKey
+  ServiceOperationStatus, ServiceDto, ServicesBigMapKeyValuePair, ServiceSigningKey,
+  converters, guards, optimization,
 } from '@tezospayments/common';
 
 import { config } from '../../config';
@@ -127,12 +127,18 @@ export class ServicesService {
     return null;
   }
 
-  async addApiKey(_service: Service, _signingKey: ServiceSigningKey): Promise<void> {
-    await wait(1000);
+  addApiKey(service: Service, signingKey: ServiceSigningKey): Promise<TransactionWalletOperation | null> {
+    const signingKeyUpdatesMap = new MichelsonMap<string, { public_key: string, name?: string }>();
+    signingKeyUpdatesMap.set(signingKey.publicKey, { public_key: signingKey.publicKey, name: signingKey.name });
+
+    return this.updateSigningKeys(service, signingKeyUpdatesMap);
   }
 
-  async deleteApiKey(_service: Service, _publicKey: string): Promise<void> {
-    await wait(1000);
+  deleteApiKey(service: Service, publicKey: ServiceSigningKey['publicKey']): Promise<TransactionWalletOperation | null> {
+    const signingKeyUpdatesMap = new MichelsonMap<string, undefined>();
+    signingKeyUpdatesMap.set(publicKey, undefined);
+
+    return this.updateSigningKeys(service, signingKeyUpdatesMap);
   }
 
   async getOperations(network: Network, contractAddress: string): Promise<ServiceOperation[]> {
@@ -142,6 +148,25 @@ export class ServicesService {
     const operations: Operation[] = await response.json();
 
     return operations.map(operation => this.mapOperationToServiceOperation(operation));
+  }
+
+  private async updateSigningKeys(
+    service: Service,
+    signingKeyUpdatesMap: MichelsonMap<string, { public_key: string, name?: string } | undefined>
+  ): Promise<TransactionWalletOperation | null> {
+    try {
+      const tezosToolkit = this.getTezosToolKit(service.network);
+
+      const serviceContract = await tezosToolkit.wallet.at(service.contractAddress);
+      if (serviceContract.methods.update_signing_keys) {
+        const operation = await serviceContract.methods.update_signing_keys(signingKeyUpdatesMap).send();
+
+        return operation;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return null;
   }
 
   private getTezosToolKit(network: Network): TezosToolkit {

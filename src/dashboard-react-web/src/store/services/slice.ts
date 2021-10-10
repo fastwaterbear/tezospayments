@@ -90,17 +90,27 @@ export const setDeleted = createAsyncThunk<void, { service: Service, deleted: bo
 
 export const addApiKey = createAsyncThunk<void, { service: Service, signingKey: ServiceSigningKey }, AppThunkAPI>(
   `${namespace}/addApiKey`,
-  async ({ service, signingKey }, { extra: app, dispatch, getState }) => {
-    await app.services.servicesService.addApiKey(service, signingKey);
-    reloadServices(dispatch, getState);
+  async ({ service, signingKey }, { extra: app, dispatch, getState, rejectWithValue }) => {
+    const operation = await app.services.servicesService.addApiKey(service, signingKey);
+
+    if (operation) {
+      dispatch(setOperation({ operation, callback: () => reloadServices(dispatch, getState) }));
+    } else {
+      return rejectWithValue(null);
+    }
   },
 );
 
 export const deleteApiKey = createAsyncThunk<void, { service: Service, publicKey: string }, AppThunkAPI>(
   `${namespace}/deleteApiKey`,
-  async ({ service, publicKey }, { extra: app, dispatch, getState }) => {
-    await app.services.servicesService.deleteApiKey(service, publicKey);
-    reloadServices(dispatch, getState);
+  async ({ service, publicKey }, { extra: app, dispatch, getState, rejectWithValue }) => {
+    const operation = await app.services.servicesService.deleteApiKey(service, publicKey);
+
+    if (operation) {
+      dispatch(setOperation({ operation, callback: () => reloadServices(dispatch, getState) }));
+    } else {
+      return rejectWithValue(null);
+    }
   },
 );
 
