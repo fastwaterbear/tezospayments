@@ -137,15 +137,15 @@ export const servicesSlice = createSlice({
   reducers: {
   },
   extraReducers: builder => {
-    builder.addCase(loadServices.fulfilled, (state, action) => {
-      (state.services as Service[]) = action.payload;
-      state.initialized = true;
-    });
+    builder.addCase(loadServices.fulfilled, (state, action) => ({
+      services: action.payload,
+      initialized: true
+    }));
 
-    builder.addCase(clearServices.fulfilled, state => {
-      state.services = optimization.emptyArray;
-      state.initialized = false;
-    });
+    builder.addCase(clearServices.fulfilled, _state => ({
+      services: optimization.emptyArray,
+      initialized: false
+    }));
 
     for (const action of [createService, updateService, setPaused, setDeleted, addApiKey, deleteApiKey]) {
       builder.addCase(action.pending, state => {
