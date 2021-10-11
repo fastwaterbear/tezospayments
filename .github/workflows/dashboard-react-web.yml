@@ -60,8 +60,8 @@ jobs:
       - name: Build the tezospayments package
         run: npm run build -w tezospayments
 
-      - name: Build the react-web-core package
-        run: npm run build -w react-web-core
+      - name: Build the @tezospayments/react-web-core package
+        run: npm run build -w @tezospayments/react-web-core
 
       - name: Build the Dashboard app
         run: npm run build -w @tezospayments/dashboard-react-web

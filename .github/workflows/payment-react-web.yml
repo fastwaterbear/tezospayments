@@ -55,8 +55,8 @@ jobs:
       - name: Build the @tezospayments/common package
         run: npm run build -w @tezospayments/common
 
-      - name: Build the react-web-core package
-        run: npm run build -w react-web-core
+      - name: Build the @tezospayments/react-web-core package
+        run: npm run build -w @tezospayments/react-web-core
 
       - name: Build the Payment app
         run: npm run build -w @tezospayments/payment-react-web

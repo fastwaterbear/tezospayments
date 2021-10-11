@@ -7,10 +7,9 @@ import {
   Donation, Payment, Service, ServiceOperationType, Network,
   converters as commonConverters, memoize
 } from '@tezospayments/common';
-import { converters } from '@tezospayments/react-web-core';
+import { converters, TezosPaymentsServiceContract } from '@tezospayments/react-web-core';
 
 import { config } from '../../config';
-import { TezosPaymentsServiceContract } from '../../models/contracts';
 import { NetworkDonation, NetworkPayment } from '../../models/payment';
 import { PaymentInfo } from '../../models/payment/paymentInfo';
 import { AppStore } from '../../store';
