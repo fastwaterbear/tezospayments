@@ -1,8 +1,14 @@
 
-import { converters, guards, Network, optimization, Service, ServiceSigningKey } from '@tezospayments/common';
+import BigNumber from 'bignumber.js';
+
+import {
+  converters, guards, Network, optimization,
+  Service, ServiceOperation, ServiceOperationDirection,
+  ServiceOperationStatus, ServiceSigningKey, tezosMeta
+} from '@tezospayments/common';
 
 import type { ServicesProvider } from '../servicesProvider';
-import type { ServiceDto, ServicesBigMapKeyValuePairDto } from './dtos';
+import type { OperationDto, ServiceDto, ServicesBigMapKeyValuePairDto } from './dtos';
 
 export class TzKTDataProvider implements ServicesProvider {
   constructor(
@@ -23,8 +29,8 @@ export class TzKTDataProvider implements ServicesProvider {
     return result;
   }
 
-  async getServices(ownerAddress: string): Promise<Service[]> {
-    const response = await fetch(`${this.baseUrl}v1/contracts/${this.servicesFactoryContractAddress}/bigmaps/services/keys/${ownerAddress}`);
+  async getServices(ownerAddress: string): Promise<readonly Service[]> {
+    const response = await fetch(`${this.baseUrl}/v1/contracts/${this.servicesFactoryContractAddress}/bigmaps/services/keys/${ownerAddress}`);
     const keyValue: ServicesBigMapKeyValuePairDto = await response.json();
     const contractAddresses = keyValue.value;
 
@@ -35,6 +41,14 @@ export class TzKTDataProvider implements ServicesProvider {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       .map((s, i) => this.mapServiceDtoToService(s, contractAddresses[i]!, this.network))
       .filter((s): s is Service => !!s);
+  }
+
+  async getOperations(serviceContractAddress: string): Promise<readonly ServiceOperation[]> {
+    // TODO: use URL builder
+    const response = await fetch(`${this.baseUrl}/v1/accounts/${serviceContractAddress}/operations?type=transaction&parameters.as=*%22entrypoint%22:%22send_payment%22*`);
+    const operations: OperationDto[] = await response.json();
+
+    return operations.map(operation => this.mapOperationToServiceOperation(operation));
   }
 
   private mapServiceDtoToService(serviceDto: ServiceDto, serviceAddress: string, network: Network): Service | null {
@@ -79,5 +93,23 @@ export class TzKTDataProvider implements ServicesProvider {
           resultMap
         )
       : resultMap;
+  }
+
+  private mapOperationToServiceOperation(operationDto: OperationDto): ServiceOperation {
+    return {
+      hash: operationDto.hash,
+      type: +operationDto.parameter.value.operation_type || 0,
+      direction: ServiceOperationDirection.Incoming,
+      status: operationDto.status === 'applied' ? ServiceOperationStatus.Success : ServiceOperationStatus.Cancelled,
+      amount: new BigNumber(operationDto.amount.toString()).div(10 ** tezosMeta.decimals),
+      payload: {
+        public: ServiceOperation.parseServiceOperationPayload(operationDto.parameter.value.payload.public),
+      },
+      asset: undefined,
+      timestamp: operationDto.timestamp,
+      date: new Date(operationDto.timestamp),
+      sender: operationDto.sender.address,
+      target: operationDto.target.address,
+    };
   }
 }
