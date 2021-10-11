@@ -2,7 +2,7 @@
 import { Button, } from 'antd';
 import React, { useCallback, useState } from 'react';
 
-import { Service } from '@tezospayments/common/src';
+import { Service } from '@tezospayments/common';
 
 import { useCurrentLanguageResources } from '../../../hooks';
 import { AddApiKeyModalPure } from './AddApiKeyModal';

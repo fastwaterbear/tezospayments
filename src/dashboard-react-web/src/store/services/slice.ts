@@ -90,17 +90,27 @@ export const setDeleted = createAsyncThunk<void, { service: Service, deleted: bo
 
 export const addApiKey = createAsyncThunk<void, { service: Service, signingKey: ServiceSigningKey }, AppThunkAPI>(
   `${namespace}/addApiKey`,
-  async ({ service, signingKey }, { extra: app, dispatch, getState }) => {
-    await app.services.servicesService.addApiKey(service, signingKey);
-    reloadServices(dispatch, getState);
+  async ({ service, signingKey }, { extra: app, dispatch, getState, rejectWithValue }) => {
+    const operation = await app.services.servicesService.addApiKey(service, signingKey);
+
+    if (operation) {
+      dispatch(setOperation({ operation, callback: () => reloadServices(dispatch, getState) }));
+    } else {
+      return rejectWithValue(null);
+    }
   },
 );
 
 export const deleteApiKey = createAsyncThunk<void, { service: Service, publicKey: string }, AppThunkAPI>(
   `${namespace}/deleteApiKey`,
-  async ({ service, publicKey }, { extra: app, dispatch, getState }) => {
-    await app.services.servicesService.deleteApiKey(service, publicKey);
-    reloadServices(dispatch, getState);
+  async ({ service, publicKey }, { extra: app, dispatch, getState, rejectWithValue }) => {
+    const operation = await app.services.servicesService.deleteApiKey(service, publicKey);
+
+    if (operation) {
+      dispatch(setOperation({ operation, callback: () => reloadServices(dispatch, getState) }));
+    } else {
+      return rejectWithValue(null);
+    }
   },
 );
 
@@ -137,15 +147,15 @@ export const servicesSlice = createSlice({
   reducers: {
   },
   extraReducers: builder => {
-    builder.addCase(loadServices.fulfilled, (state, action) => {
-      (state.services as Service[]) = action.payload;
-      state.initialized = true;
-    });
+    builder.addCase(loadServices.fulfilled, (state, action) => ({
+      services: action.payload,
+      initialized: true
+    }));
 
-    builder.addCase(clearServices.fulfilled, state => {
-      state.services = optimization.emptyArray;
-      state.initialized = false;
-    });
+    builder.addCase(clearServices.fulfilled, _state => ({
+      services: optimization.emptyArray,
+      initialized: false
+    }));
 
     for (const action of [createService, updateService, setPaused, setDeleted, addApiKey, deleteApiKey]) {
       builder.addCase(action.pending, state => {
