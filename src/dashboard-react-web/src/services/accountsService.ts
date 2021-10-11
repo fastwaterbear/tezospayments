@@ -5,15 +5,13 @@ import BigNumber from 'bignumber.js';
 import { Token, TokenFA2, TokenFA12, Network } from '@tezospayments/common';
 import { converters } from '@tezospayments/react-web-core';
 
-import { config } from '../config';
 import { Account } from '../models/blockchain';
 
 export class AccountsService {
-  private readonly dAppClient: DAppClient;
-  private readonly tezosToolKitByNetwork: Map<Network, TezosToolkit> = new Map<Network, TezosToolkit>();
-
-  constructor(dAppClient: DAppClient) {
-    this.dAppClient = dAppClient;
+  constructor(
+    private readonly tezosToolkit: TezosToolkit,
+    private readonly dAppClient: DAppClient
+  ) {
   }
 
   async connect(network: Network): Promise<string | null> {
@@ -39,8 +37,7 @@ export class AccountsService {
   }
 
   async getTezosBalance(account: Account): Promise<number> {
-    const tezosToolKit = this.getTezosToolKit(account.network);
-    const balance = await tezosToolKit.tz.getBalance(account.address);
+    const balance = await this.tezosToolkit.tz.getBalance(account.address);
 
     return +balance / 1000000;
   }
@@ -62,58 +59,20 @@ export class AccountsService {
     return result.toNumber();
   }
 
-  private getTezosToolKit(network: Network): TezosToolkit {
-    let tezosToolkit = this.tezosToolKitByNetwork.get(network);
-    if (!tezosToolkit) {
-      const networkConfig = config.tezos.networks[network.name];
-      tezosToolkit = new TezosToolkit(networkConfig.rpcUrls[networkConfig.default.rpc]);
-      tezosToolkit.setProvider({ signer: new ReadOnlySigner() });
-      this.tezosToolKitByNetwork.set(network, tezosToolkit);
-    }
-    return tezosToolkit;
-  }
-
   private async getTokenFA12Balance(account: Account, token: TokenFA12): Promise<BigNumber> {
-    const tezosToolKit = this.getTezosToolKit(account.network);
-
-    const contract = await tezosToolKit.contract.at(token.contractAddress);
+    const contract = await this.tezosToolkit.contract.at(token.contractAddress);
     const result = await contract.views.getBalance?.(account.address).read();
 
     return result || 0;
   }
 
   private async getTokenFA2Balance(account: Account, token: TokenFA2): Promise<BigNumber> {
-    const tezosToolKit = this.getTezosToolKit(account.network);
-
-    const contract = await tezosToolKit.contract.at(token.contractAddress);
+    const contract = await this.tezosToolkit.contract.at(token.contractAddress);
     const response = await contract.views?.['balance_of']?.([{ owner: account.address, token_id: token.fa2TokenId }])
       .read();
 
     const result = response[0].balance;
 
     return result || 0;
-  }
-}
-
-export class ReadOnlySigner {
-  async publicKeyHash() {
-    return 'tz1UqarjGfmwrd1BBHsXDtvdHx8VQgqKXrcK';
-  }
-
-  async publicKey() {
-    return 'edpkuAjgFnspKtJDxECF4cHeNjjWk7rxKTsWPSCFkX67sVsvxXyzYK';
-  }
-
-  async secretKey(): Promise<string> {
-    throw new Error('Secret key cannot be exposed');
-  }
-
-  async sign(): Promise<{
-    bytes: string;
-    sig: string;
-    prefixSig: string;
-    sbytes: string;
-  }> {
-    throw new Error('Cannot sign');
   }
 }

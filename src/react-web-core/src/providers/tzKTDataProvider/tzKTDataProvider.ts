@@ -34,7 +34,7 @@ export class TzKTDataProvider implements ServicesProvider {
     const keyValue: ServicesBigMapKeyValuePairDto = await response.json();
     const contractAddresses = keyValue.value;
 
-    const rawContractsInfoPromises = contractAddresses.map(v => fetch(`${this.baseUrl}v1/contracts/${v}/storage`).then(r => r.json()));
+    const rawContractsInfoPromises = contractAddresses.map(v => fetch(`${this.baseUrl}/v1/contracts/${v}/storage`).then(r => r.json()));
     const rawContractsInfo = await Promise.all<ServiceDto>(rawContractsInfoPromises);
 
     return rawContractsInfo

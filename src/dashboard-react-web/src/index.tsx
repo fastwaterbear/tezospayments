@@ -15,8 +15,7 @@ import './index.scss';
 
 enableMapSet();
 
-const webApp = new WebApp();
-const store = configureStore({
+const webApp = new WebApp(app => configureStore({
   reducer: appReducer,
   devTools: {
     serialize: true
@@ -24,7 +23,7 @@ const store = configureStore({
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       thunk: {
-        extraArgument: webApp,
+        extraArgument: app,
       },
       serializableCheck: {
         isSerializable: (value: unknown) => isPlain(value)
@@ -38,11 +37,11 @@ const store = configureStore({
           : Object.entries(value)
       }
     })
-});
+}));
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
+    <Provider store={webApp.store}>
       <Router history={webApp.history}>
         <App />
       </Router>
@@ -50,7 +49,6 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
-webApp.start(store).catch(error => console.error(error));
 
 (window as unknown as { webApp: WebApp }).webApp = webApp;
 (window as unknown as { config: AppConfig }).config = config;

@@ -22,7 +22,7 @@ const initialState: ServicesState = {
 
 const namespace = 'services';
 
-export const loadServices = createAsyncThunk<Service[], Account, AppThunkAPI>(
+export const loadServices = createAsyncThunk<readonly Service[], Account, AppThunkAPI>(
   `${namespace}/loadServices`,
   async (account, { extra: app, dispatch }) => {
     const services = await app.services.servicesService.getServices(account);

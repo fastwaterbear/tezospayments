@@ -42,18 +42,18 @@ export const config: AppConfig = {
         title: 'Granada Testnet',
         color: '#667eea',
         default: {
-          rpc: 'smartpy',
-          indexer: 'tzkt',
-          explorer: 'tzkt'
+          rpc: 'smartPy',
+          indexer: 'tzKT',
+          explorer: 'tzKT'
         },
         rpcUrls: {
-          smartpy: 'https://granadanet.smartpy.io/'
+          smartPy: 'https://granadanet.smartpy.io'
         },
         indexerUrls: {
-          tzkt: 'https://api.granadanet.tzkt.io/'
+          tzKT: 'https://api.granadanet.tzkt.io'
         },
         explorers: {
-          tzkt: { url: 'https://granadanet.tzkt.io/', title: 'TzKT' }
+          tzKT: { url: 'https://granadanet.tzkt.io', title: 'TzKT' }
         },
         servicesFactoryContractAddress: 'KT1Ja5k4rv85fiJPJ5jR1vpmCzoSzsyuW5kP'
       }
