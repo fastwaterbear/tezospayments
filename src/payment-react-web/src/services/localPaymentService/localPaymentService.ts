@@ -1,4 +1,4 @@
-import { RequestPermissionInput, AbortedBeaconError } from '@airgap/beacon-sdk';
+import { RequestPermissionInput } from '@airgap/beacon-sdk';
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit, TransactionWalletOperation, Wallet } from '@taquito/taquito';
 import BigNumber from 'bignumber.js';
@@ -84,19 +84,21 @@ export class LocalPaymentService {
     return this.serviceProvider.getService(currentRawPaymentInfoResult.targetAddress);
   }
 
-  async pay(payment: NetworkPayment): Promise<ServiceResult<boolean>> {
-    return (Payment.publicDataExists(payment.data))
-      ? this.sendPayment(
-        ServiceOperationType.Payment,
-        payment.targetAddress,
-        payment.amount,
-        payment.asset,
-        commonConverters.objectToBytes(payment.data.public)
-      )
-      : { isServiceError: true, error: errors.invalidPayment };
+  async pay(payment: NetworkPayment): Promise<boolean> {
+    if (!Payment.publicDataExists(payment.data)) {
+      throw new Error(errors.invalidPayment);
+    }
+
+    return this.sendPayment(
+      ServiceOperationType.Payment,
+      payment.targetAddress,
+      payment.amount,
+      payment.asset,
+      commonConverters.objectToBytes(payment.data.public)
+    );
   }
 
-  async donate(donation: NetworkDonation): Promise<ServiceResult<boolean>> {
+  async donate(donation: NetworkDonation): Promise<boolean> {
     return this.sendPayment(
       ServiceOperationType.Donation,
       donation.targetAddress,
@@ -122,32 +124,25 @@ export class LocalPaymentService {
     amount: BigNumber,
     assetTokenAddress: string | undefined,
     payload: string
-  ): Promise<ServiceResult<boolean>> {
-    try {
-      await this.tezosWallet.client.clearActiveAccount();
-      const canceled = await this.requestPermissions({ network: { type: converters.networkToBeaconNetwork(this.network) } });
-      if (canceled)
-        return false;
+  ): Promise<boolean> {
+    await this.tezosWallet.client.clearActiveAccount();
+    const canceled = await this.requestPermissions({ network: { type: converters.networkToBeaconNetwork(this.network) } });
+    if (canceled)
+      return false;
 
-      const contract: TezosPaymentsServiceContract<Wallet> = await this.tezosToolkit.wallet.at(targetAddress);
-      if (!contract.methods.send_payment)
-        return { isServiceError: true, error: errors.invalidContract };
+    const contract = await this.tezosToolkit.wallet.at<TezosPaymentsServiceContract<Wallet>>(targetAddress);
 
-      const result = await contract.methods.send_payment(
-        assetTokenAddress as void,
-        serviceOperationType,
-        'public',
-        payload,
-      )
-        .send({ amount });
+    const result = await contract.methods.send_payment(
+      assetTokenAddress as void,
+      serviceOperationType,
+      'public',
+      payload,
+    )
+      .send({ amount });
 
-      await this.waitConfirmation(result);
+    await this.waitConfirmation(result);
 
-      return true;
-    }
-    catch (error: unknown) {
-      return (error instanceof AbortedBeaconError) ? false : { isServiceError: true, error: (error as Error).message };
-    }
+    return true;
   }
 
   protected requestPermissions(request?: RequestPermissionInput) {

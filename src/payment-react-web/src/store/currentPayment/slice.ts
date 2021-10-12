@@ -41,12 +41,8 @@ export const loadCurrentPayment = createAsyncThunk<PaymentInfo, void, AppThunkAP
 
 export const pay = createAsyncThunk<boolean, NetworkPayment, AppThunkAPI>(
   `${namespace}/pay`,
-  async (networkPayment, { extra: app, rejectWithValue }) => {
-    const result = await app.services.localPaymentService.pay(networkPayment);
-
-    return !result.isServiceError
-      ? result
-      : rejectWithValue({ message: result.error } as UnknownApplicationError);
+  async (networkPayment, { extra: app }) => {
+    return await app.services.localPaymentService.pay(networkPayment);
   },
   {
     condition: (_payload, { getState }) => {
@@ -60,12 +56,8 @@ export const pay = createAsyncThunk<boolean, NetworkPayment, AppThunkAPI>(
 
 export const donate = createAsyncThunk<boolean, NetworkDonation, AppThunkAPI>(
   `${namespace}/donate`,
-  async (networkDonation, { extra: app, rejectWithValue }) => {
-    const result = await app.services.localPaymentService.donate(networkDonation);
-
-    return !result.isServiceError
-      ? result
-      : rejectWithValue({ message: result.error } as UnknownApplicationError);
+  async (networkDonation, { extra: app }) => {
+    return await app.services.localPaymentService.donate(networkDonation);
   },
   {
     condition: (_payload, { getState }) => {
