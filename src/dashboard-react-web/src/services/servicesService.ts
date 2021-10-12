@@ -1,7 +1,7 @@
-import { MichelsonMap, TezosToolkit, TransactionWalletOperation } from '@taquito/taquito';
+import { MichelsonMap, TezosToolkit, TransactionWalletOperation, Wallet } from '@taquito/taquito';
 
 import type { Service, ServiceOperation, ServiceSigningKey } from '@tezospayments/common';
-import type { ServicesProvider } from '@tezospayments/react-web-core';
+import type { ServicesProvider, TezosPaymentsFactoryImplementationContract, TezosPaymentsServiceContract } from '@tezospayments/react-web-core';
 
 import type { Account } from '../models/blockchain';
 import type { ServiceFactoryStorage } from '../models/contracts';
@@ -26,96 +26,51 @@ export class ServicesService {
     return this.servicesProvider.getOperations(serviceContractAddress);
   }
 
-  async updateService(service: Service): Promise<TransactionWalletOperation | null> {
-    try {
-      const factoryContract = await this.tezosToolkit.wallet.at(service.contractAddress);
-
-      if (factoryContract.methods.update_service_parameters) {
-        const encodedServiceMetadata = this.encodeMetadata(service);
-
-        const operation = await factoryContract.methods.update_service_parameters(
-          encodedServiceMetadata,
-          service.allowedTokens.tez,
-          service.allowedTokens.assets,
-          service.allowedOperationType
-        ).send();
-
-        return operation;
-      }
-    } catch (e) {
-      console.error(e);
-    }
-
-    return null;
+  async updateService(service: Service): Promise<TransactionWalletOperation> {
+    const serviceContract = await this.getServiceContract(service.contractAddress);
+    const encodedServiceMetadata = this.encodeMetadata(service);
+    return await serviceContract.methods.update_service_parameters(
+      encodedServiceMetadata,
+      service.allowedTokens.tez,
+      service.allowedTokens.assets,
+      service.allowedOperationType
+    ).send();
   }
 
-  async setPaused(service: Service, paused: boolean): Promise<TransactionWalletOperation | null> {
-    try {
-      const factoryContract = await this.tezosToolkit.wallet.at(service.contractAddress);
-
-      if (factoryContract.methods.set_pause) {
-        const operation = await factoryContract.methods.set_pause(paused).send();
-
-        return operation;
-      }
-    } catch (e) {
-      console.error(e);
-    }
-
-    return null;
+  async setPaused(service: Service, paused: boolean): Promise<TransactionWalletOperation> {
+    const serviceContract = await this.getServiceContract(service.contractAddress);
+    return await serviceContract.methods.set_pause(paused).send();
   }
 
-  async setDeleted(service: Service, deleted: boolean): Promise<TransactionWalletOperation | null> {
-    try {
-      const factoryContract = await this.tezosToolkit.wallet.at(service.contractAddress);
-
-      if (factoryContract.methods.set_deleted) {
-        const operation = await factoryContract.methods.set_deleted(deleted).send();
-
-        return operation;
-      }
-    } catch (e) {
-      console.error(e);
-    }
-
-    return null;
+  async setDeleted(service: Service, deleted: boolean): Promise<TransactionWalletOperation> {
+    const serviceContract = await this.getServiceContract(service.contractAddress);
+    return await serviceContract.methods.set_deleted(deleted).send();
   }
 
-  async createService(service: Service): Promise<TransactionWalletOperation | null> {
-    try {
-      const factoryContract = await this.tezosToolkit.contract.at(this.servicesFactoryContractAddress);
+  async createService(service: Service): Promise<TransactionWalletOperation> {
+    const factoryContract = await this.tezosToolkit.contract.at(this.servicesFactoryContractAddress);
+    const factoryStorage = await factoryContract.storage<ServiceFactoryStorage>();
+    const factoryImplementationContract = await this.getFactoryImplementationContract(factoryStorage.factory_implementation);
 
-      const factoryStorage = await factoryContract.storage<ServiceFactoryStorage>();
-      const factoryImplementationContract = await this.tezosToolkit.wallet.at(factoryStorage.factory_implementation);
+    const encodedServiceMetadata = this.encodeMetadata(service);
 
-      if (factoryImplementationContract.methods.create_service) {
-        const encodedServiceMetadata = this.encodeMetadata(service);
-
-        const operation = await factoryImplementationContract.methods.create_service(
-          encodedServiceMetadata,
-          service.allowedTokens.tez,
-          service.allowedTokens.assets,
-          service.allowedOperationType,
-          new MichelsonMap()
-        ).send();
-
-        return operation;
-      }
-    } catch (e) {
-      console.error(e);
-    }
-
-    return null;
+    return await factoryImplementationContract.methods.create_service(
+      encodedServiceMetadata,
+      service.allowedTokens.tez,
+      service.allowedTokens.assets,
+      service.allowedOperationType,
+      new MichelsonMap()
+    ).send();
   }
 
-  addApiKey(service: Service, signingKey: ServiceSigningKey): Promise<TransactionWalletOperation | null> {
+  addApiKey(service: Service, signingKey: ServiceSigningKey): Promise<TransactionWalletOperation> {
     const signingKeyUpdatesMap = new MichelsonMap<string, { public_key: string, name?: string }>();
     signingKeyUpdatesMap.set(signingKey.publicKey, { public_key: signingKey.publicKey, name: signingKey.name });
 
     return this.updateSigningKeys(service, signingKeyUpdatesMap);
   }
 
-  deleteApiKey(service: Service, publicKey: ServiceSigningKey['publicKey']): Promise<TransactionWalletOperation | null> {
+  deleteApiKey(service: Service, publicKey: ServiceSigningKey['publicKey']): Promise<TransactionWalletOperation> {
     const signingKeyUpdatesMap = new MichelsonMap<string, undefined>();
     signingKeyUpdatesMap.set(publicKey, undefined);
 
@@ -125,21 +80,12 @@ export class ServicesService {
   private async updateSigningKeys(
     service: Service,
     signingKeyUpdatesMap: MichelsonMap<string, { public_key: string, name?: string } | undefined>
-  ): Promise<TransactionWalletOperation | null> {
-    try {
-      const serviceContract = await this.tezosToolkit.wallet.at(service.contractAddress);
-      if (serviceContract.methods.update_signing_keys) {
-        const operation = await serviceContract.methods.update_signing_keys(signingKeyUpdatesMap).send();
-
-        return operation;
-      }
-    } catch (e) {
-      console.error(e);
-    }
-    return null;
+  ): Promise<TransactionWalletOperation> {
+    const serviceContract = await this.getServiceContract(service.contractAddress);
+    return await serviceContract.methods.update_signing_keys(signingKeyUpdatesMap).send();
   }
 
-  private encodeMetadata(service: Service) {
+  private encodeMetadata(service: Service): string {
     const serviceMetadata = {
       name: service.name || undefined,
       links: service.links.length ? service.links : undefined,
@@ -148,5 +94,13 @@ export class ServicesService {
     };
 
     return Buffer.from(JSON.stringify(serviceMetadata), 'utf8').toString('hex');
+  }
+
+  private async getServiceContract(contractAddress: string): Promise<TezosPaymentsServiceContract<Wallet>> {
+    return await this.tezosToolkit.wallet.at<TezosPaymentsServiceContract<Wallet>>(contractAddress);
+  }
+
+  private async getFactoryImplementationContract(contractAddress: string): Promise<TezosPaymentsFactoryImplementationContract<Wallet>> {
+    return await this.tezosToolkit.wallet.at<TezosPaymentsFactoryImplementationContract<Wallet>>(contractAddress);
   }
 }
