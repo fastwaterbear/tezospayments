@@ -38,80 +38,50 @@ export const loadServices = createAsyncThunk<readonly Service[], Account, AppThu
 
 export const updateService = createAsyncThunk<void, Service, AppThunkAPI>(
   `${namespace}/updateService`,
-  async (service, { extra: app, dispatch, getState, rejectWithValue }) => {
+  async (service, { extra: app, dispatch, getState }) => {
     const operation = await app.services.servicesService.updateService(service);
-
-    if (operation) {
-      dispatch(setOperation({ operation, callback: () => reloadServices(dispatch, getState) }));
-    } else {
-      return rejectWithValue(null);
-    }
+    dispatch(setOperation({ operation, callback: () => reloadServices(dispatch, getState) }));
   }
 );
 
 export const createService = createAsyncThunk<void, Service, AppThunkAPI>(
   `${namespace}/createService`,
-  async (service, { extra: app, dispatch, getState, rejectWithValue }) => {
+  async (service, { extra: app, dispatch, getState }) => {
     const operation = await app.services.servicesService.createService(service);
-
-    if (operation) {
-      dispatch(setOperation({ operation, callback: () => reloadServices(dispatch, getState) }));
-    } else {
-      return rejectWithValue(null);
-    }
-  },
+    dispatch(setOperation({ operation, callback: () => reloadServices(dispatch, getState) }));
+  }
 );
 
 export const setPaused = createAsyncThunk<void, { service: Service, paused: boolean }, AppThunkAPI>(
   `${namespace}/setPaused`,
-  async ({ service, paused: isPaused }, { extra: app, dispatch, getState, rejectWithValue }) => {
+  async ({ service, paused: isPaused }, { extra: app, dispatch, getState }) => {
     const operation = await app.services.servicesService.setPaused(service, isPaused);
-
-    if (operation) {
-      dispatch(setOperation({ operation, callback: () => reloadServices(dispatch, getState) }));
-    } else {
-      return rejectWithValue(null);
-    }
-  },
+    dispatch(setOperation({ operation, callback: () => reloadServices(dispatch, getState) }));
+  }
 );
 
 export const setDeleted = createAsyncThunk<void, { service: Service, deleted: boolean }, AppThunkAPI>(
   `${namespace}/setDeleted`,
-  async ({ service, deleted }, { extra: app, dispatch, getState, rejectWithValue }) => {
+  async ({ service, deleted }, { extra: app, dispatch, getState }) => {
     const operation = await app.services.servicesService.setDeleted(service, deleted);
-
-    if (operation) {
-      dispatch(setOperation({ operation, callback: () => reloadServices(dispatch, getState) }));
-    } else {
-      return rejectWithValue(null);
-    }
-  },
+    dispatch(setOperation({ operation, callback: () => reloadServices(dispatch, getState) }));
+  }
 );
 
 export const addApiKey = createAsyncThunk<void, { service: Service, signingKey: ServiceSigningKey }, AppThunkAPI>(
   `${namespace}/addApiKey`,
-  async ({ service, signingKey }, { extra: app, dispatch, getState, rejectWithValue }) => {
+  async ({ service, signingKey }, { extra: app, dispatch, getState }) => {
     const operation = await app.services.servicesService.addApiKey(service, signingKey);
-
-    if (operation) {
-      dispatch(setOperation({ operation, callback: () => reloadServices(dispatch, getState) }));
-    } else {
-      return rejectWithValue(null);
-    }
-  },
+    dispatch(setOperation({ operation, callback: () => reloadServices(dispatch, getState) }));
+  }
 );
 
 export const deleteApiKey = createAsyncThunk<void, { service: Service, publicKey: string }, AppThunkAPI>(
   `${namespace}/deleteApiKey`,
-  async ({ service, publicKey }, { extra: app, dispatch, getState, rejectWithValue }) => {
+  async ({ service, publicKey }, { extra: app, dispatch, getState }) => {
     const operation = await app.services.servicesService.deleteApiKey(service, publicKey);
-
-    if (operation) {
-      dispatch(setOperation({ operation, callback: () => reloadServices(dispatch, getState) }));
-    } else {
-      return rejectWithValue(null);
-    }
-  },
+    dispatch(setOperation({ operation, callback: () => reloadServices(dispatch, getState) }));
+  }
 );
 
 export const clearServices = createAsyncThunk<void, void, AppThunkAPI>(
