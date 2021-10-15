@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { WalletOperation } from '@taquito/taquito';
-import { castDraft } from 'immer';
 
 import { Service, optimization, ServiceSigningKey } from '@tezospayments/common';
 
@@ -190,15 +189,17 @@ export const servicesSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(loadServices.fulfilled, (state, action) => {
-      state.services = castDraft(action.payload);
-      state.initialized = true;
-    });
+    builder.addCase(loadServices.fulfilled, (state, action) => ({
+      ...state,
+      services: action.payload,
+      initialized: true
+    }));
 
-    builder.addCase(clearServices.fulfilled, state => {
-      state.services = castDraft(optimization.emptyArray);
-      state.initialized = false;
-    });
+    builder.addCase(clearServices.fulfilled, state => ({
+      ...state,
+      services: optimization.emptyArray,
+      initialized: false
+    }));
   }
 });
 
