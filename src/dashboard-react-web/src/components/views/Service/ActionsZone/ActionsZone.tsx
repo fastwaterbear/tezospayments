@@ -11,9 +11,10 @@ import './ActionsZone.scss';
 
 interface ActionsZoneProps {
   service: Service;
+  readOnly: boolean;
 }
 
-export const ActionsZone = ({ service }: ActionsZoneProps) => {
+export const ActionsZone = ({ service, readOnly }: ActionsZoneProps) => {
   const langResources = useCurrentLanguageResources();
   const servicesLangResources = langResources.views.services;
   const history = useHistory();
@@ -27,7 +28,7 @@ export const ActionsZone = ({ service }: ActionsZoneProps) => {
 
     <div className="service-actions-zone__button-container">
       <p>{servicesLangResources.acceptPaymentsDescription}</p>
-      <Button onClick={handleAcceptPaymentsClick} className="service-button" type="primary">{servicesLangResources.acceptPayments}</Button>
+      <Button disabled={readOnly} onClick={handleAcceptPaymentsClick} className="service-button" type="primary">{servicesLangResources.acceptPayments}</Button>
     </div>
   </div>;
 };

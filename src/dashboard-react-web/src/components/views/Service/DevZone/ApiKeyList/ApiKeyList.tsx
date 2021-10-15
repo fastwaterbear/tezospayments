@@ -12,6 +12,7 @@ import './ApiKeyList.scss';
 
 interface ApiKeyListProps {
   service: Service;
+  readOnly: boolean;
 }
 
 export const ApiKeyList = (props: ApiKeyListProps) => {
@@ -47,7 +48,7 @@ export const ApiKeyList = (props: ApiKeyListProps) => {
         <span>{apiKey.name}</span>
         <div>
           <span className="api-keys__item-key">{apiKey.publicKey}</span>
-          <Button onClick={() => handleRemoveItem(apiKey)} icon={<DeleteOutlined />} danger type="link"></Button>
+          <Button disabled={props.readOnly} onClick={() => handleRemoveItem(apiKey)} icon={<DeleteOutlined />} danger type="link"></Button>
         </div>
       </List.Item>
       ) :

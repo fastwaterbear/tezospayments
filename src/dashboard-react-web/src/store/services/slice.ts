@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { WalletOperation } from '@taquito/taquito';
+import { message } from 'antd';
 
 import { Service, optimization, ServiceSigningKey } from '@tezospayments/common';
 
@@ -9,6 +10,8 @@ import { getCurrentAccount } from '../accounts/selectors';
 import { clearBalances, loadBalances } from '../balances/slice';
 import { loadOperations } from '../operations/slice';
 import { AppThunkAPI } from '../thunk';
+
+enum OperationNotificationType { loading, success, error }
 
 export interface PendingOperation {
   readonly hash: string;
@@ -20,13 +23,13 @@ export interface PendingOperation {
 export interface ServicesState {
   readonly services: readonly Service[];
   readonly initialized: boolean;
-  readonly pendingOperation: PendingOperation | null;
+  readonly pendingOperations: PendingOperation[];
 }
 
 const initialState: ServicesState = {
   services: optimization.emptyArray,
   initialized: false,
-  pendingOperation: null
+  pendingOperations: optimization.emptyArray
 };
 
 const namespace = 'services';
@@ -146,20 +149,20 @@ const waitOperationConfirmation = (
   dispatch: AppDispatch,
   operation: WalletOperation,
   pendingOperation: PendingOperation,
-  confirmationsNumber = 1
+  confirmationsNumber = 2
 ): Promise<void> => {
   dispatch(addPendingOperation(pendingOperation));
 
   return new Promise<void>((resolve, reject) => {
     operation.confirmationObservable(confirmationsNumber)
       .subscribe(
-        confirmation => dispatch(setOperationConfirmation({ opHash: operation.opHash, confirmationCount: confirmation.currentConfirmation })),
+        confirmation => dispatch(setOperationConfirmation({ operation: pendingOperation, confirmationCount: confirmation.currentConfirmation })),
         error => {
-          dispatch(rejectOperation(pendingOperation.hash));
+          dispatch(rejectOperation(pendingOperation));
           reject(error);
         },
         () => {
-          dispatch(confirmOperation(pendingOperation.hash));
+          dispatch(confirmOperation(pendingOperation));
           resolve();
         }
       );
@@ -171,21 +174,32 @@ export const servicesSlice = createSlice({
   initialState,
   reducers: {
     addPendingOperation: (state, action: PayloadAction<PendingOperation>) => {
-      state.pendingOperation = action.payload;
-      state.initialized = false;
+      const operation = action.payload;
+      state.pendingOperations.push(operation);
+      const service = state.services.find(s => s.contractAddress === operation.serviceAddress);
+      if (service)
+        showOperationNotification(service, operation, OperationNotificationType.loading);
     },
-    confirmOperation: (state, action: PayloadAction<string>) => {
-      if (state.pendingOperation?.hash === action.payload)
-        state.pendingOperation = null;
+    confirmOperation: (state, action: PayloadAction<PendingOperation>) => {
+      const operation = action.payload;
+      state.pendingOperations = state.pendingOperations.filter(o => o.hash !== operation.hash);
+      const service = state.services.find(s => s.contractAddress === operation.serviceAddress);
+      if (service)
+        showOperationNotification(service, operation, OperationNotificationType.success);
     },
-    rejectOperation: (state, action: PayloadAction<string>) => {
-      state.initialized = true;
-      if (state.pendingOperation?.hash === action.payload)
-        state.pendingOperation = null;
+    rejectOperation: (state, action: PayloadAction<PendingOperation>) => {
+      const operation = action.payload;
+      state.pendingOperations = state.pendingOperations.filter(o => o.hash !== operation.hash);
+      const service = state.services.find(s => s.contractAddress === operation.serviceAddress);
+      if (service)
+        showOperationNotification(service, operation, OperationNotificationType.error);
     },
-    setOperationConfirmation: (state, action: PayloadAction<{ opHash: string, confirmationCount: number }>) => {
-      if (state.pendingOperation)
-        state.pendingOperation.confirmationCount = action.payload.confirmationCount;
+    setOperationConfirmation: (state, action: PayloadAction<{ operation: PendingOperation, confirmationCount: number }>) => {
+      const operation = state.pendingOperations.find(o => o.hash === action.payload.operation.hash);
+      const confirmationCount = action.payload.confirmationCount;
+      if (operation) {
+        operation.confirmationCount = confirmationCount;
+      }
     },
   },
   extraReducers: builder => {
@@ -202,5 +216,25 @@ export const servicesSlice = createSlice({
     }));
   }
 });
+
+const showOperationNotification = (service: Service, operation: PendingOperation, type: OperationNotificationType) => {
+  //TODO it seems it is not good place for ui updates, we will refactor this with new ui
+  const contentPostfix = `${operation.action.split('/').pop()} for service: ${service.name}`;
+  const key = operation.hash;
+
+  switch (type) {
+    case OperationNotificationType.loading:
+      message.loading({ content: `Executing operation: ${contentPostfix}`, key, duration: 0 });
+      break;
+
+    case OperationNotificationType.success:
+      message.success({ content: `Finished operation: ${contentPostfix}`, key, duration: 4 });
+      break;
+
+    case OperationNotificationType.error:
+      message.error({ content: `Failed operation: ${contentPostfix}`, key, duration: 4 });
+      break;
+  }
+};
 
 export const { addPendingOperation, confirmOperation, rejectOperation, setOperationConfirmation } = servicesSlice.actions;

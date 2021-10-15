@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 
 import { emptyService, Service as ServiceInterface, combineClassNames } from '@tezospayments/common';
 
-import { selectServicesState } from '../../../store/services/selectors';
+import { getOperationsByService, selectServicesState } from '../../../store/services/selectors';
 import { useAppSelector, useQuery } from '../../hooks';
 import { View } from '../View';
 import { ActionsZonePure } from './ActionsZone';
@@ -29,6 +29,9 @@ export const Service = (props: ServiceProps) => {
   const isEdit = !!query.get('edit');
   const { address } = useParams<{ address: string }>();
   const { services, initialized: isInitialized } = useAppSelector(selectServicesState);
+  const pendingOperations = useAppSelector(getOperationsByService);
+  const isUpdating = pendingOperations.has(address);
+  const readOnly = !!pendingOperations.size;
   const isCreateMode = props.mode === ServiceViewMode.Create;
 
   //TODO: Use Map
@@ -41,13 +44,13 @@ export const Service = (props: ServiceProps) => {
     {!isInitialized || !service
       ? <Skeleton active />
       : isEdit || isCreateMode
-        ? <ServiceEditFormPure service={service} isCreateMode={isCreateMode} />
+        ? <ServiceEditFormPure service={service} isCreateMode={isCreateMode} readOnly={readOnly} />
         : <>
-          <HeaderPure service={service} />
+          <HeaderPure service={service} isUpdating={isUpdating} readOnly={readOnly} />
           <ViewZonePure service={service} />
-          <ActionsZonePure service={service} />
-          <DevZonePure service={service} />
-          <DangerZonePure service={service} />
+          <ActionsZonePure service={service} readOnly={readOnly} />
+          <DevZonePure service={service} readOnly={readOnly} />
+          <DangerZonePure service={service} readOnly={readOnly} />
         </>}
   </View>;
 };

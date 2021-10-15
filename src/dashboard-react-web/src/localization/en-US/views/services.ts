@@ -3,7 +3,8 @@ export const services = {
   status: {
     active: 'Active',
     paused: 'Paused',
-    deleted: 'Deleted'
+    deleted: 'Deleted',
+    updating: 'Updating'
   },
   createNewService: 'Create New Service',
   acceptPayments: 'Accept Payments',

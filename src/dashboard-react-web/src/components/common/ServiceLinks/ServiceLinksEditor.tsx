@@ -9,6 +9,7 @@ import './ServiceLinksEditor.scss';
 
 interface ServiceLinksEditorProps {
   value: string[];
+  readOnly: boolean;
   onChange: (e: { value: string[] }) => void;
 }
 
@@ -33,11 +34,11 @@ export const ServiceLinksEditor = (props: ServiceLinksEditorProps) => {
     props.onChange({ value });
   }, [props]);
 
-  const editors = props.value.map((l, i) => <ServiceLinkEditor key={i} value={l} onDelete={() => handleDelete(i)} onChange={e => handleChange(i, e)} />);
+  const editors = props.value.map((l, i) => <ServiceLinkEditor readOnly={props.readOnly} key={i} value={l} onDelete={() => handleDelete(i)} onChange={e => handleChange(i, e)} />);
 
   return <div className="service-links-editor">
     {editors}
-    <Button className="service-links-editor__button" icon={<PlusOutlined />} onClick={handleAdd}>
+    <Button disabled={props.readOnly} className="service-links-editor__button" icon={<PlusOutlined />} onClick={handleAdd}>
       {servicesLangResources.editing.addLink}
     </Button>
   </div >;
