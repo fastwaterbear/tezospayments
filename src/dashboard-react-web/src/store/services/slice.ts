@@ -1,8 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { WalletOperation } from '@taquito/taquito';
-import { message } from 'antd';
 
-import { Service, optimization, ServiceSigningKey } from '@tezospayments/common';
+import { Service, optimization, ServiceSigningKey, wait } from '@tezospayments/common';
 
 import { AppDispatch, AppState } from '..';
 import { Account } from '../../models/blockchain';
@@ -11,13 +10,15 @@ import { clearBalances, loadBalances } from '../balances/slice';
 import { loadOperations } from '../operations/slice';
 import { AppThunkAPI } from '../thunk';
 
-enum OperationNotificationType { loading, success, error }
+export enum PendingOperationStatus { loading, success, error }
 
 export interface PendingOperation {
   readonly hash: string;
   readonly serviceAddress: string;
   readonly action: string;
   readonly confirmationCount: number;
+  readonly targetConfirmationCount: number;
+  readonly status: PendingOperationStatus;
 }
 
 export interface ServicesState {
@@ -52,11 +53,7 @@ export const updateService = createAsyncThunk<void, Service, AppThunkAPI>(
   `${namespace}/updateService`,
   async (service, { extra: app, dispatch, getState }) => {
     const operation = await app.services.servicesService.updateService(service);
-    await waitOperationConfirmation(
-      dispatch,
-      operation,
-      createPendingOperation(operation.opHash, service.contractAddress, updateService.typePrefix)
-    );
+    await waitOperationConfirmation(dispatch, operation, service.contractAddress, 'updating');
     reloadServices(dispatch, getState);
   }
 );
@@ -65,24 +62,16 @@ export const createService = createAsyncThunk<void, Service, AppThunkAPI>(
   `${namespace}/createService`,
   async (service, { extra: app, dispatch, getState }) => {
     const operation = await app.services.servicesService.createService(service);
-    await waitOperationConfirmation(
-      dispatch,
-      operation,
-      createPendingOperation(operation.opHash, service.contractAddress, createService.typePrefix)
-    );
+    await waitOperationConfirmation(dispatch, operation, service.contractAddress, 'creating');
     reloadServices(dispatch, getState);
   }
 );
 
 export const setPaused = createAsyncThunk<void, { service: Service, paused: boolean }, AppThunkAPI>(
   `${namespace}/setPaused`,
-  async ({ service, paused: isPaused }, { extra: app, dispatch, getState }) => {
-    const operation = await app.services.servicesService.setPaused(service, isPaused);
-    await waitOperationConfirmation(
-      dispatch,
-      operation,
-      createPendingOperation(operation.opHash, service.contractAddress, setPaused.typePrefix)
-    );
+  async ({ service, paused }, { extra: app, dispatch, getState }) => {
+    const operation = await app.services.servicesService.setPaused(service, paused);
+    await waitOperationConfirmation(dispatch, operation, service.contractAddress, paused ? 'pausing' : 'unpausing');
     reloadServices(dispatch, getState);
   }
 );
@@ -91,11 +80,7 @@ export const setDeleted = createAsyncThunk<void, { service: Service, deleted: bo
   `${namespace}/setDeleted`,
   async ({ service, deleted }, { extra: app, dispatch, getState }) => {
     const operation = await app.services.servicesService.setDeleted(service, deleted);
-    await waitOperationConfirmation(
-      dispatch,
-      operation,
-      createPendingOperation(operation.opHash, service.contractAddress, setDeleted.typePrefix)
-    );
+    await waitOperationConfirmation(dispatch, operation, service.contractAddress, deleted ? 'deleting' : 'undeleting');
     reloadServices(dispatch, getState);
   }
 );
@@ -104,11 +89,7 @@ export const addApiKey = createAsyncThunk<void, { service: Service, signingKey: 
   `${namespace}/addApiKey`,
   async ({ service, signingKey }, { extra: app, dispatch, getState }) => {
     const operation = await app.services.servicesService.addApiKey(service, signingKey);
-    await waitOperationConfirmation(
-      dispatch,
-      operation,
-      createPendingOperation(operation.opHash, service.contractAddress, addApiKey.typePrefix)
-    );
+    await waitOperationConfirmation(dispatch, operation, service.contractAddress, 'adding API key');
     reloadServices(dispatch, getState);
   }
 );
@@ -117,11 +98,7 @@ export const deleteApiKey = createAsyncThunk<void, { service: Service, publicKey
   `${namespace}/deleteApiKey`,
   async ({ service, publicKey }, { extra: app, dispatch, getState }) => {
     const operation = await app.services.servicesService.deleteApiKey(service, publicKey);
-    await waitOperationConfirmation(
-      dispatch,
-      operation,
-      createPendingOperation(operation.opHash, service.contractAddress, deleteApiKey.typePrefix)
-    );
+    await waitOperationConfirmation(dispatch, operation, service.contractAddress, 'deleting API key');
     reloadServices(dispatch, getState);
   }
 );
@@ -133,9 +110,13 @@ export const clearServices = createAsyncThunk<void, void, AppThunkAPI>(
   }
 );
 
-const createPendingOperation = (hash: string, serviceAddress: string, action: string): PendingOperation => ({
-  hash, serviceAddress, action,
+const createPendingOperation = (hash: string, serviceAddress: string, action: string, targetConfirmationCount: number): PendingOperation => ({
+  hash,
+  action,
+  serviceAddress,
+  targetConfirmationCount,
   confirmationCount: 0,
+  status: PendingOperationStatus.loading,
 });
 
 const reloadServices = (dispatch: AppDispatch, getState: () => AppState) => {
@@ -148,22 +129,30 @@ const reloadServices = (dispatch: AppDispatch, getState: () => AppState) => {
 const waitOperationConfirmation = (
   dispatch: AppDispatch,
   operation: WalletOperation,
-  pendingOperation: PendingOperation,
+  serviceAddress: string,
+  operationName: string,
   confirmationsNumber = 2
 ): Promise<void> => {
+  const pendingOperation = createPendingOperation(operation.opHash, serviceAddress, operationName, confirmationsNumber);
   dispatch(addPendingOperation(pendingOperation));
 
   return new Promise<void>((resolve, reject) => {
     operation.confirmationObservable(confirmationsNumber)
       .subscribe(
-        confirmation => dispatch(setOperationConfirmation({ operation: pendingOperation, confirmationCount: confirmation.currentConfirmation })),
-        error => {
-          dispatch(rejectOperation(pendingOperation));
+        confirmation => dispatch(setPendingOperationConfirmationCount(
+          { hash: pendingOperation.hash, confirmationCount: confirmation.currentConfirmation })
+        ),
+        async error => {
+          dispatch(setPendingOperationStatus({ hash: pendingOperation.hash, status: PendingOperationStatus.error }));
           reject(error);
+          await wait(3000);
+          dispatch(deletePendingOperation(pendingOperation.hash));
         },
-        () => {
-          dispatch(confirmOperation(pendingOperation));
+        async () => {
+          dispatch(setPendingOperationStatus({ hash: pendingOperation.hash, status: PendingOperationStatus.success }));
           resolve();
+          await wait(3000);
+          dispatch(deletePendingOperation(pendingOperation.hash));
         }
       );
   });
@@ -176,30 +165,19 @@ export const servicesSlice = createSlice({
     addPendingOperation: (state, action: PayloadAction<PendingOperation>) => {
       const operation = action.payload;
       state.pendingOperations.push(operation);
-      const service = state.services.find(s => s.contractAddress === operation.serviceAddress);
-      if (service)
-        showOperationNotification(service, operation, OperationNotificationType.loading);
     },
-    confirmOperation: (state, action: PayloadAction<PendingOperation>) => {
-      const operation = action.payload;
-      state.pendingOperations = state.pendingOperations.filter(o => o.hash !== operation.hash);
-      const service = state.services.find(s => s.contractAddress === operation.serviceAddress);
-      if (service)
-        showOperationNotification(service, operation, OperationNotificationType.success);
+    setPendingOperationStatus: (state, action: PayloadAction<{ hash: string, status: PendingOperationStatus }>) => {
+      const operation = state.pendingOperations.find(o => o.hash === action.payload.hash);
+      if (operation)
+        operation.status = action.payload.status;
     },
-    rejectOperation: (state, action: PayloadAction<PendingOperation>) => {
-      const operation = action.payload;
-      state.pendingOperations = state.pendingOperations.filter(o => o.hash !== operation.hash);
-      const service = state.services.find(s => s.contractAddress === operation.serviceAddress);
-      if (service)
-        showOperationNotification(service, operation, OperationNotificationType.error);
+    setPendingOperationConfirmationCount: (state, action: PayloadAction<{ hash: string, confirmationCount: number }>) => {
+      const operation = state.pendingOperations.find(o => o.hash === action.payload.hash);
+      if (operation)
+        operation.confirmationCount = action.payload.confirmationCount;
     },
-    setOperationConfirmation: (state, action: PayloadAction<{ operation: PendingOperation, confirmationCount: number }>) => {
-      const operation = state.pendingOperations.find(o => o.hash === action.payload.operation.hash);
-      const confirmationCount = action.payload.confirmationCount;
-      if (operation) {
-        operation.confirmationCount = confirmationCount;
-      }
+    deletePendingOperation: (state, action: PayloadAction<string>) => {
+      state.pendingOperations = state.pendingOperations.filter(o => o.hash !== action.payload);
     },
   },
   extraReducers: builder => {
@@ -217,24 +195,4 @@ export const servicesSlice = createSlice({
   }
 });
 
-const showOperationNotification = (service: Service, operation: PendingOperation, type: OperationNotificationType) => {
-  //TODO it seems it is not good place for ui updates, we will refactor this with new ui
-  const contentPostfix = `${operation.action.split('/').pop()} for service: ${service.name}`;
-  const key = operation.hash;
-
-  switch (type) {
-    case OperationNotificationType.loading:
-      message.loading({ content: `Executing operation: ${contentPostfix}`, key, duration: 0 });
-      break;
-
-    case OperationNotificationType.success:
-      message.success({ content: `Finished operation: ${contentPostfix}`, key, duration: 4 });
-      break;
-
-    case OperationNotificationType.error:
-      message.error({ content: `Failed operation: ${contentPostfix}`, key, duration: 4 });
-      break;
-  }
-};
-
-export const { addPendingOperation, confirmOperation, rejectOperation, setOperationConfirmation } = servicesSlice.actions;
+export const { addPendingOperation, setPendingOperationStatus, setPendingOperationConfirmationCount, deletePendingOperation } = servicesSlice.actions;

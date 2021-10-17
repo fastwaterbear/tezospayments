@@ -13,6 +13,7 @@ import { AcceptPaymentsPure } from '../views/AcceptPayments';
 import { ServiceViewMode } from '../views/Service/Service';
 import { HeaderPure } from './Header';
 import { NavBarPure } from './NavBar';
+import { NotificationsPure } from './Notifications';
 
 import 'antd/dist/antd.css';
 import './App.scss';
@@ -26,6 +27,7 @@ export const App = () => {
   }, [dispatch]);
 
   return <div className="main-container">
+    <NotificationsPure />
     <HeaderPure />
     <NavBarPure />
     {!initialized
