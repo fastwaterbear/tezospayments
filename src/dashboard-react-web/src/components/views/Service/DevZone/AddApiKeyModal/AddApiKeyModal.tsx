@@ -52,7 +52,8 @@ export const AddApiKeyModal = (props: AddApiKeyModalProps) => {
 
   const handleAddKeyConfirm = useCallback(() => {
     dispatch(addApiKey({ service: props.service, signingKey: { name, publicKey } }));
-  }, [dispatch, name, props.service, publicKey]);
+    props.onCancel();
+  }, [dispatch, name, props, publicKey]);
 
   return <Modal className="api-key-modal" title={`${servicesLangResources.devZone.addKey} (${langResources.common.comingSoon.toLowerCase()})`}
     centered destroyOnClose visible={props.visible} onCancel={props.onCancel}

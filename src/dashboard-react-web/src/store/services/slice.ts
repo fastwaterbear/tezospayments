@@ -145,13 +145,13 @@ const waitOperationConfirmation = (
         async error => {
           dispatch(setPendingOperationStatus({ hash: pendingOperation.hash, status: PendingOperationStatus.error }));
           reject(error);
-          await wait(3000);
+          await wait(1000);
           dispatch(deletePendingOperation(pendingOperation.hash));
         },
         async () => {
           dispatch(setPendingOperationStatus({ hash: pendingOperation.hash, status: PendingOperationStatus.success }));
           resolve();
-          await wait(3000);
+          await wait(1000);
           dispatch(deletePendingOperation(pendingOperation.hash));
         }
       );
