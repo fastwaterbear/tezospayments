@@ -35,7 +35,7 @@ export const AcceptPaymentsSettings = (props: AcceptPaymentsSettingsProps) => {
   const operationsByService = useSelector(getOperationsByService);
 
   const services = useAppSelector(getSortedServices);
-  const serviceOptions = services.map(service => ({
+  const serviceOptions = services.filter(s => !s.deleted).map(service => ({
     label: service.name,
     value: service.contractAddress,
     disabled: operationsByService.has(service.contractAddress)

@@ -62,7 +62,7 @@ export const createService = createAsyncThunk<void, Service, AppThunkAPI>(
   `${namespace}/createService`,
   async (service, { extra: app, dispatch, getState }) => {
     const operation = await app.services.servicesService.createService(service);
-    await waitOperationConfirmation(dispatch, operation, service.contractAddress, 'creating');
+    await waitOperationConfirmation(dispatch, operation, service.contractAddress, 'creating new service');
     reloadServices(dispatch, getState);
   }
 );

@@ -12,7 +12,7 @@ export const Notifications = () => {
     pendingOperations.forEach(operation => {
       const service = services.find(s => s.contractAddress === operation.serviceAddress);
 
-      const content = <span><b>{operation.action}</b> for service: <b>{`${service?.name}`}</b></span>;
+      const content = <span><b>{operation.action}</b>{service && <> for service: <b>{`${service.name}`}</b></>}</span>;
       const key = operation.hash;
 
       switch (operation.status) {
