@@ -55,7 +55,7 @@ export const config: AppConfig = {
         explorers: {
           tzKT: { url: 'https://granadanet.tzkt.io', title: 'TzKT' }
         },
-        servicesFactoryContractAddress: 'KT1Ja5k4rv85fiJPJ5jR1vpmCzoSzsyuW5kP'
+        servicesFactoryContractAddress: 'KT1NxBzCJtvHFLKfiSAX3PGxdiJMAC8CtSZV'
       }
     }
   }

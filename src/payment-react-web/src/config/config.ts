@@ -34,7 +34,7 @@ export const config: AppConfig = {
           tzStats: { baseUrl: 'https://granada.tzstats.com', title: 'TzStats' },
           betterCallDev: { baseUrl: 'https://better-call.dev', title: 'Better Call Dev' }
         },
-        servicesFactoryContractAddress: 'KT1Ja5k4rv85fiJPJ5jR1vpmCzoSzsyuW5kP'
+        servicesFactoryContractAddress: 'KT1NxBzCJtvHFLKfiSAX3PGxdiJMAC8CtSZV'
       }
     }
   }
