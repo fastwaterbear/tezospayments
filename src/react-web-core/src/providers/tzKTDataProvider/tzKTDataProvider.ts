@@ -34,18 +34,15 @@ export class TzKTDataProvider implements ServicesProvider {
     const keyValue: ServicesBigMapKeyValuePairDto = await response.json();
     const contractAddresses = keyValue.value;
 
-    const rawContractsInfoPromises = contractAddresses.map(v => fetch(`${this.baseUrl}/v1/contracts/${v}/storage`).then(r => r.json()));
-    const rawContractsInfo = await Promise.all<ServiceDto>(rawContractsInfoPromises);
-
-    return rawContractsInfo
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      .map((s, i) => this.mapServiceDtoToService(s, contractAddresses[i]!, this.network))
-      .filter((s): s is Service => !!s);
+    return Promise.all(contractAddresses.map(contractAddress => this.getService(contractAddress)));
   }
 
   async getOperations(serviceContractAddress: string): Promise<readonly ServiceOperation[]> {
-    // TODO: use URL builder
-    const response = await fetch(`${this.baseUrl}/v1/accounts/${serviceContractAddress}/operations?type=transaction&parameters.as=*%22entrypoint%22:%22send_payment%22*`);
+    const url = new URL(`v1/accounts/${serviceContractAddress}/operations`, this.baseUrl);
+    url.searchParams.set('type', 'transaction');
+    url.searchParams.set('entrypoint', 'send_payment');
+
+    const response = await fetch(url.href);
     const operations: OperationDto[] = await response.json();
 
     return operations.map(operation => this.mapOperationToServiceOperation(operation));

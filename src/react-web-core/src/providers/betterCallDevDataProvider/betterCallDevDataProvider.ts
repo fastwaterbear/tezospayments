@@ -41,8 +41,10 @@ export class BetterCallDevDataProvider implements ServicesProvider {
   }
 
   async getOperations(serviceContractAddress: string): Promise<readonly ServiceOperation[]> {
-    // TODO: use URL builder
-    const response = await fetch(`${this.baseUrl}/v1/contract/${this.network.name}/${serviceContractAddress}/operations?entrypoints=send_payment`);
+    const url = new URL(`v1/contract/${this.network.name}/${serviceContractAddress}/operations`, this.baseUrl);
+    url.searchParams.set('entrypoints', 'send_payment');
+
+    const response = await fetch(url.href);
     const operations: SendPaymentOperationDto[] = (await response.json()).operations;
 
     return operations.filter(operation => !operation.internal)
