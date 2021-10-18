@@ -50,7 +50,8 @@ export const config: AppConfig = {
           smartPy: 'https://granadanet.smartpy.io'
         },
         indexerUrls: {
-          tzKT: 'https://api.granadanet.tzkt.io'
+          tzKT: 'https://api.granadanet.tzkt.io',
+          betterCallDev: 'https://api.better-call.dev'
         },
         explorers: {
           tzKT: { url: 'https://granadanet.tzkt.io', title: 'TzKT' }

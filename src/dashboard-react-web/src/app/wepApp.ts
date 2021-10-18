@@ -4,7 +4,7 @@ import { TezosToolkit } from '@taquito/taquito';
 import { History, createBrowserHistory } from 'history';
 
 import { Network, networks } from '@tezospayments/common';
-import { ServicesProvider, TzKTDataProvider } from '@tezospayments/react-web-core';
+import { ServicesProvider, TzKTDataProvider, BetterCallDevDataProvider } from '@tezospayments/react-web-core';
 
 import { config } from '../config';
 import { AccountsService } from '../services/accountsService';
@@ -83,9 +83,14 @@ export class WebApp {
     const networkConfig = config.tezos.networks[network.name];
     const indexerName = networkConfig.default.indexer;
 
-    if (indexerName === 'tzKT')
-      return new TzKTDataProvider(network, networkConfig.indexerUrls.tzKT, networkConfig.servicesFactoryContractAddress);
-    throw new Error('Unknown service provider');
+    switch (indexerName) {
+      case 'tzKT':
+        return new TzKTDataProvider(network, networkConfig.indexerUrls.tzKT, networkConfig.servicesFactoryContractAddress);
+      case 'betterCallDev':
+        return new BetterCallDevDataProvider(network, networkConfig.indexerUrls.betterCallDev, networkConfig.servicesFactoryContractAddress);
+      default:
+        throw new Error('Unknown service provider');
+    }
   }
 
   private getNetworkError() {
