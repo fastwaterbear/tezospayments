@@ -9,7 +9,7 @@ export interface ServiceDto {
   owner: string;
   paused: boolean
   version: string;
-  signing_keys?: {
+  signing_keys: {
     [publicKey: string]: { public_key: string; name: string | null }
   }
 }
@@ -55,4 +55,3 @@ export interface OperationDto {
 export interface OperationWithDate extends OperationDto {
   date: Date;
 }
-

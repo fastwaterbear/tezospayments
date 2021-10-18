@@ -84,15 +84,11 @@ export class TzKTDataProvider implements ServicesProvider {
   }
 
   private mapSigningKeyDtosToSigningKeys(signingKeyDtos: ServiceDto['signing_keys']): Service['signingKeys'] {
-    const resultMap = new Map<ServiceSigningKey['publicKey'], ServiceSigningKey>();
-
-    return signingKeyDtos
-      ? Object.keys(signingKeyDtos)
-        .reduce(
-          (map, signingKey) => map.set(signingKey, { publicKey: signingKey, name: signingKeyDtos[signingKey]?.name || undefined }),
-          resultMap
-        )
-      : resultMap;
+    return Object.keys(signingKeyDtos)
+      .reduce(
+        (map, signingKey) => map.set(signingKey, { publicKey: signingKey, name: signingKeyDtos[signingKey]?.name || undefined }),
+        new Map<ServiceSigningKey['publicKey'], ServiceSigningKey>()
+      );
   }
 
   private mapOperationToServiceOperation(operationDto: OperationDto): ServiceOperation {
