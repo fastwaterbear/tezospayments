@@ -21,7 +21,7 @@ const defaultProps: DefaultServiceInfoProps = {
 
 export const ServiceInfo = (props: ServiceInfoProps & DefaultServiceInfoProps) => {
   const appContext = useAppContext();
-  const contractUrl = appContext.tezosExplorer.getContractUrl(props.service.contractAddress);
+  const contractUrl = appContext.tezosExplorer.getAccountUrl(props.service.contractAddress);
 
   return <div className="service-info">
     <ServiceIcon className="service-info__icon" iconUrl={props.service.iconUrl} serviceName={props.service.name} />

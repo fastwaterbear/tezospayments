@@ -1,11 +1,15 @@
 import { BlockchainUrlExplorer } from './blockchainUrlExplorer';
 
 export class TzKTBlockchainUrlExplorer extends BlockchainUrlExplorer {
-  getOperationUrl(operationHash: string) {
-    return `${this.baseUrl}/${operationHash}`;
+  getEntityUrl(entity: string) {
+    return `${this.baseUrl}/${entity}`;
   }
 
-  getContractUrl(contractAddress: string) {
-    return `${this.baseUrl}/${contractAddress}`;
+  getOperationUrl(operationHash: string) {
+    return this.getEntityUrl(operationHash);
+  }
+
+  getAccountUrl(contractAddress: string) {
+    return this.getEntityUrl(contractAddress);
   }
 }

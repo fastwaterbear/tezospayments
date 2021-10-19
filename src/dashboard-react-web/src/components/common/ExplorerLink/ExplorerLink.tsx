@@ -22,7 +22,7 @@ export const ExplorerLink = (props: ExplorerLinkProps) => {
   }, [props.hash]);
 
   return <div className="explorer-link__container">
-    <a href={appContext.tezosExplorer.getOperationUrl(props.hash)} target="_blank" rel="noreferrer" className={props.className}>
+    <a href={appContext.tezosExplorer.getEntityUrl(props.hash)} target="_blank" rel="noreferrer" className={props.className}>
       {props.children}
     </a>
     {props.showCopyButton && <CopyOutlined className="explorer-link__copy-icon" title={commonLangResources.copy} onClick={handleCopyAddressClick} />}

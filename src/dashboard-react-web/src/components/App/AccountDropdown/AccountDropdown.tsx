@@ -29,7 +29,7 @@ export const AccountDropDown = () => {
 
   const handleViewOnExplorerClick = useCallback(() => {
     if (currentExplorer) {
-      window.open(appContext.tezosExplorer.getContractUrl(currentAccountAddress), '_blank');
+      window.open(appContext.tezosExplorer.getAccountUrl(currentAccountAddress), '_blank');
     }
   }, [appContext.tezosExplorer, currentAccountAddress, currentExplorer]);
 
