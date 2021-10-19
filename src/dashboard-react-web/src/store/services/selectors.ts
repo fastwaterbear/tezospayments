@@ -46,6 +46,17 @@ export const getSortedServices = createSelector(
 export const getOperationsByService = createSelector(
   selectServicesState,
   servicesState => {
-    return servicesState.pendingOperations.reduce((p, c) => p.set(c.serviceAddress, [...(p.get(c.serviceAddress) || []), c]), new Map<string, PendingOperation[]>());
+    const operationsMap = new Map<string, PendingOperation[]>();
+
+    servicesState.pendingOperations.forEach(op => {
+      const operations = operationsMap.get(op.serviceAddress);
+
+      if (operations)
+        operations.push(op);
+      else
+        operationsMap.set(op.serviceAddress, [op]);
+    });
+
+    return operationsMap;
   }
 );
