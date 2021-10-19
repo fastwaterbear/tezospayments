@@ -1,39 +1,26 @@
-import { Action, AnyAction, createAction, createReducer } from '@reduxjs/toolkit';
+import { createAction, createReducer, isRejected } from '@reduxjs/toolkit';
 
 import type { ApplicationError } from '../models/system';
 
 export const handleError = createAction<Error>('handleError');
 export const clearError = createAction('clearError');
 
-interface RejectedErrorAction extends Action {
-  readonly payload: Error;
-  readonly error: {
-    readonly message: 'Rejected'
-  }
-}
-
-type ErrorAction =
-  | Action & { readonly error: ApplicationError; }
-  | RejectedErrorAction;
-
-const isErrorAction = (action: AnyAction): action is ErrorAction => {
-  return action.type === handleError.type || action.type.endsWith('rejected');
-};
-
-const isRejectErrorAction = (action: AnyAction): action is RejectedErrorAction => {
-  return action.error?.message === 'Rejected';
-};
-
-const initialState: ApplicationError | null = null;
+const initialState = null as ApplicationError | null;
 export const applicationErrorReducer = createReducer(
-  (initialState as ApplicationError | null),
+  initialState,
   builder => builder
     .addCase(clearError, () => null)
     .addMatcher(
-      isErrorAction,
-      (_state, action) => isRejectErrorAction(action)
-        ? { ...action.payload }
-        : { ...action.error }
+      isRejected,
+      (_state, action) => action.meta.rejectedWithValue
+        ? {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          message: action.payload && (action.payload as any).toString()
+        }
+        : {
+          message: action.error.message || 'Application Error',
+          source: action.error
+        }
     )
 );
 

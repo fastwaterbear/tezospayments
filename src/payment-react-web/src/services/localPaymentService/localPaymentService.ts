@@ -1,4 +1,4 @@
-import { RequestPermissionInput } from '@airgap/beacon-sdk';
+import { RequestPermissionInput, AbortedBeaconError } from '@airgap/beacon-sdk';
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit, TransactionWalletOperation, Wallet } from '@taquito/taquito';
 import BigNumber from 'bignumber.js';
@@ -13,8 +13,7 @@ import { NetworkDonation, NetworkPayment } from '../../models/payment';
 import { PaymentInfo } from '../../models/payment/paymentInfo';
 import { AppStore } from '../../store';
 import { confirmPayment } from '../../store/currentPayment';
-import { ServiceResult } from '../serviceResult';
-import { errors, LocalPaymentServiceError } from './errors';
+import { errors } from './errors';
 import { PaymentProvider, SerializedPaymentBase64Provider } from './paymentProviders';
 import { RawPaymentInfo, UrlRawPaymentInfoParser } from './urlRawPaymentInfoParser';
 
@@ -45,41 +44,29 @@ export class LocalPaymentService {
     this.servicesProvider = options.servicesProvider;
   }
 
-  async getCurrentPaymentInfo(): Promise<ServiceResult<PaymentInfo, LocalPaymentServiceError>> {
-    const paymentResult = await this.getCurrentPayment();
-    if (paymentResult.isServiceError)
-      return paymentResult;
-
-    const serviceResult = await this.getCurrentService();
-    if (serviceResult.isServiceError)
-      return serviceResult;
+  async getCurrentPaymentInfo(): Promise<PaymentInfo> {
+    const payment = await this.getCurrentPayment();
+    const service = await this.getCurrentService();
 
     return {
-      payment: paymentResult,
-      service: serviceResult
+      payment,
+      service
     };
   }
 
-  async getCurrentPayment(): Promise<ServiceResult<Payment | Donation, LocalPaymentServiceError>> {
-    const currentRawPaymentInfoResult = this.parseRawPaymentInfo(window.location);
-    if (currentRawPaymentInfoResult.isServiceError)
-      return currentRawPaymentInfoResult;
+  async getCurrentPayment(): Promise<Payment | Donation> {
+    const currentRawPaymentInfo = this.parseRawPaymentInfo(window.location);
+    const paymentProvider = this.getPaymentProvider(currentRawPaymentInfo);
 
-    const paymentProviderResult = this.getPaymentProvider(currentRawPaymentInfoResult);
-    if (paymentProviderResult.isServiceError)
-      return paymentProviderResult;
-
-    return currentRawPaymentInfoResult.operationType === 'payment'
-      ? paymentProviderResult.getPayment(currentRawPaymentInfoResult)
-      : paymentProviderResult.getDonation(currentRawPaymentInfoResult);
+    return currentRawPaymentInfo.operationType === 'payment'
+      ? paymentProvider.getPayment(currentRawPaymentInfo)
+      : paymentProvider.getDonation(currentRawPaymentInfo);
   }
 
-  async getCurrentService(): Promise<ServiceResult<Service, LocalPaymentServiceError>> {
-    const currentRawPaymentInfoResult = this.parseRawPaymentInfo(window.location);
-    if (currentRawPaymentInfoResult.isServiceError)
-      return currentRawPaymentInfoResult;
+  async getCurrentService(): Promise<Service> {
+    const currentRawPaymentInfo = this.parseRawPaymentInfo(window.location);
 
-    return this.servicesProvider.getService(currentRawPaymentInfoResult.targetAddress);
+    return this.servicesProvider.getService(currentRawPaymentInfo.targetAddress);
   }
 
   async pay(payment: NetworkPayment): Promise<boolean> {
@@ -107,12 +94,13 @@ export class LocalPaymentService {
   }
 
   protected parseRawPaymentInfo = memoize(
-    (url: URL | Location): ServiceResult<RawPaymentInfo, LocalPaymentServiceError> => {
+    (url: URL | Location): RawPaymentInfo => {
       const parserResult = this.urlRawPaymentInfoParser.parse(url);
 
-      return typeof parserResult !== 'string'
-        ? parserResult
-        : { isServiceError: true, error: parserResult };
+      if (typeof parserResult === 'string')
+        throw new Error(parserResult);
+
+      return parserResult;
     }
   );
 
@@ -123,24 +111,32 @@ export class LocalPaymentService {
     assetTokenAddress: string | undefined,
     payload: string
   ): Promise<boolean> {
-    await this.tezosWallet.client.clearActiveAccount();
-    const canceled = await this.requestPermissions({ network: { type: converters.networkToBeaconNetwork(this.network) } });
-    if (canceled)
-      return false;
+    try {
+      await this.tezosWallet.client.clearActiveAccount();
+      const canceled = await this.requestPermissions({ network: { type: converters.networkToBeaconNetwork(this.network) } });
+      if (canceled)
+        return false;
 
-    const contract = await this.tezosToolkit.wallet.at<TezosPaymentsServiceContract<Wallet>>(targetAddress);
+      const contract = await this.tezosToolkit.wallet.at<TezosPaymentsServiceContract<Wallet>>(targetAddress);
 
-    const result = await contract.methods.send_payment(
-      assetTokenAddress as void,
-      serviceOperationType,
-      'public',
-      payload,
-    )
-      .send({ amount });
+      const result = await contract.methods.send_payment(
+        assetTokenAddress as void,
+        serviceOperationType,
+        'public',
+        payload,
+      )
+        .send({ amount });
 
-    await this.waitConfirmation(result);
+      await this.waitConfirmation(result);
 
-    return true;
+      return true;
+
+    } catch (error: unknown) {
+      if (error instanceof AbortedBeaconError)
+        return false;
+
+      throw error;
+    }
   }
 
   protected requestPermissions(request?: RequestPermissionInput) {
@@ -156,9 +152,12 @@ export class LocalPaymentService {
       });
   }
 
-  protected getPaymentProvider(rawPaymentInfo: RawPaymentInfo): ServiceResult<PaymentProvider, LocalPaymentServiceError> {
-    return this.paymentProviders.find(paymentProvider => paymentProvider.isMatch(rawPaymentInfo))
-      || { isServiceError: true, error: rawPaymentInfo.operationType === 'payment' ? errors.invalidPayment : errors.invalidDonation };
+  protected getPaymentProvider(rawPaymentInfo: RawPaymentInfo): PaymentProvider {
+    const paymentProvider = this.paymentProviders.find(paymentProvider => paymentProvider.isMatch(rawPaymentInfo));
+    if (!paymentProvider)
+      throw new Error(rawPaymentInfo.operationType === 'payment' ? errors.invalidPayment : errors.invalidDonation);
+
+    return paymentProvider;
   }
 
   private waitConfirmation(operation: TransactionWalletOperation, confirmations?: number) {
