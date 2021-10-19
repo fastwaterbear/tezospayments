@@ -9,10 +9,11 @@ import { combineClassNames } from '@tezospayments/common';
 import { Account } from '../../../models/blockchain';
 import { getAccountsByNetwork, getCurrentAccount, getCurrentNetworkConfig } from '../../../store/accounts/selectors';
 import { disconnectAccount } from '../../../store/accounts/slice';
-import { useAppDispatch, useAppSelector, useCurrentLanguageResources } from '../../hooks';
+import { useAppContext, useAppDispatch, useAppSelector, useCurrentLanguageResources } from '../../hooks';
 import { AccountNetworkGroupPure } from './AccountNetworkGroup';
 
 export const AccountDropDown = () => {
+  const appContext = useAppContext();
   const langResources = useCurrentLanguageResources();
   const actionsLangResources = langResources.views.header.accountActions;
 
@@ -28,9 +29,9 @@ export const AccountDropDown = () => {
 
   const handleViewOnExplorerClick = useCallback(() => {
     if (currentExplorer) {
-      window.open(`${currentExplorer.url}${currentAccountAddress}`, '_blank');
+      window.open(appContext.tezosExplorer.getContractUrl(currentAccountAddress), '_blank');
     }
-  }, [currentAccountAddress, currentExplorer]);
+  }, [appContext.tezosExplorer, currentAccountAddress, currentExplorer]);
 
   const dispatch = useAppDispatch();
   const handleDisconnectButtonClick = useCallback(() => {

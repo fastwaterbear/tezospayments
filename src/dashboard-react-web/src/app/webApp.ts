@@ -4,7 +4,10 @@ import { TezosToolkit } from '@taquito/taquito';
 import { History, createBrowserHistory } from 'history';
 
 import { Network, networks } from '@tezospayments/common';
-import { ServicesProvider, TzKTDataProvider, BetterCallDevDataProvider, BlockchainUrlExplorer, TzStatsBlockchainUrlExplorer, BetterCallDevBlockchainUrlExplorer } from '@tezospayments/react-web-core';
+import {
+  ServicesProvider, TzKTDataProvider, BetterCallDevDataProvider,
+  BlockchainUrlExplorer, TzStatsBlockchainUrlExplorer, BetterCallDevBlockchainUrlExplorer, TzKTBlockchainUrlExplorer
+} from '@tezospayments/react-web-core';
 
 import { config } from '../config';
 import { AccountsService } from '../services/accountsService';
@@ -107,10 +110,12 @@ export class WebApp {
     const explorerName = networkConfig.default.explorer;
 
     switch (explorerName) {
+      case 'tzKT':
+        return new TzKTBlockchainUrlExplorer(network, networkConfig.explorers.tzKT.baseUrl);
       case 'tzStats':
-        return new TzStatsBlockchainUrlExplorer(network, networkConfig.explorers.tzStats.url);
+        return new TzStatsBlockchainUrlExplorer(network, networkConfig.explorers.tzStats.baseUrl);
       case 'betterCallDev':
-        return new BetterCallDevBlockchainUrlExplorer(network, networkConfig.explorers.betterCallDev.url);
+        return new BetterCallDevBlockchainUrlExplorer(network, networkConfig.explorers.betterCallDev.baseUrl);
       default:
         throw new Error('Unknown blockchain explorer');
     }

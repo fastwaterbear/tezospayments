@@ -15,7 +15,7 @@ interface NetworkConfig {
   },
   rpcUrls: { [key in RpcProvider]: string };
   indexerUrls: { [key in IndexerProvider]: string };
-  explorers: { [key in ExplorerProvider]: { url: string; title: string } };
+  explorers: { [key in ExplorerProvider]: { baseUrl: string; title: string } };
 }
 
 export type AppConfig = DeepReadonly<{

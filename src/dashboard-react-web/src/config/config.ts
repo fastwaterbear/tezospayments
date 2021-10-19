@@ -44,7 +44,7 @@ export const config: AppConfig = {
         default: {
           rpc: 'smartPy',
           indexer: 'tzKT',
-          explorer: 'tzStats'
+          explorer: 'tzKT'
         },
         rpcUrls: {
           smartPy: 'https://granadanet.smartpy.io'
@@ -54,9 +54,9 @@ export const config: AppConfig = {
           betterCallDev: 'https://api.better-call.dev'
         },
         explorers: {
-          tzKT: { url: 'https://granadanet.tzkt.io', title: 'TzKT' },
-          betterCallDev: { url: 'https://better-call.dev', title: 'Better Call Dev' },
-          tzStats: { url: 'https://granada.tzstats.com', title: 'TzStats' }
+          tzKT: { baseUrl: 'https://granadanet.tzkt.io', title: 'TzKT' },
+          betterCallDev: { baseUrl: 'https://better-call.dev', title: 'Better Call Dev' },
+          tzStats: { baseUrl: 'https://granada.tzstats.com', title: 'TzStats' }
         },
         servicesFactoryContractAddress: 'KT1NxBzCJtvHFLKfiSAX3PGxdiJMAC8CtSZV'
       }
