@@ -1,8 +1,8 @@
 import type { DeepReadonly, Network } from '@tezospayments/common';
 
 type RpcProvider = 'smartpy';
-type IndexerProvider = 'betterCallDev' | 'tzKT' | 'tzStats';
-type ExplorerProvider = 'betterCallDev' | 'tzStats';
+type IndexerProvider = 'tzKT' | 'tzStats' | 'betterCallDev';
+type ExplorerProvider = 'tzKT' | 'tzStats' | 'betterCallDev';
 
 interface NetworkConfig {
   title: string;

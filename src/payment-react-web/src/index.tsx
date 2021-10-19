@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import { Provider } from 'react-redux';
 
-import { AppViewContext, WebApp } from './app';
+import { ReactAppContext, WebApp } from './app';
 import { App as AppComponent } from './components/App';
 import { AppConfig, config } from './config';
 import reportWebVitals from './reportWebVitals';
@@ -39,9 +39,9 @@ const app = new WebApp(app => configureStore({
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={app.store}>
-      <AppViewContext.Provider value={app.services}>
+      <ReactAppContext.Provider value={app.reactAppContext}>
         <AppComponent />
-      </AppViewContext.Provider>
+      </ReactAppContext.Provider>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')

@@ -3,20 +3,23 @@ import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit } from '@taquito/taquito';
 
 import { Network, networks } from '@tezospayments/common';
-import { BetterCallDevBlockchainUrlExplorer, BetterCallDevDataProvider, ServicesProvider, TzKTDataProvider, TzStatsBlockchainUrlExplorer } from '@tezospayments/react-web-core';
+import {
+  BetterCallDevBlockchainUrlExplorer, BetterCallDevDataProvider, BlockchainUrlExplorer,
+  ServicesProvider, TzKTBlockchainUrlExplorer, TzKTDataProvider, TzStatsBlockchainUrlExplorer
+} from '@tezospayments/react-web-core';
 
 import { config } from '../config';
 import { LocalPaymentService } from '../services/localPaymentService';
 import { AppStore } from '../store';
+import { ReactAppContext } from './reactAppContext';
 
 interface AppServices {
   readonly localPaymentService: LocalPaymentService;
-  readonly betterCallDevBlockchainUrlExplorer: BetterCallDevBlockchainUrlExplorer;
-  readonly tzStatsUrlBlockchainExplorer: TzStatsBlockchainUrlExplorer;
 }
 
 export class WebApp {
   readonly store: AppStore;
+  readonly reactAppContext: ReactAppContext;
   readonly network: Network;
   readonly services: AppServices;
   readonly tezosToolkit: TezosToolkit;
@@ -31,6 +34,7 @@ export class WebApp {
     this.tezosToolkit.setWalletProvider(this.tezosWallet);
 
     this.services = this.createServices();
+    this.reactAppContext = this.createReactAppContext();
   }
 
   private detectNetwork(): Network {
@@ -39,8 +43,13 @@ export class WebApp {
     return (networkName && networks[networkName as keyof typeof networks]) || networks[config.tezos.defaultNetwork];
   }
 
+  protected createReactAppContext(): ReactAppContext {
+    return {
+      tezosExplorer: this.createTezosBlockchainUrlExplorer(this.network)
+    };
+  }
+
   private createServices(): AppServices {
-    const networkConfig = config.tezos.networks[this.network.name];
     const servicesProvider = this.createServicesProvider(this.network);
 
     return {
@@ -50,9 +59,7 @@ export class WebApp {
         tezosToolkit: this.tezosToolkit,
         tezosWallet: this.tezosWallet,
         servicesProvider
-      }),
-      betterCallDevBlockchainUrlExplorer: new BetterCallDevBlockchainUrlExplorer(this.network, networkConfig.explorers.betterCallDev.baseUrl),
-      tzStatsUrlBlockchainExplorer: new TzStatsBlockchainUrlExplorer(this.network, networkConfig.explorers.tzStats.baseUrl)
+      })
     };
   }
 
@@ -67,6 +74,22 @@ export class WebApp {
         return new BetterCallDevDataProvider(network, networkConfig.indexerUrls.betterCallDev, networkConfig.servicesFactoryContractAddress);
       default:
         throw new Error('Unknown service provider');
+    }
+  }
+
+  private createTezosBlockchainUrlExplorer(network: Network): BlockchainUrlExplorer {
+    const networkConfig = config.tezos.networks[network.name];
+    const explorerName = networkConfig.default.explorer;
+
+    switch (explorerName) {
+      case 'tzKT':
+        return new TzKTBlockchainUrlExplorer(network, networkConfig.explorers.tzKT.baseUrl);
+      case 'tzStats':
+        return new TzStatsBlockchainUrlExplorer(network, networkConfig.explorers.tzStats.baseUrl);
+      case 'betterCallDev':
+        return new BetterCallDevBlockchainUrlExplorer(network, networkConfig.explorers.betterCallDev.baseUrl);
+      default:
+        throw new Error('Unknown blockchain explorer');
     }
   }
 }
