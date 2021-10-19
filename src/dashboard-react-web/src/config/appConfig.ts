@@ -2,7 +2,7 @@ import type { DeepReadonly, Network } from '@tezospayments/common';
 
 type RpcProvider = 'smartPy';
 type IndexerProvider = 'tzKT' | 'betterCallDev';
-type ExplorerProvider = 'tzKT';
+type ExplorerProvider = 'tzKT' | 'tzStats' | 'betterCallDev';
 
 interface NetworkConfig {
   title: string;

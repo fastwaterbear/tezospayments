@@ -4,12 +4,13 @@ import { TezosToolkit } from '@taquito/taquito';
 import { History, createBrowserHistory } from 'history';
 
 import { Network, networks } from '@tezospayments/common';
-import { ServicesProvider, TzKTDataProvider, BetterCallDevDataProvider } from '@tezospayments/react-web-core';
+import { ServicesProvider, TzKTDataProvider, BetterCallDevDataProvider, BlockchainUrlExplorer, TzStatsBlockchainUrlExplorer, BetterCallDevBlockchainUrlExplorer } from '@tezospayments/react-web-core';
 
 import { config } from '../config';
 import { AccountsService } from '../services/accountsService';
 import { ServicesService } from '../services/servicesService';
 import { AppStore } from '../store';
+import type { ReactAppContext } from './reactAppContext';
 
 interface AppServices {
   readonly accountsService: AccountsService;
@@ -18,6 +19,7 @@ interface AppServices {
 
 export class WebApp {
   readonly store: AppStore;
+  readonly reactAppContext: ReactAppContext;
   readonly tezosWallet = new BeaconWallet({ name: config.app.name, colorMode: ColorMode.LIGHT });
   readonly history: History;
 
@@ -30,9 +32,10 @@ export class WebApp {
   constructor(storeFactory: (app: WebApp) => AppStore) {
     this.store = storeFactory(this);
     this.history = this.createHistory();
-
     this.applyNetwork(networks[config.tezos.defaultNetwork]);
+
     this.unsubscribeStoreChanged = this.store.subscribe(this.onStoreChangedListener);
+    this.reactAppContext = this.createReactAppContext();
   }
 
   get network() {
@@ -65,6 +68,12 @@ export class WebApp {
     return createBrowserHistory();
   }
 
+  protected createReactAppContext(): ReactAppContext {
+    return {
+      tezosExplorer: this.createTezosBlockchainUrlExplorer(this.network)
+    };
+  }
+
   protected applyNetwork(network: Network) {
     this._network = network;
 
@@ -90,6 +99,20 @@ export class WebApp {
         return new BetterCallDevDataProvider(network, networkConfig.indexerUrls.betterCallDev, networkConfig.servicesFactoryContractAddress);
       default:
         throw new Error('Unknown service provider');
+    }
+  }
+
+  private createTezosBlockchainUrlExplorer(network: Network): BlockchainUrlExplorer {
+    const networkConfig = config.tezos.networks[network.name];
+    const explorerName = networkConfig.default.explorer;
+
+    switch (explorerName) {
+      case 'tzStats':
+        return new TzStatsBlockchainUrlExplorer(network, networkConfig.explorers.tzStats.url);
+      case 'betterCallDev':
+        return new BetterCallDevBlockchainUrlExplorer(network, networkConfig.explorers.betterCallDev.url);
+      default:
+        throw new Error('Unknown blockchain explorer');
     }
   }
 
