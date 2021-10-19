@@ -14,6 +14,9 @@ import './index.scss';
 
 const app = new WebApp(app => configureStore({
   reducer: appReducer,
+  devTools: {
+    serialize: true
+  },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       thunk: {
@@ -21,11 +24,16 @@ const app = new WebApp(app => configureStore({
       },
       serializableCheck: {
         isSerializable: (value: unknown) => isPlain(value)
+          || value instanceof Map
+          || value instanceof Set
           || BigNumber.isBigNumber(value)
-          || value instanceof Date
-          || value instanceof URL
+          || value instanceof Date,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        getEntries: (value: any) => value instanceof Map || value instanceof Set
+          ? [...value.entries()]
+          : Object.entries(value)
       }
-    }),
+    })
 }));
 
 ReactDOM.render(
