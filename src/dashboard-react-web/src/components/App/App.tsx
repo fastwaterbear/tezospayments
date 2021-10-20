@@ -39,16 +39,16 @@ export const App = () => {
         <PrivateRouteContainer exact path={config.routers.operations}>
           <OperationsPure />
         </PrivateRouteContainer>
-        <PrivateRouteContainer exact path={`${config.routers.services}/create`}>
+        <PrivateRouteContainer exact path={config.routers.createService}>
           <ServicePure mode={ServiceViewMode.Create} />
         </PrivateRouteContainer>
-        <PrivateRouteContainer exact path={`${config.routers.services}/:address`}>
+        <PrivateRouteContainer exact path={config.routers.service.template}>
           <ServicePure mode={ServiceViewMode.ViewAndEdit} />
         </PrivateRouteContainer>
         <PrivateRouteContainer exact path={config.routers.services}>
           <ServicesPure />
         </PrivateRouteContainer>
-        <PrivateRouteContainer exact path={`${config.routers.acceptPayments}/:address?`}>
+        <PrivateRouteContainer exact path={[config.routers.acceptPayments, config.routers.acceptServicePayments.template]}>
           <AcceptPaymentsPure />
         </PrivateRouteContainer>
         <Route path={config.routers.about}>

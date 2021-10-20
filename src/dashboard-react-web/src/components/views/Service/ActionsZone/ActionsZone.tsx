@@ -20,7 +20,7 @@ export const ActionsZone = ({ service, readOnly }: ActionsZoneProps) => {
   const history = useHistory();
 
   const handleAcceptPaymentsClick = useCallback(() => {
-    history.push(`${config.routers.acceptPayments}/${service.contractAddress}`);
+    history.push(config.routers.acceptServicePayments(service.contractAddress));
   }, [history, service.contractAddress]);
 
   return <div className="service-actions-zone">

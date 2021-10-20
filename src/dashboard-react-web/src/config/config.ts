@@ -1,3 +1,4 @@
+import { getParameterizedRoute } from '@tezospayments/common';
 import { defaultConfig } from '@tezospayments/react-web-core';
 
 import type { AppConfig } from './appConfig';
@@ -23,7 +24,10 @@ export const config: AppConfig = {
     overview: '/',
     operations: '/operations',
     services: '/services',
+    service: getParameterizedRoute(address => `/services/${address}`, '/services/:address'),
+    createService: '/services/create',
     acceptPayments: '/accept',
+    acceptServicePayments: getParameterizedRoute(address => `/accept/${address}`, '/accept/:address'),
     connect: '/connect',
     about: '/about'
   },

@@ -13,7 +13,7 @@ export const NoServicesCreated = () => {
   const history = useHistory();
 
   const handleCreateServiceClick = useCallback(() => {
-    history.push(`${config.routers.services}/create`);
+    history.push(config.routers.createService);
   }, [history]);
 
   return <div className="no-services-created">

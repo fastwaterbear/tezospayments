@@ -15,7 +15,7 @@ export const NewServiceCard = () => {
   const history = useHistory();
 
   const handleCardClick = useCallback(() => {
-    history.push(`${config.routers.services}/create`);
+    history.push(config.routers.createService);
   }, [history]);
 
   return <Card bodyStyle={{ padding: 0 }} className="new-service-card-container" onClick={handleCardClick}>
