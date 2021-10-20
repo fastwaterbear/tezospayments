@@ -1,42 +1,26 @@
-import { AppConfig } from './appConfig';
+import { defaultConfig } from '@tezospayments/react-web-core';
+
+import type { AppConfig } from './appConfig';
+
+const commitShortSha = process.env.REACT_APP_COMMIT_SHORT_SHA || '';
 
 export const config: AppConfig = {
+  ...defaultConfig,
   app: {
-    publicUrl: process.env.PUBLIC_URL || 'https://github.com/fastwaterbear/',
-    sourcesUrl: 'https://github.com/fastwaterbear/',
+    publicUrl: process.env.PUBLIC_URL || '/',
     name: 'Tezos Payments',
     title: 'Tezos Payments',
+    version: {
+      name: 'Dev Version',
+      link: 'https://github.com/fastwaterbear/tezospayments/tree/master'
+    },
     buildInfo: {
-      commitShortSha: process.env.REACT_APP_COMMIT_SHORT_SHA || ''
+      commitShortSha,
+      link: `https://github.com/fastwaterbear/tezospayments/tree/${commitShortSha}`
     }
   },
-  tezos: {
-    officialSiteUrl: 'https://tezos.com/',
-    defaultNetwork: 'granadanet',
-    networks: {
-      granadanet: {
-        title: 'Granada Testnet',
-        color: '#667eea',
-        default: {
-          rpc: 'smartpy',
-          indexer: 'tzKT',
-          explorer: 'tzKT'
-        },
-        rpcUrls: {
-          smartpy: 'https://granadanet.smartpy.io'
-        },
-        indexerUrls: {
-          betterCallDev: 'https://api.better-call.dev',
-          tzKT: 'https://api.granadanet.tzkt.io',
-          tzStats: 'https://api.granada.tzstats.com'
-        },
-        explorers: {
-          tzKT: { baseUrl: 'https://granadanet.tzkt.io', title: 'TzKT' },
-          betterCallDev: { baseUrl: 'https://better-call.dev', title: 'Better Call Dev' },
-          tzStats: { baseUrl: 'https://granada.tzstats.com', title: 'TzStats' }
-        },
-        servicesFactoryContractAddress: 'KT1NxBzCJtvHFLKfiSAX3PGxdiJMAC8CtSZV'
-      }
-    }
+  links: {
+    ...defaultConfig.links,
+    tezos: 'https://tezos.com/'
   }
 };
