@@ -1,3 +1,4 @@
+import { isRejected } from '@reduxjs/toolkit';
 import { Button, Result } from 'antd';
 import React, { useCallback } from 'react';
 
@@ -19,7 +20,7 @@ export const Error = (props: ErrorProps) => {
   const handleButtonClick = useCallback(() => {
     dispatch(loadCurrentPayment())
       .then(payload => {
-        if (!payload.type.endsWith('rejected'))
+        if (!isRejected(payload))
           dispatch(clearError());
       });
   }, [dispatch]);

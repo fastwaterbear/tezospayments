@@ -3,6 +3,7 @@ import { createSelector } from 'reselect';
 import { Token, tokenWhitelistMap } from '@tezospayments/common';
 
 import { AppState } from '../index';
+import { PendingOperation } from './slice';
 
 // TODO
 export const selectTokensState = (_state: AppState) => tokenWhitelistMap;
@@ -39,5 +40,23 @@ export const getSortedServices = createSelector(
   selectServicesState,
   servicesState => {
     return [...servicesState.services].sort((a, b) => a.name.localeCompare(b.name));
+  }
+);
+
+export const getOperationsByService = createSelector(
+  selectServicesState,
+  servicesState => {
+    const operationsMap = new Map<string, PendingOperation[]>();
+
+    servicesState.pendingOperations.forEach(op => {
+      const operations = operationsMap.get(op.serviceAddress);
+
+      if (operations)
+        operations.push(op);
+      else
+        operationsMap.set(op.serviceAddress, [op]);
+    });
+
+    return operationsMap;
   }
 );

@@ -18,8 +18,8 @@ const namespace = 'operations';
 
 export const loadOperations = createAsyncThunk<ServiceOperation[], { servicesAddresses: string[], network: Network }, AppThunkAPI>(
   `${namespace}/loadOperations`,
-  async ({ servicesAddresses, network }, { extra: app }) => {
-    const operationsPromises = servicesAddresses.map(s => app.services.servicesService.getOperations(network, s));
+  async ({ servicesAddresses }, { extra: app }) => {
+    const operationsPromises = servicesAddresses.map(s => app.services.servicesService.getOperations(s));
     const operations = (await Promise.all(operationsPromises)).flat();
 
     return operations;

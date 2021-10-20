@@ -43,7 +43,7 @@ export const About = () => {
     <div className="about-view__powered-by">
       {aboutLangResources.poweredBy}
       &nbsp;
-      <ExternalLink href={config.links.tzktIo}>
+      <ExternalLink href={config.links.tzKT}>
         {aboutLangResources.tzKt}
       </ExternalLink>
       &nbsp;

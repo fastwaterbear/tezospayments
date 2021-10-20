@@ -1,7 +1,6 @@
 import { Payment, Donation, getEncodedPaymentUrlType, PaymentUrlType } from '@tezospayments/common';
 
-import { ServiceResult } from '../../serviceResult';
-import { errors, LocalPaymentServiceError } from '../errors';
+import { errors } from '../errors';
 import { RawPaymentInfo } from '../urlRawPaymentInfoParser';
 import { PaymentProvider } from './paymentProvider';
 
@@ -11,9 +10,7 @@ export class SerializedPaymentBase64Provider implements PaymentProvider {
     return true;
   }
 
-  getPayment(
-    rawPaymentInfo: RawPaymentInfo & { readonly operationType: 'payment'; }
-  ): ServiceResult<Payment | Promise<Payment>, LocalPaymentServiceError> {
+  getPayment(rawPaymentInfo: RawPaymentInfo & { readonly operationType: 'payment'; }): Payment | Promise<Payment> {
     const isLegacy = !rawPaymentInfo.serializedPayment.startsWith(encodedBase64PaymentUrlType);
     const serializedPayment = isLegacy ? rawPaymentInfo.serializedPayment : rawPaymentInfo.serializedPayment.substr(2);
 
@@ -25,14 +22,13 @@ export class SerializedPaymentBase64Provider implements PaymentProvider {
       isLegacy
     );
 
-    return payment && Payment.validate(payment) === undefined
-      ? payment
-      : { isServiceError: true, error: errors.invalidPayment };
+    if (!payment || Payment.validate(payment))
+      throw new Error(errors.invalidPayment);
+
+    return payment;
   }
 
-  getDonation(
-    rawPaymentInfo: RawPaymentInfo & { readonly operationType: 'donation'; }
-  ): ServiceResult<Donation | Promise<Donation>, LocalPaymentServiceError> {
+  getDonation(rawPaymentInfo: RawPaymentInfo & { readonly operationType: 'donation'; }): Donation | Promise<Donation> {
     const isLegacy = !!rawPaymentInfo.serializedPayment && !rawPaymentInfo.serializedPayment.startsWith(encodedBase64PaymentUrlType);
     const serializedDonation = (isLegacy ? rawPaymentInfo.serializedPayment : rawPaymentInfo.serializedPayment?.substr(2)) || '';
 
@@ -44,8 +40,9 @@ export class SerializedPaymentBase64Provider implements PaymentProvider {
       isLegacy
     );
 
-    return donation && Donation.validate(donation) === undefined
-      ? donation
-      : { isServiceError: true, error: errors.invalidDonation };
+    if (!donation || Donation.validate(donation))
+      throw new Error(errors.invalidDonation);
+
+    return donation;
   }
 }

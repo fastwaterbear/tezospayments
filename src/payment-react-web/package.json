@@ -3,29 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@reduxjs/toolkit": "^1.6.0",
-    "@taquito/beacon-wallet": "^9.1.1",
-    "@taquito/taquito": "^9.1.1",
-    "@tezospayments/common": "^0.3.1",
-    "antd": "^4.16.3",
-    "bignumber.js": "^9.0.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-redux": "^7.2.4",
-    "web-vitals": "^1.1.2"
+    "@reduxjs/toolkit": "^1.6.2",
+    "@tezospayments/react-web-core": "*",
+    "react-redux": "^7.2.5"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^5.12.0",
-    "@testing-library/react": "^11.2.6",
-    "@testing-library/user-event": "^13.1.8",
-    "@types/jest": "^26.0.23",
-    "@types/node": "^15.0.2",
-    "@types/react": "^17.0.5",
-    "@types/react-dom": "^17.0.4",
-    "@types/react-redux": "^7.1.16",
-    "react-scripts": "4.0.3",
-    "sass": "^1.32.12",
-    "source-map-explorer": "^2.5.2"
+    "@types/react-redux": "^7.1.19"
   },
   "scripts": {
     "start": "react-scripts start",
