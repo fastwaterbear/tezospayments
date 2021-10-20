@@ -6,7 +6,7 @@ import { ExternalLink } from './common';
 
 export const Footer = () => {
   return <footer>
-    <h6 className={cssClasses.label}>Powered by <ExternalLink href={config.app.publicUrl}>Tezos Payments</ExternalLink></h6>
+    <h6 className={cssClasses.label}>Powered by <ExternalLink href={config.links.tezosPayments.webSite}>Tezos Payments</ExternalLink></h6>
 
     <span className={cssClasses.warning}>
       All payments are made through smart contracts in
