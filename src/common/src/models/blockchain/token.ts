@@ -1,4 +1,4 @@
-import { Network, networks } from './network';
+import { Network } from './network';
 
 interface TokenBase {
   readonly network: Network;
