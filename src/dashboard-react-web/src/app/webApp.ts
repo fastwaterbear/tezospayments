@@ -14,6 +14,7 @@ import { AccountsService } from '../services/accountsService';
 import { ServicesService } from '../services/servicesService';
 import { AppStore } from '../store';
 import type { ReactAppContext } from './reactAppContext';
+import { ReadOnlySigner } from './readOnlySigner';
 
 interface AppServices {
   readonly accountsService: AccountsService;
@@ -82,6 +83,7 @@ export class WebApp {
 
     const networkConfig = config.tezos.networks[this.network.name];
     this._tezosToolkit = new TezosToolkit(networkConfig.rpcUrls[networkConfig.default.rpc]);
+    this.tezosToolkit.setSignerProvider(new ReadOnlySigner());
     this.tezosToolkit.setWalletProvider(this.tezosWallet);
 
     const servicesProvider = this.createServicesProvider(this.network);
