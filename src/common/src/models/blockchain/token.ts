@@ -1,4 +1,4 @@
-import { Network } from './network';
+import { Network, networks } from './network';
 
 interface TokenBase {
   readonly network: Network;
@@ -55,6 +55,29 @@ export const tokenWhitelist: readonly Token[] = [
   //     thumbnailUri: 'https://quipuswap.com/tokens/stably.png',
   //   },
   // },
+  {
+    network: networks.granadanet,
+    type: 'fa1.2',
+    contractAddress: 'KT1KcuD9MmgZuGcptdD3qRqxXpGg4WxFsfVc',
+    metadata: {
+      decimals: 0,
+      symbol: 'fa12',
+      name: 'Test fa12',
+      thumbnailUri: 'https://dashboard.tezospayments.com/tokens/unknown.png',
+    },
+  },
+  {
+    network: networks.granadanet,
+    type: 'fa2',
+    contractAddress: 'KT1BBfxboq63dbaKCAc4uwVKLFzVn1b4fy37',
+    fa2TokenId: 0,
+    metadata: {
+      decimals: 0,
+      symbol: 'fa20',
+      name: 'Test fa20',
+      thumbnailUri: 'https://dashboard.tezospayments.com/tokens/unknown.png',
+    },
+  },
 ];
 
 export const tokenWhitelistMap: ReadonlyMap<Token['contractAddress'], Token> = new Map<Token['contractAddress'], Token>(
