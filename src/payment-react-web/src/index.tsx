@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import { Provider } from 'react-redux';
 
-import { AppViewContext, WebApp } from './app';
+import { ReactAppContext, WebApp } from './app';
 import { App as AppComponent } from './components/App';
 import { AppConfig, config } from './config';
 import reportWebVitals from './reportWebVitals';
@@ -14,6 +14,9 @@ import './index.scss';
 
 const app = new WebApp(app => configureStore({
   reducer: appReducer,
+  devTools: {
+    serialize: true
+  },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       thunk: {
@@ -21,19 +24,24 @@ const app = new WebApp(app => configureStore({
       },
       serializableCheck: {
         isSerializable: (value: unknown) => isPlain(value)
+          || value instanceof Map
+          || value instanceof Set
           || BigNumber.isBigNumber(value)
-          || value instanceof Date
-          || value instanceof URL
+          || value instanceof Date,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        getEntries: (value: any) => value instanceof Map || value instanceof Set
+          ? [...value.entries()]
+          : Object.entries(value)
       }
-    }),
+    })
 }));
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={app.store}>
-      <AppViewContext.Provider value={app.services}>
+      <ReactAppContext.Provider value={app.reactAppContext}>
         <AppComponent />
-      </AppViewContext.Provider>
+      </ReactAppContext.Provider>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')

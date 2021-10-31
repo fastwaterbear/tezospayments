@@ -10,6 +10,7 @@ import './ServiceLinkEditor.scss';
 
 interface ServiceLinkEditorProps {
   value: string;
+  readOnly: boolean;
   onChange: (e: { value: string }) => void
   onDelete: () => void;
 }
@@ -30,7 +31,7 @@ export const ServiceLinkEditor = (props: ServiceLinkEditorProps) => {
 
   return <div className="service-link-editor">
     <Icon className="service-link-editor__icon" />
-    <Input className="service-link-editor__input" value={props.value} onChange={handleChange} />
-    <Button className="service-link-editor__delete-button" type="text" danger icon={<DeleteOutlined />} onClick={props.onDelete} />
+    <Input readOnly={props.readOnly} className="service-link-editor__input" value={props.value} onChange={handleChange} />
+    <Button disabled={props.readOnly} className="service-link-editor__delete-button" type="text" danger icon={<DeleteOutlined />} onClick={props.onDelete} />
   </div>;
 };

@@ -4,6 +4,7 @@ import { optimization, Token, tokenWhitelistMap } from '@tezospayments/common';
 
 import { selectAccountsState } from '../accounts/selectors';
 import { AppState } from '../index';
+import { PendingOperation } from './slice';
 
 export const selectTokensState = createSelector(
   selectAccountsState,
@@ -45,5 +46,23 @@ export const getSortedServices = createSelector(
   selectServicesState,
   servicesState => {
     return [...servicesState.services].sort((a, b) => a.name.localeCompare(b.name));
+  }
+);
+
+export const getOperationsByService = createSelector(
+  selectServicesState,
+  servicesState => {
+    const operationsMap = new Map<string, PendingOperation[]>();
+
+    servicesState.pendingOperations.forEach(op => {
+      const operations = operationsMap.get(op.serviceAddress);
+
+      if (operations)
+        operations.push(op);
+      else
+        operationsMap.set(op.serviceAddress, [op]);
+    });
+
+    return operationsMap;
   }
 );

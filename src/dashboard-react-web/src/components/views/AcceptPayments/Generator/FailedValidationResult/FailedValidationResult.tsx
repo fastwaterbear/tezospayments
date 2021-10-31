@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FailedValidationResults } from '@tezospayments/common/src/models/validation';
+import { FailedValidationResults } from '@tezospayments/common';
 
 import './FailedValidationResult.scss';
 import { useCurrentLanguageResources } from '../../../../hooks';

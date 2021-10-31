@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import { Service } from '@tezospayments/common';
 
-import { AppViewContext } from '../../app';
 import { BlockchainLinkPure } from '../common';
+import { useAppContext } from '../hooks';
 import { ServiceIcon } from './ServiceIcon';
 import { ServiceLinks } from './ServiceLinks';
 import './ServiceInfo.scss';
@@ -20,9 +20,8 @@ const defaultProps: DefaultServiceInfoProps = {
 };
 
 export const ServiceInfo = (props: ServiceInfoProps & DefaultServiceInfoProps) => {
-  const appContext = useContext(AppViewContext);
-  const urlExplorer = (props.service.network.name !== 'edo2net') ? appContext.betterCallDevBlockchainUrlExplorer : appContext.tzStatsUrlBlockchainExplorer;
-  const contractUrl = urlExplorer.getContractUrl(props.service.contractAddress);
+  const appContext = useAppContext();
+  const contractUrl = appContext.tezosExplorer.getAccountUrl(props.service.contractAddress);
 
   return <div className="service-info">
     <ServiceIcon className="service-info__icon" iconUrl={props.service.iconUrl} serviceName={props.service.name} />

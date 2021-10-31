@@ -14,11 +14,11 @@ export const NavBar = () => {
   const history = useHistory();
 
   const handleCreateServiceClick = useCallback(() => {
-    history.push(`${config.routers.services}/create`);
+    history.push(config.routers.createService);
   }, [history]);
 
   const handleAcceptPaymentsClick = useCallback(() => {
-    history.push(`${config.routers.acceptPayments}`);
+    history.push(config.routers.acceptPayments);
   }, [history]);
 
   return <nav className="navbar">

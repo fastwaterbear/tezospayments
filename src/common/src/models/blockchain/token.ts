@@ -56,17 +56,28 @@ export const tokenWhitelist: readonly Token[] = [
   //   },
   // },
   {
-    network: networks.edo2net,
+    network: networks.granadanet,
+    type: 'fa1.2',
+    contractAddress: 'KT1KcuD9MmgZuGcptdD3qRqxXpGg4WxFsfVc',
+    metadata: {
+      decimals: 0,
+      symbol: 'fa12',
+      name: 'Test fa12',
+      thumbnailUri: 'https://dashboard.tezospayments.com/tokens/unknown.png',
+    },
+  },
+  {
+    network: networks.granadanet,
     type: 'fa2',
-    contractAddress: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2',
+    contractAddress: 'KT1BBfxboq63dbaKCAc4uwVKLFzVn1b4fy37',
     fa2TokenId: 0,
     metadata: {
       decimals: 0,
-      symbol: 'MBRG',
-      name: 'MAX BURGER',
+      symbol: 'fa20',
+      name: 'Test fa20',
       thumbnailUri: 'https://dashboard.tezospayments.com/tokens/unknown.png',
     },
-  }
+  },
 ];
 
 

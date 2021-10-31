@@ -3,7 +3,6 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Service, Donation, Payment, PaymentType } from '@tezospayments/common';
 
 import { NetworkDonation, NetworkPayment, PaymentInfo, PaymentStatus } from '../../models/payment';
-import { UnknownApplicationError } from '../../models/system';
 import { AppThunkAPI } from '../thunk';
 
 interface CurrentPaymentState {
@@ -30,23 +29,15 @@ const checkSendPaymentCondition = (
 
 export const loadCurrentPayment = createAsyncThunk<PaymentInfo, void, AppThunkAPI>(
   `${namespace}/loadCurrentPay`,
-  async (_, { extra: app, rejectWithValue }) => {
-    const result = await app.services.localPaymentService.getCurrentPaymentInfo();
-
-    return !result.isServiceError
-      ? result
-      : rejectWithValue({ message: result.error } as UnknownApplicationError);
+  async (_, { extra: app }) => {
+    return app.services.localPaymentService.getCurrentPaymentInfo();
   },
 );
 
 export const pay = createAsyncThunk<boolean, NetworkPayment, AppThunkAPI>(
   `${namespace}/pay`,
-  async (networkPayment, { extra: app, rejectWithValue }) => {
-    const result = await app.services.localPaymentService.pay(networkPayment);
-
-    return !result.isServiceError
-      ? result
-      : rejectWithValue({ message: result.error } as UnknownApplicationError);
+  async (networkPayment, { extra: app }) => {
+    return app.services.localPaymentService.pay(networkPayment);
   },
   {
     condition: (_payload, { getState }) => {
@@ -60,12 +51,8 @@ export const pay = createAsyncThunk<boolean, NetworkPayment, AppThunkAPI>(
 
 export const donate = createAsyncThunk<boolean, NetworkDonation, AppThunkAPI>(
   `${namespace}/donate`,
-  async (networkDonation, { extra: app, rejectWithValue }) => {
-    const result = await app.services.localPaymentService.donate(networkDonation);
-
-    return !result.isServiceError
-      ? result
-      : rejectWithValue({ message: result.error } as UnknownApplicationError);
+  async (networkDonation, { extra: app }) => {
+    return app.services.localPaymentService.donate(networkDonation);
   },
   {
     condition: (_payload, { getState }) => {

@@ -30,6 +30,9 @@
     },
     {
       "path": "../tezospayments"
+    },
+    {
+      "path": "../react-web-core"
     }
   ]
 }

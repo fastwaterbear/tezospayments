@@ -18,6 +18,7 @@ import './ServiceEditForm.scss';
 interface ServiceEditFormProps {
   service: Service;
   isCreateMode: boolean;
+  readOnly: boolean;
 }
 
 const serviceLinkHelper = new ServiceLinkHelper();
@@ -120,9 +121,9 @@ export const ServiceEditForm = (props: ServiceEditFormProps) => {
     <View.Title>{operationName}</View.Title>
     <div className="service-edit">
       <span className="service-edit__caption">{servicesLangResources.editing.serviceName}</span>
-      <Input placeholder={servicesLangResources.editing.serviceName} value={name} onChange={handleNameChange} />
+      <Input readOnly={props.readOnly} placeholder={servicesLangResources.editing.serviceName} value={name} onChange={handleNameChange} />
       <span className="service-edit__caption">{servicesLangResources.editing.description}</span>
-      <Input.TextArea rows={5} placeholder={servicesLangResources.editing.description} value={description} onChange={handleDescriptionChange} />
+      <Input.TextArea readOnly={props.readOnly} rows={5} placeholder={servicesLangResources.editing.description} value={description} onChange={handleDescriptionChange} />
       <div className="service-edit__lists-container">
         <div className="service-edit__list-container">
           <span className="service-edit__list-header">{servicesLangResources.allowedCurrencies}</span>
@@ -130,21 +131,21 @@ export const ServiceEditForm = (props: ServiceEditFormProps) => {
         </div>
         <div className="service-edit__list-container">
           <span className="service-edit__list-header">{servicesLangResources.links}</span>
-          <ServiceLinksEditor value={links as string[]} onChange={handleLinksChange} />
+          <ServiceLinksEditor readOnly={props.readOnly} value={links as string[]} onChange={handleLinksChange} />
         </div>
       </div>
       <span className="service-edit__caption">{servicesLangResources.editing.accept}</span>
       <div className="service-edit__accept-list">
-        <Checkbox className="service-edit__accept-list-item" checked={acceptPayments} onChange={handleAcceptPaymentsChange}>
+        <Checkbox disabled={props.readOnly} className="service-edit__accept-list-item" checked={acceptPayments} onChange={handleAcceptPaymentsChange}>
           {servicesLangResources.editing.acceptPayments}
         </Checkbox>
-        <Checkbox className="service-edit__accept-list-item" checked={acceptDonations} onChange={handleDonationsPaymentsChange}>
+        <Checkbox disabled={props.readOnly} className="service-edit__accept-list-item" checked={acceptDonations} onChange={handleDonationsPaymentsChange}>
           {servicesLangResources.editing.acceptDonations}
         </Checkbox>
       </div>
       <div className="service-edit__buttons-container">
         <Button className="service-edit__button" onClick={handleCancelClick}>{commonLangResources.cancel}</Button>
-        <Button className="service-edit__button" onClick={handleUpdateClick} disabled={!isFormValid} type="primary">{operationName}</Button>
+        <Button className="service-edit__button" onClick={handleUpdateClick} disabled={!isFormValid || props.readOnly} type="primary">{operationName}</Button>
       </div>
     </div>
   </>;

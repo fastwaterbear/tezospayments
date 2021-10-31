@@ -13,6 +13,7 @@ import './ServiceCard.scss';
 
 interface ServiceCardProps {
   service: Service;
+  isUpdating: boolean;
 }
 
 export const ServiceCard = (props: ServiceCardProps) => {
@@ -42,7 +43,7 @@ export const ServiceCard = (props: ServiceCardProps) => {
           <div className="service-card__name-container">
             <span className="service-card__name" title={props.service.name}>{props.service.name}</span>
             <div className="service-card__tags-container">
-              <ActiveTagPure paused={props.service.paused} deleted={props.service.deleted} />
+              <ActiveTagPure paused={props.service.paused} deleted={props.service.deleted} isUpdating={props.isUpdating} />
             </div>
           </div>
         </div>

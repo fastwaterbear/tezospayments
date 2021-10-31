@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - 'src/common/**'
+      - 'src/react-web-core/**'
       - 'src/payment-react-web/**'
       - 'package.json'
       - 'package-lock.json'
@@ -13,6 +14,7 @@ on:
   pull_request:
     paths:
       - 'src/common/**'
+      - 'src/react-web-core/**'
       - 'src/payment-react-web/**'
       - 'package.json'
       - 'package-lock.json'
@@ -35,7 +37,8 @@ jobs:
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
 
-      - name: Update npm
+      - name: Update npm if needed
+        if: ${{ env.node-version < 15 }}
         run: npm install -g npm@latest
 
       - name: Print environment info
@@ -51,6 +54,9 @@ jobs:
 
       - name: Build the @tezospayments/common package
         run: npm run build -w @tezospayments/common
+
+      - name: Build the @tezospayments/react-web-core package
+        run: npm run build -w @tezospayments/react-web-core
 
       - name: Build the Payment app
         run: npm run build -w @tezospayments/payment-react-web
@@ -76,7 +82,8 @@ jobs:
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
 
-      - name: Update npm
+      - name: Update npm if needed
+        if: ${{ env.node-version < 15 }}
         run: npm install -g npm@latest
 
       - name: Print environment info

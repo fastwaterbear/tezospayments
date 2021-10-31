@@ -1,7 +1,7 @@
 import { Skeleton } from 'antd';
 import React from 'react';
 
-import { getSortedServices, selectServicesState } from '../../../store/services/selectors';
+import { getOperationsByService, getSortedServices, selectServicesState } from '../../../store/services/selectors';
 import { NoServicesCreatedPure } from '../../common/NoServicesCreated';
 import { useAppSelector, useCurrentLanguageResources } from '../../hooks';
 import { View } from '../View';
@@ -13,11 +13,13 @@ export const Services = () => {
   const servicesLangResources = langResources.views.services;
 
   const servicesState = useAppSelector(selectServicesState);
+  const pendingOperations = useAppSelector(getOperationsByService);
 
   const services = useAppSelector(getSortedServices);
   const servicesCards = services.map(s => <ServiceCardPure
     key={s.contractAddress}
     service={s}
+    isUpdating={pendingOperations.has(s.contractAddress)}
   />);
 
   return <View title={servicesLangResources.title}>

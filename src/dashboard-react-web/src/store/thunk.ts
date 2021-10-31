@@ -1,7 +1,7 @@
 
 import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
 
-import type { WebApp } from '../app/wepApp';
+import type { WebApp } from '../app/webApp';
 
 import type { AppState, AppDispatch } from './index';
 

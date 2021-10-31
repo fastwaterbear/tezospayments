@@ -1,9 +1,9 @@
 import { DeleteOutlined } from '@ant-design/icons';
 import { Button, List, Modal } from 'antd';
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { Service } from '@tezospayments/common/src';
+import { Service, ServiceSigningKey } from '@tezospayments/common';
 
 import { deleteApiKey } from '../../../../../store/services/slice';
 import { useCurrentLanguageResources } from '../../../../hooks';
@@ -12,17 +12,14 @@ import './ApiKeyList.scss';
 
 interface ApiKeyListProps {
   service: Service;
+  readOnly: boolean;
 }
 
 export const ApiKeyList = (props: ApiKeyListProps) => {
   const langResources = useCurrentLanguageResources();
   const servicesLangResources = langResources.views.services;
   const dispatch = useDispatch();
-
-  const apiKeys = Object.entries(props.service.signingKeys).map(([_k, v]) => ({
-    name: v.name,
-    publicKey: v.publicKey
-  }));
+  const apiKeys = useMemo(() => [...props.service.signingKeys.values()], [props.service.signingKeys]);
 
   const confirm = useCallback((text: string, onOk: () => void) => {
     Modal.confirm({
@@ -38,8 +35,8 @@ export const ApiKeyList = (props: ApiKeyListProps) => {
     });
   }, []);
 
-  const handleRemoveItem = useCallback((item: { name: string; publicKey: string; }) => {
-    const text = `${servicesLangResources.devZone.deleteKeyConfirmation}: ${item.name}`;
+  const handleRemoveItem = useCallback((item: ServiceSigningKey) => {
+    const text = servicesLangResources.devZone.deleteKeyConfirmation + (item.name ? `: ${item.name}` : '');
     confirm(text, () => {
       dispatch(deleteApiKey({ service: props.service, publicKey: item.publicKey }));
     });
@@ -47,11 +44,11 @@ export const ApiKeyList = (props: ApiKeyListProps) => {
 
   return <List size="small" bordered>
     {apiKeys.length
-      ? apiKeys.map(i => <List.Item key={i.publicKey} className="api-keys__item">
-        <span>{i.name}</span>
+      ? apiKeys.map(apiKey => <List.Item key={apiKey.publicKey} className="api-keys__item">
+        <span>{apiKey.name}</span>
         <div>
-          <span className="api-keys__item-key">{i.publicKey}</span>
-          <Button onClick={() => handleRemoveItem(i)} icon={<DeleteOutlined />} danger type="link"></Button>
+          <span className="api-keys__item-key">{apiKey.publicKey}</span>
+          <Button disabled={props.readOnly} onClick={() => handleRemoveItem(apiKey)} icon={<DeleteOutlined />} danger type="link"></Button>
         </div>
       </List.Item>
       ) :

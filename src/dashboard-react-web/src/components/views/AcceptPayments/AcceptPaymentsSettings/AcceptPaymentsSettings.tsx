@@ -1,10 +1,11 @@
 import { Input, Radio, RadioChangeEvent, Select } from 'antd';
 import { SelectValue } from 'antd/lib/select';
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 import { PaymentType } from '@tezospayments/common';
 
-import { getSortedServices } from '../../../../store/services/selectors';
+import { getOperationsByService, getSortedServices } from '../../../../store/services/selectors';
 import { useAppSelector, useCurrentLanguageResources } from '../../../hooks';
 import { PaymentAmountPure } from '../PaymentAmount';
 
@@ -34,11 +35,13 @@ export const AcceptPaymentsSettings = (props: AcceptPaymentsSettingsProps) => {
   const langResources = useCurrentLanguageResources();
   const acceptPaymentsLangResources = langResources.views.acceptPayments;
   const serviceLangResources = langResources.views.services;
+  const operationsByService = useSelector(getOperationsByService);
 
   const services = useAppSelector(getSortedServices);
-  const serviceOptions = services.map(s => ({
-    label: s.name,
-    value: s.contractAddress
+  const serviceOptions = services.filter(s => !s.deleted).map(service => ({
+    label: service.name,
+    value: service.contractAddress,
+    disabled: operationsByService.has(service.contractAddress)
   }));
 
   const typeOptions = [

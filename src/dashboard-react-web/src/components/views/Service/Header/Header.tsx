@@ -14,9 +14,11 @@ import './Header.scss';
 
 interface HeaderProps {
   service: Service;
+  isUpdating: boolean;
+  readOnly: boolean;
 }
 
-export const Header = ({ service }: HeaderProps) => {
+export const Header = ({ service, isUpdating, readOnly }: HeaderProps) => {
   const history = useHistory();
   const langResources = useCurrentLanguageResources();
   const servicesLangResources = langResources.views.services;
@@ -44,13 +46,13 @@ export const Header = ({ service }: HeaderProps) => {
           {service.contractAddress}
         </ExplorerLinkPure>
         <div className="service-header__tags-container">
-          <ActiveTagPure paused={service.paused} deleted={service.deleted} />
+          <ActiveTagPure paused={service.paused} deleted={service.deleted} isUpdating={isUpdating} />
           {arePaymentsAllowed && <CustomTagPure text={servicesLangResources.operations.paymentsEnabled} />}
           {areDonationsAllowed && <CustomTagPure text={servicesLangResources.operations.donationsEnabled} />}
         </div>
       </div>
     </div>
-    <Button className="service-button" icon={<EditFilled />} type="primary" onClick={handleEditClick}>{servicesLangResources.editing.editService}</Button>
+    <Button disabled={readOnly} className="service-button" icon={<EditFilled />} type="primary" onClick={handleEditClick}>{servicesLangResources.editing.editService}</Button>
   </div>;
 };
 

@@ -2,7 +2,7 @@
 import { Button, } from 'antd';
 import React, { useCallback, useState } from 'react';
 
-import { Service } from '@tezospayments/common/src';
+import { Service } from '@tezospayments/common';
 
 import { useCurrentLanguageResources } from '../../../hooks';
 import { AddApiKeyModalPure } from './AddApiKeyModal';
@@ -12,6 +12,7 @@ import './DevZone.scss';
 
 interface DevZoneProps {
   service: Service;
+  readOnly: boolean;
 }
 
 export const DevZone = (props: DevZoneProps) => {
@@ -25,11 +26,11 @@ export const DevZone = (props: DevZoneProps) => {
   return <>
     <div className="service-dev-zone__button-container">
       <span className="service-dev-zone__header">{`${servicesLangResources.devZone.title} (${langResources.common.comingSoon.toLowerCase()}`})</span>
-      <Button className="service-button" type="default" onClick={handleAddKeyButtonClick}>
+      <Button disabled={props.readOnly} className="service-button" type="default" onClick={handleAddKeyButtonClick}>
         {servicesLangResources.devZone.addKey}
       </Button>
     </div>
-    <ApiKeyListPure service={props.service} />
+    <ApiKeyListPure service={props.service} readOnly={props.readOnly} />
     <AddApiKeyModalPure service={props.service} visible={addKeyModalVisible} onCancel={handleClosePopupClick} />
   </>;
 };

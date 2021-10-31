@@ -26,9 +26,9 @@ export const AddApiKeyModal = (props: AddApiKeyModalProps) => {
   const servicesLangResources = langResources.views.services;
   const dispatch = useDispatch();
 
-  const [algorithType, setAlgorithType] = useState(algorithmOptions[0]?.value || KeyType.Ed25519);
-  const handleAlgorithTypeChanges = useCallback((e: RadioChangeEvent) => {
-    setAlgorithType(e.target.value);
+  const [algorithmType, setAlgorithmType] = useState(algorithmOptions[0]?.value || KeyType.Ed25519);
+  const handleAlgorithmTypeChanges = useCallback((e: RadioChangeEvent) => {
+    setAlgorithmType(e.target.value);
   }, []);
 
   const [name, setName] = useState('');
@@ -36,7 +36,7 @@ export const AddApiKeyModal = (props: AddApiKeyModalProps) => {
     setName(e.target.value);
   }, []);
 
-  const [publicKey, secretKey] = getKeys(algorithType);
+  const [publicKey, secretKey] = getKeys(algorithmType);
 
   const publicKeyRef = useRef<Input>(null);
   const secretKeyRef = useRef<Input>(null);
@@ -52,7 +52,8 @@ export const AddApiKeyModal = (props: AddApiKeyModalProps) => {
 
   const handleAddKeyConfirm = useCallback(() => {
     dispatch(addApiKey({ service: props.service, signingKey: { name, publicKey } }));
-  }, [dispatch, name, props.service, publicKey]);
+    props.onCancel();
+  }, [dispatch, name, props, publicKey]);
 
   return <Modal className="api-key-modal" title={`${servicesLangResources.devZone.addKey} (${langResources.common.comingSoon.toLowerCase()})`}
     centered destroyOnClose visible={props.visible} onCancel={props.onCancel}
@@ -77,7 +78,7 @@ export const AddApiKeyModal = (props: AddApiKeyModalProps) => {
     <span className="api-key-modal__label">{servicesLangResources.devZone.name}:</span>
     <Input autoFocus value={name} onChange={handleNameChanged} />
     <span className="api-key-modal__label">{servicesLangResources.devZone.algorithm}:</span>
-    <Radio.Group options={algorithmOptions} value={algorithType} onChange={handleAlgorithTypeChanges} />
+    <Radio.Group options={algorithmOptions} value={algorithmType} onChange={handleAlgorithmTypeChanges} />
     <Divider />
     <span className="api-key-modal__label">{servicesLangResources.devZone.publicKey}:</span>
     <Search ref={publicKeyRef} readOnly value={publicKey} enterButton={<Button icon={<CopyOutlined />} />} onSearch={() => handleCopyClick(publicKeyRef)} />

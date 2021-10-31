@@ -1,63 +1,26 @@
-import { AppConfig } from './appConfig';
+import { defaultConfig } from '@tezospayments/react-web-core';
+
+import type { AppConfig } from './appConfig';
+
+const commitShortSha = process.env.REACT_APP_COMMIT_SHORT_SHA || '';
 
 export const config: AppConfig = {
+  ...defaultConfig,
   app: {
-    publicUrl: process.env.PUBLIC_URL || 'https://github.com/fastwaterbear/',
-    sourcesUrl: 'https://github.com/fastwaterbear/',
+    publicUrl: process.env.PUBLIC_URL || '/',
     name: 'Tezos Payments',
     title: 'Tezos Payments',
+    version: {
+      name: 'Dev Version',
+      link: 'https://github.com/fastwaterbear/tezospayments/tree/master'
+    },
     buildInfo: {
-      commitShortSha: process.env.REACT_APP_COMMIT_SHORT_SHA || ''
+      commitShortSha,
+      link: `https://github.com/fastwaterbear/tezospayments/tree/${commitShortSha}`
     }
   },
-  tezos: {
-    officialSiteUrl: 'https://tezos.com/',
-    defaultNetwork: 'edo2net',
-    networks: {
-      granadanet: {
-        title: 'Granada Testnet',
-        color: '#667eea',
-        default: {
-          rpc: 'smartpy',
-          indexer: 'tzKT',
-          explorer: 'tzStats'
-        },
-        rpcUrls: {
-          smartpy: 'https://granadanet.smartpy.io'
-        },
-        indexerUrls: {
-          betterCallDev: 'https://api.better-call.dev',
-          tzKT: 'https://api.granadanet.tzkt.io',
-          tzStats: 'https://api.granada.tzstats.com'
-        },
-        explorers: {
-          tzStats: { baseUrl: 'https://granada.tzstats.com', title: 'TzStats' },
-          betterCallDev: { baseUrl: 'https://better-call.dev', title: 'Better Call Dev' }
-        },
-        servicesFactoryContractAddress: 'KT1TsixZzkALSuJhzKkyCDgyJxQCbHsGoqda'
-      },
-      edo2net: {
-        title: 'Edo2 Testnet',
-        color: '#fbbf24',
-        default: {
-          rpc: 'smartpy',
-          indexer: 'tzKT',
-          explorer: 'tzStats'
-        },
-        rpcUrls: {
-          smartpy: 'https://edonet.smartpy.io'
-        },
-        indexerUrls: {
-          betterCallDev: 'https://api.better-call.dev',
-          tzKT: 'https://api.edo2net.tzkt.io',
-          tzStats: 'https://api.edo.tzstats.com'
-        },
-        explorers: {
-          tzStats: { baseUrl: 'https://edo.tzstats.com', title: 'TzStats' },
-          betterCallDev: { baseUrl: 'https://better-call.dev', title: 'Better Call Dev' }
-        },
-        servicesFactoryContractAddress: 'KT1PXyQ3wDpwm6J3r6iyLCWu5QKH5tef7ejU'
-      }
-    }
+  links: {
+    ...defaultConfig.links,
+    tezos: 'https://tezos.com/'
   }
 };

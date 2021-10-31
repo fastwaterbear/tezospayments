@@ -30,22 +30,22 @@
   ],
   "cSpell.language": "en,ru",
   "cSpell.words": [
-    "Popconfirm",
-    "Secp256k1",
     "airgap",
     "antd",
     "bignumber",
     "browserslist",
-    "edonet",
     "entrypoint",
     "entrypoints",
     "fastwaterbear",
     "florencenet",
     "granadanet",
     "mutez",
+    "Popconfirm",
     "promisify",
+    "Secp256k1",
     "serializable",
     "tezos",
-    "tezospayments"
+    "tezospayments",
+    "undeleting"
   ]
 }

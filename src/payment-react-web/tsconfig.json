@@ -27,6 +27,9 @@
   "references": [
     {
       "path": "../common"
+    },
+    {
+      "path": "../react-web-core"
     }
   ]
 }
