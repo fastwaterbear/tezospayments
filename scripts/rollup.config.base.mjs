@@ -2,6 +2,7 @@ import path from 'path';
 
 import { babel } from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import typeScript from 'rollup-plugin-typescript2';
 
@@ -60,6 +61,7 @@ export const getBaseBabelOptions = babelHelpers => ({
 
 export const getResolvePlugins = format => format === 'umd'
   ? [
+    json(),
     commonjs({
       extensions: ['.js'],
     }),
@@ -86,14 +88,16 @@ export const getDefaultES = (format, outputFileNameOrNames, declarationEnabled =
   ]
 });
 
-export const getDefaultESUmd = (format, outputFileName, globalName) => ({
+export const getDefaultESUmd = (format, outputFileName, globalName, globals = undefined) => ({
   input: entryPointFilePath,
   output: [
     {
       ...getBaseOutputOptions({ fileName: outputFileName, format }),
-      name: globalName
-    }
+      name: globalName,
+      globals
+    },
   ],
+  external: globals && Object.keys(globals),
   plugins: [
     ...getResolvePlugins(format),
     typeScript(getBaseTypeScriptPluginOptions(false)),
@@ -127,14 +131,16 @@ export const getES5 = (format, outputFileNameOrNames, declarationEnabled = false
   ]
 });
 
-export const getES5Umd = (format, outputFileName, globalName) => ({
+export const getES5Umd = (format, outputFileName, globalName, globals = undefined) => ({
   input: entryPointFilePath,
   output: [
     {
       ...getBaseOutputOptions({ fileName: outputFileName, format }),
-      name: globalName
+      name: globalName,
+      globals
     }
   ],
+  external: globals && Object.keys(globals),
   plugins: [
     ...getResolvePlugins(format),
     typeScript(getBaseTypeScriptPluginOptions(false)),
