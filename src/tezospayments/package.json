@@ -31,7 +31,6 @@
     "nanoid": "^3.1.25"
   },
   "devDependencies": {
-    "@taquito/signer": "^10.1.0",
     "@types/jest": "^27.0.1",
     "babel-jest": "^27.0.6",
     "jest": "^27.0.6"
