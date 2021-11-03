@@ -1,8 +1,11 @@
 import { BigNumber } from 'bignumber.js';
+import { useSelector } from 'react-redux';
 
-import { Network, tezosMeta, tokenWhitelistMap } from '@tezospayments/common';
+import { Network, tezosMeta, } from '@tezospayments/common';
 
 import './TotalAmount.scss';
+
+import { selectTokensState } from '../../../store/currentPayment/selectors';
 
 interface TotalAmountProps {
   asset: string | undefined;
@@ -11,7 +14,8 @@ interface TotalAmountProps {
 }
 
 export const TotalAmount = (props: TotalAmountProps) => {
-  const asset = props.asset && tokenWhitelistMap.get(props.network)?.get(props.asset);
+  const tokens = useSelector(selectTokensState);
+  const asset = props.asset && tokens.get(props.asset);
 
   const imageSrc = asset ? asset.metadata?.thumbnailUri : tezosMeta.thumbnailUri;
   const assetName = asset ? asset.metadata?.name : tezosMeta.name;
