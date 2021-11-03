@@ -31,6 +31,7 @@ export type TezosPaymentsServiceContract<T extends ContractProvider | Wallet = C
     ): ContractMethod<T>;
     send_payment(
       assetTokenAddress: string,
+      assetTokenId: number | null,
       assetValue: BigNumber,
       operationType: ServiceOperationType,
       payloadType: 'public' | 'private',
@@ -38,6 +39,7 @@ export type TezosPaymentsServiceContract<T extends ContractProvider | Wallet = C
     ): ContractMethod<T>;
     send_payment(
       assetTokenAddress: string,
+      assetTokenId: number | null,
       assetValue: BigNumber,
       operationType: ServiceOperationType,
       payloadType: 'public_and_private',
