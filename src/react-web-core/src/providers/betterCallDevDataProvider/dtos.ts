@@ -161,7 +161,7 @@ export type OperationDto<TParameters = unknown> = {
   fee: number,
   counter: number,
   gas_limit: number,
-  amount: number,
+  amount: number | undefined,
   content_index: number,
   consumed_gas: number,
   storage_size: number,
@@ -189,7 +189,27 @@ export type SendPaymentOperationParametersDto = [
         prim: 'option',
         type: 'option',
         name: 'asset_value',
-        value: string
+        value: string,
+        children: [
+          {
+            name: 'token_address'
+            prim: 'address'
+            type: 'address'
+            value: string
+          },
+          {
+            name: 'token_id'
+            prim: 'option'
+            type: 'option'
+            value: string
+          },
+          {
+            name: 'value'
+            prim: 'nat'
+            type: 'nat'
+            value: string
+          }
+        ] | undefined
       },
       {
         prim: 'nat',

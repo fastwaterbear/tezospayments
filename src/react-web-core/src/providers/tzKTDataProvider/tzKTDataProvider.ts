@@ -94,11 +94,13 @@ export class TzKTDataProvider implements ServicesProvider {
       type: +operationDto.parameter.value.operation_type || 0,
       direction: ServiceOperationDirection.Incoming,
       status: operationDto.status === 'applied' ? ServiceOperationStatus.Success : ServiceOperationStatus.Cancelled,
-      amount: new BigNumber(operationDto.amount.toString()).div(10 ** tezosMeta.decimals),
+      amount: operationDto.parameter.value.asset_value
+        ? new BigNumber(operationDto.parameter.value.asset_value.value)
+        : new BigNumber(operationDto.amount.toString()).div(10 ** tezosMeta.decimals),
       payload: {
         public: ServiceOperation.parseServiceOperationPayload(operationDto.parameter.value.payload.public),
       },
-      asset: undefined,
+      asset: operationDto.parameter.value.asset_value?.token_address,
       timestamp: operationDto.timestamp,
       date: new Date(operationDto.timestamp),
       sender: operationDto.sender.address,

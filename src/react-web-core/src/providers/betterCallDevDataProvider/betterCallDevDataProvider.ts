@@ -109,18 +109,21 @@ export class BetterCallDevDataProvider implements ServicesProvider {
   }
 
   private mapSendPaymentOperationToServiceOperation(operationDto: SendPaymentOperationDto): ServiceOperation {
-    const rawAssetValue = operationDto.parameters[0].children[0].value;
+    const assetAddress = operationDto.parameters[0].children[0].children?.[0].value;
+    const assetValue = operationDto.parameters[0].children[0].children?.[2].value;
+
+    console.log(operationDto);
 
     return {
       hash: operationDto.hash,
       type: +operationDto.parameters[0].children[1].value || 0,
       direction: ServiceOperationDirection.Incoming,
       status: operationDto.status === 'applied' ? ServiceOperationStatus.Success : ServiceOperationStatus.Cancelled,
-      amount: new BigNumber(operationDto.amount.toString()).div(10 ** tezosMeta.decimals),
+      amount: assetValue ? new BigNumber(assetValue) : new BigNumber(operationDto.amount || 0).div(10 ** tezosMeta.decimals),
       payload: {
         public: ServiceOperation.parseServiceOperationPayload(converters.stringToBytes(operationDto.parameters[0].children[2].children[0].value)),
       },
-      asset: rawAssetValue !== 'None' ? rawAssetValue : undefined,
+      asset: assetAddress,
       timestamp: operationDto.timestamp,
       date: new Date(operationDto.timestamp),
       sender: operationDto.source,
