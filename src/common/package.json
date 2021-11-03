@@ -28,8 +28,9 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.15.3",
-    "@taquito/taquito": "^10.2.1",
+    "@taquito/michel-codec": "^10.2.1",
     "@taquito/signer": "^10.2.1",
+    "@taquito/taquito": "^10.2.1",
     "bignumber.js": "^9.0.1",
     "clsx": "^1.1.1",
     "lodash.isplainobject": "^4.0.6"
