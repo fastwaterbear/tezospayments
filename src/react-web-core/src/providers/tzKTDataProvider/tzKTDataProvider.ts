@@ -30,7 +30,14 @@ export class TzKTDataProvider implements ServicesProvider {
   }
 
   async getServices(ownerAddress: string): Promise<readonly Service[]> {
-    const response = await fetch(`${this.baseUrl}/v1/contracts/${this.servicesFactoryContractAddress}/bigmaps/services/keys/${ownerAddress}`);
+    const keysUrl = `${this.baseUrl}/v1/contracts/${this.servicesFactoryContractAddress}/bigmaps/services/keys`;
+    const allKeysResponse = await fetch(keysUrl);
+    const allKeys: ServicesBigMapKeyValuePairDto[] = await allKeysResponse.json();
+    if (allKeys.every(k => k.key !== ownerAddress)) {
+      return [];
+    }
+
+    const response = await fetch(`${keysUrl}/${ownerAddress}`);
     const keyValue: ServicesBigMapKeyValuePairDto = await response.json();
     const contractAddresses = keyValue.value;
 
