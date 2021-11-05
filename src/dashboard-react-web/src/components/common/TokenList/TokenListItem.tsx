@@ -17,6 +17,15 @@ interface TokenListItemProps {
   handleDelete?: (contractAddress: string) => void;
 }
 
+const getStringAmount = (value: number, maximumFractionDigits: number) => value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits });
+
+const getStringAmounts = (value: number) => {
+  const displayedDecimals = 6;
+  const [shortAmount, amount] = [getStringAmount(value, displayedDecimals), getStringAmount(value, 20)];
+
+  return [amount.substring(0, shortAmount.length), amount];
+};
+
 export const TokenListItem = (props: TokenListItemProps) => {
   const valueClassNames = combineClassNames('token-list-item__value',
     { 'token-list-item__value_positive': props.highlightSign && props.value && props.value > 0 },
@@ -31,14 +40,12 @@ export const TokenListItem = (props: TokenListItemProps) => {
         ? '−'
         : '';
 
-  const decimals = props.decimals !== undefined ? props.decimals : 2;
-
-  const displayedDecimals = 6;
   const value = props.value && Math.abs(props.value);
-  const allDecimalsShown = displayedDecimals < decimals;
-  const valueSpan = value !== undefined && value !== null ? <span className={valueClassNames}>
-    {`${sign}${value.toLocaleString(undefined, { minimumFractionDigits: displayedDecimals })}${allDecimalsShown ? '...' : ''}`}
-  </span> : null;
+  const [shortAmount, amount] = value !== undefined && value !== null ? getStringAmounts(value) : [null, null];
+  const allDecimalsShown = shortAmount === amount;
+  const amountSpan = shortAmount && <span className={valueClassNames}>
+    {`${sign}${shortAmount}${allDecimalsShown ? '' : '...'}`}
+  </span>;
 
   return <li className={combineClassNames('token-list-item', props.className)}>
     <img className="token-list-item__icon" src={props.iconSrc} alt={props.name} />
@@ -46,13 +53,16 @@ export const TokenListItem = (props: TokenListItemProps) => {
       <div className="token-list-item__name-container">
         <span className="token-list-item__ticker">{props.ticker}</span>
         <span className="token-list-item__name">{props.name}</span>
-        {props.handleDelete && <Button className="service-link-editor__delete-button" type="text" danger icon={<DeleteOutlined />} onClick={() => props.handleDelete?.(props.contractAddress)} />}
+        {props.handleDelete && <Button
+          className="service-link-editor__delete-button"
+          type="text" danger icon={<DeleteOutlined />}
+          onClick={() => props.handleDelete?.(props.contractAddress)} />}
       </div>
-      {allDecimalsShown && value !== undefined && value !== null
-        ? <Tooltip title={value.toLocaleString(undefined, { minimumFractionDigits: decimals })}>
-          {valueSpan}
+      {!allDecimalsShown && value !== undefined && value !== null
+        ? <Tooltip title={amount}>
+          {amountSpan}
         </Tooltip>
-        : valueSpan}
+        : amountSpan}
     </div>
   </li>;
 };
