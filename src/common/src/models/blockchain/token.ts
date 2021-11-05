@@ -78,6 +78,18 @@ export const tokenWhitelist: readonly Token[] = [
       thumbnailUri: 'https://dashboard.tezospayments.com/tokens/unknown.png',
     },
   },
+  {
+    network: networks.granadanet,
+    type: 'fa2',
+    contractAddress: 'KT1PMAT81mmL6NFp9rVU3xoVzU2dRdcXt4R9',
+    fa2TokenId: 0,
+    metadata: {
+      decimals: 6,
+      symbol: 'USDS',
+      name: 'Stably USD',
+      thumbnailUri: 'https://quipuswap.com/tokens/stably.png',
+    },
+  },
 ];
 
 
