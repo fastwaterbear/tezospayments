@@ -36,8 +36,6 @@ export const PaymentAmount = (props: DonationAmountProps) => {
     allowedTokens.forEach(t => t.metadata && assets.push({ label: t.metadata.symbol, value: t.contractAddress, imageUrl: t.metadata.thumbnailUri }));
   }
 
-  const disabled = assets.length === 0;
-
   const options = assets.map(a => <Select.Option key={a.label} value={a.value} label={a.label}>
     <div className="payment-amount__select-option">
       <img className="payment-amount__select-option-image" alt={a.label} src={a.imageUrl} />
@@ -45,11 +43,19 @@ export const PaymentAmount = (props: DonationAmountProps) => {
     </div>
   </Select.Option>);
 
+  const disabled = assets.length === 0;
+
   return <div className="payment-amount">
     <Select className="payment-amount__select" value={props.asset || ''} onChange={props.onAssetChange} disabled={disabled}>
       {options}
     </Select>
-    <InputNumber className="payment-amount__input" min={'0'} value={props.amount.toString()} onChange={props.onAmountChange} disabled={disabled} />
+    <InputNumber
+      className="payment-amount__input"
+      stringMode
+      min={'0'}
+      value={props.amount.toString()}
+      onChange={props.onAmountChange}
+      disabled={disabled} />
   </div>;
 };
 

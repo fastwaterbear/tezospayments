@@ -125,12 +125,14 @@ export class LocalPaymentService {
         operation = await this.sendNativeToken(contract, serviceOperationType, amount, payload);
       } else {
         const token = tokenWhitelistMap.get(this.network)?.get(assetTokenAddress);
-        if (!token)
+        if (!token || !token.metadata)
           return false;
 
+        const tokenAmount = amount.multipliedBy(10 ** token.metadata.decimals);
+
         operation = token.type === 'fa1.2'
-          ? await this.sendFa12Token(contract, token, serviceOperationType, amount, payload)
-          : await this.sendFa20Token(contract, token, serviceOperationType, amount, payload);
+          ? await this.sendFa12Token(contract, token, serviceOperationType, tokenAmount, payload)
+          : await this.sendFa20Token(contract, token, serviceOperationType, tokenAmount, payload);
       }
 
       await this.waitConfirmation(operation);

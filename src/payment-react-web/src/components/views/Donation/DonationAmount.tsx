@@ -55,10 +55,11 @@ export const DonationAmount = (props: DonationAmountProps) => {
       onClick={handleCurrencyIconClick}
     />
     <InputNumber className="donation-amount__input"
+      stringMode
       ref={inputAmountRef}
       size="large"
       min="0"
-      defaultValue={props.amount?.toString()}
+      value={props.amount?.toString()}
       onChange={props.onAmountChange}
     />
     <Dropdown trigger={['click']} overlay={menu} placement="bottomRight">
