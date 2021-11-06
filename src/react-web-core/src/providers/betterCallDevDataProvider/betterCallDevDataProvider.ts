@@ -1,16 +1,22 @@
 import BigNumber from 'bignumber.js';
 
-import { converters, guards, Network, optimization, Service, ServiceOperation, ServiceOperationDirection, ServiceOperationStatus, ServiceSigningKey, tezosMeta } from '@tezospayments/common';
+import {
+  converters, guards, Network, optimization, Service, ServiceOperation, ServiceOperationDirection,
+  ServiceOperationStatus, ServiceSigningKey, tezosMeta, Token, tokenWhitelistMap
+} from '@tezospayments/common';
 
 import type { ServicesProvider } from '../servicesProvider';
 import type { SendPaymentOperationDto, ServiceDto, ServicesBigMapDto, ServicesFactoryDto, SigningKeyDto } from './dtos';
 
 export class BetterCallDevDataProvider implements ServicesProvider {
+  readonly tokenWhiteList: ReadonlyMap<string, Token>;
+
   constructor(
     readonly network: Network,
     readonly baseUrl: string,
     readonly servicesFactoryContractAddress: string
   ) {
+    this.tokenWhiteList = tokenWhitelistMap.get(this.network) || optimization.emptyMap;
   }
 
   async getService(serviceContractAddress: string): Promise<Service> {
@@ -112,14 +118,18 @@ export class BetterCallDevDataProvider implements ServicesProvider {
     const assetAddress = operationDto.parameters[0].children[0].children?.[0].value;
     const assetValue = operationDto.parameters[0].children[0].children?.[2].value;
 
-    console.log(operationDto);
+    const decimals = assetAddress
+      ? this.tokenWhiteList.get(assetAddress)?.metadata?.decimals || 0
+      : tezosMeta.decimals;
+
+    const amount = assetValue || (operationDto.amount || 0).toString();
 
     return {
       hash: operationDto.hash,
       type: +operationDto.parameters[0].children[1].value || 0,
       direction: ServiceOperationDirection.Incoming,
       status: operationDto.status === 'applied' ? ServiceOperationStatus.Success : ServiceOperationStatus.Cancelled,
-      amount: assetValue ? new BigNumber(assetValue) : new BigNumber(operationDto.amount || 0).div(10 ** tezosMeta.decimals),
+      amount: new BigNumber(amount).div(10 ** decimals),
       payload: {
         public: ServiceOperation.parseServiceOperationPayload(converters.stringToBytes(operationDto.parameters[0].children[2].children[0].value)),
       },
