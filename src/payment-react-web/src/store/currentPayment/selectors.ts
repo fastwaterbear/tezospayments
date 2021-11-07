@@ -2,7 +2,7 @@ import { createSelector } from '@reduxjs/toolkit';
 
 import { optimization, Token, tokenWhitelistMap } from '@tezospayments/common';
 
-import { AppState } from '..';
+import type { AppState } from '../index';
 
 export const selectPaymentState = (state: AppState) => state.currentPaymentState;
 

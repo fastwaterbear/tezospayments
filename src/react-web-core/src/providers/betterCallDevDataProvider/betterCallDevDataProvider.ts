@@ -115,8 +115,9 @@ export class BetterCallDevDataProvider implements ServicesProvider {
   }
 
   private mapSendPaymentOperationToServiceOperation(operationDto: SendPaymentOperationDto): ServiceOperation {
-    const assetAddress = operationDto.parameters[0].children[0].children?.[0].value;
-    const assetValue = operationDto.parameters[0].children[0].children?.[2].value;
+    const assetInfo = operationDto.parameters[0].children[0].children;
+    const assetAddress = assetInfo?.[0].value;
+    const assetValue = assetInfo?.[2].value;
 
     const decimals = assetAddress
       ? this.tokenWhiteList.get(assetAddress)?.metadata?.decimals || 0
