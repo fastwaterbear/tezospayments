@@ -4,18 +4,21 @@ import BigNumber from 'bignumber.js';
 import {
   converters, guards, Network, optimization,
   Service, ServiceOperation, ServiceOperationDirection,
-  ServiceOperationStatus, ServiceSigningKey, tezosMeta
+  ServiceOperationStatus, ServiceSigningKey, tezosMeta, Token, tokenWhitelistMap
 } from '@tezospayments/common';
 
 import type { ServicesProvider } from '../servicesProvider';
 import type { OperationDto, ServiceDto, ServicesBigMapKeyValuePairDto } from './dtos';
 
 export class TzKTDataProvider implements ServicesProvider {
+  readonly tokenWhiteList: ReadonlyMap<string, Token>;
+
   constructor(
     readonly network: Network,
     readonly baseUrl: string,
-    readonly servicesFactoryContractAddress: string
+    readonly servicesFactoryContractAddress: string,
   ) {
+    this.tokenWhiteList = tokenWhitelistMap.get(this.network) || optimization.emptyMap;
   }
 
   async getService(serviceContractAddress: string): Promise<Service> {
@@ -30,7 +33,14 @@ export class TzKTDataProvider implements ServicesProvider {
   }
 
   async getServices(ownerAddress: string): Promise<readonly Service[]> {
-    const response = await fetch(`${this.baseUrl}/v1/contracts/${this.servicesFactoryContractAddress}/bigmaps/services/keys/${ownerAddress}`);
+    const keysUrl = `${this.baseUrl}/v1/contracts/${this.servicesFactoryContractAddress}/bigmaps/services/keys`;
+    const allKeysResponse = await fetch(keysUrl);
+    const allKeys: ServicesBigMapKeyValuePairDto[] = await allKeysResponse.json();
+    if (allKeys.every(k => k.key !== ownerAddress)) {
+      return [];
+    }
+
+    const response = await fetch(`${keysUrl}/${ownerAddress}`);
     const keyValue: ServicesBigMapKeyValuePairDto = await response.json();
     const contractAddresses = keyValue.value;
 
@@ -89,16 +99,22 @@ export class TzKTDataProvider implements ServicesProvider {
   }
 
   private mapOperationToServiceOperation(operationDto: OperationDto): ServiceOperation {
+    const decimals = operationDto.parameter.value.asset_value
+      ? this.tokenWhiteList.get(operationDto.parameter.value.asset_value.token_address)?.metadata?.decimals || 0
+      : tezosMeta.decimals;
+
+    const amount = operationDto.parameter.value.asset_value ? operationDto.parameter.value.asset_value.value : operationDto.amount.toString();
+
     return {
       hash: operationDto.hash,
       type: +operationDto.parameter.value.operation_type || 0,
       direction: ServiceOperationDirection.Incoming,
       status: operationDto.status === 'applied' ? ServiceOperationStatus.Success : ServiceOperationStatus.Cancelled,
-      amount: new BigNumber(operationDto.amount.toString()).div(10 ** tezosMeta.decimals),
+      amount: new BigNumber(amount).div(10 ** decimals),
       payload: {
         public: ServiceOperation.parseServiceOperationPayload(operationDto.parameter.value.payload.public),
       },
-      asset: undefined,
+      asset: operationDto.parameter.value.asset_value?.token_address,
       timestamp: operationDto.timestamp,
       date: new Date(operationDto.timestamp),
       sender: operationDto.sender.address,

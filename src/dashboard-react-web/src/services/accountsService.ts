@@ -55,8 +55,9 @@ export class AccountsService {
       default:
         throw new Error('Not Supported');
     }
+    const divider = token.metadata ? 10 ** token.metadata.decimals : 1;
 
-    return result.toNumber();
+    return +result / divider;
   }
 
   private async getTokenFA12Balance(account: Account, token: TokenFA12): Promise<BigNumber> {

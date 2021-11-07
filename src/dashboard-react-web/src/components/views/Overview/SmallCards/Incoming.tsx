@@ -21,6 +21,7 @@ export const Incoming = () => {
   if (acceptTezos) {
     items.push(<TokenList.Item
       key={tezosMeta.symbol}
+      contractAddress={''}
       ticker={tezosMeta.symbol}
       name={tezosMeta.name}
       decimals={tezosMeta.decimals}
@@ -30,14 +31,17 @@ export const Incoming = () => {
   }
 
   tokens.forEach(t => {
-    items.push(<TokenList.Item
-      key={t.metadata?.symbol}
-      ticker={t.metadata?.symbol || 'unknown'}
-      name={t.metadata?.name || 'unknown'}
-      decimals={t.metadata ? t.metadata.decimals : 2}
-      value={462518}
-      iconSrc={t.metadata?.thumbnailUri}
-      highlightSign />);
+    if (t.metadata) {
+      items.push(<TokenList.Item
+        key={t.metadata.symbol}
+        contractAddress={t.contractAddress}
+        ticker={t.metadata.symbol}
+        name={t.metadata.name}
+        decimals={t.metadata.decimals}
+        value={462518}
+        iconSrc={t.metadata.thumbnailUri}
+        highlightSign />);
+    }
   });
 
   return <TokenList>

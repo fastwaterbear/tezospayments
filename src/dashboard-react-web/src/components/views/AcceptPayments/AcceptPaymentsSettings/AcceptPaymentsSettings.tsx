@@ -21,6 +21,9 @@ interface AcceptPaymentsSettingsProps {
   amount: string;
   onAmountChange: (rawValue: string) => void;
 
+  asset: string | undefined;
+  onAssetChange: (rawValue: string | undefined) => void;
+
   publicData: string;
   onPublicDataChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 
@@ -68,7 +71,8 @@ export const AcceptPaymentsSettings = (props: AcceptPaymentsSettingsProps) => {
     {props.paymentType === PaymentType.Payment
       ? <>
         <span className="accept-payments-settings__caption">{acceptPaymentsLangResources.amount}</span>
-        <PaymentAmountPure onChange={props.onAmountChange} value={props.amount} />
+        <PaymentAmountPure serviceAddress={props.serviceAddress} amount={props.amount} onAmountChange={props.onAmountChange}
+          asset={props.asset} onAssetChange={props.onAssetChange} />
         <span className="accept-payments-settings__header">{acceptPaymentsLangResources.paymentPublicData}</span>
         <span className="accept-payments-settings__caption">{acceptPaymentsLangResources.orderId}</span>
         <Input className="accept-payments-settings__order-id-input" value={props.publicData} onChange={props.onPublicDataChange} />

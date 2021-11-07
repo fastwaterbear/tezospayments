@@ -31,7 +31,11 @@ export interface SendPaymentParameterDto extends OperationParameterDtoBase {
   entrypoint: 'send_payment',
   value: {
     operation_type: string;
-    asset_value: null;
+    asset_value: {
+      value: string,
+      token_id: string | null,
+      token_address: string
+    } | null;
     payload: {
       public: string;
     }

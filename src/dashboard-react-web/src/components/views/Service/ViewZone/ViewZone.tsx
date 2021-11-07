@@ -4,7 +4,7 @@ import { Service } from '@tezospayments/common';
 
 import { ServiceLinks } from '../../../common/ServiceLinks';
 import { useCurrentLanguageResources } from '../../../hooks';
-import { TokensPure } from '../Tokens';
+import { TokensPure } from './Tokens';
 
 import './ViewZone.scss';
 

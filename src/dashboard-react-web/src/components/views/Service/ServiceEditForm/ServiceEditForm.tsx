@@ -1,4 +1,3 @@
-import { PlusOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Input } from 'antd';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -12,7 +11,7 @@ import { createService, updateService } from '../../../../store/services/slice';
 import { ServiceLinksEditor } from '../../../common/ServiceLinks';
 import { useAppDispatch, useAppSelector, useCurrentLanguageResources } from '../../../hooks';
 import { View } from '../../View';
-import { TokensPure } from '../Tokens';
+import { TokensEditor } from './TokensEditor';
 
 import './ServiceEditForm.scss';
 
@@ -41,13 +40,15 @@ export const ServiceEditForm = (props: ServiceEditFormProps) => {
   const [name, setName] = useState(props.service.name);
   const [description, setDescription] = useState(props.service.description);
   const [links, setLinks] = useState(props.service.links);
+  const [allowedTokens, setAllowedTokens] = useState(props.service.allowedTokens);
 
   const validate = useCallback(() => {
     const isValid = !!name
-      && links.every(l => !!serviceLinkHelper.getLinkInfo(l));
+      && links.every(l => !!serviceLinkHelper.getLinkInfo(l))
+      && (allowedTokens.tez || allowedTokens.assets.length > 0);
 
     setIsFormValid(isValid);
-  }, [links, name]);
+  }, [allowedTokens.assets.length, allowedTokens.tez, links, name]);
 
   useEffect(() => validate(), [validate]);
 
@@ -68,6 +69,11 @@ export const ServiceEditForm = (props: ServiceEditFormProps) => {
 
   const [acceptPayments, setAcceptPayments] = useState(props.service.allowedOperationType === ServiceOperationType.All || props.service.allowedOperationType === ServiceOperationType.Payment);
   const [acceptDonations, setAcceptDonations] = useState(props.service.allowedOperationType === ServiceOperationType.All || props.service.allowedOperationType === ServiceOperationType.Donation);
+
+  const handleAllowedTokensChange = useCallback((allowedTokens: Service['allowedTokens']) => {
+    setAllowedTokens(allowedTokens);
+    validate();
+  }, [validate]);
 
   const handleAcceptPaymentsChange = useCallback((e: CheckboxChangeEvent) => {
     setAcceptPayments(e.target.checked);
@@ -95,10 +101,10 @@ export const ServiceEditForm = (props: ServiceEditFormProps) => {
       name,
       description,
       allowedOperationType,
+      allowedTokens,
       links,
       network: props.isCreateMode && currentAccount ? currentAccount.network : props.service.network
     };
-
 
     if (props.isCreateMode) {
       dispatch(createService(updatedService));
@@ -107,7 +113,7 @@ export const ServiceEditForm = (props: ServiceEditFormProps) => {
     }
 
     handleCancelClick();
-  }, [acceptDonations, acceptPayments, currentAccount, description, dispatch, handleCancelClick, links, name, props.isCreateMode, props.service]);
+  }, [acceptDonations, acceptPayments, allowedTokens, currentAccount, description, dispatch, handleCancelClick, links, name, props.isCreateMode, props.service]);
 
   const operationName = props.isCreateMode ? servicesLangResources.editing.createService : servicesLangResources.editing.updateService;
 
@@ -121,10 +127,7 @@ export const ServiceEditForm = (props: ServiceEditFormProps) => {
       <div className="service-edit__lists-container">
         <div className="service-edit__list-container">
           <span className="service-edit__list-header">{servicesLangResources.allowedCurrencies}</span>
-          <TokensPure service={props.service} />
-          <Button className="service-edit__button" disabled icon={<PlusOutlined />}>
-            {`${servicesLangResources.editing.addCurrency} (${commonLangResources.comingSoon})`}
-          </Button>
+          <TokensEditor allowedTokens={allowedTokens} onChange={handleAllowedTokensChange} />
         </div>
         <div className="service-edit__list-container">
           <span className="service-edit__list-header">{servicesLangResources.links}</span>

@@ -1,13 +1,14 @@
 import { RequestPermissionInput, AbortedBeaconError } from '@airgap/beacon-sdk';
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit, TransactionWalletOperation, Wallet } from '@taquito/taquito';
+import { BatchWalletOperation } from '@taquito/taquito/dist/types/wallet/batch-operation';
 import BigNumber from 'bignumber.js';
 
 import {
   Donation, Payment, Service, ServiceOperationType, Network,
-  converters as commonConverters, memoize
+  converters as commonConverters, memoize, tokenWhitelistMap, TokenFA2, TokenFA12
 } from '@tezospayments/common';
-import { converters, ServicesProvider, TezosPaymentsServiceContract } from '@tezospayments/react-web-core';
+import { converters, Fa12Contract, Fa20Contract, ServicesProvider, TezosPaymentsServiceContract } from '@tezospayments/react-web-core';
 
 import { NetworkDonation, NetworkPayment } from '../../models/payment';
 import { PaymentInfo } from '../../models/payment/paymentInfo';
@@ -118,19 +119,25 @@ export class LocalPaymentService {
         return false;
 
       const contract = await this.tezosToolkit.wallet.at<TezosPaymentsServiceContract<Wallet>>(targetAddress);
+      let operation;
 
-      const result = await contract.methods.send_payment(
-        assetTokenAddress as void,
-        serviceOperationType,
-        'public',
-        payload,
-      )
-        .send({ amount });
+      if (!assetTokenAddress) {
+        operation = await this.sendNativeToken(contract, serviceOperationType, amount, payload);
+      } else {
+        const token = tokenWhitelistMap.get(this.network)?.get(assetTokenAddress);
+        if (!token || !token.metadata)
+          return false;
 
-      await this.waitConfirmation(result);
+        const tokenAmount = amount.multipliedBy(10 ** token.metadata.decimals);
+
+        operation = token.type === 'fa1.2'
+          ? await this.sendFa12Token(contract, token, serviceOperationType, tokenAmount, payload)
+          : await this.sendFa20Token(contract, token, serviceOperationType, tokenAmount, payload);
+      }
+
+      await this.waitConfirmation(operation);
 
       return true;
-
     } catch (error: unknown) {
       if (error instanceof AbortedBeaconError)
         return false;
@@ -160,7 +167,82 @@ export class LocalPaymentService {
     return paymentProvider;
   }
 
-  private waitConfirmation(operation: TransactionWalletOperation, confirmations?: number) {
+  private async sendNativeToken(
+    contract: TezosPaymentsServiceContract<Wallet>,
+    serviceOperationType: ServiceOperationType,
+    amount: BigNumber,
+    payload: string
+  ): Promise<TransactionWalletOperation> {
+    return await contract.methods.send_payment(
+      undefined,
+      serviceOperationType,
+      'public',
+      payload,
+    ).send({ amount });
+  }
+
+  private async sendFa12Token(
+    contract: TezosPaymentsServiceContract<Wallet>,
+    token: TokenFA12,
+    serviceOperationType: ServiceOperationType,
+    amount: BigNumber,
+    payload: string
+  ): Promise<BatchWalletOperation> {
+    const tokenContract = await this.tezosToolkit.wallet.at<Fa12Contract<Wallet>>(token.contractAddress);
+
+    return await this.tezosToolkit.wallet.batch()
+      .withContractCall(tokenContract.methods.approve(contract.address, amount))
+      .withContractCall(
+        contract.methods.send_payment(
+          token.contractAddress,
+          null,
+          amount,
+          serviceOperationType,
+          'public',
+          payload,
+        )
+      ).send();
+  }
+
+  private async sendFa20Token(
+    contract: TezosPaymentsServiceContract<Wallet>,
+    token: TokenFA2,
+    serviceOperationType: ServiceOperationType,
+    amount: BigNumber,
+    payload: string
+  ): Promise<BatchWalletOperation> {
+    const tokenContract = await this.tezosToolkit.wallet.at<Fa20Contract<Wallet>>(token.contractAddress);
+    const userAddress = await this.tezosToolkit.wallet.pkh();
+
+    return await this.tezosToolkit.wallet.batch()
+      .withContractCall(tokenContract.methods.update_operators([{
+        add_operator: {
+          owner: userAddress,
+          operator: contract.address,
+          token_id: token.fa2TokenId
+        }
+      }]))
+      .withContractCall(
+        contract.methods.send_payment(
+          token.contractAddress,
+          token.fa2TokenId,
+          amount,
+          serviceOperationType,
+          'public',
+          payload,
+        )
+      )
+      .withContractCall(tokenContract.methods.update_operators([{
+        remove_operator: {
+          owner: userAddress,
+          operator: contract.address,
+          token_id: token.fa2TokenId
+        }
+      }]))
+      .send();
+  }
+
+  private waitConfirmation(operation: TransactionWalletOperation | BatchWalletOperation, confirmations?: number) {
     // TODO: use a service event instead of dispatching
     this.store.dispatch(confirmPayment({
       hash: operation.opHash,

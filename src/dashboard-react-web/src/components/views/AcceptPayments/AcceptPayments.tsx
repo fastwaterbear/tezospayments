@@ -1,11 +1,12 @@
 import { RadioChangeEvent, Skeleton } from 'antd';
 import { SelectValue } from 'antd/lib/select';
+import BigNumber from 'bignumber.js';
 import React, { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { PaymentType } from '@tezospayments/common';
+import { PaymentType, tezosMeta } from '@tezospayments/common';
 
-import { selectServicesState } from '../../../store/services/selectors';
+import { selectServicesState, selectTokensState } from '../../../store/services/selectors';
 import { NoServicesCreatedPure } from '../../common/NoServicesCreated';
 import { useAppSelector, useCurrentLanguageResources } from '../../hooks';
 import { View } from '../View';
@@ -18,24 +19,45 @@ export const AcceptPayments = () => {
   const langResources = useCurrentLanguageResources();
   const acceptPaymentsLangResources = langResources.views.acceptPayments;
   const servicesState = useAppSelector(selectServicesState);
+  const tokens = useAppSelector(selectTokensState);
 
   const { address: addressFromUrl } = useParams<{ address: string }>();
   const [serviceAddress, setServiceAddress] = useState<string | undefined>(addressFromUrl);
   const [paymentType, setPaymentType] = useState<PaymentType>(PaymentType.Payment);
-  const [amount, setAmount] = useState<string>('1');
+  const [amount, setAmount] = useState<string>('');
+
+  const getDefaultAsset = useCallback((serviceAddress: string | undefined) => {
+    const service = servicesState.services.filter(s => s.contractAddress === serviceAddress)[0];
+
+    return service
+      ? service.allowedTokens.tez ? undefined : service.allowedTokens.assets[0]
+      : undefined;
+  }, [servicesState.services]);
+
+  const [asset, setAsset] = useState<string | undefined>(getDefaultAsset(serviceAddress));
   const [publicData, setPublicData] = useState<string>('');
   const [donationData, setDonationData] = useState<string>('');
 
+  const decimals = asset ? tokens.get(asset)?.metadata?.decimals || 0 : tezosMeta.decimals;
+
   const handleServiceAddressChange = useCallback((value: SelectValue) => {
-    setServiceAddress(value as string);
-  }, []);
+    const service = value as string;
+    setServiceAddress(service);
+    setAsset(getDefaultAsset(service));
+  }, [getDefaultAsset]);
 
   const handlePaymentTypeChange = useCallback((e: RadioChangeEvent) => {
     setPaymentType(e.target.value);
   }, []);
 
   const handleAmountChange = useCallback((rawValue: string) => {
-    setAmount(rawValue);
+    const formattedValue = rawValue ? new BigNumber(rawValue).toFormat(decimals, { groupSeparator: '', decimalSeparator: '.' }) : '';
+    setAmount(formattedValue);
+  }, [decimals]);
+
+  const handleAssetChange = useCallback((rawValue: string | undefined) => {
+    setAsset(rawValue || undefined);
+    setAmount('');
   }, []);
 
   const handlePublicDataChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,6 +80,7 @@ export const AcceptPayments = () => {
               serviceAddress={serviceAddress} onServiceAddressChange={handleServiceAddressChange}
               paymentType={paymentType} onPaymentTypeChange={handlePaymentTypeChange}
               amount={amount} onAmountChange={handleAmountChange}
+              asset={asset} onAssetChange={handleAssetChange}
               publicData={publicData} onPublicDataChange={handlePublicDataChange}
               donationData={donationData} onDonationDataChange={handleDonationDataChange}
             />
@@ -66,6 +89,7 @@ export const AcceptPayments = () => {
             <GeneratorPure
               serviceAddress={serviceAddress}
               paymentType={paymentType}
+              asset={asset}
               amount={amount}
               publicData={publicData}
               donationData={donationData}
