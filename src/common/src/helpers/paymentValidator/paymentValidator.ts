@@ -1,4 +1,4 @@
-import type { Payment } from '../../models/payment';
+import type { Payment, UnsignedPayment } from '../../models/payment';
 import { PaymentType } from '../../models/payment/paymentBase';
 import type { PaymentValidationMethod } from './paymentValidationMethod';
 import { PaymentValidatorBase } from './paymentValidatorBase';
@@ -7,7 +7,7 @@ import {
   validateCreatedDate, validateExpiredDate, validateUrl
 } from './validationMethods';
 
-export class PaymentValidator extends PaymentValidatorBase<Payment> {
+export class PaymentValidator extends PaymentValidatorBase<Payment | UnsignedPayment> {
   static readonly errors = {
     invalidPaymentObject: 'Payment is undefined or not object',
     invalidType: 'Payment type is invalid',
@@ -36,7 +36,7 @@ export class PaymentValidator extends PaymentValidatorBase<Payment> {
   } as const;
   static readonly minimumPaymentLifetime = 600000; // 10 * 60 * 1000;
 
-  protected readonly validationMethods: ReadonlyArray<PaymentValidationMethod<Payment>> = [
+  protected readonly validationMethods: ReadonlyArray<PaymentValidationMethod<Payment | UnsignedPayment>> = [
     payment => payment.type !== PaymentType.Payment ? [PaymentValidator.errors.invalidType] : undefined,
     payment => validateTargetAddress(payment.targetAddress, PaymentValidator.errors),
     payment => validateId(payment.id, PaymentValidator.errors),

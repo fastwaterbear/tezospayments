@@ -1,7 +1,7 @@
 
 import { MichelsonType, packDataBytes } from '@taquito/michel-codec';
 
-import { Payment, EncodedPaymentSignPayload } from '../../models';
+import type { UnsignedPayment, EncodedPaymentSignPayload } from '../../models';
 import { optimization } from '../../utils';
 import { contractPaymentInTezSignPayloadMichelsonType, contractPaymentInAssetSignPayloadMichelsonType } from './michelsonTypes';
 
@@ -9,14 +9,14 @@ export class PaymentSignPayloadEncoder {
   protected static readonly contractPaymentInTezSignPayloadMichelsonType: MichelsonType = contractPaymentInTezSignPayloadMichelsonType;
   protected static readonly contractPaymentInAssetSignPayloadMichelsonType: MichelsonType = contractPaymentInAssetSignPayloadMichelsonType;
 
-  encode(payment: Payment): EncodedPaymentSignPayload {
+  encode(payment: UnsignedPayment): EncodedPaymentSignPayload {
     return {
       contractSignPayload: this.getContractSignPayload(payment),
       clientSignPayload: this.getClientSignPayload(payment)
     };
   }
 
-  protected getContractSignPayload(payment: Payment): EncodedPaymentSignPayload['contractSignPayload'] {
+  protected getContractSignPayload(payment: UnsignedPayment): EncodedPaymentSignPayload['contractSignPayload'] {
     const signPayload = payment.asset
       ? packDataBytes(
         {
@@ -60,7 +60,7 @@ export class PaymentSignPayloadEncoder {
     return signPayload.bytes;
   }
 
-  protected getClientSignPayload(payment: Payment): EncodedPaymentSignPayload['clientSignPayload'] {
+  protected getClientSignPayload(payment: UnsignedPayment): EncodedPaymentSignPayload['clientSignPayload'] {
     return (
       (payment.successUrl ? payment.successUrl.href : '')
       + (payment.cancelUrl ? payment.cancelUrl.href : '')

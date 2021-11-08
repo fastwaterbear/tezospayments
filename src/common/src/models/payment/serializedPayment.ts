@@ -33,6 +33,25 @@ export type SerializedPayment = {
    * expired
    */
   e?: number;
+  /**
+   * signature
+   */
+  s: SerializedPaymentSignature;
+};
+
+export type SerializedPaymentSignature = {
+  /**
+   * signingPublicKey
+   */
+  k: string;
+  /**
+   * contract
+   */
+  c: string;
+  /**
+   * client
+   */
+  cl?: string;
 };
 
 export type LegacySerializedPayment = {

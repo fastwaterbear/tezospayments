@@ -43,6 +43,10 @@ const validLegacySerializedPaymentTestCases: ReadonlyArray<readonly [
         cancelUrl: new URL('https://fastwaterbear.com/tezospayments/test/payment/cancel'),
         created: createdDate,
         expired: undefined,
+        signature: {
+          signingPublicKey: '',
+          contract: '',
+        },
         ...nonSerializedSlice
       })
     ],
@@ -77,6 +81,10 @@ const validLegacySerializedPaymentTestCases: ReadonlyArray<readonly [
         cancelUrl: new URL('https://fastwaterbear.com/tezospayments/test/payment/cancel'),
         created: createdDate,
         expired: undefined,
+        signature: {
+          signingPublicKey: '',
+          contract: '',
+        },
         ...nonSerializedSlice
       })
     ],
@@ -111,6 +119,10 @@ const validLegacySerializedPaymentTestCases: ReadonlyArray<readonly [
         cancelUrl: new URL('https://fastwaterbear.com/tezospayments/test/payment/cancel'),
         created: createdDate,
         expired: expiredDate,
+        signature: {
+          signingPublicKey: '',
+          contract: '',
+        },
         ...nonSerializedSlice
       })
     ],
@@ -141,6 +153,10 @@ const validLegacySerializedPaymentTestCases: ReadonlyArray<readonly [
         asset: undefined,
         created: createdDate,
         expired: expiredDate,
+        signature: {
+          signingPublicKey: '',
+          contract: '',
+        },
         ...nonSerializedSlice
       })
     ],

@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 
-import type { NonSerializedDonationSlice, Donation, SerializedDonation } from '../../models';
+import type { NonSerializedDonationSlice, Donation, SerializedDonation, SerializedDonationSignature, DonationSignature } from '../../models';
 import { PaymentType } from '../../models/payment/paymentBase';
 import { URL } from '../../native';
 import { Base64Deserializer } from '../base64';
@@ -29,7 +29,15 @@ export class DonationDeserializer {
       desiredAsset: serializedDonation.das,
       successUrl: serializedDonation.su ? new URL(serializedDonation.su) : undefined,
       cancelUrl: serializedDonation.cu ? new URL(serializedDonation.cu) : undefined,
-      targetAddress: nonSerializedDonationSlice.targetAddress
+      targetAddress: nonSerializedDonationSlice.targetAddress,
+      signature: serializedDonation.s ? this.mapSerializedDonationSignatureToDonationSignature(serializedDonation.s) : undefined
+    };
+  }
+
+  protected mapSerializedDonationSignatureToDonationSignature(serializedDonationSignature: SerializedDonationSignature): DonationSignature {
+    return {
+      signingPublicKey: serializedDonationSignature.k,
+      client: serializedDonationSignature.cl
     };
   }
 }

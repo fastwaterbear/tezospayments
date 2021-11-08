@@ -1,10 +1,10 @@
-import type { Donation } from '../../models/payment';
+import type { Donation, UnsignedDonation } from '../../models/payment';
 import { PaymentType } from '../../models/payment/paymentBase';
 import type { PaymentValidationMethod } from './paymentValidationMethod';
 import { PaymentValidatorBase } from './paymentValidatorBase';
 import { validateTargetAddress, validateDesiredAmount, validateAsset, validateUrl } from './validationMethods';
 
-export class DonationValidator extends PaymentValidatorBase<Donation> {
+export class DonationValidator extends PaymentValidatorBase<Donation | UnsignedDonation> {
   static readonly errors = {
     invalidDonationObject: 'Donation is undefined or not object',
     invalidType: 'Donation type is invalid',
@@ -22,7 +22,7 @@ export class DonationValidator extends PaymentValidatorBase<Donation> {
     cancelUrlHasInvalidProtocol: 'Cancel URL has an invalid protocol'
   } as const;
 
-  protected readonly validationMethods: ReadonlyArray<PaymentValidationMethod<Donation>> = [
+  protected readonly validationMethods: ReadonlyArray<PaymentValidationMethod<Donation | UnsignedDonation>> = [
     donation => donation.type !== PaymentType.Donation ? [DonationValidator.errors.invalidType] : undefined,
     donation => validateTargetAddress(donation.targetAddress, DonationValidator.errors),
     donation => validateDesiredAmount(donation.desiredAmount, DonationValidator.errors),

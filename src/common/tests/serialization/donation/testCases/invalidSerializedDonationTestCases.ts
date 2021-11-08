@@ -34,8 +34,12 @@ const invalidSerializedDonationTestCases: ReadonlyArray<readonly [
           da: '3939439430403',
           su: '<script>alert(1)</script>',
           cu: 'https://fastwaterbear.com/tezospayments/test/donation/cancel',
+          s: {
+            k: 'edskRvH8WRyuVQve1XgV11wXWsU2dPgARqJEi9TRkV9jGWDN54tyXarWE9kJtaD5GEFHZN1B5wc25PLV6wYH2AW7riHeou3HNe',
+            cl: 'edsigu6zZ54Yhiqi3JfwiXQUhLDL3U6MbNHWi1uwD6SReUPcsszuw5Md5P2QGjjtnwuLeczABVZsmobzDSnm8iexuLHgxWq4fm3'
+          }
         },
-        'eyJkYSI6IjM5Mzk0Mzk0MzA0MDMiLCJzdSI6IjxzY3JpcHQ+YWxlcnQoMSk8L3NjcmlwdD4iLCJjdSI6Imh0dHBzOi8vZmFzdHdhdGVyYmVhci5jb20vdGV6b3NwYXltZW50cy90ZXN0L2RvbmF0aW9uL2NhbmNlbCJ9',
+        'eyJkYSI6IjM5Mzk0Mzk0MzA0MDMiLCJzdSI6IjxzY3JpcHQ-YWxlcnQoMSk8L3NjcmlwdD4iLCJjdSI6Imh0dHBzOi8vZmFzdHdhdGVyYmVhci5jb20vdGV6b3NwYXltZW50cy90ZXN0L2RvbmF0aW9uL2NhbmNlbCIsInMiOnsiayI6ImVkc2tSdkg4V1J5dVZRdmUxWGdWMTF3WFdzVTJkUGdBUnFKRWk5VFJrVjlqR1dETjU0dHlYYXJXRTlrSnRhRDVHRUZIWk4xQjV3YzI1UExWNndZSDJBVzdyaUhlb3UzSE5lIiwiY2wiOiJlZHNpZ3U2elo1NFloaXFpM0pmd2lYUVVoTERMM1U2TWJOSFdpMXV3RDZTUmVVUGNzc3p1dzVNZDVQMlFHamp0bnd1TGVjekFCVlpzbW9iekRTbm04aWV4dUxIZ3hXcTRmbTMifX0',
       ]
     ],
     [

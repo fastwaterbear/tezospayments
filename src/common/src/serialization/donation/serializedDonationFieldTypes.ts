@@ -11,7 +11,9 @@ export const serializedDonationFieldTypes: ReadonlyMap<
   // successUrl
   .set('su', ['string', 'undefined', 'null'])
   // cancelUrl
-  .set('cu', ['string', 'undefined', 'null']);
+  .set('cu', ['string', 'undefined', 'null'])
+  // signature
+  .set('s', ['object', 'undefined', 'null']);
 
 export const legacySerializedDonationFieldTypes: ReadonlyMap<
   keyof LegacySerializedDonation, SerializedFieldType | readonly SerializedFieldType[]

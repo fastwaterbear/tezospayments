@@ -6,5 +6,5 @@ export interface PaymentSignature {
 
 export interface DonationSignature {
   readonly signingPublicKey: string;
-  readonly client?: string;
+  readonly client: string;
 }

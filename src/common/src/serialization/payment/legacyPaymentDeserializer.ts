@@ -33,7 +33,11 @@ export class LegacyPaymentDeserializer {
       cancelUrl: serializedPayment.cancelUrl ? new URL(serializedPayment.cancelUrl) : undefined,
       created: new Date(serializedPayment.created),
       expired: serializedPayment.expired ? new Date(serializedPayment.expired) : undefined,
-      targetAddress: nonSerializedPaymentSlice.targetAddress
+      targetAddress: nonSerializedPaymentSlice.targetAddress,
+      signature: {
+        signingPublicKey: '',
+        contract: '',
+      }
     };
   }
 }

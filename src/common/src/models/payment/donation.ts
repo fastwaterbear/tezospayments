@@ -4,6 +4,7 @@ import { DonationValidator } from '../../helpers';
 import { URL } from '../../native';
 import { DonationDeserializer, LegacyDonationDeserializer } from '../../serialization';
 import { StateModel } from '../core';
+import type { DonationSignature } from '../signing';
 import { PaymentBase, PaymentType } from './paymentBase';
 import { NonSerializedDonationSlice } from './serializedDonation';
 
@@ -13,13 +14,10 @@ export interface Donation extends PaymentBase {
   readonly desiredAsset?: string;
   readonly successUrl?: URL;
   readonly cancelUrl?: URL;
+  readonly signature?: DonationSignature;
 }
 
-export type SignedDonation = Donation & {
-  readonly signature: {
-    readonly client?: string;
-  }
-};
+export type UnsignedDonation = Omit<Donation, 'signature'>;
 
 export class Donation extends StateModel {
   static readonly defaultDeserializer: DonationDeserializer = new DonationDeserializer();

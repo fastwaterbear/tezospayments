@@ -19,7 +19,9 @@ export const serializedPaymentFieldTypes: ReadonlyMap<
   // created
   .set('c', 'number')
   // expired
-  .set('e', ['number', 'undefined', 'null']);
+  .set('e', ['number', 'undefined', 'null'])
+  // signature
+  .set('s', 'object');
 
 export const legacySerializedPaymentFieldTypes: ReadonlyMap<
   keyof LegacySerializedPayment, SerializedFieldType | readonly SerializedFieldType[]

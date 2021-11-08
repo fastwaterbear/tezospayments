@@ -4,6 +4,7 @@ import { PaymentValidator } from '../../helpers';
 import { URL } from '../../native';
 import { LegacyPaymentDeserializer, PaymentDeserializer } from '../../serialization';
 import { StateModel } from '../core';
+import type { PaymentSignature } from '../signing';
 import { PaymentBase, PaymentType } from './paymentBase';
 import { NonSerializedPaymentSlice } from './serializedPayment';
 
@@ -30,14 +31,10 @@ export interface Payment extends PaymentBase {
   readonly expired?: Date;
   readonly successUrl?: URL;
   readonly cancelUrl?: URL;
+  readonly signature: PaymentSignature;
 }
 
-export type SignedPayment = Payment & {
-  readonly signature: {
-    readonly contract: string;
-    readonly client?: string;
-  };
-};
+export type UnsignedPayment = Omit<Payment, 'signature'>;
 
 export class Payment extends StateModel {
   static readonly defaultDeserializer: PaymentDeserializer = new PaymentDeserializer();

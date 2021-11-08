@@ -17,6 +17,21 @@ export type SerializedDonation = {
    * cancelUrl
    */
   cu?: string;
+  /**
+   * signature
+   */
+  s?: SerializedDonationSignature;
+};
+
+export type SerializedDonationSignature = {
+  /**
+   * signingPublicKey
+   */
+  k: string;
+  /**
+   * client
+   */
+  cl: string;
 };
 
 export type LegacySerializedDonation = {
