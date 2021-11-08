@@ -54,12 +54,16 @@ export class ServicesService {
 
     const encodedServiceMetadata = this.encodeMetadata(service);
 
+    const signingKeysMichelsonMap = new MichelsonMap<string, { public_key: string, name?: string }>();
+    for (const signingKey of service.signingKeys.values())
+      signingKeysMichelsonMap.set(signingKey.publicKey, { public_key: signingKey.publicKey, name: signingKey.name });
+
     return await factoryImplementationContract.methods.create_service(
       encodedServiceMetadata,
       service.allowedTokens.tez,
       service.allowedTokens.assets,
       service.allowedOperationType,
-      new MichelsonMap()
+      signingKeysMichelsonMap
     ).send();
   }
 
