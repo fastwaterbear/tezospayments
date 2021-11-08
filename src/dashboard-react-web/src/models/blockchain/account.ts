@@ -2,6 +2,7 @@ import { StateModel, Network } from '@tezospayments/common';
 
 export interface Account {
   readonly address: string;
+  readonly publicKey: string;
   readonly network: Network;
 }
 
