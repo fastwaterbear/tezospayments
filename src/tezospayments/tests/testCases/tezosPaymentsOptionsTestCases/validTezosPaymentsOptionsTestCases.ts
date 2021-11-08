@@ -8,7 +8,7 @@ const validTezosPaymentsOptionsTestCases: PositiveTestCases = [
   [
     'Simple options with API key',
     {
-      serviceContractAddress: 'KT1ECFaVQDnA5vYnaVkFc7RdfQVjxvjPHuQn',
+      serviceContractAddress: 'KT1Ni4pYV3UGWcDp7MgR5prgcD4NCK1MpXiR',
       signing: {
         apiSecretKey
       }
@@ -17,7 +17,7 @@ const validTezosPaymentsOptionsTestCases: PositiveTestCases = [
   [
     'Simple options with wallet signing',
     {
-      serviceContractAddress: 'KT1UmBbUKwsuHwmjGJ2GHSYbVLoJXVcvjMCa',
+      serviceContractAddress: 'KT1CgrsR3mctUE6ww3B5mq4cjpDfmUnJSdNh',
       signing: {
         walletSigning: testWalletSigner.sign
       }
@@ -26,7 +26,7 @@ const validTezosPaymentsOptionsTestCases: PositiveTestCases = [
   [
     'Empty default payment parameters',
     {
-      serviceContractAddress: 'KT1ECFaVQDnA5vYnaVkFc7RdfQVjxvjPHuQn',
+      serviceContractAddress: 'KT1Ni4pYV3UGWcDp7MgR5prgcD4NCK1MpXiR',
       signing: {
         apiSecretKey
       },
@@ -36,7 +36,7 @@ const validTezosPaymentsOptionsTestCases: PositiveTestCases = [
   [
     'With default network definition',
     {
-      serviceContractAddress: 'KT1ECFaVQDnA5vYnaVkFc7RdfQVjxvjPHuQn',
+      serviceContractAddress: 'KT1Ni4pYV3UGWcDp7MgR5prgcD4NCK1MpXiR',
       signing: {
         apiSecretKey
       },
@@ -50,7 +50,7 @@ const validTezosPaymentsOptionsTestCases: PositiveTestCases = [
   [
     'With default url type definition',
     {
-      serviceContractAddress: 'KT1ECFaVQDnA5vYnaVkFc7RdfQVjxvjPHuQn',
+      serviceContractAddress: 'KT1Ni4pYV3UGWcDp7MgR5prgcD4NCK1MpXiR',
       signing: {
         apiSecretKey
       },

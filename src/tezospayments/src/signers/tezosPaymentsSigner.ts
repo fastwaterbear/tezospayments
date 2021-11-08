@@ -1,4 +1,4 @@
-import { Payment } from '@tezospayments/common';
+import { UnsignedPayment, PaymentSignature } from '@tezospayments/common';
 
 import type { SigningType } from '../models';
 
@@ -6,5 +6,5 @@ export abstract class TezosPaymentsSigner {
   constructor(readonly signingType: SigningType) {
   }
 
-  abstract sign(payment: Payment): string | Promise<string>;
+  abstract sign(payment: UnsignedPayment): PaymentSignature | Promise<PaymentSignature>;
 }

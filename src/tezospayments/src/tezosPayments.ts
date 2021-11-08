@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid';
 
 import {
   native, networks, tezosInfo, networkNameRegExp, networkIdRegExp, PaymentUrlType,
-  DeepReadonly, FailedValidationResults, Payment as CommonPaymentModel,
+  DeepReadonly, FailedValidationResults, UnsignedPayment as CommonUnsignedPaymentModel, Payment as CommonPaymentModel,
   PaymentType, PaymentValidator, Mutable
 } from '@tezospayments/common';
 
@@ -56,13 +56,18 @@ export class TezosPayments {
         throw new InvalidPaymentError(errors);
     }
 
-    const paymentWithoutUrl = this.createPaymentByCreateParameters(createParameters);
-    errors = this.paymentValidator.validate(paymentWithoutUrl, true);
+    const unsignedPayment = this.createPaymentByCreateParameters(createParameters);
+    errors = this.paymentValidator.validate(unsignedPayment, true);
     if (errors)
       throw new InvalidPaymentError(errors);
 
-    const paymentUrl = await this.getPaymentUrl(paymentWithoutUrl, createParameters.urlType, createParameters.network);
-    const payment = this.applyPaymentUrl(paymentWithoutUrl, paymentUrl);
+    const signedPayment = await this.getSignedPayment(unsignedPayment);
+    errors = this.paymentValidator.validate(signedPayment, true);
+    if (errors)
+      throw new InvalidPaymentError(errors);
+
+    const paymentUrl = await this.getPaymentUrl(signedPayment, createParameters.urlType, createParameters.network);
+    const payment = this.applyPaymentUrl(signedPayment, paymentUrl);
 
     return payment;
   }
@@ -91,6 +96,12 @@ export class TezosPayments {
     return paymentUrlFactory;
   }
 
+  protected async getSignedPayment(unsignedPayment: CommonUnsignedPaymentModel): Promise<CommonPaymentModel> {
+    (unsignedPayment as Mutable<CommonPaymentModel>).signature = await this.signer.sign(unsignedPayment);
+
+    return unsignedPayment as CommonPaymentModel;
+  }
+
   protected createSigner(signingOptions: TezosPaymentsOptions['signing']): TezosPaymentsSigner {
     if ('apiSecretKey' in signingOptions)
       return new ApiSecretKeySigner(signingOptions.apiSecretKey);
@@ -109,8 +120,8 @@ export class TezosPayments {
     }
   }
 
-  protected createPaymentByCreateParameters(createParameters: PaymentCreateParameters): CommonPaymentModel {
-    const payment: Mutable<CommonPaymentModel> = {
+  protected createPaymentByCreateParameters(createParameters: PaymentCreateParameters): CommonUnsignedPaymentModel {
+    const payment: Mutable<CommonUnsignedPaymentModel> = {
       type: PaymentType.Payment,
       id: createParameters.id || nanoid(),
       targetAddress: this.serviceContractAddress,

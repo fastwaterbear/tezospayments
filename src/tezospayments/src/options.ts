@@ -10,7 +10,7 @@ export interface TezosPaymentsWalletSigningOptions {
   walletSigning: (dataBytes: string) => Promise<string>;
 }
 
-export type TezosPaymentsCustomSigning = (payment: Omit<Payment, 'url'>) => Promise<string>;
+export type TezosPaymentsCustomSigning = (payment: Omit<Payment, 'url' | 'signature'>) => Promise<string>;
 
 type TezosPaymentsSigningOptions =
   | TezosPaymentsApiSigningOptions
