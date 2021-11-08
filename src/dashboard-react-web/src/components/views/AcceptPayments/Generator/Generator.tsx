@@ -36,6 +36,10 @@ export const Generator = (props: GeneratorProps) => {
       amount: new BigNumber(props.amount),
       data: props.publicData ? { public: { orderId: props.publicData } } : undefined,
       created: new Date(),
+      signature: {
+        signingPublicKey: 'edpkuWJYhY5TVZ6xaoubNkidXArJmVhjA2yuZZuucEN6FF4fQeV9Dd',
+        contract: 'edsigtaNoneNoneNoneNoneNoneNoneNoneNoneNoneNoneNoneNoneNoneNoneNoneNoneNoneNoneNoneNoneNoneNog2Ndso',
+      }
     } as Payment
     : {
       type: props.paymentType,
