@@ -1,6 +1,5 @@
 import { Card } from 'antd';
 import BigNumber from 'bignumber.js';
-import { nanoid } from 'nanoid';
 import React from 'react';
 
 import { Donation, Payment, PaymentType } from '@tezospayments/common';
@@ -15,8 +14,8 @@ interface GeneratorProps {
   paymentType: PaymentType;
   asset: string | undefined;
   amount: string;
-  publicData: string;
-  donationData: string;
+  paymentId: string;
+  clientData: Record<string, unknown> | undefined;
 }
 
 export const Generator = (props: GeneratorProps) => {
@@ -31,10 +30,9 @@ export const Generator = (props: GeneratorProps) => {
     ? {
       type: props.paymentType,
       targetAddress: props.serviceAddress,
-      id: nanoid(),
+      id: props.paymentId,
       asset: props.asset,
       amount: new BigNumber(props.amount),
-      data: props.publicData ? { public: { orderId: props.publicData } } : undefined,
       created: new Date(),
       signature: {
         signingPublicKey: 'edpkuWJYhY5TVZ6xaoubNkidXArJmVhjA2yuZZuucEN6FF4fQeV9Dd',
@@ -44,6 +42,7 @@ export const Generator = (props: GeneratorProps) => {
     : {
       type: props.paymentType,
       targetAddress: props.serviceAddress,
+      data: props.clientData
     } as Donation;
 
   const failedValidationResults = paymentOrDonation.type === PaymentType.Payment

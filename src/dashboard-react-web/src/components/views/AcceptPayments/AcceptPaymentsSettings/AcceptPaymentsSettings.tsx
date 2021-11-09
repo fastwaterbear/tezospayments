@@ -24,11 +24,11 @@ interface AcceptPaymentsSettingsProps {
   asset: string | undefined;
   onAssetChange: (rawValue: string | undefined) => void;
 
-  publicData: string;
-  onPublicDataChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  paymentId: string;
+  onPaymentIdChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 
-  donationData: string;
-  onDonationDataChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  donationDescription: string;
+  onDonationDescriptionChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
 export const AcceptPaymentsSettings = (props: AcceptPaymentsSettingsProps) => {
@@ -73,17 +73,17 @@ export const AcceptPaymentsSettings = (props: AcceptPaymentsSettingsProps) => {
         <span className="accept-payments-settings__caption">{acceptPaymentsLangResources.amount}</span>
         <PaymentAmountPure serviceAddress={props.serviceAddress} amount={props.amount} onAmountChange={props.onAmountChange}
           asset={props.asset} onAssetChange={props.onAssetChange} />
-        <span className="accept-payments-settings__header">{acceptPaymentsLangResources.paymentPublicData}</span>
-        <span className="accept-payments-settings__caption">{acceptPaymentsLangResources.orderId}</span>
-        <Input className="accept-payments-settings__order-id-input" value={props.publicData} onChange={props.onPublicDataChange} />
-        <span className="accept-payments-settings__help-text">{acceptPaymentsLangResources.orderIdHelpText}</span>
+        <span className="accept-payments-settings__header">{acceptPaymentsLangResources.paymentData}</span>
+        <span className="accept-payments-settings__caption">{acceptPaymentsLangResources.paymentId}</span>
+        <Input className="accept-payments-settings__payment-id-input" value={props.paymentId} onChange={props.onPaymentIdChange} />
+        <span className="accept-payments-settings__help-text">{acceptPaymentsLangResources.paymentIdHelpText}</span>
       </>
       : <>
         <span className="accept-payments-settings__header">{acceptPaymentsLangResources.donationData}</span>
-        <span className="accept-payments-settings__caption">{acceptPaymentsLangResources.shortDescription}</span>
-        <Input.TextArea className="accept-payments-settings__order-id-input" value={props.donationData} onChange={props.onDonationDataChange}
+        <span className="accept-payments-settings__description-caption">{acceptPaymentsLangResources.donationDescription}</span>
+        <Input.TextArea className="accept-payments-settings__description-input" value={props.donationDescription} onChange={props.onDonationDescriptionChange}
           showCount rows={5} maxLength={250} />
-        <span className="accept-payments-settings__help-text">{acceptPaymentsLangResources.shortDescriptionHelpText}</span>
+        <span className="accept-payments-settings__help-text">{acceptPaymentsLangResources.donationDescriptionHelpText}</span>
       </>}
   </div>;
 };
