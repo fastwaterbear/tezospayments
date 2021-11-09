@@ -53,6 +53,16 @@ const invalidSerializedDonationTestCases: ReadonlyArray<readonly [
       ]
     ],
     [
+      'donation with invalid field types (data)',
+      [
+        {
+          da: '38843.37343',
+          d: 94
+        },
+        'eyJkYSI6IjM4ODQzLjM3MzQzIiwiZCI6OTR9',
+      ]
+    ],
+    [
       'invalid donation object',
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       [undefined as any, 'U29tZSB0ZXh0']

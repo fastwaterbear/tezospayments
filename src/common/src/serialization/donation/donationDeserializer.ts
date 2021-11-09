@@ -25,6 +25,7 @@ export class DonationDeserializer {
   protected mapSerializedDonationToDonation(serializedDonation: SerializedDonation, nonSerializedDonationSlice: NonSerializedDonationSlice): Donation {
     return {
       type: PaymentType.Donation,
+      data: serializedDonation.d,
       desiredAmount: serializedDonation.da ? new BigNumber(serializedDonation.da) : undefined,
       desiredAsset: serializedDonation.das,
       successUrl: serializedDonation.su ? new URL(serializedDonation.su) : undefined,

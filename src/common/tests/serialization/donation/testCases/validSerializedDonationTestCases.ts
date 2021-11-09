@@ -27,6 +27,31 @@ const validSerializedDonationTestCases: ReadonlyArray<readonly [
       })
     ],
     [
+      'donation with the data',
+      [
+        {
+          d: {
+            message: 'Hello!',
+            image: 'https://test.com/preview.png'
+          },
+        },
+        'eyJkIjp7Im1lc3NhZ2UiOiJIZWxsbyEiLCJpbWFnZSI6Imh0dHBzOi8vdGVzdC5jb20vcHJldmlldy5wbmcifSwiZGEiOiIzODQ4MDMuMzgzMjAyIn0',
+      ],
+      nonSerializedSlice => ({
+        type: PaymentType.Donation,
+        data: {
+          message: 'Hello!',
+          image: 'https://test.com/preview.png'
+        },
+        desiredAmount: new BigNumber(384803.383202),
+        desiredAsset: undefined,
+        successUrl: undefined,
+        cancelUrl: undefined,
+        signature: undefined,
+        ...nonSerializedSlice
+      })
+    ],
+    [
       'donation with the desired amount',
       [
         {

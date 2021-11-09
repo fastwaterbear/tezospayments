@@ -22,6 +22,7 @@ export class DonationSerializer {
 
   protected mapDonationToSerializedDonation(donation: Donation): SerializedDonation {
     return {
+      d: donation.data,
       da: donation.desiredAmount?.toString(),
       das: donation.desiredAsset,
       su: donation.successUrl?.toString(),

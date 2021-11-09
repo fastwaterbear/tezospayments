@@ -2,12 +2,13 @@ import type { Donation, UnsignedDonation } from '../../models/payment';
 import { PaymentType } from '../../models/payment/paymentBase';
 import type { PaymentValidationMethod } from './paymentValidationMethod';
 import { PaymentValidatorBase } from './paymentValidatorBase';
-import { validateTargetAddress, validateDesiredAmount, validateAsset, validateUrl } from './validationMethods';
+import { validateTargetAddress, validateDesiredAmount, validateAsset, validateUrl, validateData } from './validationMethods';
 
 export class DonationValidator extends PaymentValidatorBase<Donation | UnsignedDonation> {
   static readonly errors = {
     invalidDonationObject: 'Donation is undefined or not object',
     invalidType: 'Donation type is invalid',
+    invalidData: 'Donation data is invalid',
     invalidAmount: 'Desired amount is invalid',
     amountIsNonPositive: 'Desired amount is less than or equal to zero',
     invalidTargetAddress: 'Target address is invalid',
@@ -24,6 +25,7 @@ export class DonationValidator extends PaymentValidatorBase<Donation | UnsignedD
 
   protected readonly validationMethods: ReadonlyArray<PaymentValidationMethod<Donation | UnsignedDonation>> = [
     donation => donation.type !== PaymentType.Donation ? [DonationValidator.errors.invalidType] : undefined,
+    donation => validateData(donation.data, DonationValidator.errors),
     donation => validateTargetAddress(donation.targetAddress, DonationValidator.errors),
     donation => validateDesiredAmount(donation.desiredAmount, DonationValidator.errors),
     donation => validateAsset(donation.desiredAsset, DonationValidator.errors),

@@ -2,6 +2,10 @@ import type { Donation } from './donation';
 
 export type SerializedDonation = {
   /**
+   * data
+   */
+  d?: Donation['data'];
+  /**
    * desiredAmount
    */
   da?: string;

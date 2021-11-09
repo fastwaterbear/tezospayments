@@ -8,8 +8,13 @@ import type { DonationSignature } from '../signing';
 import { PaymentBase, PaymentType } from './paymentBase';
 import { NonSerializedDonationSlice } from './serializedDonation';
 
+interface DonationData {
+  readonly [fieldName: string]: unknown;
+}
+
 export interface Donation extends PaymentBase {
   readonly type: PaymentType.Donation;
+  readonly data?: DonationData;
   readonly desiredAmount?: BigNumber;
   readonly desiredAsset?: string;
   readonly successUrl?: URL;
