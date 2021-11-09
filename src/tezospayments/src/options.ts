@@ -32,7 +32,7 @@ interface PaymentCreateParametersBase {
   amount: string;
   id?: string;
   asset?: string;
-  data: Payment['data'];
+  data?: Payment['data'];
   created?: number;
   expired?: number;
   successUrl?: string;
