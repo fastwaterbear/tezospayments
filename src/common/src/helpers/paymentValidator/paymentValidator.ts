@@ -1,4 +1,4 @@
-import type { Payment } from '../../models/payment';
+import type { Payment, UnsignedPayment } from '../../models/payment';
 import { PaymentType } from '../../models/payment/paymentBase';
 import type { PaymentValidationMethod } from './paymentValidationMethod';
 import { PaymentValidatorBase } from './paymentValidatorBase';
@@ -7,7 +7,7 @@ import {
   validateCreatedDate, validateExpiredDate, validateUrl
 } from './validationMethods';
 
-export class PaymentValidator extends PaymentValidatorBase<Payment> {
+export class PaymentValidator extends PaymentValidatorBase<Payment | UnsignedPayment> {
   static readonly errors = {
     invalidPaymentObject: 'Payment is undefined or not object',
     invalidType: 'Payment type is invalid',
@@ -19,10 +19,6 @@ export class PaymentValidator extends PaymentValidatorBase<Payment> {
     invalidAmount: 'Amount is invalid',
     amountIsNonPositive: 'Amount is less than or equal to zero',
     invalidData: 'Payment data is invalid',
-    invalidPublicData: 'Payment public data is invalid',
-    invalidPrivateData: 'Payment private data is invalid',
-    publicDataShouldBeFlat: 'Public data should be flat',
-    privateDataShouldBeFlat: 'Private data should be flat',
     invalidAsset: 'Asset address is invalid',
     assetIsNotContractAddress: 'Asset address isn\'t a contract address',
     assetHasInvalidLength: 'Asset address has an invalid address',
@@ -36,13 +32,13 @@ export class PaymentValidator extends PaymentValidatorBase<Payment> {
   } as const;
   static readonly minimumPaymentLifetime = 600000; // 10 * 60 * 1000;
 
-  protected readonly validationMethods: ReadonlyArray<PaymentValidationMethod<Payment>> = [
+  protected readonly validationMethods: ReadonlyArray<PaymentValidationMethod<Payment | UnsignedPayment>> = [
     payment => payment.type !== PaymentType.Payment ? [PaymentValidator.errors.invalidType] : undefined,
     payment => validateTargetAddress(payment.targetAddress, PaymentValidator.errors),
     payment => validateId(payment.id, PaymentValidator.errors),
     payment => validateAmount(payment.amount, PaymentValidator.errors),
-    payment => validateData(payment.data, PaymentValidator.errors),
     payment => validateAsset(payment.asset, PaymentValidator.errors),
+    payment => validateData(payment.data, PaymentValidator.errors),
     payment => validateUrl(payment.successUrl, PaymentValidator.successUrlErrors),
     payment => validateUrl(payment.cancelUrl, PaymentValidator.cancelUrlErrors),
     payment => validateCreatedDate(payment.created, PaymentValidator.errors),

@@ -111,37 +111,11 @@ export const validateExpiredDate = (
 
 export const validateData = (
   data: Payment['data'],
-  errors: Errors<'invalidData' | 'invalidPublicData' | 'publicDataShouldBeFlat' | 'invalidPrivateData' | 'privateDataShouldBeFlat'>
+  errors: Errors<'invalidData'>
 ): FailedValidationResults => {
-  if (!guards.isPlainObject(data) || Object.keys(data).some(key => key !== 'public' && key !== 'private'))
+  if (data === undefined)
+    return undefined;
+
+  if (!guards.isPlainObject(data))
     return [errors.invalidData];
-
-  const publicData = (data as Exclude<Payment['data'], { private: unknown }>).public;
-  const privateData = (data as Exclude<Payment['data'], { public: unknown }>).private;
-  if (!(publicData || privateData))
-    return [errors.invalidData];
-
-  if (publicData !== undefined) {
-    if (!guards.isPlainObject(publicData))
-      return [errors.invalidPublicData];
-    if (!isFlatObject(publicData))
-      return [errors.publicDataShouldBeFlat];
-  }
-
-  if (privateData !== undefined) {
-    if (!guards.isPlainObject(privateData))
-      return [errors.invalidPrivateData];
-    if (!isFlatObject(privateData))
-      return [errors.privateDataShouldBeFlat];
-  }
-};
-
-const isFlatObject = (obj: Record<string, unknown>) => {
-  for (const propertyName of Object.getOwnPropertyNames(obj)) {
-    const property = obj[propertyName];
-    if (typeof property === 'object' || typeof property === 'function')
-      return false;
-  }
-
-  return true;
 };

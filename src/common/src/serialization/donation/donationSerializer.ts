@@ -1,4 +1,4 @@
-import type { Donation, SerializedDonation } from '../../models';
+import type { Donation, DonationSignature, SerializedDonation, SerializedDonationSignature } from '../../models';
 import { Base64Serializer } from '../base64';
 import { serializedDonationFieldTypes } from './serializedDonationFieldTypes';
 
@@ -22,10 +22,19 @@ export class DonationSerializer {
 
   protected mapDonationToSerializedDonation(donation: Donation): SerializedDonation {
     return {
+      d: donation.data,
       da: donation.desiredAmount?.toString(),
       das: donation.desiredAsset,
       su: donation.successUrl?.toString(),
       cu: donation.cancelUrl?.toString(),
+      s: donation.signature ? this.mapDonationSignatureToSerializedDonationSignature(donation.signature) : undefined
+    };
+  }
+
+  protected mapDonationSignatureToSerializedDonationSignature(donationSignature: DonationSignature): SerializedDonationSignature {
+    return {
+      k: donationSignature.signingPublicKey,
+      cl: donationSignature.client
     };
   }
 }

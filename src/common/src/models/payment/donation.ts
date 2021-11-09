@@ -2,32 +2,38 @@ import BigNumber from 'bignumber.js';
 
 import { DonationValidator } from '../../helpers';
 import { URL } from '../../native';
-import { DonationDeserializer, LegacyDonationDeserializer } from '../../serialization';
+import { DonationDeserializer } from '../../serialization';
 import { StateModel } from '../core';
+import type { DonationSignature } from '../signing';
 import { PaymentBase, PaymentType } from './paymentBase';
 import { NonSerializedDonationSlice } from './serializedDonation';
 
+interface DonationData {
+  readonly [fieldName: string]: unknown;
+}
+
 export interface Donation extends PaymentBase {
   readonly type: PaymentType.Donation;
+  readonly data?: DonationData;
   readonly desiredAmount?: BigNumber;
   readonly desiredAsset?: string;
   readonly successUrl?: URL;
   readonly cancelUrl?: URL;
+  readonly signature?: DonationSignature;
 }
+
+export type UnsignedDonation = Omit<Donation, 'signature'>;
 
 export class Donation extends StateModel {
   static readonly defaultDeserializer: DonationDeserializer = new DonationDeserializer();
-  static readonly defaultLegacyDeserializer: LegacyDonationDeserializer = new LegacyDonationDeserializer();
   static readonly defaultValidator: DonationValidator = new DonationValidator();
 
   static validate(donation: Donation) {
-    return this.defaultValidator.validate(donation);
+    return Donation.defaultValidator.validate(donation);
   }
 
-  static deserialize(serializedDonation: string, nonSerializedDonationSlice: NonSerializedDonationSlice, isLegacy = false): Donation | null {
-    return !isLegacy
-      ? Donation.defaultDeserializer.deserialize(serializedDonation, nonSerializedDonationSlice)
-      : Donation.defaultLegacyDeserializer.deserialize(serializedDonation, nonSerializedDonationSlice);
+  static deserialize(serializedDonation: string, nonSerializedDonationSlice: NonSerializedDonationSlice): Donation | null {
+    return Donation.defaultDeserializer.deserialize(serializedDonation, nonSerializedDonationSlice);
   }
 }
 

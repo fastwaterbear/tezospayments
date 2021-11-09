@@ -1,7 +1,7 @@
 import { Skeleton } from 'antd';
 import React from 'react';
 
-import { ServiceOperation, ServiceOperationDirection } from '@tezospayments/common';
+import { DonationOperation, Operation, OperationDirection, OperationType, PaymentOperation } from '@tezospayments/common';
 
 import { getSortedOperations } from '../../../store/operations/selectors';
 import { selectServicesState, selectTokensState } from '../../../store/services/selectors';
@@ -10,6 +10,17 @@ import { OperationList } from '../../common/OperationList';
 import { useAppSelector, useCurrentLanguageResources } from '../../hooks';
 import { View } from '../View';
 import { NoOperationsPerformedPure } from './NoOperationsPerformed';
+
+const getFormattedOperationData = (operation: Operation): string | undefined => {
+  switch (operation.type) {
+    case OperationType.Payment:
+      return (operation as PaymentOperation).paymentId;
+    case OperationType.Donation:
+      return (operation as DonationOperation).payload?.valueString;
+    default:
+      return undefined;
+  }
+};
 
 export const Operations = () => {
   const langResources = useCurrentLanguageResources();
@@ -24,7 +35,7 @@ export const Operations = () => {
     return {
       date: o.date,
       hash: o.hash,
-      data: ServiceOperation.publicPayloadExists(o) ? o.payload.public.valueString : '',
+      data: getFormattedOperationData(o) || '',
       accountAddress: o.sender,
       serviceAddress: o.target,
       serviceName: servicesState.services.filter(s => s.contractAddress === o.target)[0]?.name || '',
@@ -32,7 +43,7 @@ export const Operations = () => {
       value: o.amount,
       status: o.status,
       type: o.type,
-      direction: ServiceOperationDirection.Incoming
+      direction: OperationDirection.Incoming
     };
   });
 

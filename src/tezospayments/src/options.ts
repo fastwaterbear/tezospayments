@@ -10,7 +10,7 @@ export interface TezosPaymentsWalletSigningOptions {
   walletSigning: (dataBytes: string) => Promise<string>;
 }
 
-export type TezosPaymentsCustomSigning = (payment: Omit<Payment, 'url'>) => Promise<string>;
+export type TezosPaymentsCustomSigning = (payment: Omit<Payment, 'url' | 'signature'>) => Promise<string>;
 
 type TezosPaymentsSigningOptions =
   | TezosPaymentsApiSigningOptions
@@ -32,7 +32,7 @@ interface PaymentCreateParametersBase {
   amount: string;
   id?: string;
   asset?: string;
-  data: Payment['data'];
+  data?: Payment['data'];
   created?: number;
   expired?: number;
   successUrl?: string;

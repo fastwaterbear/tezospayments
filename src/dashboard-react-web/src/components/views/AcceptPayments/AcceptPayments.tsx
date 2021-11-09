@@ -35,8 +35,8 @@ export const AcceptPayments = () => {
   }, [servicesState.services]);
 
   const [asset, setAsset] = useState<string | undefined>(getDefaultAsset(serviceAddress));
-  const [publicData, setPublicData] = useState<string>('');
-  const [donationData, setDonationData] = useState<string>('');
+  const [paymentId, setPaymentId] = useState<string>('');
+  const [clientData, setClientData] = useState<Record<string, string>>();
 
   const decimals = asset ? tokens.get(asset)?.metadata?.decimals || 0 : tezosMeta.decimals;
 
@@ -60,12 +60,12 @@ export const AcceptPayments = () => {
     setAmount('');
   }, []);
 
-  const handlePublicDataChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setPublicData(e.target.value);
+  const handlePaymentIdChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setPaymentId(e.target.value);
   }, []);
 
-  const handleDonationDataChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setDonationData(e.target.value);
+  const handleDonationDescriptionChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setClientData({ description: e.target.value });
   }, []);
 
   return <View title={acceptPaymentsLangResources.title}>
@@ -81,8 +81,8 @@ export const AcceptPayments = () => {
               paymentType={paymentType} onPaymentTypeChange={handlePaymentTypeChange}
               amount={amount} onAmountChange={handleAmountChange}
               asset={asset} onAssetChange={handleAssetChange}
-              publicData={publicData} onPublicDataChange={handlePublicDataChange}
-              donationData={donationData} onDonationDataChange={handleDonationDataChange}
+              paymentId={paymentId} onPaymentIdChange={handlePaymentIdChange}
+              donationDescription={clientData?.description || ''} onDonationDescriptionChange={handleDonationDescriptionChange}
             />
           </div>
           <div className="accept-payments__generator">
@@ -91,8 +91,8 @@ export const AcceptPayments = () => {
               paymentType={paymentType}
               asset={asset}
               amount={amount}
-              publicData={publicData}
-              donationData={donationData}
+              paymentId={paymentId}
+              clientData={clientData}
             />
           </div>
         </div>}

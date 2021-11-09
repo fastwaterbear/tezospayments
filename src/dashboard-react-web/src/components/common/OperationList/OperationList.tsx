@@ -2,10 +2,7 @@ import { BigNumber } from 'bignumber.js';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import {
-  ServiceOperationDirection, ServiceOperationType,
-  ServiceOperationStatus, combineClassNames
-} from '@tezospayments/common';
+import { combineClassNames, OperationDirection, OperationStatus, OperationType } from '@tezospayments/common';
 
 import { config } from '../../../config';
 import { useCurrentLanguageResources } from '../../hooks';
@@ -25,9 +22,9 @@ export const OperationList = (props: OperationListProps) => {
 };
 
 interface OperationListItemProps {
-  type: ServiceOperationType;
-  direction: ServiceOperationDirection;
-  status: ServiceOperationStatus;
+  type: OperationType;
+  direction: OperationDirection;
+  status: OperationStatus;
   date: Date;
   hash: string;
   serviceAddress: string;
@@ -42,19 +39,19 @@ const OperationListItem = (props: OperationListItemProps) => {
   const langResources = useCurrentLanguageResources();
   const operationsLangResources = langResources.views.operations.operationList;
 
-  const isIncoming = props.direction === ServiceOperationDirection.Incoming;
+  const isIncoming = props.direction === OperationDirection.Incoming;
   const from = isIncoming ? props.accountAddress : props.serviceAddress;
   const to = isIncoming ? props.serviceAddress : props.accountAddress;
 
   const hash = getShortHash(props.hash);
-  const isDonation = props.type === ServiceOperationType.Donation;
-  const data = `${isDonation ? operationsLangResources.donationData : operationsLangResources.paymentData} ${props.data}`;
+  const isDonation = props.type === OperationType.Donation;
+  const data = `${isDonation ? operationsLangResources.donationData : operationsLangResources.paymentId} ${props.data}`;
 
   const sign = isIncoming ? '+' : '−';
   const amountClassNames = combineClassNames('operation-list-item__amount',
     { 'operation-list-item__amount_income': isIncoming },
     { 'operation-list-item__amount_expense': !isIncoming },
-    { 'operation-list-item__amount_cancelled': props.status === ServiceOperationStatus.Cancelled }
+    { 'operation-list-item__amount_cancelled': props.status === OperationStatus.Cancelled }
   );
 
   const serviceLink = `${config.routers.services}/${props.serviceAddress}`;

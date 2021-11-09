@@ -71,16 +71,13 @@ export class LocalPaymentService {
   }
 
   async pay(payment: NetworkPayment): Promise<boolean> {
-    if (!Payment.publicDataExists(payment.data)) {
-      throw new Error(errors.invalidPayment);
-    }
-
     return this.sendPayment(
       ServiceOperationType.Payment,
       payment.targetAddress,
       payment.amount,
       payment.asset,
-      commonConverters.objectToBytes(payment.data.public)
+      // TODO: temp
+      commonConverters.stringToBytes(payment.id)
     );
   }
 
@@ -90,7 +87,7 @@ export class LocalPaymentService {
       donation.targetAddress,
       donation.amount,
       donation.asset,
-      ''
+      donation.payload ? commonConverters.objectToBytes(donation.payload) : ''
     );
   }
 

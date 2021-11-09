@@ -14,9 +14,15 @@ export class AccountsService {
   ) {
   }
 
-  async connect(network: Network): Promise<string | null> {
+  async connect(network: Network): Promise<Account | null> {
     return this.dAppClient.requestPermissions({ network: { type: converters.networkToBeaconNetwork(network) } })
-      .then(permissions => permissions.address)
+      .then(permissions => {
+        return {
+          address: permissions.address,
+          publicKey: permissions.publicKey,
+          network
+        };
+      })
       .catch(e => {
         console.error(e);
         this.dAppClient.clearActiveAccount();
@@ -28,11 +34,15 @@ export class AccountsService {
     return this.dAppClient.clearActiveAccount();
   }
 
-  async getActiveAccount(): Promise<Pick<Account, 'address' | 'network'> | undefined> {
+  async getActiveAccount(): Promise<Account | undefined> {
     const activeAccount = await this.dAppClient.getActiveAccount();
 
     return activeAccount
-      ? { address: activeAccount.address, network: converters.beaconNetworkToNetwork(activeAccount.network.type) }
+      ? {
+        address: activeAccount.address,
+        publicKey: activeAccount.publicKey,
+        network: converters.beaconNetworkToNetwork(activeAccount.network.type)
+      }
       : undefined;
   }
 

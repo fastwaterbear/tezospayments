@@ -1,4 +1,4 @@
-import type { Payment, SerializedPayment } from '../../models';
+import type { Payment, PaymentSignature, SerializedPayment, SerializedPaymentSignature } from '../../models';
 import { Base64Serializer } from '../base64';
 import { serializedPaymentFieldTypes } from './serializedPaymentFieldTypes';
 
@@ -21,12 +21,21 @@ export class PaymentSerializer {
     return {
       i: payment.id,
       a: payment.amount.toString(),
-      d: payment.data,
       as: payment.asset,
+      d: payment.data,
       su: payment.successUrl?.toString(),
       cu: payment.cancelUrl?.toString(),
       c: payment.created.getTime(),
       e: payment.expired?.getTime(),
+      s: this.mapPaymentSignatureToSerializedPaymentSignature(payment.signature)
+    };
+  }
+
+  protected mapPaymentSignatureToSerializedPaymentSignature(paymentSignature: PaymentSignature): SerializedPaymentSignature {
+    return {
+      k: paymentSignature.signingPublicKey,
+      c: paymentSignature.contract,
+      cl: paymentSignature.client
     };
   }
 }

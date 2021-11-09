@@ -1,8 +1,9 @@
 import BigNumber from 'bignumber.js';
 
 import {
-  converters, guards, Network, optimization, Service, ServiceOperation, ServiceOperationDirection,
-  ServiceOperationStatus, ServiceSigningKey, tezosMeta, Token, tokenWhitelistMap
+  converters, DonationOperation, guards, Mutable, Network,
+  Operation, OperationDirection, OperationStatus, OperationType, optimization, PaymentOperation, ServiceOperation,
+  Service, ServiceSigningKey, tezosMeta, Token, tokenWhitelistMap
 } from '@tezospayments/common';
 
 import type { ServicesProvider } from '../servicesProvider';
@@ -53,8 +54,11 @@ export class BetterCallDevDataProvider implements ServicesProvider {
     const response = await fetch(url.href);
     const operations: SendPaymentOperationDto[] = (await response.json()).operations;
 
-    return operations.filter(operation => !operation.internal)
-      .map(operation => this.mapSendPaymentOperationToServiceOperation(operation));
+    return operations
+      .filter(operation => !operation.internal)
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      .map(operation => this.mapSendPaymentOperationToServiceOperation(operation)!)
+      .filter(Boolean);
   }
 
   private async getServicesFactoryDto(): Promise<ServicesFactoryDto> {
@@ -114,7 +118,7 @@ export class BetterCallDevDataProvider implements ServicesProvider {
     );
   }
 
-  private mapSendPaymentOperationToServiceOperation(operationDto: SendPaymentOperationDto): ServiceOperation {
+  private mapSendPaymentOperationToServiceOperation(operationDto: SendPaymentOperationDto): ServiceOperation | null {
     const assetInfo = operationDto.parameters[0].children[0].children;
     const assetAddress = assetInfo?.[0].value;
     const assetValue = assetInfo?.[2].value;
@@ -125,20 +129,36 @@ export class BetterCallDevDataProvider implements ServicesProvider {
 
     const amount = assetValue || (operationDto.amount || 0).toString();
 
-    return {
+    const operationBase: Operation = {
       hash: operationDto.hash,
-      type: +operationDto.parameters[0].children[1].value || 0,
-      direction: ServiceOperationDirection.Incoming,
-      status: operationDto.status === 'applied' ? ServiceOperationStatus.Success : ServiceOperationStatus.Cancelled,
+      type: +operationDto.parameters[0].children[1].value,
+      direction: OperationDirection.Incoming,
+      status: operationDto.status === 'applied' ? OperationStatus.Success : OperationStatus.Cancelled,
       amount: new BigNumber(amount).div(10 ** decimals),
-      payload: {
-        public: ServiceOperation.parseServiceOperationPayload(converters.stringToBytes(operationDto.parameters[0].children[2].children[0].value)),
-      },
       asset: assetAddress,
       timestamp: operationDto.timestamp,
       date: new Date(operationDto.timestamp),
       sender: operationDto.source,
       target: operationDto.destination,
     };
+
+    switch (operationBase.type) {
+      case OperationType.Payment: {
+        const paymentOperation = operationBase as Mutable<PaymentOperation>;
+
+        paymentOperation.paymentId = operationDto.parameters[0].children[2].children[0].value;
+
+        return paymentOperation;
+      }
+      case OperationType.Donation: {
+        const donationOperation = operationBase as Mutable<DonationOperation>;
+
+        donationOperation.payload = DonationOperation.parsePayload(converters.stringToBytes(operationDto.parameters[0].children[2].children[0].value));
+
+        return donationOperation;
+      }
+      default:
+        return null;
+    }
   }
 }

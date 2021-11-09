@@ -1,5 +1,6 @@
 export { default as validDonationTestCases } from './validDonationTestCases';
 
+export { default as invalidDataTestCases } from './invalidDataTestCases';
 export { default as invalidDesiredAmountTestCases } from './invalidDesiredAmountTestCases';
 export { default as invalidDesiredAssetTestCases } from './invalidDesiredAssetTestCases';
 export { default as invalidCancelUrlTestCases } from './invalidCancelUrlTestCases';

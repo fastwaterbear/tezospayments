@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 
-import type { NonSerializedPaymentSlice, Payment, SerializedPayment } from '../../models';
+import type { NonSerializedPaymentSlice, Payment, PaymentSignature, SerializedPayment, SerializedPaymentSignature } from '../../models';
 import { PaymentType } from '../../models/payment/paymentBase';
 import { URL } from '../../native';
 import { Base64Deserializer } from '../base64';
@@ -27,13 +27,22 @@ export class PaymentDeserializer {
       type: PaymentType.Payment,
       id: serializedPayment.i,
       amount: new BigNumber(serializedPayment.a),
-      data: serializedPayment.d,
       asset: serializedPayment.as,
+      data: serializedPayment.d,
       successUrl: serializedPayment.su ? new URL(serializedPayment.su) : undefined,
       cancelUrl: serializedPayment.cu ? new URL(serializedPayment.cu) : undefined,
       created: new Date(serializedPayment.c),
       expired: serializedPayment.e ? new Date(serializedPayment.e) : undefined,
-      targetAddress: nonSerializedPaymentSlice.targetAddress
+      targetAddress: nonSerializedPaymentSlice.targetAddress,
+      signature: this.mapSerializedPaymentSignatureToPaymentSignature(serializedPayment.s)
+    };
+  }
+
+  protected mapSerializedPaymentSignatureToPaymentSignature(serializedPaymentSignature: SerializedPaymentSignature): PaymentSignature {
+    return {
+      signingPublicKey: serializedPaymentSignature.k,
+      contract: serializedPaymentSignature.c,
+      client: serializedPaymentSignature.cl
     };
   }
 }

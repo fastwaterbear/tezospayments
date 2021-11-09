@@ -36,8 +36,7 @@ export const loadActiveAccount = createAsyncThunk<Account | null, void, AppThunk
 export const connectAccount = createAsyncThunk<Account | null, Network, AppThunkAPI>(
   `${namespace}/connect`,
   async (network: Network, { extra: app, dispatch }) => {
-    const address = await app.services.accountsService.connect(network);
-    const account = address ? { address, network } : null;
+    const account = await app.services.accountsService.connect(network);
 
     if (account) {
       dispatch(loadServices(account));

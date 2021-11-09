@@ -1,5 +1,6 @@
-import { DonationValidator } from '../../../../src/helpers';
 import { URL } from 'url';
+
+import { DonationValidator } from '../../../../src/helpers';
 import type { NegativeTestCases } from '../testCase';
 import validDonationTestCases from './validDonationTestCases';
 
@@ -38,6 +39,7 @@ export default [
   [
     {
       ...validDonationBase,
+      // eslint-disable-next-line no-script-url
       cancelUrl: new URL('javascript:alert(111)')
     },
     [DonationValidator.errors.cancelUrlHasInvalidProtocol]

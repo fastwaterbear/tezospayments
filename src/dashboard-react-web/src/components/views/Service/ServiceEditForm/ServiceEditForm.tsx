@@ -3,7 +3,7 @@ import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ServiceLinkHelper, Service, ServiceOperationType } from '@tezospayments/common';
+import { ServiceLinkHelper, Service, ServiceOperationType, ServiceSigningKey } from '@tezospayments/common';
 
 import { config } from '../../../../config';
 import { getCurrentAccount } from '../../../../store/accounts/selectors';
@@ -96,6 +96,7 @@ export const ServiceEditForm = (props: ServiceEditFormProps) => {
         ? ServiceOperationType.Payment
         : ServiceOperationType.Donation;
 
+    const isNewService = props.isCreateMode && !!currentAccount;
     const updatedService: Service = {
       ...props.service,
       name,
@@ -103,7 +104,10 @@ export const ServiceEditForm = (props: ServiceEditFormProps) => {
       allowedOperationType,
       allowedTokens,
       links,
-      network: props.isCreateMode && currentAccount ? currentAccount.network : props.service.network
+      signingKeys: isNewService
+        ? new Map<ServiceSigningKey['publicKey'], ServiceSigningKey>().set(currentAccount.publicKey, { publicKey: currentAccount.publicKey })
+        : props.service.signingKeys,
+      network: isNewService ? currentAccount.network : props.service.network
     };
 
     if (props.isCreateMode) {
