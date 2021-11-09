@@ -8,10 +8,10 @@ export const serializedPaymentFieldTypes: ReadonlyMap<
   .set('i', 'string')
   // amount
   .set('a', 'string')
-  // data
-  .set('d', 'object')
   // asset
   .set('as', ['string', 'undefined', 'null'])
+  // data
+  .set('d', ['object', 'undefined', 'null'])
   // successUrl
   .set('su', ['string', 'undefined', 'null'])
   // cancelUrl

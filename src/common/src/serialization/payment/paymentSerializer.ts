@@ -21,8 +21,8 @@ export class PaymentSerializer {
     return {
       i: payment.id,
       a: payment.amount.toString(),
-      d: payment.data,
       as: payment.asset,
+      d: payment.data,
       su: payment.successUrl?.toString(),
       cu: payment.cancelUrl?.toString(),
       c: payment.created.getTime(),

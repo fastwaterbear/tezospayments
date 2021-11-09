@@ -10,13 +10,13 @@ export type SerializedPayment = {
    */
   a: string;
   /**
-   * data
-   */
-  d: Payment['data'];
-  /**
    * created
    */
   c: number;
+  /**
+   * data
+   */
+  d?: Payment['data'];
   /**
    * asset
    */
@@ -56,7 +56,7 @@ export type SerializedPaymentSignature = {
 
 export type LegacySerializedPayment = {
   amount: string;
-  data: Payment['data'];
+  data?: Payment['data'];
   created: number;
   asset?: string;
   successUrl?: string;
