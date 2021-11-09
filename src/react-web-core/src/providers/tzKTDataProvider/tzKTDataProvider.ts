@@ -2,9 +2,9 @@
 import BigNumber from 'bignumber.js';
 
 import {
-  converters, guards, Network, optimization,
-  Service, ServiceOperation, ServiceOperationDirection,
-  ServiceOperationStatus, ServiceSigningKey, tezosMeta, Token, tokenWhitelistMap
+  converters, DonationOperation, guards, Mutable, Network,
+  Operation, OperationDirection, OperationStatus, OperationType, optimization, PaymentOperation, ServiceOperation,
+  Service, ServiceSigningKey, tezosMeta, Token, tokenWhitelistMap
 } from '@tezospayments/common';
 
 import type { ServicesProvider } from '../servicesProvider';
@@ -55,7 +55,10 @@ export class TzKTDataProvider implements ServicesProvider {
     const response = await fetch(url.href);
     const operations: OperationDto[] = await response.json();
 
-    return operations.map(operation => this.mapOperationToServiceOperation(operation));
+    return operations
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      .map(operation => this.mapOperationDtoToServiceOperation(operation)!)
+      .filter(Boolean);
   }
 
   private mapServiceDtoToService(serviceDto: ServiceDto, serviceAddress: string, network: Network): Service | null {
@@ -98,27 +101,42 @@ export class TzKTDataProvider implements ServicesProvider {
       );
   }
 
-  private mapOperationToServiceOperation(operationDto: OperationDto): ServiceOperation {
+  private mapOperationDtoToServiceOperation(operationDto: OperationDto): ServiceOperation | null {
     const decimals = operationDto.parameter.value.asset_value
       ? this.tokenWhiteList.get(operationDto.parameter.value.asset_value.token_address)?.metadata?.decimals || 0
       : tezosMeta.decimals;
-
     const amount = operationDto.parameter.value.asset_value ? operationDto.parameter.value.asset_value.value : operationDto.amount.toString();
 
-    return {
+    const operationBase: Operation = {
       hash: operationDto.hash,
-      type: +operationDto.parameter.value.operation_type || 0,
-      direction: ServiceOperationDirection.Incoming,
-      status: operationDto.status === 'applied' ? ServiceOperationStatus.Success : ServiceOperationStatus.Cancelled,
+      type: +operationDto.parameter.value.operation_type,
+      direction: OperationDirection.Incoming,
+      status: operationDto.status === 'applied' ? OperationStatus.Success : OperationStatus.Cancelled,
       amount: new BigNumber(amount).div(10 ** decimals),
-      payload: {
-        public: ServiceOperation.parseServiceOperationPayload(operationDto.parameter.value.payload.public),
-      },
       asset: operationDto.parameter.value.asset_value?.token_address,
       timestamp: operationDto.timestamp,
       date: new Date(operationDto.timestamp),
       sender: operationDto.sender.address,
       target: operationDto.target.address,
     };
+
+    switch (operationBase.type) {
+      case OperationType.Payment: {
+        const paymentOperation = operationBase as Mutable<PaymentOperation>;
+
+        paymentOperation.paymentId = operationDto.parameter.value.payload.public;
+
+        return paymentOperation;
+      }
+      case OperationType.Donation: {
+        const donationOperation = operationBase as Mutable<DonationOperation>;
+
+        donationOperation.payload = DonationOperation.parsePayload(operationDto.parameter.value.payload.public);
+
+        return donationOperation;
+      }
+      default:
+        return null;
+    }
   }
 }

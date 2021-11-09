@@ -1,7 +1,7 @@
 export const operations = {
   title: 'Operations',
   operationList: {
-    paymentData: 'Payment Data:',
+    paymentId: 'Payment Id:',
     donationData: 'Donation Data:',
     income: 'Income',
     expense: 'Expense',
