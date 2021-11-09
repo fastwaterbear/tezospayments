@@ -87,7 +87,7 @@ export class LocalPaymentService {
       donation.targetAddress,
       donation.amount,
       donation.asset,
-      donation.payload || ''
+      donation.payload ? commonConverters.objectToBytes(donation.payload) : ''
     );
   }
 

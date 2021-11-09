@@ -6,8 +6,8 @@ export type NetworkPayment = Pick<Payment,
   | 'id'
   | 'amount'
   | 'asset'
-> & { signature: string };
+> & { readonly signature: string };
 
 export type NetworkDonation = Pick<Donation, 'type' | 'targetAddress'>
   & Pick<Payment, 'amount' | 'asset'>
-  & { payload?: string };
+  & { readonly payload?: { [fieldName: string]: unknown; } };
