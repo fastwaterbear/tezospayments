@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 
 import {
   Donation, Payment, Service, ServiceOperationType, Network,
-  memoize, tokenWhitelistMap, TokenFA2, TokenFA12
+  converters as commonConverters, memoize, tokenWhitelistMap, TokenFA2, TokenFA12
 } from '@tezospayments/common';
 import { converters, Fa12Contract, Fa20Contract, ServicesProvider, TezosPaymentsServiceContract } from '@tezospayments/react-web-core';
 
@@ -76,7 +76,8 @@ export class LocalPaymentService {
       payment.targetAddress,
       payment.amount,
       payment.asset,
-      payment.id
+      // TODO: temp
+      commonConverters.stringToBytes(payment.id)
     );
   }
 
