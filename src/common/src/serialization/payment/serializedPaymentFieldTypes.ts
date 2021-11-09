@@ -1,4 +1,4 @@
-import { LegacySerializedPayment, SerializedPayment } from '../../models';
+import { SerializedPayment } from '../../models';
 import { SerializedFieldType } from '../base64';
 
 export const serializedPaymentFieldTypes: ReadonlyMap<
@@ -22,14 +22,3 @@ export const serializedPaymentFieldTypes: ReadonlyMap<
   .set('e', ['number', 'undefined', 'null'])
   // signature
   .set('s', 'object');
-
-export const legacySerializedPaymentFieldTypes: ReadonlyMap<
-  keyof LegacySerializedPayment, SerializedFieldType | readonly SerializedFieldType[]
-> = new Map<keyof LegacySerializedPayment, SerializedFieldType | readonly SerializedFieldType[]>()
-  .set('amount', 'string')
-  .set('data', 'object')
-  .set('asset', ['string', 'undefined', 'null'])
-  .set('successUrl', ['string', 'undefined', 'null'])
-  .set('cancelUrl', ['string', 'undefined', 'null'])
-  .set('created', 'number')
-  .set('expired', ['number', 'undefined', 'null']);

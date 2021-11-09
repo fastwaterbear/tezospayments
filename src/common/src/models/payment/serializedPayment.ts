@@ -54,14 +54,4 @@ export type SerializedPaymentSignature = {
   cl?: string;
 };
 
-export type LegacySerializedPayment = {
-  amount: string;
-  data?: Payment['data'];
-  created: number;
-  asset?: string;
-  successUrl?: string;
-  cancelUrl?: string;
-  expired?: number;
-};
-
 export type NonSerializedPaymentSlice = Pick<Payment, 'targetAddress'>;

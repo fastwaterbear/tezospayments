@@ -34,11 +34,4 @@ export type SerializedDonationSignature = {
   cl: string;
 };
 
-export type LegacySerializedDonation = {
-  desiredAmount?: string;
-  desiredAsset?: string;
-  successUrl?: string;
-  cancelUrl?: string;
-};
-
 export type NonSerializedDonationSlice = Pick<Donation, 'targetAddress'>;

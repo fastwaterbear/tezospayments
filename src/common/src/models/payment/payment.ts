@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 
 import { PaymentValidator } from '../../helpers';
 import { URL } from '../../native';
-import { LegacyPaymentDeserializer, PaymentDeserializer } from '../../serialization';
+import { PaymentDeserializer } from '../../serialization';
 import { StateModel } from '../core';
 import type { PaymentSignature } from '../signing';
 import { PaymentBase, PaymentType } from './paymentBase';
@@ -29,16 +29,13 @@ export type UnsignedPayment = Omit<Payment, 'signature'>;
 
 export class Payment extends StateModel {
   static readonly defaultDeserializer: PaymentDeserializer = new PaymentDeserializer();
-  static readonly defaultLegacyDeserializer: LegacyPaymentDeserializer = new LegacyPaymentDeserializer();
   static readonly defaultValidator: PaymentValidator = new PaymentValidator();
 
   static validate(payment: Payment) {
-    return this.defaultValidator.validate(payment);
+    return Payment.defaultValidator.validate(payment);
   }
 
-  static deserialize(serializedPayment: string, nonSerializedPaymentSlice: NonSerializedPaymentSlice, isLegacy = false): Payment | null {
-    return !isLegacy
-      ? Payment.defaultDeserializer.deserialize(serializedPayment, nonSerializedPaymentSlice)
-      : Payment.defaultLegacyDeserializer.deserialize(serializedPayment, nonSerializedPaymentSlice);
+  static deserialize(serializedPayment: string, nonSerializedPaymentSlice: NonSerializedPaymentSlice): Payment | null {
+    return Payment.defaultDeserializer.deserialize(serializedPayment, nonSerializedPaymentSlice);
   }
 }

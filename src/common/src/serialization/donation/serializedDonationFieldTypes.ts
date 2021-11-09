@@ -1,4 +1,4 @@
-import { LegacySerializedDonation, SerializedDonation } from '../../models';
+import { SerializedDonation } from '../../models';
 import { SerializedFieldType } from '../base64';
 
 export const serializedDonationFieldTypes: ReadonlyMap<
@@ -14,11 +14,3 @@ export const serializedDonationFieldTypes: ReadonlyMap<
   .set('cu', ['string', 'undefined', 'null'])
   // signature
   .set('s', ['object', 'undefined', 'null']);
-
-export const legacySerializedDonationFieldTypes: ReadonlyMap<
-  keyof LegacySerializedDonation, SerializedFieldType | readonly SerializedFieldType[]
-> = new Map<keyof LegacySerializedDonation, SerializedFieldType | readonly SerializedFieldType[]>()
-  .set('desiredAmount', ['string', 'undefined', 'null'])
-  .set('desiredAsset', ['string', 'undefined', 'null'])
-  .set('successUrl', ['string', 'undefined', 'null'])
-  .set('cancelUrl', ['string', 'undefined', 'null']);
