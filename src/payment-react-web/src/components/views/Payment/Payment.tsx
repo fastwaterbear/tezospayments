@@ -20,14 +20,15 @@ export const Payment = (props: PaymentProps) => {
   const networkPayment: NetworkPayment = {
     type: props.payment.type,
     targetAddress: props.payment.targetAddress,
+    id: props.payment.id,
     amount: props.payment.amount,
-    data: props.payment.data,
     asset: props.payment.asset,
+    signature: props.payment.signature.contract
   };
 
   return <View className="payment-view">
     <View.Side isRight={false}>
-      <PaymentDetails paymentData={props.payment.data} />
+      <PaymentDetails paymentId={props.payment.id} paymentData={props.payment.data} />
       <ServiceInfoPure service={props.service} showDescription={false} />
     </View.Side>
     <View.Side isRight={true}>

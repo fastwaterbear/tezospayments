@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 
 import {
   Donation, Payment, Service, ServiceOperationType, Network,
-  converters as commonConverters, memoize, tokenWhitelistMap, TokenFA2, TokenFA12
+  memoize, tokenWhitelistMap, TokenFA2, TokenFA12
 } from '@tezospayments/common';
 import { converters, Fa12Contract, Fa20Contract, ServicesProvider, TezosPaymentsServiceContract } from '@tezospayments/react-web-core';
 
@@ -71,16 +71,12 @@ export class LocalPaymentService {
   }
 
   async pay(payment: NetworkPayment): Promise<boolean> {
-    if (!Payment.publicDataExists(payment.data)) {
-      throw new Error(errors.invalidPayment);
-    }
-
     return this.sendPayment(
       ServiceOperationType.Payment,
       payment.targetAddress,
       payment.amount,
       payment.asset,
-      commonConverters.objectToBytes(payment.data.public)
+      payment.id
     );
   }
 
@@ -90,7 +86,7 @@ export class LocalPaymentService {
       donation.targetAddress,
       donation.amount,
       donation.asset,
-      ''
+      donation.payload || ''
     );
   }
 

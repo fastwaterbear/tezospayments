@@ -30,7 +30,7 @@ export const Donation = (props: DonationProps) => {
     type: props.donation.type,
     asset: props.service.allowedTokens.tez ? '' : props.service.allowedTokens.assets[0],
     targetAddress: props.donation.targetAddress,
-    amount: defaultAmount,
+    amount: defaultAmount
   });
 
   const decimals = networkDonation.asset ? tokens.get(networkDonation.asset)?.metadata?.decimals || 0 : tezosMeta.decimals;
