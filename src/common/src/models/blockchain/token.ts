@@ -31,6 +31,13 @@ export const tezosMeta: TokenMetadata = {
   thumbnailUri: 'https://dashboard.tezospayments.com/tokens/tezos.png'
 };
 
+export const unknownAssetMeta: TokenMetadata = {
+  name: 'Unknown',
+  symbol: 'Unknown',
+  decimals: 0,
+  thumbnailUri: 'https://dashboard.tezospayments.com/tokens/unknown.png'
+};
+
 export const tokenWhitelist: readonly Token[] = [
   // {
   //   network: networks.mainnet,
