@@ -1,4 +1,5 @@
 import { Skeleton } from 'antd';
+import BigNumber from 'bignumber.js';
 import React from 'react';
 
 import { tezosMeta } from '@tezospayments/common';
@@ -25,7 +26,7 @@ export const Incoming = () => {
       ticker={tezosMeta.symbol}
       name={tezosMeta.name}
       decimals={tezosMeta.decimals}
-      value={52.4}
+      value={new BigNumber(52.4)}
       iconSrc={tezosMeta.thumbnailUri}
       highlightSign />);
   }
@@ -38,7 +39,7 @@ export const Incoming = () => {
         ticker={t.metadata.symbol}
         name={t.metadata.name}
         decimals={t.metadata.decimals}
-        value={462518}
+        value={new BigNumber(462518)}
         iconSrc={t.metadata.thumbnailUri}
         highlightSign />);
     }

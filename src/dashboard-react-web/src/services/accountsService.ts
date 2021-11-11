@@ -2,7 +2,7 @@ import { DAppClient } from '@airgap/beacon-sdk';
 import { TezosToolkit } from '@taquito/taquito';
 import BigNumber from 'bignumber.js';
 
-import { Token, TokenFA2, TokenFA12, Network } from '@tezospayments/common';
+import { Token, TokenFA2, TokenFA12, Network, tezosMeta } from '@tezospayments/common';
 import { converters } from '@tezospayments/react-web-core';
 
 import { Account } from '../models/blockchain';
@@ -46,14 +46,14 @@ export class AccountsService {
       : undefined;
   }
 
-  async getTezosBalance(account: Account): Promise<number> {
+  async getTezosBalance(account: Account): Promise<BigNumber> {
     const balance = await this.tezosToolkit.tz.getBalance(account.address);
 
-    return +balance / 1000000;
+    return balance.div(10 ** tezosMeta.decimals);
   }
 
-  async getTokenBalance(account: Account, token: Token): Promise<number> {
-    let result = null;
+  async getTokenBalance(account: Account, token: Token): Promise<BigNumber> {
+    let result: BigNumber | null = null;
 
     switch (token.type) {
       case 'fa1.2':
@@ -67,7 +67,7 @@ export class AccountsService {
     }
     const divider = token.metadata ? 10 ** token.metadata.decimals : 1;
 
-    return +result / divider;
+    return result.div(divider);
   }
 
   private async getTokenFA12Balance(account: Account, token: TokenFA12): Promise<BigNumber> {

@@ -1,7 +1,7 @@
 import { Skeleton } from 'antd';
 import React from 'react';
 
-import { tezosMeta } from '@tezospayments/common';
+import { optimization, tezosMeta } from '@tezospayments/common';
 
 import { selectBalancesState } from '../../../../store/balances/selectors';
 import { getAcceptTezos, getAllAcceptedTokens, selectServicesState } from '../../../../store/services/selectors';
@@ -39,7 +39,7 @@ export const Balances = () => {
         ticker={t.metadata.symbol}
         name={t.metadata.name}
         decimals={t.metadata.decimals}
-        value={balances.tokens[t.contractAddress] || 0}
+        value={balances.tokens[t.contractAddress] || optimization.zeroBigNumber}
         iconSrc={t.metadata.thumbnailUri} />);
     }
   });
