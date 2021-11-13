@@ -8,6 +8,7 @@ export type NetworkConfig = DeepReadonly<{
   title: string;
   color: string;
   servicesFactoryContractAddress: string;
+  minimumSupportedServiceVersion: number;
   default: {
     rpc: RpcProvider;
     indexer: IndexerProvider;

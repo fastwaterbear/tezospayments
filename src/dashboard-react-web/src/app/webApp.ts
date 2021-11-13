@@ -89,7 +89,12 @@ export class WebApp {
     const servicesProvider = this.createServicesProvider(this.network);
     this._services = {
       accountsService: new AccountsService(this.tezosToolkit, this.tezosWallet.client),
-      servicesService: new ServicesService(this.tezosToolkit, servicesProvider, networkConfig.servicesFactoryContractAddress)
+      servicesService: new ServicesService(
+        this.tezosToolkit,
+        servicesProvider,
+        networkConfig.servicesFactoryContractAddress,
+        networkConfig.minimumSupportedServiceVersion
+      )
     };
   }
 
