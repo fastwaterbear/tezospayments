@@ -5,8 +5,9 @@ import { useDispatch } from 'react-redux';
 
 import { Service, ServiceSigningKey } from '@tezospayments/common';
 
+import { getCurrentAccount } from '../../../../../store/accounts/selectors';
 import { deleteApiKey } from '../../../../../store/services/slice';
-import { useCurrentLanguageResources } from '../../../../hooks';
+import { useAppSelector, useCurrentLanguageResources } from '../../../../hooks';
 
 import './ApiKeyList.scss';
 
@@ -18,8 +19,19 @@ interface ApiKeyListProps {
 export const ApiKeyList = (props: ApiKeyListProps) => {
   const langResources = useCurrentLanguageResources();
   const servicesLangResources = langResources.views.services;
+  const currentAccount = useAppSelector(getCurrentAccount);
   const dispatch = useDispatch();
-  const apiKeys = useMemo(() => [...props.service.signingKeys.values()], [props.service.signingKeys]);
+  const apiKeys = useMemo(
+    () => {
+      let keys = [...props.service.signingKeys.values()];
+
+      if (currentAccount)
+        keys = keys.filter(k => k.publicKey !== currentAccount.publicKey);
+
+      return keys;
+    },
+    [currentAccount, props.service.signingKeys]
+  );
 
   const confirm = useCallback((text: string, onOk: () => void) => {
     Modal.confirm({
