@@ -78,7 +78,10 @@ export const AddApiKeyModal = (props: AddApiKeyModalProps) => {
     <span className="api-key-modal__label">{servicesLangResources.devZone.name}:</span>
     <Input autoFocus value={name} onChange={handleNameChanged} />
     <span className="api-key-modal__label">{servicesLangResources.devZone.algorithm}:</span>
-    <Radio.Group options={algorithmOptions} value={algorithmType} onChange={handleAlgorithmTypeChanges} />
+    <div className="api-key-modal__algorithm-container">
+      <Radio.Group options={algorithmOptions} value={algorithmType} onChange={handleAlgorithmTypeChanges} />
+      <Button>{servicesLangResources.devZone.generateKeys}</Button>
+    </div>
     <Divider />
     <span className="api-key-modal__label">{servicesLangResources.devZone.publicKey}:</span>
     <Search ref={publicKeyRef} readOnly value={publicKey} enterButton={<Button icon={<CopyOutlined />} />} onSearch={() => handleCopyClick(publicKeyRef)} />
