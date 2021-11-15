@@ -1,4 +1,4 @@
-import type { PaymentAsset } from '../../common/dist/types';
+import type { PaymentAsset } from 'tezospayments';
 
 export const paymentAssetMetadata: ReadonlyMap<string, PaymentAsset> = new Map<string, PaymentAsset>()
   .set('USDS', {
