@@ -10,15 +10,12 @@ export class ServicesService {
   constructor(
     private readonly tezosToolkit: TezosToolkit,
     private readonly servicesProvider: ServicesProvider,
-    private readonly servicesFactoryContractAddress: string,
-    private readonly minimumSupportedServiceVersion: number
+    private readonly servicesFactoryContractAddress: string
   ) {
   }
 
   async getServices(account: Account): Promise<readonly Service[]> {
-    const allServices = await this.servicesProvider.getServices(account.address);
-
-    return allServices.filter(s => s.version >= this.minimumSupportedServiceVersion);
+    return this.servicesProvider.getServices(account.address);
   }
 
   async getService(serviceContractAddress: string): Promise<Service> {

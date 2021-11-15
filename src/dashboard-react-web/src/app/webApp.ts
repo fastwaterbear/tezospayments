@@ -93,8 +93,7 @@ export class WebApp {
       servicesService: new ServicesService(
         this.tezosToolkit,
         servicesProvider,
-        networkConfig.servicesFactoryContractAddress,
-        networkConfig.minimumSupportedServiceVersion
+        networkConfig.servicesFactoryContractAddress
       )
     };
   }
@@ -105,9 +104,9 @@ export class WebApp {
 
     switch (indexerName) {
       case 'tzKT':
-        return new TzKTDataProvider(network, networkConfig.indexerUrls.tzKT, networkConfig.servicesFactoryContractAddress);
+        return new TzKTDataProvider(network, networkConfig.indexerUrls.tzKT, networkConfig.servicesFactoryContractAddress, networkConfig.minimumSupportedServiceVersion);
       case 'betterCallDev':
-        return new BetterCallDevDataProvider(network, networkConfig.indexerUrls.betterCallDev, networkConfig.servicesFactoryContractAddress);
+        return new BetterCallDevDataProvider(network, networkConfig.indexerUrls.betterCallDev, networkConfig.servicesFactoryContractAddress, networkConfig.minimumSupportedServiceVersion);
       default:
         throw new Error('Unknown service provider');
     }

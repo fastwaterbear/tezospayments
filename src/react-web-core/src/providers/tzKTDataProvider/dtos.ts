@@ -30,15 +30,25 @@ export interface OperationParameterDtoBase {
 export interface SendPaymentParameterDto extends OperationParameterDtoBase {
   entrypoint: 'send_payment',
   value: {
-    operation_type: string;
+    id: string;
+    signature: string;
     asset_value: {
       value: string,
       token_id: string | null,
       token_address: string
     } | null;
-    payload: {
-      public: string;
-    }
+  }
+}
+
+export interface SendDonationParameterDto extends OperationParameterDtoBase {
+  entrypoint: 'send_donation',
+  value: {
+    payload: string,
+    asset_value: {
+      value: string,
+      token_id: string | null,
+      token_address: string
+    } | null;
   }
 }
 
@@ -53,7 +63,7 @@ export interface OperationDto {
   sender: OperationAccountDto;
   target: OperationAccountDto;
   amount: BigInt;
-  parameter: SendPaymentParameterDto;
+  parameter: SendPaymentParameterDto | SendDonationParameterDto;
 }
 
 export interface OperationWithDate extends OperationDto {
