@@ -1,6 +1,5 @@
 import { SigningType } from '@airgap/beacon-sdk';
 import { BeaconWallet } from '@taquito/beacon-wallet';
-import { useMemo } from 'react';
 import { TezosPayments } from 'tezospayments';
 
 import { Network } from '@tezospayments/common';
@@ -21,15 +20,13 @@ const createTezosPayments = (serviceContractAddress: string, network: Network, t
   });
 };
 
+const tezosPaymentsInstancesMap = new Map<string, TezosPayments>();
+
 export const useTezosPayments = (serviceContractAddress: string | undefined | null) => {
   const appContext = useAppContext();
   const currentNetwork = useAppSelector(getCurrentAccount)?.network;
-  const tezosPaymentsInstancesMap = useMemo(
-    () => serviceContractAddress && currentNetwork ? new Map<string, TezosPayments>() : null,
-    [serviceContractAddress, currentNetwork]
-  );
 
-  if (!serviceContractAddress || !currentNetwork || !tezosPaymentsInstancesMap)
+  if (!serviceContractAddress || !currentNetwork)
     return null;
 
   let tezosPaymentsInstance = tezosPaymentsInstancesMap.get(serviceContractAddress);
