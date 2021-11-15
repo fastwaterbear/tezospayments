@@ -20,7 +20,7 @@ export type SerializedPayment = {
   /**
    * asset
    */
-  as?: string;
+  as?: SerializedPaymentAsset;
   /**
    * successUrl
    */
@@ -39,11 +39,22 @@ export type SerializedPayment = {
   s: SerializedPaymentSignature;
 };
 
-export type SerializedPaymentSignature = {
+export interface SerializedPaymentAsset {
   /**
-   * signingPublicKey
+   * address
    */
-  k: string;
+  a: string;
+  /**
+   * decimals
+   */
+  d: number;
+  /**
+   * id
+   */
+  i?: number;
+}
+
+export interface SerializedPaymentSignature {
   /**
    * contract
    */
@@ -52,6 +63,10 @@ export type SerializedPaymentSignature = {
    * client
    */
   cl?: string;
-};
+  /**
+   * signingPublicKey
+   */
+  k: string;
+}
 
 export type NonSerializedPaymentSlice = Pick<Payment, 'targetAddress'>;

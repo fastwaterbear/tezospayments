@@ -12,7 +12,7 @@ export type SerializedDonation = {
   /**
    * desiredAsset
    */
-  das?: string;
+  das?: SerializedDonationAsset;
   /**
    * successUrl
    */
@@ -27,15 +27,26 @@ export type SerializedDonation = {
   s?: SerializedDonationSignature;
 };
 
-export type SerializedDonationSignature = {
+export interface SerializedDonationAsset {
   /**
-   * signingPublicKey
+   * address
    */
-  k: string;
+  a: string;
+  /**
+   * id
+   */
+  i?: number;
+}
+
+export interface SerializedDonationSignature {
   /**
    * client
    */
   cl: string;
-};
+  /**
+   * signingPublicKey
+   */
+  k: string;
+}
 
 export type NonSerializedDonationSlice = Pick<Donation, 'targetAddress'>;

@@ -32,7 +32,11 @@ export default [
     data: {
       orderId: 'da242e2b-6a2b-4066-bad1-2479fa947c54'
     },
-    asset: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2',
+    asset: {
+      address: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2',
+      decimals: 7,
+      id: null
+    },
     successUrl: new URL('https://fastwaterbear.com/tezospayments/test/payment/success'),
     cancelUrl: new URL('https://fastwaterbear.com/tezospayments/test/payment/cancel'),
     created: new Date('2021-07-05T10:21:01.111Z'),
@@ -40,6 +44,28 @@ export default [
       signingPublicKey: 'edpktfQYQXPQB2mecyszBvXSVUz1s3U7ihttiJomFgxYbUHWBji4du',
       contract: 'edsigtsKED6qzvit5rnbDTYE14oUKxwRoZySoPykKaR2A1JwbC2bfnFJzRhjfNnNgD4ubTTurtgBhdKjEdqnhaDysu7MgCJVQ8F',
       client: 'edsigtcFp4PVGnT3ZNTNiPo4GyyRKGZBUba1KnwVyGyGJe32HcSvbGaWSKkWsddRaQCeCTuG3Bm3tK8Gd8nYwiB9bsnMxdfPukZ'
+    },
+  },
+  {
+    type: PaymentType.Payment,
+    targetAddress: 'KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x',
+    id: 'qaotm3tPvh1KIaOcbAScD',
+    amount: new BigNumber(20238382.31137334043773843),
+    data: {
+      orderId: 'qaotm3tPvh1KIaOcbAScD'
+    },
+    asset: {
+      address: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2',
+      decimals: 17,
+      id: 131
+    },
+    successUrl: new URL('https://fastwaterbear.com/tezospayments/test/payment/success'),
+    cancelUrl: new URL('https://fastwaterbear.com/tezospayments/test/payment/cancel'),
+    created: new Date('2021-11-15T23:31:10.117Z'),
+    signature: {
+      signingPublicKey: 'edpkvNH5QwkrHLPUS3jFunTtde9iKHUsTFJH4xJ5YAqTqUnMjif3ZJ',
+      contract: 'edsigtsXbV3C5WU23pEVKWy6KBLYRsrR1aLXrNjhAtZaSHPNeHvh1YfDEqZtFMqx1RA8RRGT2QiR8sXPZQRosx3GtGFcogWtQfd',
+      client: 'edsigtsKED6qzvit5rnbDTYE14oUKxwRoZySoPykKaR2A1JwbC2bfnFJzRhjfNnNgD4ubTTurtgBhdKjEdqnhaDysu7MgCJVQ8F'
     },
   },
   {

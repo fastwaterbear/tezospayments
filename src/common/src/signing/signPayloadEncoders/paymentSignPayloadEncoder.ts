@@ -33,7 +33,7 @@ export class PaymentSignPayloadEncoder {
               prim: 'Pair',
               args: [
                 { int: payment.amount.toFormat(optimization.emptyObject) },
-                { string: payment.asset }
+                { string: payment.asset.address }
               ]
             }
           ]

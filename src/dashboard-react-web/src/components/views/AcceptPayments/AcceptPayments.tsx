@@ -89,7 +89,7 @@ export const AcceptPayments = () => {
             <GeneratorPure
               serviceAddress={serviceAddress}
               paymentType={paymentType}
-              asset={asset}
+              assetAddress={asset}
               amount={amount}
               paymentId={paymentId}
               clientData={clientData}

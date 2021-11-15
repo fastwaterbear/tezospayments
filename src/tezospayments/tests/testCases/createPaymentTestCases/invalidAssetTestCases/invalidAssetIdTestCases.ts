@@ -1,7 +1,7 @@
-import type { PaymentCreateParameters } from '../../../src';
-import { InvalidPaymentError } from '../../../src/errors';
-import type { NegativeTestCases } from './testCase';
-import validPaymentTestCases from './validPaymentTestCases';
+import type { PaymentAsset, PaymentCreateParameters } from '../../../../src';
+import { InvalidPaymentError } from '../../../../src/errors';
+import type { NegativeTestCases } from '../testCase';
+import validPaymentTestCases from '../validPaymentTestCases';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type InvalidPaymentCreateParametersSlice = { asset?: any };
@@ -13,70 +13,107 @@ const paymentCreateParametersBase: PaymentCreateParameters & InvalidPaymentCreat
 };
 delete paymentCreateParametersBase.asset;
 
+const validAssetBase: Omit<PaymentAsset, 'id'> = {
+  address: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2',
+  decimals: 5
+};
+
 export const invalidAssetTestCases: NegativeTestCases<InvalidPaymentCreateParametersSlice> = [
   [
-    'Asset has an invalid type, function',
+    'Token Id is missed',
     tezosPaymentsOptions,
     {
       ...paymentCreateParametersBase,
-      asset: () => 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2'
+      asset: {
+        ...validAssetBase
+      }
     },
     InvalidPaymentError
   ],
   [
-    'Asset has an invalid type, empty object',
+    'Token Id has an invalid type, function',
     tezosPaymentsOptions,
     {
       ...paymentCreateParametersBase,
-      asset: {}
+      asset: {
+        ...validAssetBase,
+        id: () => 17
+      }
     },
     InvalidPaymentError
   ],
   [
-    'Asset has an invalid type, array',
+    'Token Id has an invalid type, object',
     tezosPaymentsOptions,
     {
       ...paymentCreateParametersBase,
-      asset: ['KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2']
+      asset: {
+        ...validAssetBase,
+        id: {}
+      }
     },
     InvalidPaymentError
   ],
   [
-    'The length of the asset contract address is less than normal',
+    'Token Id has an invalid type, string',
     tezosPaymentsOptions,
     {
       ...paymentCreateParametersBase,
-      asset: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL'
+      asset: {
+        ...validAssetBase,
+        id: '11'
+      }
     },
     InvalidPaymentError
   ],
   [
-    'The length of the asset contract address is more than normal',
+    'Token Id is NaN',
     tezosPaymentsOptions,
     {
       ...paymentCreateParametersBase,
-      asset: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2Z'
+      asset: {
+        ...validAssetBase,
+        id: NaN
+      }
     },
     InvalidPaymentError
   ],
   [
-    'The asset contract address is an implicit account',
+    'Token Id is Infinity',
     tezosPaymentsOptions,
     {
       ...paymentCreateParametersBase,
-      asset: 'tz1UtQYueaXRV3MfLj4XHaHZziijHRwF31a5'
+      asset: {
+        ...validAssetBase,
+        id: Infinity
+      }
     },
     InvalidPaymentError
   ],
   [
-    'The asset contract address has an invalid prefix',
+    'Token Id is negative',
     tezosPaymentsOptions,
     {
       ...paymentCreateParametersBase,
-      asset: 'CT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2'
+      asset: {
+        ...validAssetBase,
+        id: -3
+      }
     },
     InvalidPaymentError
-  ]
+  ],
+  [
+    'Token Id isn\'t an integer',
+    tezosPaymentsOptions,
+    {
+      ...paymentCreateParametersBase,
+      asset: {
+        ...validAssetBase,
+        id: 1.5
+      }
+    },
+    InvalidPaymentError
+  ],
 ];
 
 export default invalidAssetTestCases;

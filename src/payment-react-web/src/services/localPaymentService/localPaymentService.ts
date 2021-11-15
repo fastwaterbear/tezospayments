@@ -10,7 +10,7 @@ import {
 } from '@tezospayments/common';
 import { converters, Fa12Contract, Fa20Contract, ServicesProvider, TezosPaymentsServiceContract } from '@tezospayments/react-web-core';
 
-import { NetworkDonation, NetworkPayment } from '../../models/payment';
+import { NetworkAsset, NetworkDonation, NetworkPayment } from '../../models/payment';
 import { PaymentInfo } from '../../models/payment/paymentInfo';
 import { AppStore } from '../../store';
 import { confirmPayment } from '../../store/currentPayment';
@@ -86,7 +86,7 @@ export class LocalPaymentService {
       ServiceOperationType.Donation,
       donation.targetAddress,
       donation.amount,
-      donation.asset,
+      donation.assetAddress,
       donation.payload ? commonConverters.objectToBytes(donation.payload) : ''
     );
   }
@@ -106,7 +106,7 @@ export class LocalPaymentService {
     serviceOperationType: ServiceOperationType,
     targetAddress: string,
     amount: BigNumber,
-    assetTokenAddress: string | undefined,
+    asset: NetworkAsset | string | undefined | null,
     payload: string
   ): Promise<boolean> {
     try {
@@ -118,10 +118,10 @@ export class LocalPaymentService {
       const contract = await this.tezosToolkit.wallet.at<TezosPaymentsServiceContract<Wallet>>(targetAddress);
       let operation;
 
-      if (!assetTokenAddress) {
+      if (!asset) {
         operation = await this.sendNativeToken(contract, serviceOperationType, amount, payload);
       } else {
-        const token = tokenWhitelistMap.get(this.network)?.get(assetTokenAddress);
+        const token = tokenWhitelistMap.get(this.network)?.get(typeof asset === 'string' ? asset : asset.address);
         if (!token || !token.metadata)
           return false;
 
@@ -216,13 +216,13 @@ export class LocalPaymentService {
         add_operator: {
           owner: userAddress,
           operator: contract.address,
-          token_id: token.fa2TokenId
+          token_id: token.id
         }
       }]))
       .withContractCall(
         contract.methods.send_payment(
           token.contractAddress,
-          token.fa2TokenId,
+          token.id,
           amount,
           serviceOperationType,
           'public',
@@ -233,7 +233,7 @@ export class LocalPaymentService {
         remove_operator: {
           owner: userAddress,
           operator: contract.address,
-          token_id: token.fa2TokenId
+          token_id: token.id
         }
       }]))
       .send();

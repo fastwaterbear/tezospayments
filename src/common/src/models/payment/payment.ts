@@ -8,15 +8,11 @@ import type { PaymentSignature } from '../signing';
 import { PaymentBase, PaymentType } from './paymentBase';
 import { NonSerializedPaymentSlice } from './serializedPayment';
 
-interface PaymentData {
-  readonly [fieldName: string]: unknown;
-}
-
 export interface Payment extends PaymentBase {
   readonly type: PaymentType.Payment;
   readonly id: string;
   readonly amount: BigNumber;
-  readonly asset?: string;
+  readonly asset?: PaymentAsset;
   readonly created: Date;
   readonly expired?: Date;
   readonly data?: PaymentData;
@@ -26,6 +22,16 @@ export interface Payment extends PaymentBase {
 }
 
 export type UnsignedPayment = Omit<Payment, 'signature'>;
+
+interface PaymentData {
+  readonly [fieldName: string]: unknown;
+}
+
+export interface PaymentAsset {
+  readonly address: string;
+  readonly decimals: number;
+  readonly id: number | null;
+}
 
 export class Payment extends StateModel {
   static readonly defaultDeserializer: PaymentDeserializer = new PaymentDeserializer();

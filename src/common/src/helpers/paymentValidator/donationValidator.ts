@@ -2,7 +2,7 @@ import type { Donation, UnsignedDonation } from '../../models/payment';
 import { PaymentType } from '../../models/payment/paymentBase';
 import type { PaymentValidationMethod } from './paymentValidationMethod';
 import { PaymentValidatorBase } from './paymentValidatorBase';
-import { validateTargetAddress, validateDesiredAmount, validateAsset, validateUrl, validateData } from './validationMethods';
+import { validateTargetAddress, validateDesiredAmount, validateDonationAsset, validateUrl, validateData } from './validationMethods';
 
 export class DonationValidator extends PaymentValidatorBase<Donation | UnsignedDonation> {
   static readonly errors = {
@@ -14,9 +14,13 @@ export class DonationValidator extends PaymentValidatorBase<Donation | UnsignedD
     invalidTargetAddress: 'Target address is invalid',
     targetAddressIsNotNetworkAddress: 'Target address isn\'t a network address',
     targetAddressHasInvalidLength: 'Target address has an invalid address',
-    invalidAsset: 'Desired asset address is invalid',
-    assetIsNotContractAddress: 'Desired asset address isn\'t a contract address',
-    assetHasInvalidLength: 'Desired asset address has an invalid address',
+    invalidAsset: 'Desired asset is invalid',
+    invalidAssetAddress: 'Desired asset address is invalid',
+    assetAddressIsNotContractAddress: 'Desired asset address isn\'t a contract address',
+    assetAddressHasInvalidLength: 'Desired asset address has an invalid address',
+    invalidAssetId: 'Asset Id is invalid',
+    assetIdIsNegative: 'Asset Id is negative',
+    assetIdIsNotInteger: 'Asset Id isn\'t an integer',
     invalidSuccessUrl: 'Success URL is invalid',
     successUrlHasInvalidProtocol: 'Success URL has an invalid protocol',
     invalidCancelUrl: 'Cancel URL is invalid',
@@ -28,7 +32,7 @@ export class DonationValidator extends PaymentValidatorBase<Donation | UnsignedD
     donation => validateData(donation.data, DonationValidator.errors),
     donation => validateTargetAddress(donation.targetAddress, DonationValidator.errors),
     donation => validateDesiredAmount(donation.desiredAmount, DonationValidator.errors),
-    donation => validateAsset(donation.desiredAsset, DonationValidator.errors),
+    donation => validateDonationAsset(donation.desiredAsset, DonationValidator.errors),
     donation => validateUrl(donation.successUrl, DonationValidator.successUrlErrors),
     donation => validateUrl(donation.cancelUrl, DonationValidator.cancelUrlErrors)
   ];

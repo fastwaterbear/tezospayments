@@ -4,21 +4,28 @@ import React from 'react';
 
 import { Donation, Payment, PaymentType } from '@tezospayments/common';
 
+import { selectTokensState } from '../../../../store/services/selectors';
+import { useAppSelector, useTezosPayments } from '../../../hooks';
 import { DirectLinkGeneratorPure } from './DirectLinkGenerator';
 import { FailedValidationResult } from './FailedValidationResult';
-
 import './Generator.scss';
 
 interface GeneratorProps {
   serviceAddress: string | undefined;
   paymentType: PaymentType;
-  asset: string | undefined;
+  assetAddress: string | undefined;
   amount: string;
   paymentId: string;
   clientData: Record<string, unknown> | undefined;
 }
 
 export const Generator = (props: GeneratorProps) => {
+  const tokens = useAppSelector(selectTokensState);
+  const tezosPayments = useTezosPayments(props.serviceAddress);
+  const currentAssetToken = props.assetAddress ? tokens.get(props.assetAddress) : undefined;
+  if (!tezosPayments)
+    return null;
+
   const tabList = [
     { key: 'directLink', tab: 'Direct Link' },
     { key: 'widget', tab: 'Widget', disabled: true },
@@ -31,7 +38,11 @@ export const Generator = (props: GeneratorProps) => {
       type: props.paymentType,
       targetAddress: props.serviceAddress,
       id: props.paymentId,
-      asset: props.asset,
+      asset: currentAssetToken ? {
+        address: currentAssetToken.contractAddress,
+        decimals: currentAssetToken.metadata?.decimals || 0,
+        id: currentAssetToken.type === 'fa2' ? currentAssetToken.id : null
+      } : undefined,
       amount: new BigNumber(props.amount),
       created: new Date(),
       signature: {

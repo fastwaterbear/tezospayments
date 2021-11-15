@@ -79,7 +79,7 @@ export class AccountsService {
 
   private async getTokenFA2Balance(account: Account, token: TokenFA2): Promise<BigNumber> {
     const contract = await this.tezosToolkit.contract.at(token.contractAddress);
-    const response = await contract.views?.['balance_of']?.([{ owner: account.address, token_id: token.fa2TokenId }])
+    const response = await contract.views?.['balance_of']?.([{ owner: account.address, token_id: token.id }])
       .read();
 
     const result = response[0].balance;

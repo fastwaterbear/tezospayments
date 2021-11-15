@@ -3,7 +3,7 @@ import { PaymentType } from '../../models/payment/paymentBase';
 import type { PaymentValidationMethod } from './paymentValidationMethod';
 import { PaymentValidatorBase } from './paymentValidatorBase';
 import {
-  validateTargetAddress, validateId, validateAmount, validateData, validateAsset,
+  validateTargetAddress, validateId, validateAmount, validateData, validatePaymentAsset,
   validateCreatedDate, validateExpiredDate, validateUrl
 } from './validationMethods';
 
@@ -19,9 +19,16 @@ export class PaymentValidator extends PaymentValidatorBase<Payment | UnsignedPay
     invalidAmount: 'Amount is invalid',
     amountIsNonPositive: 'Amount is less than or equal to zero',
     invalidData: 'Payment data is invalid',
-    invalidAsset: 'Asset address is invalid',
-    assetIsNotContractAddress: 'Asset address isn\'t a contract address',
-    assetHasInvalidLength: 'Asset address has an invalid address',
+    invalidAsset: 'Asset is invalid',
+    invalidAssetAddress: 'Asset address is invalid',
+    assetAddressIsNotContractAddress: 'Asset address isn\'t a contract address',
+    assetAddressHasInvalidLength: 'Asset address has an invalid address',
+    invalidAssetId: 'Asset Id is invalid',
+    assetIdIsNegative: 'Asset Id is negative',
+    assetIdIsNotInteger: 'Asset Id isn\'t an integer',
+    invalidAssetDecimals: 'Asset number of decimals is invalid',
+    assetDecimalsNumberIsNegative: 'Asset number of decimals is negative',
+    assetDecimalsNumberIsNotInteger: 'Asset number of decimals isn\'t an integer',
     invalidSuccessUrl: 'Success URL is invalid',
     successUrlHasInvalidProtocol: 'Success URL has an invalid protocol',
     invalidCancelUrl: 'Cancel URL is invalid',
@@ -37,7 +44,7 @@ export class PaymentValidator extends PaymentValidatorBase<Payment | UnsignedPay
     payment => validateTargetAddress(payment.targetAddress, PaymentValidator.errors),
     payment => validateId(payment.id, PaymentValidator.errors),
     payment => validateAmount(payment.amount, PaymentValidator.errors),
-    payment => validateAsset(payment.asset, PaymentValidator.errors),
+    payment => validatePaymentAsset(payment.asset, PaymentValidator.errors),
     payment => validateData(payment.data, PaymentValidator.errors),
     payment => validateUrl(payment.successUrl, PaymentValidator.successUrlErrors),
     payment => validateUrl(payment.cancelUrl, PaymentValidator.cancelUrlErrors),

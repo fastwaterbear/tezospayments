@@ -80,7 +80,7 @@ const validPaymentTestCases: PositiveTestCases = [
     }
   ],
   [
-    'Payment in asset tokens',
+    'Payment in asset tokens (FA 1.2)',
     {
       serviceContractAddress: 'KT1CgrsR3mctUE6ww3B5mq4cjpDfmUnJSdNh',
       signing: {
@@ -96,14 +96,22 @@ const validPaymentTestCases: PositiveTestCases = [
           itemsCount: 11
         }
       },
-      asset: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2'
+      asset: {
+        address: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2',
+        decimals: 11,
+        id: null
+      }
     },
     {
       type: PaymentType.Payment,
       targetAddress: 'KT1CgrsR3mctUE6ww3B5mq4cjpDfmUnJSdNh',
       id: '2mcIVPiQ9zLnlZ-AFORvD',
       amount: new BigNumber('2323232443343433743.4393343544'),
-      asset: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2',
+      asset: {
+        address: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2',
+        decimals: 11,
+        id: null
+      },
       data: {
         order: {
           id: 'd75fe06b-9288-412d-821b-ca06cd9c7e38',
@@ -115,7 +123,42 @@ const validPaymentTestCases: PositiveTestCases = [
         signingPublicKey: 'edpkuS4n5MZqhRbhqdQNmJ5TTnGFfYWBReF8pSagomFyDkpDRc1T6s',
         contract: 'edsigtgmAw45kpcTFrPLHfzqfhTpFMUW5B8mB4Lpwo2RLYjMZ7uBgbPMkj5sktjjnN8ri7SRTPXUCQnaye5ni1ac8fZhUR9NcNY',
       },
-      url: 'https://payment.tezospayments.com/KT1CgrsR3mctUE6ww3B5mq4cjpDfmUnJSdNh/payment?network=granadanet#00eyJpIjoiMm1jSVZQaVE5ekxubFotQUZPUnZEIiwiYSI6IjIzMjMyMzI0NDMzNDM0MzM3NDMuNDM5MzM0MzU0NCIsImFzIjoiS1QxTW4ySFVVS1VQZzh3aVFoVUo4WjlqVXRaTGFabjhFV0wyIiwiZCI6eyJvcmRlciI6eyJpZCI6ImQ3NWZlMDZiLTkyODgtNDEyZC04MjFiLWNhMDZjZDljN2UzOCIsIml0ZW1zQ291bnQiOjExfX0sImMiOjE2MzA2NjQzMDMwMTcsInMiOnsiayI6ImVkcGt1UzRuNU1acWhSYmhxZFFObUo1VFRuR0ZmWVdCUmVGOHBTYWdvbUZ5RGtwRFJjMVQ2cyIsImMiOiJlZHNpZ3RnbUF3NDVrcGNURnJQTEhmenFmaFRwRk1VVzVCOG1CNExwd28yUkxZak1aN3VCZ2JQTWtqNXNrdGpqbk44cmk3U1JUUFhVQ1FuYXllNW5pMWFjOGZaaFVSOU5jTlkifX0'
+      url: 'https://payment.tezospayments.com/KT1CgrsR3mctUE6ww3B5mq4cjpDfmUnJSdNh/payment?network=granadanet#00eyJpIjoiMm1jSVZQaVE5ekxubFotQUZPUnZEIiwiYSI6IjIzMjMyMzI0NDMzNDM0MzM3NDMuNDM5MzM0MzU0NCIsImFzIjp7ImEiOiJLVDFNbjJIVVVLVVBnOHdpUWhVSjhaOWpVdFpMYVpuOEVXTDIiLCJkIjoxMX0sImQiOnsib3JkZXIiOnsiaWQiOiJkNzVmZTA2Yi05Mjg4LTQxMmQtODIxYi1jYTA2Y2Q5YzdlMzgiLCJpdGVtc0NvdW50IjoxMX19LCJjIjoxNjMwNjY0MzAzMDE3LCJzIjp7ImsiOiJlZHBrdVM0bjVNWnFoUmJocWRRTm1KNVRUbkdGZllXQlJlRjhwU2Fnb21GeURrcERSYzFUNnMiLCJjIjoiZWRzaWd0Z21BdzQ1a3BjVEZyUExIZnpxZmhUcEZNVVc1QjhtQjRMcHdvMlJMWWpNWjd1QmdiUE1rajVza3Rqam5OOHJpN1NSVFBYVUNRbmF5ZTVuaTFhYzhmWmhVUjlOY05ZIn19'
+    }
+  ],
+  [
+    'Payment in asset tokens (FA 2)',
+    {
+      serviceContractAddress: 'KT1U2v9pECyE62NgZcYeJi4cdLKWTeiagugA',
+      signing: {
+        apiSecretKey
+      }
+    },
+    {
+      id: 'E-aV1ZvjAP6qVCHzYnSA_',
+      amount: '94329423853995395305305',
+      asset: {
+        address: 'KT1DjUcNtz8pY2xL2HHfzc2Q3k9RnMuPBmV8',
+        decimals: 0,
+        id: null
+      }
+    },
+    {
+      type: PaymentType.Payment,
+      targetAddress: 'KT1U2v9pECyE62NgZcYeJi4cdLKWTeiagugA',
+      id: 'E-aV1ZvjAP6qVCHzYnSA_',
+      amount: new BigNumber('94329423853995395305305'),
+      asset: {
+        address: 'KT1DjUcNtz8pY2xL2HHfzc2Q3k9RnMuPBmV8',
+        decimals: 0,
+        id: null
+      },
+      created: new Date('2021-09-03T10:18:23.017Z'),
+      signature: {
+        signingPublicKey: 'edpkuS4n5MZqhRbhqdQNmJ5TTnGFfYWBReF8pSagomFyDkpDRc1T6s',
+        contract: 'edsigtceQHxhFp8hpfsckcVk3AoTGDS1hBLct59yNTh7vZz8cwidJwpgzXTbQSyHx5Mc89brvHWfmW6RrCGqmT8MwGmWsP6kBe2',
+      },
+      url: 'https://payment.tezospayments.com/KT1U2v9pECyE62NgZcYeJi4cdLKWTeiagugA/payment?network=granadanet#00eyJpIjoiRS1hVjFadmpBUDZxVkNIelluU0FfIiwiYSI6IjkuNDMyOTQyMzg1Mzk5NTM5NTMwNTMwNWUrMjIiLCJhcyI6eyJhIjoiS1QxRGpVY050ejhwWTJ4TDJISGZ6YzJRM2s5Um5NdVBCbVY4IiwiZCI6MH0sImMiOjE2MzA2NjQzMDMwMTcsInMiOnsiayI6ImVkcGt1UzRuNU1acWhSYmhxZFFObUo1VFRuR0ZmWVdCUmVGOHBTYWdvbUZ5RGtwRFJjMVQ2cyIsImMiOiJlZHNpZ3RjZVFIeGhGcDhocGZzY2tjVmszQW9UR0RTMWhCTGN0NTl5TlRoN3Zaejhjd2lkSndwZ3pYVGJRU3lIeDVNYzg5YnJ2SFdmbVc2UnJDR3FtVDhNd0dtV3NQNmtCZTIifX0'
     }
   ],
   [
@@ -129,7 +172,11 @@ const validPaymentTestCases: PositiveTestCases = [
     {
       id: '04b7a527-65b8-49ef-b8df-cb5d3ecdae07',
       amount: '0.232932843438438',
-      asset: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2',
+      asset: {
+        address: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2',
+        decimals: 17,
+        id: 1,
+      },
       created: new Date('2021-09-03T23:23:00.000Z').getTime(),
       expired: new Date('2021-09-03T23:40:00.000Z').getTime(),
     },
@@ -138,14 +185,18 @@ const validPaymentTestCases: PositiveTestCases = [
       targetAddress: 'KT1CgrsR3mctUE6ww3B5mq4cjpDfmUnJSdNh',
       id: '04b7a527-65b8-49ef-b8df-cb5d3ecdae07',
       amount: new BigNumber('0.232932843438438'),
-      asset: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2',
+      asset: {
+        address: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2',
+        decimals: 17,
+        id: 1,
+      },
       created: new Date('2021-09-03T23:23:00.000Z'),
       expired: new Date('2021-09-03T23:40:00.000Z'),
       signature: {
         signingPublicKey: 'edpkuS4n5MZqhRbhqdQNmJ5TTnGFfYWBReF8pSagomFyDkpDRc1T6s',
         contract: 'edsigtt8XDL2zA2xz9bDmYKgCc9ryYgtT9G7jQ65V9QR8AGJcGAX6yhYR4teyoaoXinxqqKTF2qBCqHwTmqRpsNdi5RjFZFbDCD',
       },
-      url: 'https://payment.tezospayments.com/KT1CgrsR3mctUE6ww3B5mq4cjpDfmUnJSdNh/payment?network=granadanet#00eyJpIjoiMDRiN2E1MjctNjViOC00OWVmLWI4ZGYtY2I1ZDNlY2RhZTA3IiwiYSI6IjAuMjMyOTMyODQzNDM4NDM4IiwiYXMiOiJLVDFNbjJIVVVLVVBnOHdpUWhVSjhaOWpVdFpMYVpuOEVXTDIiLCJjIjoxNjMwNzExMzgwMDAwLCJlIjoxNjMwNzEyNDAwMDAwLCJzIjp7ImsiOiJlZHBrdVM0bjVNWnFoUmJocWRRTm1KNVRUbkdGZllXQlJlRjhwU2Fnb21GeURrcERSYzFUNnMiLCJjIjoiZWRzaWd0dDhYREwyekEyeHo5YkRtWUtnQ2M5cnlZZ3RUOUc3alE2NVY5UVI4QUdKY0dBWDZ5aFlSNHRleW9hb1hpbnhxcUtURjJxQkNxSHdUbXFScHNOZGk1UmpGWkZiRENEIn19'
+      url: 'https://payment.tezospayments.com/KT1CgrsR3mctUE6ww3B5mq4cjpDfmUnJSdNh/payment?network=granadanet#00eyJpIjoiMDRiN2E1MjctNjViOC00OWVmLWI4ZGYtY2I1ZDNlY2RhZTA3IiwiYSI6IjAuMjMyOTMyODQzNDM4NDM4IiwiYXMiOnsiYSI6IktUMU1uMkhVVUtVUGc4d2lRaFVKOFo5alV0WkxhWm44RVdMMiIsImQiOjE3LCJpIjoxfSwiYyI6MTYzMDcxMTM4MDAwMCwiZSI6MTYzMDcxMjQwMDAwMCwicyI6eyJrIjoiZWRwa3VTNG41TVpxaFJiaHFkUU5tSjVUVG5HRmZZV0JSZUY4cFNhZ29tRnlEa3BEUmMxVDZzIiwiYyI6ImVkc2lndHQ4WERMMnpBMnh6OWJEbVlLZ0NjOXJ5WWd0VDlHN2pRNjVWOVFSOEFHSmNHQVg2eWhZUjR0ZXlvYW9YaW54cXFLVEYycUJDcUh3VG1xUnBzTmRpNVJqRlpGYkRDRCJ9fQ'
     }
   ]
 ];

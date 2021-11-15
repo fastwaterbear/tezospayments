@@ -8,21 +8,26 @@ import type { DonationSignature } from '../signing';
 import { PaymentBase, PaymentType } from './paymentBase';
 import { NonSerializedDonationSlice } from './serializedDonation';
 
-interface DonationData {
-  readonly [fieldName: string]: unknown;
-}
-
 export interface Donation extends PaymentBase {
   readonly type: PaymentType.Donation;
   readonly data?: DonationData;
   readonly desiredAmount?: BigNumber;
-  readonly desiredAsset?: string;
+  readonly desiredAsset?: DonationAsset;
   readonly successUrl?: URL;
   readonly cancelUrl?: URL;
   readonly signature?: DonationSignature;
 }
 
 export type UnsignedDonation = Omit<Donation, 'signature'>;
+
+interface DonationData {
+  readonly [fieldName: string]: unknown;
+}
+
+export interface DonationAsset {
+  readonly address: string;
+  readonly id: number | null;
+}
 
 export class Donation extends StateModel {
   static readonly defaultDeserializer: DonationDeserializer = new DonationDeserializer();

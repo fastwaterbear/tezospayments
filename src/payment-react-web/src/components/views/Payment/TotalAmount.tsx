@@ -8,14 +8,14 @@ import './TotalAmount.scss';
 import { selectTokensState } from '../../../store/currentPayment/selectors';
 
 interface TotalAmountProps {
-  asset: string | undefined;
+  assetAddress: string | undefined;
   network: Network;
   value: BigNumber;
 }
 
 export const TotalAmount = (props: TotalAmountProps) => {
   const tokens = useSelector(selectTokensState);
-  const asset = props.asset && tokens.get(props.asset);
+  const asset = props.assetAddress && tokens.get(props.assetAddress);
 
   const { thumbnailUri, name, symbol } = asset ? (asset.metadata || unknownAssetMeta) : tezosMeta;
 

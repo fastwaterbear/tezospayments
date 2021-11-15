@@ -58,28 +58,78 @@ const validSerializedPaymentTestCases: ReadonlyArray<readonly [
       })
     ],
     [
-      'payment in Kolibri USD',
+      'payment in FA 1.2',
       [
         {
           i: '2e743b62-2526-4630-9754-64bba8081e7d',
           a: '8383.383202283822832232',
-          as: 'KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV',
+          as: {
+            a: 'KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV',
+            d: 18
+          },
+          su: 'https://fastwaterbear.com/tezospayments/test/payment/success',
+          cu: 'https://fastwaterbear.com/tezospayments/test/payment/cancel',
+          c: createdDate.getTime(),
+          s: {
+            c: 'edsigu6zZ54Yhiqi3JfwiXQUhLDL3U6MbNHWi1uwD6SReUPcsszuw5Md5P2QGjjtnwuLeczABVZsmobzDSnm8iexuLHgxWq4fm3',
+            cl: 'edsigtsKED6qzvit5rnbDTYE14oUKxwRoZySoPykKaR2A1JwbC2bfnFJzRhjfNnNgD4ubTTurtgBhdKjEdqnhaDysu7MgCJVQ8F',
+            k: 'edpktfQYQXPQB2mecyszBvXSVUz1s3U7ihttiJomFgxYbUHWBji4du',
+          }
+        },
+        'eyJpIjoiMmU3NDNiNjItMjUyNi00NjMwLTk3NTQtNjRiYmE4MDgxZTdkIiwiYSI6IjgzODMuMzgzMjAyMjgzODIyODMyMjMyIiwiYXMiOnsiYSI6IktUMUs5Z0NSZ2FMUkZLVEVyWXQxd1Z4QTNGcmI5Rmphc2pUViIsImQiOjE4fSwic3UiOiJodHRwczovL2Zhc3R3YXRlcmJlYXIuY29tL3Rlem9zcGF5bWVudHMvdGVzdC9wYXltZW50L3N1Y2Nlc3MiLCJjdSI6Imh0dHBzOi8vZmFzdHdhdGVyYmVhci5jb20vdGV6b3NwYXltZW50cy90ZXN0L3BheW1lbnQvY2FuY2VsIiwiYyI6MTYyNDY2NzgyMzkzMCwicyI6eyJrIjoiZWRwa3RmUVlRWFBRQjJtZWN5c3pCdlhTVlV6MXMzVTdpaHR0aUpvbUZneFliVUhXQmppNGR1IiwiYyI6ImVkc2lndTZ6WjU0WWhpcWkzSmZ3aVhRVWhMREwzVTZNYk5IV2kxdXdENlNSZVVQY3NzenV3NU1kNVAyUUdqanRud3VMZWN6QUJWWnNtb2J6RFNubThpZXh1TEhneFdxNGZtMyIsImNsIjoiZWRzaWd0c0tFRDZxenZpdDVybmJEVFlFMTRvVUt4d1JvWnlTb1B5a0thUjJBMUp3YkMyYmZuRkp6UmhqZk5uTmdENHViVFR1cnRnQmhkS2pFZHFuaGFEeXN1N01nQ0pWUThGIn19',
+      ],
+      nonSerializedSlice => ({
+        type: PaymentType.Payment,
+        id: '2e743b62-2526-4630-9754-64bba8081e7d',
+        amount: new BigNumber('8383.383202283822832232'),
+        asset: {
+          address: 'KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV',
+          decimals: 18,
+          id: null
+        },
+        successUrl: new URL('https://fastwaterbear.com/tezospayments/test/payment/success'),
+        cancelUrl: new URL('https://fastwaterbear.com/tezospayments/test/payment/cancel'),
+        created: createdDate,
+        expired: undefined,
+        signature: {
+          signingPublicKey: 'edpktfQYQXPQB2mecyszBvXSVUz1s3U7ihttiJomFgxYbUHWBji4du',
+          contract: 'edsigu6zZ54Yhiqi3JfwiXQUhLDL3U6MbNHWi1uwD6SReUPcsszuw5Md5P2QGjjtnwuLeczABVZsmobzDSnm8iexuLHgxWq4fm3',
+          client: 'edsigtsKED6qzvit5rnbDTYE14oUKxwRoZySoPykKaR2A1JwbC2bfnFJzRhjfNnNgD4ubTTurtgBhdKjEdqnhaDysu7MgCJVQ8F'
+        },
+        ...nonSerializedSlice
+      })
+    ],
+    [
+      'payment in FA 2',
+      [
+        {
+          i: 'vRTlqz72EYR7elfyUMmsP',
+          a: '398493943.32',
+          as: {
+            a: 'KT1Q8EisfBH91DHTFY2Ee3qp6cXXV5RHPN6N',
+            d: 2,
+            i: 193,
+          },
           su: 'https://fastwaterbear.com/tezospayments/test/payment/success',
           cu: 'https://fastwaterbear.com/tezospayments/test/payment/cancel',
           c: createdDate.getTime(),
           s: {
             k: 'edpktfQYQXPQB2mecyszBvXSVUz1s3U7ihttiJomFgxYbUHWBji4du',
             c: 'edsigu6zZ54Yhiqi3JfwiXQUhLDL3U6MbNHWi1uwD6SReUPcsszuw5Md5P2QGjjtnwuLeczABVZsmobzDSnm8iexuLHgxWq4fm3',
-            cl: 'edsigtsKED6qzvit5rnbDTYE14oUKxwRoZySoPykKaR2A1JwbC2bfnFJzRhjfNnNgD4ubTTurtgBhdKjEdqnhaDysu7MgCJVQ8F'
-          }
+            cl: 'edsigtsKED6qzvit5rnbDTYE14oUKxwRoZySoPykKaR2A1JwbC2bfnFJzRhjfNnNgD4ubTTurtgBhdKjEdqnhaDysu7MgCJVQ8F',
+          },
         },
-        'eyJpIjoiMmU3NDNiNjItMjUyNi00NjMwLTk3NTQtNjRiYmE4MDgxZTdkIiwiYSI6IjgzODMuMzgzMjAyMjgzODIyODMyMjMyIiwiYXMiOiJLVDFLOWdDUmdhTFJGS1RFcll0MXdWeEEzRnJiOUZqYXNqVFYiLCJzdSI6Imh0dHBzOi8vZmFzdHdhdGVyYmVhci5jb20vdGV6b3NwYXltZW50cy90ZXN0L3BheW1lbnQvc3VjY2VzcyIsImN1IjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9jYW5jZWwiLCJjIjoxNjI0NjY3ODIzOTMwLCJzIjp7ImsiOiJlZHBrdGZRWVFYUFFCMm1lY3lzekJ2WFNWVXoxczNVN2lodHRpSm9tRmd4WWJVSFdCamk0ZHUiLCJjIjoiZWRzaWd1NnpaNTRZaGlxaTNKZndpWFFVaExETDNVNk1iTkhXaTF1d0Q2U1JlVVBjc3N6dXc1TWQ1UDJRR2pqdG53dUxlY3pBQlZac21vYnpEU25tOGlleHVMSGd4V3E0Zm0zIiwiY2wiOiJlZHNpZ3RzS0VENnF6dml0NXJuYkRUWUUxNG9VS3h3Um9aeVNvUHlrS2FSMkExSndiQzJiZm5GSnpSaGpmTm5OZ0Q0dWJUVHVydGdCaGRLakVkcW5oYUR5c3U3TWdDSlZROEYifX0',
+        'eyJpIjoidlJUbHF6NzJFWVI3ZWxmeVVNbXNQIiwiYSI6IjM5ODQ5Mzk0My4zMiIsImFzIjp7ImEiOiJLVDFROEVpc2ZCSDkxREhURlkyRWUzcXA2Y1hYVjVSSFBONk4iLCJkIjoyLCJpIjoxOTN9LCJzdSI6Imh0dHBzOi8vZmFzdHdhdGVyYmVhci5jb20vdGV6b3NwYXltZW50cy90ZXN0L3BheW1lbnQvc3VjY2VzcyIsImN1IjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9jYW5jZWwiLCJjIjoxNjI0NjY3ODIzOTMwLCJzIjp7ImsiOiJlZHBrdGZRWVFYUFFCMm1lY3lzekJ2WFNWVXoxczNVN2lodHRpSm9tRmd4WWJVSFdCamk0ZHUiLCJjIjoiZWRzaWd1NnpaNTRZaGlxaTNKZndpWFFVaExETDNVNk1iTkhXaTF1d0Q2U1JlVVBjc3N6dXc1TWQ1UDJRR2pqdG53dUxlY3pBQlZac21vYnpEU25tOGlleHVMSGd4V3E0Zm0zIiwiY2wiOiJlZHNpZ3RzS0VENnF6dml0NXJuYkRUWUUxNG9VS3h3Um9aeVNvUHlrS2FSMkExSndiQzJiZm5GSnpSaGpmTm5OZ0Q0dWJUVHVydGdCaGRLakVkcW5oYUR5c3U3TWdDSlZROEYifX0',
       ],
       nonSerializedSlice => ({
         type: PaymentType.Payment,
-        id: '2e743b62-2526-4630-9754-64bba8081e7d',
-        amount: new BigNumber('8383.383202283822832232'),
-        asset: 'KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV',
+        id: 'vRTlqz72EYR7elfyUMmsP',
+        amount: new BigNumber('398493943.32'),
+        asset: {
+          address: 'KT1Q8EisfBH91DHTFY2Ee3qp6cXXV5RHPN6N',
+          decimals: 2,
+          id: 193
+        },
         successUrl: new URL('https://fastwaterbear.com/tezospayments/test/payment/success'),
         cancelUrl: new URL('https://fastwaterbear.com/tezospayments/test/payment/cancel'),
         created: createdDate,

@@ -28,12 +28,12 @@ export const Donation = (props: DonationProps) => {
 
   const [networkDonation, setNetworkDonation] = useState<NetworkDonation>({
     type: props.donation.type,
-    asset: props.service.allowedTokens.tez ? '' : props.service.allowedTokens.assets[0],
+    assetAddress: props.service.allowedTokens.tez ? '' : props.service.allowedTokens.assets[0],
     targetAddress: props.donation.targetAddress,
     amount: defaultAmount
   });
 
-  const decimals = networkDonation.asset ? tokens.get(networkDonation.asset)?.metadata?.decimals || 0 : tezosMeta.decimals;
+  const decimals = networkDonation.assetAddress ? tokens.get(networkDonation.assetAddress)?.metadata?.decimals || 0 : tezosMeta.decimals;
 
   const handleDonationAmountChange = useCallback((rawValue: string) => {
     const amount = new BigNumber(new BigNumber(rawValue).toFormat(decimals, { groupSeparator: '', decimalSeparator: '.' }));
@@ -50,7 +50,7 @@ export const Donation = (props: DonationProps) => {
     </View.Side>
     <View.Side isRight={true}>
       <DonationAmount amount={networkDonation.amount} onAmountChange={handleDonationAmountChange}
-        asset={networkDonation.asset} onAssetChange={handleAssetChange} service={props.service} />
+        asset={networkDonation.assetAddress} onAssetChange={handleAssetChange} service={props.service} />
       <PayButtonPure networkPayment={networkDonation} text="Donate" disabled={networkDonation.amount.isLessThanOrEqualTo(0)} />
       <FooterPure />
     </View.Side>

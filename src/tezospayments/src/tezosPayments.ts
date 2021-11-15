@@ -50,7 +50,7 @@ export class TezosPayments {
       throw new InvalidPaymentCreateParametersError(createParameters);
 
     let errors: FailedValidationResults;
-    if (createParameters.urlType || createParameters.network) {
+    if (createParameters.urlType) {
       errors = this.validateDefaultPaymentParameters(createParameters);
       if (errors)
         throw new InvalidPaymentError(errors);
@@ -66,18 +66,14 @@ export class TezosPayments {
     if (errors)
       throw new InvalidPaymentError(errors);
 
-    const paymentUrl = await this.getPaymentUrl(signedPayment, createParameters.urlType, createParameters.network);
+    const paymentUrl = await this.getPaymentUrl(signedPayment, createParameters.urlType);
     const payment = this.applyPaymentUrl(signedPayment, paymentUrl);
 
     return payment;
   }
 
-  protected getPaymentUrl(
-    payment: CommonPaymentModel,
-    urlType = this.defaultPaymentParameters.urlType,
-    network = this.defaultPaymentParameters.network
-  ): string | Promise<string> {
-    return this.getPaymentUrlFactory(urlType).createPaymentUrl(payment, network);
+  protected getPaymentUrl(payment: CommonPaymentModel, urlType = this.defaultPaymentParameters.urlType): string | Promise<string> {
+    return this.getPaymentUrlFactory(urlType).createPaymentUrl(payment, this.defaultPaymentParameters.network);
   }
 
   protected applyPaymentUrl(payment: CommonPaymentModel, url: string): Payment {
@@ -121,6 +117,8 @@ export class TezosPayments {
   }
 
   protected createPaymentByCreateParameters(createParameters: PaymentCreateParameters): CommonUnsignedPaymentModel {
+    // TODO: check decimals
+    // TODO: floor amount to decimals count: new BigNumber(amount).toFixed(asset.decimals)
     const payment: Mutable<CommonUnsignedPaymentModel> = {
       type: PaymentType.Payment,
       id: createParameters.id || nanoid(),

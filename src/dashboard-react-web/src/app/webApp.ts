@@ -74,6 +74,7 @@ export class WebApp {
 
   protected createReactAppContext(): ReactAppContext {
     return {
+      tezosWallet: this.tezosWallet,
       tezosExplorer: this.createTezosBlockchainUrlExplorer(this.network)
     };
   }

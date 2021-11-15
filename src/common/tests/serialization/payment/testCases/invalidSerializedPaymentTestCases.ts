@@ -142,31 +142,32 @@ const invalidSerializedPaymentTestCases: ReadonlyArray<readonly [
         'eyJpIjoiYTg1ZjQzZTUtMjFkOC00ZTg3LWJmOGMtM2FmMTQzNWExMDg4IiwiYSI6IjM5Mzk0Mzk0MzA0MDMiLCJkIjp7Im9yZGVySWQiOiIwYTZkMmRiMTgxZmE0ZWM3YTdkYmZiN2I3MjgyMDFmNiIsIml0ZW1zQ291bnQiOjEwfSwic3UiOiI8c2NyaXB0PmFsZXJ0KDEpPC9zY3JpcHQ-IiwiY3UiOiJodHRwczovL2Zhc3R3YXRlcmJlYXIuY29tL3Rlem9zcGF5bWVudHMvdGVzdC9wYXltZW50L2NhbmNlbCIsImMiOjE2MjQ2Njc4MjM5MzAsImUiOjE2MjQ2NjkwMjM5MzAsInMiOnsiayI6ImVkcGt0dUthRVVHMVlQakxTZmQ5MWVUYWtZVjZlS2NaQXQyRHM3cWZvUzJZVEFpMjVtdlpUcCIsImMiOiJlZHNpZ3RzS0VENnF6dml0NXJuYkRUWUUxNG9VS3h3Um9aeVNvUHlrS2FSMkExSndiQzJiZm5GSnpSaGpmTm5OZ0Q0dWJUVHVydGdCaGRLakVkcW5oYUR5c3U3TWdDSlZROEYiLCJjbCI6ImVkc2lndGNGcDRQVkduVDNaTlROaVBvNEd5eVJLR1pCVWJhMUtud1Z5R3lHSmUzMkhjU3ZiR2FXU0trV3NkZFJhUUNlQ1R1RzNCbTN0SzhHZDhuWXdpQjlic25NeGRmUHVrWiJ9fQ',
       ]
     ],
-    [
-      'payment with invalid field types (asset)',
-      [
-        {
-          i: '32793899-d3f8-4352-a61c-f0ec50987dc2',
-          a: '8383.383202283822832232',
-          d: {
-            order: {
-              id: '0a6d2db181fa4ec7a7dbfb7b728201f6',
-              type: 30
-            }
-          },
-          as: { value: 3333333 },
-          su: 'https://fastwaterbear.com/tezospayments/test/payment/success',
-          cu: 'https://fastwaterbear.com/tezospayments/test/payment/cancel',
-          c: createdDate.getTime(),
-          s: {
-            k: 'edpktfQYQXPQB2mecyszBvXSVUz1s3U7ihttiJomFgxYbUHWBji4du',
-            c: 'edsigtsKED6qzvit5rnbDTYE14oUKxwRoZySoPykKaR2A1JwbC2bfnFJzRhjfNnNgD4ubTTurtgBhdKjEdqnhaDysu7MgCJVQ8F',
-            cl: 'edsigtcFp4PVGnT3ZNTNiPo4GyyRKGZBUba1KnwVyGyGJe32HcSvbGaWSKkWsddRaQCeCTuG3Bm3tK8Gd8nYwiB9bsnMxdfPukZ'
-          },
-        },
-        'eyJpIjoiMzI3OTM4OTktZDNmOC00MzUyLWE2MWMtZjBlYzUwOTg3ZGMyIiwiYSI6IjgzODMuMzgzMjAyMjgzODIyODMyMjMyIiwiZCI6eyJvcmRlciI6eyJpZCI6IjBhNmQyZGIxODFmYTRlYzdhN2RiZmI3YjcyODIwMWY2IiwidHlwZSI6MzB9fSwiYXMiOnsidmFsdWUiOjMzMzMzMzN9LCJzdSI6Imh0dHBzOi8vZmFzdHdhdGVyYmVhci5jb20vdGV6b3NwYXltZW50cy90ZXN0L3BheW1lbnQvc3VjY2VzcyIsImN1IjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9jYW5jZWwiLCJjIjoxNjI0NjY3ODIzOTMwLCJzIjp7ImsiOiJlZHBrdGZRWVFYUFFCMm1lY3lzekJ2WFNWVXoxczNVN2lodHRpSm9tRmd4WWJVSFdCamk0ZHUiLCJjIjoiZWRzaWd0c0tFRDZxenZpdDVybmJEVFlFMTRvVUt4d1JvWnlTb1B5a0thUjJBMUp3YkMyYmZuRkp6UmhqZk5uTmdENHViVFR1cnRnQmhkS2pFZHFuaGFEeXN1N01nQ0pWUThGIiwiY2wiOiJlZHNpZ3RjRnA0UFZHblQzWk5UTmlQbzRHeXlSS0daQlViYTFLbndWeUd5R0plMzJIY1N2YkdhV1NLa1dzZGRSYVFDZUNUdUczQm0zdEs4R2Q4bll3aUI5YnNuTXhkZlB1a1oifX0',
-      ]
-    ],
+    // TODO
+    // [
+    //   'payment with invalid field types (asset)',
+    //   [
+    //     {
+    //       i: '32793899-d3f8-4352-a61c-f0ec50987dc2',
+    //       a: '8383.383202283822832232',
+    //       d: {
+    //         order: {
+    //           id: '0a6d2db181fa4ec7a7dbfb7b728201f6',
+    //           type: 30
+    //         }
+    //       },
+    //       as: { value: 3333333 },
+    //       su: 'https://fastwaterbear.com/tezospayments/test/payment/success',
+    //       cu: 'https://fastwaterbear.com/tezospayments/test/payment/cancel',
+    //       c: createdDate.getTime(),
+    //       s: {
+    //         k: 'edpktfQYQXPQB2mecyszBvXSVUz1s3U7ihttiJomFgxYbUHWBji4du',
+    //         c: 'edsigtsKED6qzvit5rnbDTYE14oUKxwRoZySoPykKaR2A1JwbC2bfnFJzRhjfNnNgD4ubTTurtgBhdKjEdqnhaDysu7MgCJVQ8F',
+    //         cl: 'edsigtcFp4PVGnT3ZNTNiPo4GyyRKGZBUba1KnwVyGyGJe32HcSvbGaWSKkWsddRaQCeCTuG3Bm3tK8Gd8nYwiB9bsnMxdfPukZ'
+    //       },
+    //     },
+    //     'eyJpIjoiMzI3OTM4OTktZDNmOC00MzUyLWE2MWMtZjBlYzUwOTg3ZGMyIiwiYSI6IjgzODMuMzgzMjAyMjgzODIyODMyMjMyIiwiZCI6eyJvcmRlciI6eyJpZCI6IjBhNmQyZGIxODFmYTRlYzdhN2RiZmI3YjcyODIwMWY2IiwidHlwZSI6MzB9fSwiYXMiOnsidmFsdWUiOjMzMzMzMzN9LCJzdSI6Imh0dHBzOi8vZmFzdHdhdGVyYmVhci5jb20vdGV6b3NwYXltZW50cy90ZXN0L3BheW1lbnQvc3VjY2VzcyIsImN1IjoiaHR0cHM6Ly9mYXN0d2F0ZXJiZWFyLmNvbS90ZXpvc3BheW1lbnRzL3Rlc3QvcGF5bWVudC9jYW5jZWwiLCJjIjoxNjI0NjY3ODIzOTMwLCJzIjp7ImsiOiJlZHBrdGZRWVFYUFFCMm1lY3lzekJ2WFNWVXoxczNVN2lodHRpSm9tRmd4WWJVSFdCamk0ZHUiLCJjIjoiZWRzaWd0c0tFRDZxenZpdDVybmJEVFlFMTRvVUt4d1JvWnlTb1B5a0thUjJBMUp3YkMyYmZuRkp6UmhqZk5uTmdENHViVFR1cnRnQmhkS2pFZHFuaGFEeXN1N01nQ0pWUThGIiwiY2wiOiJlZHNpZ3RjRnA0UFZHblQzWk5UTmlQbzRHeXlSS0daQlViYTFLbndWeUd5R0plMzJIY1N2YkdhV1NLa1dzZGRSYVFDZUNUdUczQm0zdEs4R2Q4bll3aUI5YnNuTXhkZlB1a1oifX0',
+    //   ]
+    // ],
     [
       'invalid payment object',
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
