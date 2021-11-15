@@ -2,8 +2,7 @@
 import { MichelsonType, packDataBytes } from '@taquito/michel-codec';
 
 import type { UnsignedPayment, EncodedPaymentSignPayload } from '../../models';
-import { optimization } from '../../utils';
-import { tokensAmountToNat } from '../../utils/converters';
+import { tezToMutez, tokensAmountToNat } from '../../utils/converters';
 import { contractPaymentInTezSignPayloadMichelsonType, contractPaymentInAssetSignPayloadMichelsonType } from './michelsonTypes';
 
 export class PaymentSignPayloadEncoder {
@@ -60,7 +59,7 @@ export class PaymentSignPayloadEncoder {
                 { string: payment.targetAddress }
               ]
             },
-            { int: payment.amount.toFormat(optimization.emptyObject) }
+            { int: tezToMutez(payment.amount).toString(10) }
           ]
         },
         contractPaymentInTezSignPayloadMichelsonType
