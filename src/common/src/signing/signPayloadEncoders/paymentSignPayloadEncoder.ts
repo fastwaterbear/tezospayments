@@ -3,6 +3,7 @@ import { MichelsonType, packDataBytes } from '@taquito/michel-codec';
 
 import type { UnsignedPayment, EncodedPaymentSignPayload } from '../../models';
 import { optimization } from '../../utils';
+import { tokensAmountToNat } from '../../utils/converters';
 import { contractPaymentInTezSignPayloadMichelsonType, contractPaymentInAssetSignPayloadMichelsonType } from './michelsonTypes';
 
 export class PaymentSignPayloadEncoder {
@@ -25,17 +26,25 @@ export class PaymentSignPayloadEncoder {
             {
               prim: 'Pair',
               args: [
-                { string: payment.id },
-                { string: payment.targetAddress }
+                {
+                  prim: 'Pair',
+                  args: [
+                    { string: payment.id },
+                    { string: payment.targetAddress }
+                  ]
+                },
+                {
+                  prim: 'Pair',
+                  args: [
+                    { int: tokensAmountToNat(payment.amount, payment.asset.decimals).toString(10) },
+                    { string: payment.asset.address }
+                  ]
+                }
               ]
             },
-            {
-              prim: 'Pair',
-              args: [
-                { int: payment.amount.toFormat(optimization.emptyObject) },
-                { string: payment.asset.address }
-              ]
-            }
+            payment.asset.id !== undefined && payment.asset.id !== null
+              ? { prim: 'Some', args: [{ int: payment.asset.id.toString() }] }
+              : { prim: 'None' }
           ]
         },
         contractPaymentInAssetSignPayloadMichelsonType
@@ -57,7 +66,7 @@ export class PaymentSignPayloadEncoder {
         contractPaymentInTezSignPayloadMichelsonType
       );
 
-    return signPayload.bytes;
+    return '0x' + signPayload.bytes;
   }
 
   protected getClientSignPayload(payment: UnsignedPayment): EncodedPaymentSignPayload['clientSignPayload'] {

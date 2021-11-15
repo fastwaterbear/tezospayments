@@ -121,9 +121,9 @@ const validPaymentTestCases: PositiveTestCases = [
       created: new Date('2021-09-03T10:18:23.017Z'),
       signature: {
         signingPublicKey: 'edpkuS4n5MZqhRbhqdQNmJ5TTnGFfYWBReF8pSagomFyDkpDRc1T6s',
-        contract: 'edsigtgmAw45kpcTFrPLHfzqfhTpFMUW5B8mB4Lpwo2RLYjMZ7uBgbPMkj5sktjjnN8ri7SRTPXUCQnaye5ni1ac8fZhUR9NcNY',
+        contract: 'edsigtd4BTonwv4DRCRtdpqHipCL14JUQbp9xaKidU7JZG7nCyE4tzTc2d75SyEw9qohvZocsbvgD97q8KaiKNxr8s5L2Cb5ryz',
       },
-      url: 'https://payment.tezospayments.com/KT1CgrsR3mctUE6ww3B5mq4cjpDfmUnJSdNh/payment?network=granadanet#00eyJpIjoiMm1jSVZQaVE5ekxubFotQUZPUnZEIiwiYSI6IjIzMjMyMzI0NDMzNDM0MzM3NDMuNDM5MzM0MzU0NCIsImFzIjp7ImEiOiJLVDFNbjJIVVVLVVBnOHdpUWhVSjhaOWpVdFpMYVpuOEVXTDIiLCJkIjoxMX0sImQiOnsib3JkZXIiOnsiaWQiOiJkNzVmZTA2Yi05Mjg4LTQxMmQtODIxYi1jYTA2Y2Q5YzdlMzgiLCJpdGVtc0NvdW50IjoxMX19LCJjIjoxNjMwNjY0MzAzMDE3LCJzIjp7ImsiOiJlZHBrdVM0bjVNWnFoUmJocWRRTm1KNVRUbkdGZllXQlJlRjhwU2Fnb21GeURrcERSYzFUNnMiLCJjIjoiZWRzaWd0Z21BdzQ1a3BjVEZyUExIZnpxZmhUcEZNVVc1QjhtQjRMcHdvMlJMWWpNWjd1QmdiUE1rajVza3Rqam5OOHJpN1NSVFBYVUNRbmF5ZTVuaTFhYzhmWmhVUjlOY05ZIn19'
+      url: 'https://payment.tezospayments.com/KT1CgrsR3mctUE6ww3B5mq4cjpDfmUnJSdNh/payment?network=granadanet#00eyJpIjoiMm1jSVZQaVE5ekxubFotQUZPUnZEIiwiYSI6IjIzMjMyMzI0NDMzNDM0MzM3NDMuNDM5MzM0MzU0NCIsImFzIjp7ImEiOiJLVDFNbjJIVVVLVVBnOHdpUWhVSjhaOWpVdFpMYVpuOEVXTDIiLCJkIjoxMX0sImQiOnsib3JkZXIiOnsiaWQiOiJkNzVmZTA2Yi05Mjg4LTQxMmQtODIxYi1jYTA2Y2Q5YzdlMzgiLCJpdGVtc0NvdW50IjoxMX19LCJjIjoxNjMwNjY0MzAzMDE3LCJzIjp7ImsiOiJlZHBrdVM0bjVNWnFoUmJocWRRTm1KNVRUbkdGZllXQlJlRjhwU2Fnb21GeURrcERSYzFUNnMiLCJjIjoiZWRzaWd0ZDRCVG9ud3Y0RFJDUnRkcHFIaXBDTDE0SlVRYnA5eGFLaWRVN0paRzduQ3lFNHR6VGMyZDc1U3lFdzlxb2h2Wm9jc2J2Z0Q5N3E4S2FpS054cjhzNUwyQ2I1cnl6In19'
     }
   ],
   [
@@ -156,9 +156,9 @@ const validPaymentTestCases: PositiveTestCases = [
       created: new Date('2021-09-03T10:18:23.017Z'),
       signature: {
         signingPublicKey: 'edpkuS4n5MZqhRbhqdQNmJ5TTnGFfYWBReF8pSagomFyDkpDRc1T6s',
-        contract: 'edsigtceQHxhFp8hpfsckcVk3AoTGDS1hBLct59yNTh7vZz8cwidJwpgzXTbQSyHx5Mc89brvHWfmW6RrCGqmT8MwGmWsP6kBe2',
+        contract: 'edsigth9Ctb7NBsXki5vfi7pfQmDSuCQk9QwFD6X2hc43ZejD8pqyyahuQ18XJGSq53HwPLf3tE5dQhk17pe5a1tEmctZn8griQ',
       },
-      url: 'https://payment.tezospayments.com/KT1U2v9pECyE62NgZcYeJi4cdLKWTeiagugA/payment?network=granadanet#00eyJpIjoiRS1hVjFadmpBUDZxVkNIelluU0FfIiwiYSI6IjkuNDMyOTQyMzg1Mzk5NTM5NTMwNTMwNWUrMjIiLCJhcyI6eyJhIjoiS1QxRGpVY050ejhwWTJ4TDJISGZ6YzJRM2s5Um5NdVBCbVY4IiwiZCI6MH0sImMiOjE2MzA2NjQzMDMwMTcsInMiOnsiayI6ImVkcGt1UzRuNU1acWhSYmhxZFFObUo1VFRuR0ZmWVdCUmVGOHBTYWdvbUZ5RGtwRFJjMVQ2cyIsImMiOiJlZHNpZ3RjZVFIeGhGcDhocGZzY2tjVmszQW9UR0RTMWhCTGN0NTl5TlRoN3Zaejhjd2lkSndwZ3pYVGJRU3lIeDVNYzg5YnJ2SFdmbVc2UnJDR3FtVDhNd0dtV3NQNmtCZTIifX0'
+      url: 'https://payment.tezospayments.com/KT1U2v9pECyE62NgZcYeJi4cdLKWTeiagugA/payment?network=granadanet#00eyJpIjoiRS1hVjFadmpBUDZxVkNIelluU0FfIiwiYSI6IjkuNDMyOTQyMzg1Mzk5NTM5NTMwNTMwNWUrMjIiLCJhcyI6eyJhIjoiS1QxRGpVY050ejhwWTJ4TDJISGZ6YzJRM2s5Um5NdVBCbVY4IiwiZCI6MH0sImMiOjE2MzA2NjQzMDMwMTcsInMiOnsiayI6ImVkcGt1UzRuNU1acWhSYmhxZFFObUo1VFRuR0ZmWVdCUmVGOHBTYWdvbUZ5RGtwRFJjMVQ2cyIsImMiOiJlZHNpZ3RoOUN0YjdOQnNYa2k1dmZpN3BmUW1EU3VDUWs5UXdGRDZYMmhjNDNaZWpEOHBxeXlhaHVRMThYSkdTcTUzSHdQTGYzdEU1ZFFoazE3cGU1YTF0RW1jdFpuOGdyaVEifX0'
     }
   ],
   [
@@ -194,9 +194,9 @@ const validPaymentTestCases: PositiveTestCases = [
       expired: new Date('2021-09-03T23:40:00.000Z'),
       signature: {
         signingPublicKey: 'edpkuS4n5MZqhRbhqdQNmJ5TTnGFfYWBReF8pSagomFyDkpDRc1T6s',
-        contract: 'edsigtt8XDL2zA2xz9bDmYKgCc9ryYgtT9G7jQ65V9QR8AGJcGAX6yhYR4teyoaoXinxqqKTF2qBCqHwTmqRpsNdi5RjFZFbDCD',
+        contract: 'edsigtwjusdPHpe13gtsAzwUUTvMfgPgHBKWNjEnWXUxtV4rYEnrbdgjfQbrtUXujfyTxTTkvQvPZduvYbcxfs4uMGqrB9quEvS',
       },
-      url: 'https://payment.tezospayments.com/KT1CgrsR3mctUE6ww3B5mq4cjpDfmUnJSdNh/payment?network=granadanet#00eyJpIjoiMDRiN2E1MjctNjViOC00OWVmLWI4ZGYtY2I1ZDNlY2RhZTA3IiwiYSI6IjAuMjMyOTMyODQzNDM4NDM4IiwiYXMiOnsiYSI6IktUMU1uMkhVVUtVUGc4d2lRaFVKOFo5alV0WkxhWm44RVdMMiIsImQiOjE3LCJpIjoxfSwiYyI6MTYzMDcxMTM4MDAwMCwiZSI6MTYzMDcxMjQwMDAwMCwicyI6eyJrIjoiZWRwa3VTNG41TVpxaFJiaHFkUU5tSjVUVG5HRmZZV0JSZUY4cFNhZ29tRnlEa3BEUmMxVDZzIiwiYyI6ImVkc2lndHQ4WERMMnpBMnh6OWJEbVlLZ0NjOXJ5WWd0VDlHN2pRNjVWOVFSOEFHSmNHQVg2eWhZUjR0ZXlvYW9YaW54cXFLVEYycUJDcUh3VG1xUnBzTmRpNVJqRlpGYkRDRCJ9fQ'
+      url: 'https://payment.tezospayments.com/KT1CgrsR3mctUE6ww3B5mq4cjpDfmUnJSdNh/payment?network=granadanet#00eyJpIjoiMDRiN2E1MjctNjViOC00OWVmLWI4ZGYtY2I1ZDNlY2RhZTA3IiwiYSI6IjAuMjMyOTMyODQzNDM4NDM4IiwiYXMiOnsiYSI6IktUMU1uMkhVVUtVUGc4d2lRaFVKOFo5alV0WkxhWm44RVdMMiIsImQiOjE3LCJpIjoxfSwiYyI6MTYzMDcxMTM4MDAwMCwiZSI6MTYzMDcxMjQwMDAwMCwicyI6eyJrIjoiZWRwa3VTNG41TVpxaFJiaHFkUU5tSjVUVG5HRmZZV0JSZUY4cFNhZ29tRnlEa3BEUmMxVDZzIiwiYyI6ImVkc2lndHdqdXNkUEhwZTEzZ3RzQXp3VVVUdk1mZ1BnSEJLV05qRW5XWFV4dFY0cllFbnJiZGdqZlFicnRVWHVqZnlUeFRUa3ZRdlBaZHV2WWJjeGZzNHVNR3FyQjlxdUV2UyJ9fQ'
     }
   ]
 ];

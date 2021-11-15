@@ -1,5 +1,7 @@
 import { Buffer } from 'buffer';
 
+import BigNumber from 'bignumber.js';
+
 export const stringToUint8Array = (hex: string): Uint8Array => {
   const integers = hex.match(/[\da-f]{2}/gi)?.map(val => parseInt(val, 16));
 
@@ -20,10 +22,13 @@ export const bytesToObject = <T extends Record<string, unknown> = Record<string,
   }
 };
 
-export function tezToMutez(tez: number): number;
-export function tezToMutez(tez: bigint): bigint;
-export function tezToMutez(tez: bigint | number): bigint | number {
-  return typeof tez === 'number'
-    ? tez * 1000000
-    : tez * BigInt(1000000);
-}
+export const tokensAmountToNat = (tokensAmount: BigNumber | number, decimals: number): BigNumber => {
+  return new BigNumber(tokensAmount).multipliedBy(10 ** decimals).integerValue();
+};
+
+export const numberToTokensAmount = (value: BigNumber | number, decimals: number): BigNumber => {
+  return new BigNumber(value).div(10 ** decimals).integerValue();
+};
+
+export const tezToMutez = (tez: BigNumber | number): BigNumber => tokensAmountToNat(tez, 6);
+export const mutezToTez = (mutez: BigNumber | number): BigNumber => numberToTokensAmount(mutez, 6);

@@ -20,16 +20,25 @@ export const contractPaymentInAssetSignPayloadMichelsonType: MichelsonType = {
     {
       prim: 'pair',
       args: [
-        { prim: 'string' },
-        { prim: 'address' }
+        {
+          prim: 'pair',
+          args: [
+            { prim: 'string' },
+            { prim: 'address' }
+          ]
+        },
+        {
+          prim: 'pair',
+          args: [
+            { prim: 'nat' },
+            { prim: 'address' }
+          ]
+        }
       ]
     },
     {
-      prim: 'pair',
-      args: [
-        { prim: 'nat' },
-        { prim: 'address' }
-      ]
+      prim: 'option',
+      args: [{ prim: 'nat' }]
     }
   ]
 };
