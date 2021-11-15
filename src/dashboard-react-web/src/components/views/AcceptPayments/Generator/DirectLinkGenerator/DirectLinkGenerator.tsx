@@ -3,7 +3,7 @@ import { Button } from 'antd';
 import React, { useCallback, useState, useEffect } from 'react';
 import { internal as tezosPaymentsInternal } from 'tezospayments';
 
-import { Donation, Payment, PaymentType, networks, Network } from '@tezospayments/common';
+import { Donation, Payment, PaymentType, networks } from '@tezospayments/common';
 
 import { config } from '../../../../../config';
 import { getCurrentAccount } from '../../../../../store/accounts/selectors';
