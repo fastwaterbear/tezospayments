@@ -23,15 +23,16 @@ export const Generator = (props: GeneratorProps) => {
   const tokens = useAppSelector(selectTokensState);
   const tezosPayments = useTezosPayments(props.serviceAddress);
   const currentAssetToken = props.assetAddress ? tokens.get(props.assetAddress) : undefined;
-  if (!tezosPayments)
-    return null;
 
   const tabList = [
-    { key: 'directLink', tab: 'Direct Link' },
     { key: 'widget', tab: 'Widget', disabled: true },
     { key: 'typescript', tab: 'TypeScript Library', disabled: true },
     { key: 'dotnet', tab: '.NET Library', disabled: true },
-  ];
+  ] as Array<{ key: string, tab: string, disabled?: boolean }>;
+
+  if (tezosPayments) {
+    tabList.splice(0, 0, { key: 'directLink', tab: 'Direct Link' });
+  }
 
   const paymentOrDonation = props.paymentType === PaymentType.Payment
     ? {
@@ -64,11 +65,11 @@ export const Generator = (props: GeneratorProps) => {
     className="generator"
     style={{ width: '100%' }}
     tabList={tabList}
-    activeTabKey={tabList[0]?.key}
+    activeTabKey={'directLink'}
   >
     {failedValidationResults
       ? <FailedValidationResult results={failedValidationResults} />
-      : <DirectLinkGeneratorPure paymentOrDonation={paymentOrDonation} />}
+      : <DirectLinkGeneratorPure paymentOrDonation={paymentOrDonation} serviceAddress={props.serviceAddress} />}
   </Card >;
 };
 
