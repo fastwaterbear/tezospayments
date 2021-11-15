@@ -8,9 +8,9 @@
 }
 
 .button_primary {
-  background-color: #1890ff;
-  border: 1px solid #1890ff;
-  color: #fff;
+  background-color: #3571e9;
+  border: 1px solid #3571e9;
+  color: #fdfdfe;
 }
 
 .button_secondary {
@@ -19,7 +19,15 @@
 }
 
 .button_primary:hover {
-  color: #fff;
-  background: #40a9ff;
-  border-color: #40a9ff;
+  color: #fdfdfe;
+  background: #1e61e6;
+  border-color: #1e61e6;
+}
+
+.button_primary:disabled {
+  cursor: initial;
+  background-color: #3571e9;
+  border: 1px solid #3571e9;
+  color: #fdfdfe;
+  opacity: 0.48;
 }

@@ -1,22 +1,25 @@
 import type { Product } from '../models/product';
+import fitnessBraceletImageUrl from '../public/products/0-fitness-bracelet.jpg';
+import watchImageUrl from '../public/products/1-watch.jpg';
+import smartSpeakerImageUrl from '../public/products/2-smart-speaker.jpg';
 
 export const products: readonly Product[] = [
   {
     id: 0,
     name: 'Fitness Bracelet',
     price: [9.99, 'XTZ'],
-    imageUrl: 'https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6'
+    image: fitnessBraceletImageUrl
   },
   {
     id: 1,
     name: 'Watch',
     price: [19.99, 'XTZ'],
-    imageUrl: 'https://images.unsplash.com/photo-1562157705-52df57a5883b'
+    image: watchImageUrl
   },
   {
     id: 2,
     name: 'Smart Speaker',
     price: [59.77, 'XTZ'],
-    imageUrl: 'https://images.unsplash.com/photo-1587145717184-e7ee5311253d'
+    image: smartSpeakerImageUrl
   },
 ];
