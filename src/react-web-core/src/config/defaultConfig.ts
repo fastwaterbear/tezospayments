@@ -36,7 +36,7 @@ export const defaultConfig: DefaultAppConfig = {
       granadanet: {
         title: 'Granada Testnet',
         color: '#667eea',
-        minimumSupportedServiceVersion: 2,
+        minimumSupportedServiceVersion: 3,
         default: {
           rpc: 'smartPy',
           indexer: 'tzKT',

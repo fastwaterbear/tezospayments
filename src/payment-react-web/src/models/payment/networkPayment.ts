@@ -1,3 +1,5 @@
+import type BigNumber from 'bignumber.js';
+
 import type { Donation, Payment } from '@tezospayments/common';
 
 export interface NetworkAsset {
@@ -5,13 +7,19 @@ export interface NetworkAsset {
   readonly id: number | null;
 }
 
-export type NetworkPayment = Pick<Payment,
-  | 'type'
-  | 'targetAddress'
-  | 'id'
-  | 'amount'
-> & { readonly asset?: NetworkAsset; readonly signature: string };
+export interface NetworkPayment {
+  readonly type: Payment['type'];
+  readonly targetAddress: string;
+  readonly id: string;
+  readonly amount: BigNumber;
+  readonly asset?: NetworkAsset;
+  readonly signature: string
+}
 
-export type NetworkDonation = Pick<Donation, 'type' | 'targetAddress'>
-  & Pick<Payment, 'amount'>
-  & { readonly assetAddress?: string; readonly payload?: { [fieldName: string]: unknown; } };
+export interface NetworkDonation {
+  readonly type: Donation['type'];
+  readonly targetAddress: string;
+  readonly amount: BigNumber;
+  readonly assetAddress?: string;
+  readonly payload?: { [fieldName: string]: unknown; }
+}
