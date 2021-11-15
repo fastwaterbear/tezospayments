@@ -1,6 +1,6 @@
 import { CopyOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { internal as tezosPaymentsInternal } from 'tezospayments';
 
 import { Donation, Payment, PaymentType, networks, Network } from '@tezospayments/common';
@@ -20,39 +20,50 @@ const base64PaymentUrlFactory = new tezosPaymentsInternal.paymentUrlFactories.Ba
   config.links.tezosPayments.paymentsApp
 );
 
-const getPaymentLink = (paymentOrDonation: Payment | Donation, network: Network) => {
-  try {
-    return base64PaymentUrlFactory.createPaymentUrl(paymentOrDonation, network);
-  }
-  catch {
-    return '';
-  }
-};
-
 export const DirectLinkGenerator = ({ paymentOrDonation }: DirectLinkGeneratorProps) => {
   const langResources = useCurrentLanguageResources();
   const commonLangResources = langResources.common;
   const acceptPaymentsLangResources = langResources.views.acceptPayments;
   const currentAccount = useAppSelector(getCurrentAccount);
 
-  // TODO: handle errors
-  const url = getPaymentLink(paymentOrDonation, currentAccount?.network || networks[config.tezos.defaultNetwork]);
+  const [url, setUrl] = useState('');
+
+  const getPaymentLink = useCallback(
+    () => {
+      const network = currentAccount?.network || networks[config.tezos.defaultNetwork];
+      try {
+        return base64PaymentUrlFactory.createPaymentUrl(paymentOrDonation, network);
+      }
+      catch {
+        return '';
+      }
+    }, [currentAccount?.network, paymentOrDonation]
+  );
+
+  useEffect(() => {
+    setUrl(paymentOrDonation.type === PaymentType.Payment ? '' : getPaymentLink());
+  }, [getPaymentLink, paymentOrDonation]);
 
   const helpText = paymentOrDonation.type === PaymentType.Payment
     ? acceptPaymentsLangResources.directLinkPaymentHelpText
     : acceptPaymentsLangResources.directLinkDonationHelpText;
+
+  const handleGenerateAndSignClick = useCallback(() => {
+    setUrl(getPaymentLink());
+  }, [getPaymentLink]);
 
   const handleCopyClick = useCallback(() => {
     navigator.clipboard.writeText(url);
   }, [url]);
 
   return <div className="generator__direct-link">
-    <span className="generator__direct-link-help-text">{helpText}</span>
+    {url && <span className="generator__direct-link-help-text">{helpText}</span>}
     <ExternalLink className="generator__direct-link-link" href={url}>{url}</ExternalLink>
     <div className="generator__direct-link-buttons">
-      <Button onClick={handleCopyClick} icon={<CopyOutlined />}>{commonLangResources.copyLink}</Button>
+      {!url && <Button type="primary" onClick={handleGenerateAndSignClick}>{acceptPaymentsLangResources.generateAndSignPaymentLink}</Button>}
+      {url && <Button onClick={handleCopyClick} icon={<CopyOutlined />}>{commonLangResources.copyLink}</Button>}
     </div>
-  </div>;
+  </div >;
 };
 
 export const DirectLinkGeneratorPure = React.memo(DirectLinkGenerator);
