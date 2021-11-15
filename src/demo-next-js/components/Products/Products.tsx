@@ -39,9 +39,8 @@ export const Products = (props: ProductsProps) => {
       }
       catch (error) {
         console.error(error);
+        setIsLoading(false);
       }
-
-      setIsLoading(false);
     },
     []
   );
