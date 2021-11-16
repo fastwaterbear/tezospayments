@@ -12,7 +12,9 @@ export class WalletSigner extends TezosPaymentsSigner {
 
   async sign(payment: UnsignedPayment): Promise<PaymentSignature> {
     const signPayload = this.paymentSignPayloadEncoder.encode(payment);
-    const contractSigningPromise = this.walletSigning(signPayload.contractSignPayload);
+    const walletContractSignPayload = signPayload.contractSignPayload.substring(2);
+
+    const contractSigningPromise = this.walletSigning(walletContractSignPayload);
     const signingPromises = signPayload.clientSignPayload
       ? [contractSigningPromise, this.walletSigning(signPayload.clientSignPayload)]
       : [contractSigningPromise];
