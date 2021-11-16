@@ -4,13 +4,14 @@ import _inherits from '@babel/runtime/helpers/inherits';
 import _possibleConstructorReturn from '@babel/runtime/helpers/possibleConstructorReturn';
 import _getPrototypeOf from '@babel/runtime/helpers/getPrototypeOf';
 import _wrapNativeSuper from '@babel/runtime/helpers/wrapNativeSuper';
-import { guards, PaymentUrlType, PaymentSerializer, DonationSerializer, PaymentType, native, getEncodedPaymentUrlType, networks, tezosInfo, networkNameRegExp, networkIdRegExp, PaymentValidator } from '@tezospayments/common';
+import { guards, PaymentUrlType, PaymentSerializer, DonationSerializer, PaymentType, native, getEncodedPaymentUrlType, PaymentSignPayloadEncoder, networks, tezosInfo, networkNameRegExp, networkIdRegExp, PaymentValidator } from '@tezospayments/common';
 export { PaymentUrlType } from '@tezospayments/common';
 import _assertThisInitialized from '@babel/runtime/helpers/assertThisInitialized';
 import _defineProperty from '@babel/runtime/helpers/defineProperty';
-import _typeof from '@babel/runtime/helpers/typeof';
 import _asyncToGenerator from '@babel/runtime/helpers/asyncToGenerator';
 import _regeneratorRuntime from '@babel/runtime/regenerator';
+import { InMemorySigner } from '@taquito/signer';
+import _typeof from '@babel/runtime/helpers/typeof';
 import BigNumber from 'bignumber.js';
 import { nanoid } from 'nanoid';
 
@@ -260,15 +261,61 @@ var ApiSecretKeySigner = /*#__PURE__*/function (_TezosPaymentsSigner) {
     _classCallCheck(this, ApiSecretKeySigner);
 
     _this = _super.call(this, SigningType.ApiSecretKey);
+
+    _defineProperty(_assertThisInitialized(_this), "paymentSignPayloadEncoder", new PaymentSignPayloadEncoder());
+
     _this.apiSecretKey = apiSecretKey;
+    _this.inMemorySigner = new InMemorySigner(_this.apiSecretKey);
     return _this;
   }
 
   _createClass(ApiSecretKeySigner, [{
     key: "sign",
-    value: function sign(_payment) {
-      throw new Error('Method not implemented.');
-    }
+    value: function () {
+      var _sign = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee(payment) {
+        var _signatures$;
+
+        var signPayload, contractSigningPromise, signingPromises, signatures;
+        return _regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                signPayload = this.paymentSignPayloadEncoder.encode(payment);
+                contractSigningPromise = this.inMemorySigner.sign(signPayload.contractSignPayload);
+                signingPromises = signPayload.clientSignPayload ? [contractSigningPromise, this.inMemorySigner.sign(signPayload.clientSignPayload)] : [contractSigningPromise]; // TODO: add "[Awaited<ReturnType<typeof this.inMemorySigner.sign>>, Awaited<ReturnType<typeof this.inMemorySigner.sign>>?]" type
+
+                _context.next = 5;
+                return Promise.all(signingPromises);
+
+              case 5:
+                signatures = _context.sent;
+                _context.next = 8;
+                return this.inMemorySigner.publicKey();
+
+              case 8:
+                _context.t0 = _context.sent;
+                _context.t1 = signatures[0].prefixSig;
+                _context.t2 = (_signatures$ = signatures[1]) === null || _signatures$ === void 0 ? void 0 : _signatures$.prefixSig;
+                return _context.abrupt("return", {
+                  signingPublicKey: _context.t0,
+                  contract: _context.t1,
+                  client: _context.t2
+                });
+
+              case 12:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function sign(_x) {
+        return _sign.apply(this, arguments);
+      }
+
+      return sign;
+    }()
   }]);
 
   return ApiSecretKeySigner;
@@ -288,15 +335,53 @@ var WalletSigner = /*#__PURE__*/function (_TezosPaymentsSigner) {
     _classCallCheck(this, WalletSigner);
 
     _this = _super.call(this, SigningType.Wallet);
+
+    _defineProperty(_assertThisInitialized(_this), "paymentSignPayloadEncoder", new PaymentSignPayloadEncoder());
+
     _this.walletSigning = walletSigning;
     return _this;
   }
 
   _createClass(WalletSigner, [{
     key: "sign",
-    value: function sign(_payment) {
-      throw new Error('Method not implemented.');
-    }
+    value: function () {
+      var _sign = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee(payment) {
+        var signPayload, walletContractSignPayload, contractSigningPromise, signingPromises, signatures;
+        return _regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                signPayload = this.paymentSignPayloadEncoder.encode(payment);
+                walletContractSignPayload = signPayload.contractSignPayload.substring(2);
+                contractSigningPromise = this.walletSigning(walletContractSignPayload);
+                signingPromises = signPayload.clientSignPayload ? [contractSigningPromise, this.walletSigning(signPayload.clientSignPayload)] : [contractSigningPromise]; // TODO: add "[Awaited<ReturnType<typeof this.inMemorySigner.sign>>, Awaited<ReturnType<typeof this.inMemorySigner.sign>>?]" type
+
+                _context.next = 6;
+                return Promise.all(signingPromises);
+
+              case 6:
+                signatures = _context.sent;
+                return _context.abrupt("return", {
+                  signingPublicKey: '',
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  contract: signatures[0],
+                  client: signatures[1]
+                });
+
+              case 8:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function sign(_x) {
+        return _sign.apply(this, arguments);
+      }
+
+      return sign;
+    }()
   }]);
 
   return WalletSigner;
@@ -382,7 +467,7 @@ var TezosPayments = /*#__PURE__*/function () {
     key: "createPayment",
     value: function () {
       var _createPayment = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee(createParameters) {
-        var errors, paymentWithoutUrl, paymentUrl, payment;
+        var errors, unsignedPayment, signedPayment, paymentUrl, payment;
         return _regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -395,7 +480,7 @@ var TezosPayments = /*#__PURE__*/function () {
                 throw new InvalidPaymentCreateParametersError(createParameters);
 
               case 2:
-                if (!(createParameters.urlType || createParameters.network)) {
+                if (!createParameters.urlType) {
                   _context.next = 6;
                   break;
                 }
@@ -410,8 +495,8 @@ var TezosPayments = /*#__PURE__*/function () {
                 throw new InvalidPaymentError(errors);
 
               case 6:
-                paymentWithoutUrl = this.createPaymentByCreateParameters(createParameters);
-                errors = this.paymentValidator.validate(paymentWithoutUrl, true);
+                unsignedPayment = this.createPaymentByCreateParameters(createParameters);
+                errors = this.paymentValidator.validate(unsignedPayment, true);
 
                 if (!errors) {
                   _context.next = 10;
@@ -422,14 +507,29 @@ var TezosPayments = /*#__PURE__*/function () {
 
               case 10:
                 _context.next = 12;
-                return this.getPaymentUrl(paymentWithoutUrl, createParameters.urlType, createParameters.network);
+                return this.getSignedPayment(unsignedPayment);
 
               case 12:
+                signedPayment = _context.sent;
+                errors = this.paymentValidator.validate(signedPayment, true);
+
+                if (!errors) {
+                  _context.next = 16;
+                  break;
+                }
+
+                throw new InvalidPaymentError(errors);
+
+              case 16:
+                _context.next = 18;
+                return this.getPaymentUrl(signedPayment, createParameters.urlType);
+
+              case 18:
                 paymentUrl = _context.sent;
-                payment = this.applyPaymentUrl(paymentWithoutUrl, paymentUrl);
+                payment = this.applyPaymentUrl(signedPayment, paymentUrl);
                 return _context.abrupt("return", payment);
 
-              case 15:
+              case 21:
               case "end":
                 return _context.stop();
             }
@@ -447,8 +547,7 @@ var TezosPayments = /*#__PURE__*/function () {
     key: "getPaymentUrl",
     value: function getPaymentUrl(payment) {
       var urlType = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.defaultPaymentParameters.urlType;
-      var network = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : this.defaultPaymentParameters.network;
-      return this.getPaymentUrlFactory(urlType).createPaymentUrl(payment, network);
+      return this.getPaymentUrlFactory(urlType).createPaymentUrl(payment, this.defaultPaymentParameters.network);
     }
   }, {
     key: "applyPaymentUrl",
@@ -468,6 +567,35 @@ var TezosPayments = /*#__PURE__*/function () {
 
       return paymentUrlFactory;
     }
+  }, {
+    key: "getSignedPayment",
+    value: function () {
+      var _getSignedPayment = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee2(unsignedPayment) {
+        return _regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return this.signer.sign(unsignedPayment);
+
+              case 2:
+                unsignedPayment.signature = _context2.sent;
+                return _context2.abrupt("return", unsignedPayment);
+
+              case 4:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function getSignedPayment(_x2) {
+        return _getSignedPayment.apply(this, arguments);
+      }
+
+      return getSignedPayment;
+    }()
   }, {
     key: "createSigner",
     value: function createSigner(signingOptions) {
@@ -489,6 +617,8 @@ var TezosPayments = /*#__PURE__*/function () {
   }, {
     key: "createPaymentByCreateParameters",
     value: function createPaymentByCreateParameters(createParameters) {
+      // TODO: check decimals
+      // TODO: floor amount to decimals count: new BigNumber(amount).toFixed(asset.decimals)
       var payment = {
         type: PaymentType.Payment,
         id: createParameters.id || nanoid(),

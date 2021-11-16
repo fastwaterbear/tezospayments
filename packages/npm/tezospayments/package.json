@@ -1,6 +1,6 @@
 {
   "name": "tezospayments",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Package for payment generation in the Tezos Payments system.",
   "main": "dist/index.cjs.js",
   "module": "dist/index.mjs",
@@ -27,11 +27,10 @@
     }
   },
   "dependencies": {
-    "@tezospayments/common": "^0.3.1",
+    "@tezospayments/common": "^0.4.0",
     "nanoid": "^3.1.25"
   },
   "devDependencies": {
-    "@taquito/signer": "^10.1.0",
     "@types/jest": "^27.0.1",
     "babel-jest": "^27.0.6",
     "jest": "^27.0.6"

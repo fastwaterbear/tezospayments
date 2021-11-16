@@ -1,4 +1,4 @@
-import type { CustomNetwork, Network, PaymentUrlType } from '@tezospayments/common';
+import type { CustomNetwork, Network, PaymentAsset, PaymentUrlType } from '@tezospayments/common';
 import type { Payment } from './models';
 export interface TezosPaymentsApiSigningOptions {
     apiSecretKey: string;
@@ -6,7 +6,7 @@ export interface TezosPaymentsApiSigningOptions {
 export interface TezosPaymentsWalletSigningOptions {
     walletSigning: (dataBytes: string) => Promise<string>;
 }
-export declare type TezosPaymentsCustomSigning = (payment: Omit<Payment, 'url'>) => Promise<string>;
+export declare type TezosPaymentsCustomSigning = (payment: Omit<Payment, 'url' | 'signature'>) => Promise<string>;
 declare type TezosPaymentsSigningOptions = TezosPaymentsApiSigningOptions | TezosPaymentsWalletSigningOptions | TezosPaymentsCustomSigning;
 export interface DefaultPaymentParameters {
     network: Network | CustomNetwork;
@@ -20,12 +20,14 @@ export interface TezosPaymentsOptions {
 interface PaymentCreateParametersBase {
     amount: string;
     id?: string;
-    asset?: string;
-    data: Payment['data'];
+    asset?: PaymentAsset;
+    data?: Payment['data'];
     created?: number;
     expired?: number;
     successUrl?: string;
     cancelUrl?: string;
 }
-export declare type PaymentCreateParameters = PaymentCreateParametersBase & Partial<DefaultPaymentParameters>;
+export declare type PaymentCreateParameters = PaymentCreateParametersBase & {
+    urlType?: PaymentUrlType;
+};
 export {};

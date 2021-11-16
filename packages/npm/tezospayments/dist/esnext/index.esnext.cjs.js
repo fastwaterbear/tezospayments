@@ -3,6 +3,7 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var common = require('@tezospayments/common');
+var signer = require('@taquito/signer');
 var BigNumber = require('bignumber.js');
 var nanoid = require('nanoid');
 
@@ -139,23 +140,52 @@ exports.SigningType = void 0;
 
 class ApiSecretKeySigner extends TezosPaymentsSigner {
     apiSecretKey;
+    paymentSignPayloadEncoder = new common.PaymentSignPayloadEncoder();
+    inMemorySigner;
     constructor(apiSecretKey) {
         super(exports.SigningType.ApiSecretKey);
         this.apiSecretKey = apiSecretKey;
+        this.inMemorySigner = new signer.InMemorySigner(this.apiSecretKey);
     }
-    sign(_payment) {
-        throw new Error('Method not implemented.');
+    async sign(payment) {
+        const signPayload = this.paymentSignPayloadEncoder.encode(payment);
+        const contractSigningPromise = this.inMemorySigner.sign(signPayload.contractSignPayload);
+        const signingPromises = signPayload.clientSignPayload
+            ? [contractSigningPromise, this.inMemorySigner.sign(signPayload.clientSignPayload)]
+            : [contractSigningPromise];
+        // TODO: add "[Awaited<ReturnType<typeof this.inMemorySigner.sign>>, Awaited<ReturnType<typeof this.inMemorySigner.sign>>?]" type
+        const signatures = await Promise.all(signingPromises);
+        return {
+            signingPublicKey: await this.inMemorySigner.publicKey(),
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            contract: signatures[0].prefixSig,
+            client: signatures[1]?.prefixSig,
+        };
     }
 }
 
 class WalletSigner extends TezosPaymentsSigner {
     walletSigning;
+    paymentSignPayloadEncoder = new common.PaymentSignPayloadEncoder();
     constructor(walletSigning) {
         super(exports.SigningType.Wallet);
         this.walletSigning = walletSigning;
     }
-    sign(_payment) {
-        throw new Error('Method not implemented.');
+    async sign(payment) {
+        const signPayload = this.paymentSignPayloadEncoder.encode(payment);
+        const walletContractSignPayload = signPayload.contractSignPayload.substring(2);
+        const contractSigningPromise = this.walletSigning(walletContractSignPayload);
+        const signingPromises = signPayload.clientSignPayload
+            ? [contractSigningPromise, this.walletSigning(signPayload.clientSignPayload)]
+            : [contractSigningPromise];
+        // TODO: add "[Awaited<ReturnType<typeof this.inMemorySigner.sign>>, Awaited<ReturnType<typeof this.inMemorySigner.sign>>?]" type
+        const signatures = await Promise.all(signingPromises);
+        return {
+            signingPublicKey: '',
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            contract: signatures[0],
+            client: signatures[1],
+        };
     }
 }
 
@@ -228,21 +258,25 @@ class TezosPayments {
         if (!createParameters)
             throw new InvalidPaymentCreateParametersError(createParameters);
         let errors;
-        if (createParameters.urlType || createParameters.network) {
+        if (createParameters.urlType) {
             errors = this.validateDefaultPaymentParameters(createParameters);
             if (errors)
                 throw new InvalidPaymentError(errors);
         }
-        const paymentWithoutUrl = this.createPaymentByCreateParameters(createParameters);
-        errors = this.paymentValidator.validate(paymentWithoutUrl, true);
+        const unsignedPayment = this.createPaymentByCreateParameters(createParameters);
+        errors = this.paymentValidator.validate(unsignedPayment, true);
         if (errors)
             throw new InvalidPaymentError(errors);
-        const paymentUrl = await this.getPaymentUrl(paymentWithoutUrl, createParameters.urlType, createParameters.network);
-        const payment = this.applyPaymentUrl(paymentWithoutUrl, paymentUrl);
+        const signedPayment = await this.getSignedPayment(unsignedPayment);
+        errors = this.paymentValidator.validate(signedPayment, true);
+        if (errors)
+            throw new InvalidPaymentError(errors);
+        const paymentUrl = await this.getPaymentUrl(signedPayment, createParameters.urlType);
+        const payment = this.applyPaymentUrl(signedPayment, paymentUrl);
         return payment;
     }
-    getPaymentUrl(payment, urlType = this.defaultPaymentParameters.urlType, network = this.defaultPaymentParameters.network) {
-        return this.getPaymentUrlFactory(urlType).createPaymentUrl(payment, network);
+    getPaymentUrl(payment, urlType = this.defaultPaymentParameters.urlType) {
+        return this.getPaymentUrlFactory(urlType).createPaymentUrl(payment, this.defaultPaymentParameters.network);
     }
     applyPaymentUrl(payment, url) {
         payment.url = url;
@@ -255,6 +289,10 @@ class TezosPayments {
             this.paymentUrlFactories.set(paymentUrlType, paymentUrlFactory);
         }
         return paymentUrlFactory;
+    }
+    async getSignedPayment(unsignedPayment) {
+        unsignedPayment.signature = await this.signer.sign(unsignedPayment);
+        return unsignedPayment;
     }
     createSigner(signingOptions) {
         if ('apiSecretKey' in signingOptions)
@@ -272,11 +310,13 @@ class TezosPayments {
         }
     }
     createPaymentByCreateParameters(createParameters) {
+        // TODO: check decimals
+        // TODO: floor amount to decimals count: new BigNumber(amount).toFixed(asset.decimals)
         const payment = {
             type: common.PaymentType.Payment,
             id: createParameters.id || nanoid.nanoid(),
             targetAddress: this.serviceContractAddress,
-            amount: new BigNumber__default['default'](createParameters.amount),
+            amount: new BigNumber__default["default"](createParameters.amount),
             data: createParameters.data,
             created: createParameters.created ? new Date(createParameters.created) : new Date(),
         };
@@ -350,9 +390,7 @@ const internal = {
 
 Object.defineProperty(exports, 'PaymentUrlType', {
   enumerable: true,
-  get: function () {
-    return common.PaymentUrlType;
-  }
+  get: function () { return common.PaymentUrlType; }
 });
 exports.TezosPayments = TezosPayments;
 exports.internal = internal;

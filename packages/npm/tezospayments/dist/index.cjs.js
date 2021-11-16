@@ -4,6 +4,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var common = require('@tezospayments/common');
 var _defineProperty = require('@babel/runtime/helpers/defineProperty');
+var signer = require('@taquito/signer');
 var BigNumber = require('bignumber.js');
 var nanoid = require('nanoid');
 
@@ -73,9 +74,9 @@ class Base64PaymentUrlFactory extends PaymentUrlFactory {
   constructor(baseUrl = Base64PaymentUrlFactory.baseUrl) {
     super(common.PaymentUrlType.Base64);
 
-    _defineProperty__default['default'](this, "paymentSerializer", new common.PaymentSerializer());
+    _defineProperty__default["default"](this, "paymentSerializer", new common.PaymentSerializer());
 
-    _defineProperty__default['default'](this, "donationSerializer", new common.DonationSerializer());
+    _defineProperty__default["default"](this, "donationSerializer", new common.DonationSerializer());
 
     this.baseUrl = baseUrl;
   }
@@ -115,7 +116,7 @@ class Base64PaymentUrlFactory extends PaymentUrlFactory {
 
 }
 
-_defineProperty__default['default'](Base64PaymentUrlFactory, "baseUrl", constants.paymentAppBaseUrl);
+_defineProperty__default["default"](Base64PaymentUrlFactory, "baseUrl", constants.paymentAppBaseUrl);
 
 var paymentUrlFactories = /*#__PURE__*/Object.freeze({
   __proto__: null,
@@ -141,11 +142,27 @@ exports.SigningType = void 0;
 class ApiSecretKeySigner extends TezosPaymentsSigner {
   constructor(apiSecretKey) {
     super(exports.SigningType.ApiSecretKey);
+
+    _defineProperty__default["default"](this, "paymentSignPayloadEncoder", new common.PaymentSignPayloadEncoder());
+
     this.apiSecretKey = apiSecretKey;
+    this.inMemorySigner = new signer.InMemorySigner(this.apiSecretKey);
   }
 
-  sign(_payment) {
-    throw new Error('Method not implemented.');
+  async sign(payment) {
+    var _signatures$;
+
+    const signPayload = this.paymentSignPayloadEncoder.encode(payment);
+    const contractSigningPromise = this.inMemorySigner.sign(signPayload.contractSignPayload);
+    const signingPromises = signPayload.clientSignPayload ? [contractSigningPromise, this.inMemorySigner.sign(signPayload.clientSignPayload)] : [contractSigningPromise]; // TODO: add "[Awaited<ReturnType<typeof this.inMemorySigner.sign>>, Awaited<ReturnType<typeof this.inMemorySigner.sign>>?]" type
+
+    const signatures = await Promise.all(signingPromises);
+    return {
+      signingPublicKey: await this.inMemorySigner.publicKey(),
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      contract: signatures[0].prefixSig,
+      client: (_signatures$ = signatures[1]) === null || _signatures$ === void 0 ? void 0 : _signatures$.prefixSig
+    };
   }
 
 }
@@ -153,11 +170,25 @@ class ApiSecretKeySigner extends TezosPaymentsSigner {
 class WalletSigner extends TezosPaymentsSigner {
   constructor(walletSigning) {
     super(exports.SigningType.Wallet);
+
+    _defineProperty__default["default"](this, "paymentSignPayloadEncoder", new common.PaymentSignPayloadEncoder());
+
     this.walletSigning = walletSigning;
   }
 
-  sign(_payment) {
-    throw new Error('Method not implemented.');
+  async sign(payment) {
+    const signPayload = this.paymentSignPayloadEncoder.encode(payment);
+    const walletContractSignPayload = signPayload.contractSignPayload.substring(2);
+    const contractSigningPromise = this.walletSigning(walletContractSignPayload);
+    const signingPromises = signPayload.clientSignPayload ? [contractSigningPromise, this.walletSigning(signPayload.clientSignPayload)] : [contractSigningPromise]; // TODO: add "[Awaited<ReturnType<typeof this.inMemorySigner.sign>>, Awaited<ReturnType<typeof this.inMemorySigner.sign>>?]" type
+
+    const signatures = await Promise.all(signingPromises);
+    return {
+      signingPublicKey: '',
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      contract: signatures[0],
+      client: signatures[1]
+    };
   }
 
 }
@@ -205,9 +236,9 @@ const tezosPaymentsOptionsValidationErrors = {
 
 class TezosPayments {
   constructor(options) {
-    _defineProperty__default['default'](this, "paymentValidator", new common.PaymentValidator());
+    _defineProperty__default["default"](this, "paymentValidator", new common.PaymentValidator());
 
-    _defineProperty__default['default'](this, "paymentUrlFactories", new Map());
+    _defineProperty__default["default"](this, "paymentUrlFactories", new Map());
 
     const errors = this.validateOptions(options);
     if (errors) throw new InvalidTezosPaymentsOptionsError(errors);
@@ -224,21 +255,24 @@ class TezosPayments {
     if (!createParameters) throw new InvalidPaymentCreateParametersError(createParameters);
     let errors;
 
-    if (createParameters.urlType || createParameters.network) {
+    if (createParameters.urlType) {
       errors = this.validateDefaultPaymentParameters(createParameters);
       if (errors) throw new InvalidPaymentError(errors);
     }
 
-    const paymentWithoutUrl = this.createPaymentByCreateParameters(createParameters);
-    errors = this.paymentValidator.validate(paymentWithoutUrl, true);
+    const unsignedPayment = this.createPaymentByCreateParameters(createParameters);
+    errors = this.paymentValidator.validate(unsignedPayment, true);
     if (errors) throw new InvalidPaymentError(errors);
-    const paymentUrl = await this.getPaymentUrl(paymentWithoutUrl, createParameters.urlType, createParameters.network);
-    const payment = this.applyPaymentUrl(paymentWithoutUrl, paymentUrl);
+    const signedPayment = await this.getSignedPayment(unsignedPayment);
+    errors = this.paymentValidator.validate(signedPayment, true);
+    if (errors) throw new InvalidPaymentError(errors);
+    const paymentUrl = await this.getPaymentUrl(signedPayment, createParameters.urlType);
+    const payment = this.applyPaymentUrl(signedPayment, paymentUrl);
     return payment;
   }
 
-  getPaymentUrl(payment, urlType = this.defaultPaymentParameters.urlType, network = this.defaultPaymentParameters.network) {
-    return this.getPaymentUrlFactory(urlType).createPaymentUrl(payment, network);
+  getPaymentUrl(payment, urlType = this.defaultPaymentParameters.urlType) {
+    return this.getPaymentUrlFactory(urlType).createPaymentUrl(payment, this.defaultPaymentParameters.network);
   }
 
   applyPaymentUrl(payment, url) {
@@ -255,6 +289,11 @@ class TezosPayments {
     }
 
     return paymentUrlFactory;
+  }
+
+  async getSignedPayment(unsignedPayment) {
+    unsignedPayment.signature = await this.signer.sign(unsignedPayment);
+    return unsignedPayment;
   }
 
   createSigner(signingOptions) {
@@ -274,11 +313,13 @@ class TezosPayments {
   }
 
   createPaymentByCreateParameters(createParameters) {
+    // TODO: check decimals
+    // TODO: floor amount to decimals count: new BigNumber(amount).toFixed(asset.decimals)
     const payment = {
       type: common.PaymentType.Payment,
       id: createParameters.id || nanoid.nanoid(),
       targetAddress: this.serviceContractAddress,
-      amount: new BigNumber__default['default'](createParameters.amount),
+      amount: new BigNumber__default["default"](createParameters.amount),
       data: createParameters.data,
       created: createParameters.created ? new Date(createParameters.created) : new Date()
     };
@@ -327,12 +368,12 @@ class TezosPayments {
 
 }
 
-_defineProperty__default['default'](TezosPayments, "defaultPaymentParameters", {
+_defineProperty__default["default"](TezosPayments, "defaultPaymentParameters", {
   network: common.networks.granadanet,
   urlType: common.PaymentUrlType.Base64
 });
 
-_defineProperty__default['default'](TezosPayments, "optionsValidationErrors", tezosPaymentsOptionsValidationErrors);
+_defineProperty__default["default"](TezosPayments, "optionsValidationErrors", tezosPaymentsOptionsValidationErrors);
 
 const internal = {
   constants,
@@ -343,9 +384,7 @@ const internal = {
 
 Object.defineProperty(exports, 'PaymentUrlType', {
   enumerable: true,
-  get: function () {
-    return common.PaymentUrlType;
-  }
+  get: function () { return common.PaymentUrlType; }
 });
 exports.TezosPayments = TezosPayments;
 exports.internal = internal;

@@ -1,4 +1,4 @@
-import { PaymentUrlType, DeepReadonly, FailedValidationResults, Payment as CommonPaymentModel, PaymentValidator } from '@tezospayments/common';
+import { PaymentUrlType, DeepReadonly, FailedValidationResults, UnsignedPayment as CommonUnsignedPaymentModel, Payment as CommonPaymentModel, PaymentValidator } from '@tezospayments/common';
 import { Payment } from './models';
 import type { DefaultPaymentParameters, PaymentCreateParameters, TezosPaymentsOptions } from './options';
 import { PaymentUrlFactory } from './paymentUrlFactories';
@@ -27,21 +27,13 @@ export declare class TezosPayments {
     private paymentUrlFactories;
     constructor(options: DeepReadonly<TezosPaymentsOptions>);
     createPayment(createParameters: PaymentCreateParameters): Promise<Payment>;
-    protected getPaymentUrl(payment: CommonPaymentModel, urlType?: PaymentUrlType, network?: {
-        readonly id: "NetXz969SFaFn8k";
-        readonly name: "granadanet";
-    } | {
-        readonly id: "NetXSgo1ZT2DRUG";
-        readonly name: "edo2net";
-    } | {
-        readonly id?: string | undefined;
-        readonly name: string;
-    }): string | Promise<string>;
+    protected getPaymentUrl(payment: CommonPaymentModel, urlType?: PaymentUrlType): string | Promise<string>;
     protected applyPaymentUrl(payment: CommonPaymentModel, url: string): Payment;
     protected getPaymentUrlFactory(paymentUrlType: PaymentUrlType): PaymentUrlFactory;
+    protected getSignedPayment(unsignedPayment: CommonUnsignedPaymentModel): Promise<CommonPaymentModel>;
     protected createSigner(signingOptions: TezosPaymentsOptions['signing']): TezosPaymentsSigner;
     protected createPaymentUrlFactory(paymentUrlType: PaymentUrlType): PaymentUrlFactory;
-    protected createPaymentByCreateParameters(createParameters: PaymentCreateParameters): CommonPaymentModel;
+    protected createPaymentByCreateParameters(createParameters: PaymentCreateParameters): CommonUnsignedPaymentModel;
     protected validateOptions(options: DeepReadonly<TezosPaymentsOptions>): FailedValidationResults;
     private validateServiceContractAddress;
     private validateSigningOptions;
