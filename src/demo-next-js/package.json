@@ -13,7 +13,7 @@
     "next": "^12.0.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "tezospayments": "^0.2.0"
+    "tezospayments": "^0.3.0"
   },
   "devDependencies": {
     "@types/react": "^17.0.34",
