@@ -1,4 +1,4 @@
-import type { CustomNetwork, Network, PaymentUrlType } from '@tezospayments/common';
+import type { CustomNetwork, Network, PaymentAsset, PaymentUrlType } from '@tezospayments/common';
 
 import type { Payment } from './models';
 
@@ -31,7 +31,7 @@ export interface TezosPaymentsOptions {
 interface PaymentCreateParametersBase {
   amount: string;
   id?: string;
-  asset?: string;
+  asset?: PaymentAsset;
   data?: Payment['data'];
   created?: number;
   expired?: number;
@@ -39,4 +39,4 @@ interface PaymentCreateParametersBase {
   cancelUrl?: string;
 }
 
-export type PaymentCreateParameters = PaymentCreateParametersBase & Partial<DefaultPaymentParameters>;
+export type PaymentCreateParameters = PaymentCreateParametersBase & { urlType?: PaymentUrlType; };

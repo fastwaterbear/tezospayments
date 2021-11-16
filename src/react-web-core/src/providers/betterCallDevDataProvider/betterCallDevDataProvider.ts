@@ -1,13 +1,13 @@
 import BigNumber from 'bignumber.js';
 
 import {
-  converters, DonationOperation, guards, Mutable, Network,
-  Operation, OperationDirection, OperationStatus, OperationType, optimization, PaymentOperation, ServiceOperation,
+  converters, DonationOperation, guards, Network,
+  OperationDirection, OperationStatus, OperationType, optimization, PaymentOperation, ServiceOperation,
   Service, ServiceSigningKey, tezosMeta, Token, tokenWhitelistMap
 } from '@tezospayments/common';
 
 import type { ServicesProvider } from '../servicesProvider';
-import type { SendPaymentOperationDto, ServiceDto, ServicesBigMapDto, ServicesFactoryDto, SigningKeyDto } from './dtos';
+import type { OperationDto, SendDonationOperationParametersDto, SendPaymentOperationParametersDto, ServiceDto, ServicesBigMapDto, ServicesFactoryDto, SigningKeyDto } from './dtos';
 
 export class BetterCallDevDataProvider implements ServicesProvider {
   readonly tokenWhiteList: ReadonlyMap<string, Token>;
@@ -15,7 +15,8 @@ export class BetterCallDevDataProvider implements ServicesProvider {
   constructor(
     readonly network: Network,
     readonly baseUrl: string,
-    readonly servicesFactoryContractAddress: string
+    readonly servicesFactoryContractAddress: string,
+    readonly minimumSupportedServiceVersion: number
   ) {
     this.tokenWhiteList = tokenWhitelistMap.get(this.network) || optimization.emptyMap;
   }
@@ -23,6 +24,13 @@ export class BetterCallDevDataProvider implements ServicesProvider {
   async getService(serviceContractAddress: string): Promise<Service> {
     const response = await fetch(`${this.baseUrl}/v1/contract/${this.network.name}/${serviceContractAddress}/storage`);
     const serviceDto: ServiceDto = await response.json();
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((+(serviceDto?.[0].children?.[serviceDto[0].children.length - 1] as any).value < this.minimumSupportedServiceVersion)) {
+      // Only for Dev
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return null!;
+    }
 
     const result = this.mapServiceDtoToService(serviceDto, serviceContractAddress, this.network);
     if (!result)
@@ -44,20 +52,23 @@ export class BetterCallDevDataProvider implements ServicesProvider {
 
     const contractAddresses = servicesSet.data.value.children.map(serviceAddressDto => serviceAddressDto.value);
 
-    return Promise.all(contractAddresses.map(contractAddress => this.getService(contractAddress)));
+    return (await Promise.all(contractAddresses.map(contractAddress => this.getService(contractAddress)))).filter(Boolean);
   }
 
   async getOperations(serviceContractAddress: string): Promise<readonly ServiceOperation[]> {
     const url = new URL(`v1/contract/${this.network.name}/${serviceContractAddress}/operations`, this.baseUrl);
-    url.searchParams.set('entrypoints', 'send_payment');
+    url.searchParams.set('entrypoints', 'send_payment,send_donation');
 
     const response = await fetch(url.href);
-    const operations: SendPaymentOperationDto[] = (await response.json()).operations;
+    const operations: OperationDto[] = (await response.json()).operations;
 
     return operations
       .filter(operation => !operation.internal)
+      .filter(operation => operation.entrypoint === 'send_payment' || operation.entrypoint === 'send_donation')
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      .map(operation => this.mapSendPaymentOperationToServiceOperation(operation)!)
+      .map(operation => operation.entrypoint === 'send_payment'
+        ? this.mapSendPaymentOperationToServiceOperation(operation as OperationDto<SendPaymentOperationParametersDto>)
+        : this.mapSendDonationOperationToServiceOperation(operation as OperationDto<SendDonationOperationParametersDto>))
       .filter(Boolean);
   }
 
@@ -69,7 +80,7 @@ export class BetterCallDevDataProvider implements ServicesProvider {
   private mapServiceDtoToService(serviceDto: ServiceDto, serviceAddress: string, network: Network): Service | null {
     let metadataJson: Record<string, unknown>;
     try {
-      metadataJson = JSON.parse(serviceDto[0].children[3].value);
+      metadataJson = JSON.parse(serviceDto[0].children[4].value);
     }
     catch {
       return null;
@@ -85,8 +96,8 @@ export class BetterCallDevDataProvider implements ServicesProvider {
         links: metadataJson.links || optimization.emptyArray,
         description: metadataJson.description,
         iconUrl: metadataJson.iconUrl,
-        version: +serviceDto[0].children[7].value,
-        metadata: converters.stringToBytes(serviceDto[0].children[3].value),
+        version: +serviceDto[0].children[8].value,
+        metadata: converters.stringToBytes(serviceDto[0].children[4].value),
 
         contractAddress: serviceAddress,
         network,
@@ -96,11 +107,11 @@ export class BetterCallDevDataProvider implements ServicesProvider {
         },
         allowedOperationType: +serviceDto[0].children[0].value,
 
-        owner: serviceDto[0].children[4].value,
-        paused: serviceDto[0].children[5].value,
-        deleted: serviceDto[0].children[2].value,
-        signingKeys: serviceDto[0].children[6].children
-          ? this.mapSigningKeyDtosToSigningKeys(serviceDto[0].children[6].children)
+        owner: serviceDto[0].children[5].value,
+        paused: serviceDto[0].children[6].value,
+        deleted: serviceDto[0].children[3].value,
+        signingKeys: serviceDto[0].children[7].children
+          ? this.mapSigningKeyDtosToSigningKeys(serviceDto[0].children[7].children)
           : new Map()
       }
       : null;
@@ -118,23 +129,23 @@ export class BetterCallDevDataProvider implements ServicesProvider {
     );
   }
 
-  private mapSendPaymentOperationToServiceOperation(operationDto: SendPaymentOperationDto): ServiceOperation | null {
-    const assetInfo = operationDto.parameters[0].children[0].children;
+  private mapSendPaymentOperationToServiceOperation(operationDto: OperationDto<SendPaymentOperationParametersDto>): ServiceOperation {
+    const assetInfo = operationDto.parameters[0].children[1].children;
     const assetAddress = assetInfo?.[0].value;
     const assetValue = assetInfo?.[2].value;
 
     const decimals = assetAddress
       ? this.tokenWhiteList.get(assetAddress)?.metadata?.decimals || 0
       : tezosMeta.decimals;
-
     const amount = assetValue || (operationDto.amount || 0).toString();
 
-    const operationBase: Operation = {
+    const paymentOperation: PaymentOperation = {
       hash: operationDto.hash,
-      type: +operationDto.parameters[0].children[1].value,
+      type: OperationType.Payment,
       direction: OperationDirection.Incoming,
       status: operationDto.status === 'applied' ? OperationStatus.Success : OperationStatus.Cancelled,
-      amount: new BigNumber(amount).div(10 ** decimals),
+      paymentId: operationDto.parameters[0].children[0].value,
+      amount: converters.numberToTokensAmount(new BigNumber(amount), decimals),
       asset: assetAddress,
       timestamp: operationDto.timestamp,
       date: new Date(operationDto.timestamp),
@@ -142,23 +153,35 @@ export class BetterCallDevDataProvider implements ServicesProvider {
       target: operationDto.destination,
     };
 
-    switch (operationBase.type) {
-      case OperationType.Payment: {
-        const paymentOperation = operationBase as Mutable<PaymentOperation>;
+    return paymentOperation;
+  }
 
-        paymentOperation.paymentId = operationDto.parameters[0].children[2].children[0].value;
+  private mapSendDonationOperationToServiceOperation(operationDto: OperationDto<SendDonationOperationParametersDto>): ServiceOperation {
+    const assetInfo = operationDto.parameters[0].children[0].children;
+    const assetAddress = assetInfo?.[0].value;
+    const assetValue = assetInfo?.[2].value;
 
-        return paymentOperation;
-      }
-      case OperationType.Donation: {
-        const donationOperation = operationBase as Mutable<DonationOperation>;
+    const decimals = assetAddress
+      ? this.tokenWhiteList.get(assetAddress)?.metadata?.decimals || 0
+      : tezosMeta.decimals;
+    const amount = assetValue || (operationDto.amount || 0).toString();
 
-        donationOperation.payload = DonationOperation.parsePayload(converters.stringToBytes(operationDto.parameters[0].children[2].children[0].value));
+    const donationOperation: DonationOperation = {
+      hash: operationDto.hash,
+      type: OperationType.Donation,
+      direction: OperationDirection.Incoming,
+      status: operationDto.status === 'applied' ? OperationStatus.Success : OperationStatus.Cancelled,
+      amount: converters.numberToTokensAmount(new BigNumber(amount), decimals),
+      asset: assetAddress,
+      timestamp: operationDto.timestamp,
+      date: new Date(operationDto.timestamp),
+      sender: operationDto.source,
+      target: operationDto.destination,
+      payload: DonationOperation.parsePayload(
+        converters.stringToBytes(operationDto.parameters[0].children[1].value)
+      )
+    };
 
-        return donationOperation;
-      }
-      default:
-        return null;
-    }
+    return donationOperation;
   }
 }

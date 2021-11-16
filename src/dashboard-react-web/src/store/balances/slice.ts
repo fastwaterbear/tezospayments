@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import BigNumber from 'bignumber.js';
 
 import { optimization } from '@tezospayments/common';
 
@@ -7,13 +8,13 @@ import { getAllAcceptedTokens } from '../services/selectors';
 import { AppThunkAPI } from '../thunk';
 
 export interface BalancesState {
-  readonly tezos: number;
-  readonly tokens: { [key: string]: number };
+  readonly tezos: BigNumber;
+  readonly tokens: { [key: string]: BigNumber };
   readonly initialized: boolean;
 }
 
 const initialState: BalancesState = {
-  tezos: 0,
+  tezos: optimization.zeroBigNumber,
   tokens: optimization.emptyObject,
   initialized: false
 };
@@ -26,7 +27,7 @@ export const loadBalances = createAsyncThunk<Pick<BalancesState, 'tezos' | 'toke
     const tezos = await app.services.accountsService.getTezosBalance(account);
 
     const acceptedTokens = getAllAcceptedTokens(getState());
-    const tokens: { [key: string]: number } = {};
+    const tokens: { [key: string]: BigNumber } = {};
     const balancesPromises = acceptedTokens.map(t => app.services.accountsService.getTokenBalance(account, t));
     const balances = await Promise.all(balancesPromises);
 
@@ -46,7 +47,7 @@ export const balancesSlice = createSlice({
   initialState,
   reducers: {
     clearBalances: state => {
-      state.tezos = 0;
+      state.tezos = optimization.zeroBigNumber;
       state.initialized = false;
     }
   },

@@ -12,7 +12,7 @@ export interface TokenFA12 extends TokenBase {
 
 export interface TokenFA2 extends TokenBase {
   readonly type: 'fa2';
-  readonly fa2TokenId: number;
+  readonly id: number;
 }
 
 export type Token = TokenFA12 | TokenFA2;
@@ -29,6 +29,13 @@ export const tezosMeta: TokenMetadata = {
   name: 'Tezos',
   decimals: 6,
   thumbnailUri: 'https://dashboard.tezospayments.com/tokens/tezos.png'
+};
+
+export const unknownAssetMeta: TokenMetadata = {
+  name: 'Unknown',
+  symbol: 'Unknown',
+  decimals: 0,
+  thumbnailUri: 'https://dashboard.tezospayments.com/tokens/unknown.png'
 };
 
 export const tokenWhitelist: readonly Token[] = [
@@ -70,7 +77,7 @@ export const tokenWhitelist: readonly Token[] = [
     network: networks.granadanet,
     type: 'fa2',
     contractAddress: 'KT1BBfxboq63dbaKCAc4uwVKLFzVn1b4fy37',
-    fa2TokenId: 0,
+    id: 0,
     metadata: {
       decimals: 0,
       symbol: 'fa20',
@@ -82,7 +89,7 @@ export const tokenWhitelist: readonly Token[] = [
     network: networks.granadanet,
     type: 'fa2',
     contractAddress: 'KT1PMAT81mmL6NFp9rVU3xoVzU2dRdcXt4R9',
-    fa2TokenId: 0,
+    id: 0,
     metadata: {
       decimals: 6,
       symbol: 'USDS',

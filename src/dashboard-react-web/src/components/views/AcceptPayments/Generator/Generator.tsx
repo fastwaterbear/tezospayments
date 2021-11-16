@@ -4,34 +4,46 @@ import React from 'react';
 
 import { Donation, Payment, PaymentType } from '@tezospayments/common';
 
+import { selectTokensState } from '../../../../store/services/selectors';
+import { useAppSelector, useTezosPayments } from '../../../hooks';
 import { DirectLinkGeneratorPure } from './DirectLinkGenerator';
 import { FailedValidationResult } from './FailedValidationResult';
-
 import './Generator.scss';
 
 interface GeneratorProps {
   serviceAddress: string | undefined;
   paymentType: PaymentType;
-  asset: string | undefined;
+  assetAddress: string | undefined;
   amount: string;
   paymentId: string;
   clientData: Record<string, unknown> | undefined;
 }
 
 export const Generator = (props: GeneratorProps) => {
+  const tokens = useAppSelector(selectTokensState);
+  const tezosPayments = useTezosPayments(props.serviceAddress);
+  const currentAssetToken = props.assetAddress ? tokens.get(props.assetAddress) : undefined;
+
   const tabList = [
-    { key: 'directLink', tab: 'Direct Link' },
     { key: 'widget', tab: 'Widget', disabled: true },
     { key: 'typescript', tab: 'TypeScript Library', disabled: true },
     { key: 'dotnet', tab: '.NET Library', disabled: true },
-  ];
+  ] as Array<{ key: string, tab: string, disabled?: boolean }>;
+
+  if (tezosPayments) {
+    tabList.splice(0, 0, { key: 'directLink', tab: 'Direct Link' });
+  }
 
   const paymentOrDonation = props.paymentType === PaymentType.Payment
     ? {
       type: props.paymentType,
       targetAddress: props.serviceAddress,
       id: props.paymentId,
-      asset: props.asset,
+      asset: currentAssetToken ? {
+        address: currentAssetToken.contractAddress,
+        decimals: currentAssetToken.metadata?.decimals || 0,
+        id: currentAssetToken.type === 'fa2' ? currentAssetToken.id : null
+      } : undefined,
       amount: new BigNumber(props.amount),
       created: new Date(),
       signature: {
@@ -53,11 +65,11 @@ export const Generator = (props: GeneratorProps) => {
     className="generator"
     style={{ width: '100%' }}
     tabList={tabList}
-    activeTabKey={tabList[0]?.key}
+    activeTabKey={'directLink'}
   >
     {failedValidationResults
       ? <FailedValidationResult results={failedValidationResults} />
-      : <DirectLinkGeneratorPure paymentOrDonation={paymentOrDonation} />}
+      : <DirectLinkGeneratorPure paymentOrDonation={paymentOrDonation} serviceAddress={props.serviceAddress} />}
   </Card >;
 };
 

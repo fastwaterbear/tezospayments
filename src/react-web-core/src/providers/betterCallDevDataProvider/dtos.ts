@@ -69,6 +69,12 @@ export type ServiceDto = [
         ]
       },
       {
+        prim: 'big_map',
+        type: 'big_map',
+        name: 'completed_payments',
+        value: number
+      },
+      {
         prim: 'bool',
         type: 'bool',
         name: 'deleted',
@@ -186,6 +192,12 @@ export type SendPaymentOperationParametersDto = [
     name: 'send_payment',
     children: [
       {
+        prim: 'string',
+        type: 'string',
+        name: 'id',
+        value: string
+      },
+      {
         prim: 'option',
         type: 'option',
         name: 'asset_value',
@@ -212,26 +224,53 @@ export type SendPaymentOperationParametersDto = [
         ] | undefined
       },
       {
-        prim: 'nat',
-        type: 'nat',
-        name: 'operation_type',
-        value: '1' | '2'
+        prim: 'signature',
+        type: 'signature',
+        name: 'signature',
+        value: string
       },
-      {
-        prim: 'or',
-        type: 'namedunion',
-        name: 'payload',
-        children: [
-          {
-            prim: 'bytes',
-            type: 'bytes',
-            name: 'public',
-            value: string
-          }
-        ]
-      }
     ]
   }
 ];
 
-export type SendPaymentOperationDto = OperationDto<SendPaymentOperationParametersDto>;
+export type SendDonationOperationParametersDto = [
+  {
+    prim: 'pair',
+    type: 'namedtuple',
+    name: 'send_donation',
+    children: [
+      {
+        prim: 'option',
+        type: 'option',
+        name: 'asset_value',
+        value: string,
+        children: [
+          {
+            name: 'token_address'
+            prim: 'address'
+            type: 'address'
+            value: string
+          },
+          {
+            name: 'token_id'
+            prim: 'option'
+            type: 'option'
+            value: string
+          },
+          {
+            name: 'value'
+            prim: 'nat'
+            type: 'nat'
+            value: string
+          }
+        ] | undefined
+      },
+      {
+        prim: 'bytes',
+        type: 'bytes',
+        name: 'payload',
+        value: string
+      }
+    ]
+  }
+];

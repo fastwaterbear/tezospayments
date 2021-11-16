@@ -1,5 +1,6 @@
 import { DeleteOutlined } from '@ant-design/icons';
 import { Button, Tooltip } from 'antd';
+import BigNumber from 'bignumber.js';
 
 import { combineClassNames } from '@tezospayments/common';
 
@@ -10,39 +11,36 @@ interface TokenListItemProps {
   ticker: string;
   contractAddress: string;
   iconSrc?: string;
-  value?: number;
+  value?: BigNumber;
   decimals?: number;
   highlightSign?: boolean;
   className?: string;
   handleDelete?: (contractAddress: string) => void;
 }
 
-const getStringAmount = (value: number, maximumFractionDigits: number) => value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits });
-
-const getStringAmounts = (value: number) => {
+const getStringAmounts = (value: BigNumber): [string, string] => {
   const displayedDecimals = 6;
-  const [shortAmount, amount] = [getStringAmount(value, displayedDecimals), getStringAmount(value, 20)];
+  const shortAmount = value.toFormat(displayedDecimals, { groupSeparator: '', decimalSeparator: '.' });
+  const amount = value.toString();
 
   return [amount.substring(0, shortAmount.length), amount];
 };
 
 export const TokenListItem = (props: TokenListItemProps) => {
   const valueClassNames = combineClassNames('token-list-item__value',
-    { 'token-list-item__value_positive': props.highlightSign && props.value && props.value > 0 },
-    { 'token-list-item__value_negative': props.highlightSign && props.value && props.value < 0 }
+    { 'token-list-item__value_positive': props.highlightSign && props.value && !props.value.isZero() && props.value.isPositive() },
+    { 'token-list-item__value_negative': props.highlightSign && props.value && !props.value.isZero() && props.value.isNegative() }
   );
 
-  const sign = !props.value
-    ? ''
-    : props.value > 0 && props.highlightSign
+  const sign = props.value?.isNegative()
+    ? '-'
+    : props.highlightSign && props.value?.isPositive()
       ? '+'
-      : props.value < 0
-        ? '−'
-        : '';
+      : '';
 
-  const value = props.value && Math.abs(props.value);
+  const value = props.value && props.value.abs();
   const [shortAmount, amount] = value !== undefined && value !== null ? getStringAmounts(value) : [null, null];
-  const allDecimalsShown = shortAmount === amount;
+  const allDecimalsShown = shortAmount !== null && amount !== null && (shortAmount === amount || amount.substr(shortAmount.length).split('').every(s => s === '0'));
   const amountSpan = shortAmount && <span className={valueClassNames}>
     {`${sign}${shortAmount}${allDecimalsShown ? '' : '...'}`}
   </span>;

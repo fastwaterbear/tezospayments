@@ -35,7 +35,7 @@ const validSerializedDonationTestCases: ReadonlyArray<readonly [
             image: 'https://test.com/preview.png'
           },
         },
-        'eyJkIjp7Im1lc3NhZ2UiOiJIZWxsbyEiLCJpbWFnZSI6Imh0dHBzOi8vdGVzdC5jb20vcHJldmlldy5wbmcifSwiZGEiOiIzODQ4MDMuMzgzMjAyIn0',
+        'eyJkIjp7Im1lc3NhZ2UiOiJIZWxsbyEiLCJpbWFnZSI6Imh0dHBzOi8vdGVzdC5jb20vcHJldmlldy5wbmcifX0',
       ],
       nonSerializedSlice => ({
         type: PaymentType.Donation,
@@ -43,7 +43,6 @@ const validSerializedDonationTestCases: ReadonlyArray<readonly [
           message: 'Hello!',
           image: 'https://test.com/preview.png'
         },
-        desiredAmount: new BigNumber(384803.383202),
         desiredAsset: undefined,
         successUrl: undefined,
         cancelUrl: undefined,
@@ -70,17 +69,46 @@ const validSerializedDonationTestCases: ReadonlyArray<readonly [
       })
     ],
     [
-      'donation with the desired asset (Kolibri USD)',
+      'donation with the desired asset (FA 1.2)',
       [
         {
-          das: 'KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV',
+          das: {
+            a: 'KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV',
+          }
         },
-        'eyJkYXMiOiJLVDFLOWdDUmdhTFJGS1RFcll0MXdWeEEzRnJiOUZqYXNqVFYifQ',
+        'eyJkYXMiOnsiYSI6IktUMUs5Z0NSZ2FMUkZLVEVyWXQxd1Z4QTNGcmI5Rmphc2pUViJ9fQ',
       ],
       nonSerializedSlice => ({
         type: PaymentType.Donation,
         desiredAmount: undefined,
-        desiredAsset: 'KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV',
+        desiredAsset: {
+          address: 'KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV',
+          id: null
+        },
+        successUrl: undefined,
+        cancelUrl: undefined,
+        signature: undefined,
+        ...nonSerializedSlice
+      })
+    ],
+    [
+      'donation with the desired asset (FA 2)',
+      [
+        {
+          das: {
+            a: 'KT1Q8EisfBH91DHTFY2Ee3qp6cXXV5RHPN6N',
+            i: 173,
+          }
+        },
+        'eyJkYXMiOnsiYSI6IktUMVE4RWlzZkJIOTFESFRGWTJFZTNxcDZjWFhWNVJIUE42TiIsImkiOjE3M319',
+      ],
+      nonSerializedSlice => ({
+        type: PaymentType.Donation,
+        desiredAmount: undefined,
+        desiredAsset: {
+          address: 'KT1Q8EisfBH91DHTFY2Ee3qp6cXXV5RHPN6N',
+          id: 173
+        },
         successUrl: undefined,
         cancelUrl: undefined,
         signature: undefined,

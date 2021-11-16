@@ -1,32 +1,30 @@
 import { BigNumber } from 'bignumber.js';
 import { useSelector } from 'react-redux';
 
-import { Network, tezosMeta, } from '@tezospayments/common';
+import { Network, tezosMeta, unknownAssetMeta, } from '@tezospayments/common';
 
 import './TotalAmount.scss';
 
 import { selectTokensState } from '../../../store/currentPayment/selectors';
 
 interface TotalAmountProps {
-  asset: string | undefined;
+  assetAddress: string | undefined;
   network: Network;
   value: BigNumber;
 }
 
 export const TotalAmount = (props: TotalAmountProps) => {
   const tokens = useSelector(selectTokensState);
-  const asset = props.asset && tokens.get(props.asset);
+  const asset = props.assetAddress && tokens.get(props.assetAddress);
 
-  const imageSrc = asset ? asset.metadata?.thumbnailUri : tezosMeta.thumbnailUri;
-  const assetName = asset ? asset.metadata?.name : tezosMeta.name;
-  const assetTicker = asset ? asset.metadata?.symbol : tezosMeta.symbol;
+  const { thumbnailUri, name, symbol } = asset ? (asset.metadata || unknownAssetMeta) : tezosMeta;
 
   return <div className="total-amount">
-    <img className="total-amount__currency-icon" src={imageSrc} alt="Currency" draggable="false" />
+    <img className="total-amount__currency-icon" src={thumbnailUri} alt="Currency" draggable="false" />
     <h1 className="total-amount__value">{props.value.toFormat()}</h1>
     <div className="total-amount__currency">
-      <span className="total-amount__currency-name">{assetName}</span>
-      <span className="total-amount__ticker">{assetTicker}</span>
+      <span className="total-amount__currency-name">{name}</span>
+      <span className="total-amount__ticker">{symbol}</span>
     </div>
   </div>;
 };

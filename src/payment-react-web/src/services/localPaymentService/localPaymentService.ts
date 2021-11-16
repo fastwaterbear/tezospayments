@@ -1,14 +1,9 @@
 import { RequestPermissionInput, AbortedBeaconError } from '@airgap/beacon-sdk';
 import { BeaconWallet } from '@taquito/beacon-wallet';
-import { TezosToolkit, TransactionWalletOperation, Wallet } from '@taquito/taquito';
-import { BatchWalletOperation } from '@taquito/taquito/dist/types/wallet/batch-operation';
-import BigNumber from 'bignumber.js';
+import { TezosToolkit, WalletOperation } from '@taquito/taquito';
 
-import {
-  Donation, Payment, Service, ServiceOperationType, Network,
-  converters as commonConverters, memoize, tokenWhitelistMap, TokenFA2, TokenFA12
-} from '@tezospayments/common';
-import { converters, Fa12Contract, Fa20Contract, ServicesProvider, TezosPaymentsServiceContract } from '@tezospayments/react-web-core';
+import { Donation, Payment, Service, Network, memoize } from '@tezospayments/common';
+import { converters, ServicesProvider } from '@tezospayments/react-web-core';
 
 import { NetworkDonation, NetworkPayment } from '../../models/payment';
 import { PaymentInfo } from '../../models/payment/paymentInfo';
@@ -16,6 +11,7 @@ import { AppStore } from '../../store';
 import { confirmPayment } from '../../store/currentPayment';
 import { errors } from './errors';
 import { PaymentProvider, SerializedPaymentBase64Provider } from './paymentProviders';
+import { DonationSender, PaymentSender } from './sender';
 import { RawPaymentInfo, UrlRawPaymentInfoParser } from './urlRawPaymentInfoParser';
 
 interface LocalPaymentServiceOptions {
@@ -36,6 +32,8 @@ export class LocalPaymentService {
   protected readonly paymentProviders: readonly PaymentProvider[] = [
     new SerializedPaymentBase64Provider()
   ];
+  protected readonly paymentSender;
+  protected readonly donationSender;
 
   constructor(options: LocalPaymentServiceOptions) {
     this.network = options.network;
@@ -43,6 +41,9 @@ export class LocalPaymentService {
     this.tezosToolkit = options.tezosToolkit;
     this.tezosWallet = options.tezosWallet;
     this.servicesProvider = options.servicesProvider;
+
+    this.paymentSender = new PaymentSender(this.network, this.tezosToolkit, this.tezosWallet);
+    this.donationSender = new DonationSender(this.network, this.tezosToolkit, this.tezosWallet);
   }
 
   async getCurrentPaymentInfo(): Promise<PaymentInfo> {
@@ -71,24 +72,11 @@ export class LocalPaymentService {
   }
 
   async pay(payment: NetworkPayment): Promise<boolean> {
-    return this.sendPayment(
-      ServiceOperationType.Payment,
-      payment.targetAddress,
-      payment.amount,
-      payment.asset,
-      // TODO: temp
-      commonConverters.stringToBytes(payment.id)
-    );
+    return this.send(() => this.paymentSender.send(payment));
   }
 
   async donate(donation: NetworkDonation): Promise<boolean> {
-    return this.sendPayment(
-      ServiceOperationType.Donation,
-      donation.targetAddress,
-      donation.amount,
-      donation.asset,
-      donation.payload ? commonConverters.objectToBytes(donation.payload) : ''
-    );
+    return this.send(() => this.donationSender.send(donation));
   }
 
   protected parseRawPaymentInfo = memoize(
@@ -102,35 +90,14 @@ export class LocalPaymentService {
     }
   );
 
-  protected async sendPayment(
-    serviceOperationType: ServiceOperationType,
-    targetAddress: string,
-    amount: BigNumber,
-    assetTokenAddress: string | undefined,
-    payload: string
-  ): Promise<boolean> {
+  protected async send(getSendOperation: () => Promise<WalletOperation>): Promise<boolean> {
     try {
       await this.tezosWallet.client.clearActiveAccount();
       const canceled = await this.requestPermissions({ network: { type: converters.networkToBeaconNetwork(this.network) } });
       if (canceled)
         return false;
 
-      const contract = await this.tezosToolkit.wallet.at<TezosPaymentsServiceContract<Wallet>>(targetAddress);
-      let operation;
-
-      if (!assetTokenAddress) {
-        operation = await this.sendNativeToken(contract, serviceOperationType, amount, payload);
-      } else {
-        const token = tokenWhitelistMap.get(this.network)?.get(assetTokenAddress);
-        if (!token || !token.metadata)
-          return false;
-
-        const tokenAmount = amount.multipliedBy(10 ** token.metadata.decimals);
-
-        operation = token.type === 'fa1.2'
-          ? await this.sendFa12Token(contract, token, serviceOperationType, tokenAmount, payload)
-          : await this.sendFa20Token(contract, token, serviceOperationType, tokenAmount, payload);
-      }
+      const operation = await getSendOperation();
 
       await this.waitConfirmation(operation);
 
@@ -164,82 +131,7 @@ export class LocalPaymentService {
     return paymentProvider;
   }
 
-  private async sendNativeToken(
-    contract: TezosPaymentsServiceContract<Wallet>,
-    serviceOperationType: ServiceOperationType,
-    amount: BigNumber,
-    payload: string
-  ): Promise<TransactionWalletOperation> {
-    return await contract.methods.send_payment(
-      undefined,
-      serviceOperationType,
-      'public',
-      payload,
-    ).send({ amount });
-  }
-
-  private async sendFa12Token(
-    contract: TezosPaymentsServiceContract<Wallet>,
-    token: TokenFA12,
-    serviceOperationType: ServiceOperationType,
-    amount: BigNumber,
-    payload: string
-  ): Promise<BatchWalletOperation> {
-    const tokenContract = await this.tezosToolkit.wallet.at<Fa12Contract<Wallet>>(token.contractAddress);
-
-    return await this.tezosToolkit.wallet.batch()
-      .withContractCall(tokenContract.methods.approve(contract.address, amount))
-      .withContractCall(
-        contract.methods.send_payment(
-          token.contractAddress,
-          null,
-          amount,
-          serviceOperationType,
-          'public',
-          payload,
-        )
-      ).send();
-  }
-
-  private async sendFa20Token(
-    contract: TezosPaymentsServiceContract<Wallet>,
-    token: TokenFA2,
-    serviceOperationType: ServiceOperationType,
-    amount: BigNumber,
-    payload: string
-  ): Promise<BatchWalletOperation> {
-    const tokenContract = await this.tezosToolkit.wallet.at<Fa20Contract<Wallet>>(token.contractAddress);
-    const userAddress = await this.tezosToolkit.wallet.pkh();
-
-    return await this.tezosToolkit.wallet.batch()
-      .withContractCall(tokenContract.methods.update_operators([{
-        add_operator: {
-          owner: userAddress,
-          operator: contract.address,
-          token_id: token.fa2TokenId
-        }
-      }]))
-      .withContractCall(
-        contract.methods.send_payment(
-          token.contractAddress,
-          token.fa2TokenId,
-          amount,
-          serviceOperationType,
-          'public',
-          payload,
-        )
-      )
-      .withContractCall(tokenContract.methods.update_operators([{
-        remove_operator: {
-          owner: userAddress,
-          operator: contract.address,
-          token_id: token.fa2TokenId
-        }
-      }]))
-      .send();
-  }
-
-  private waitConfirmation(operation: TransactionWalletOperation | BatchWalletOperation, confirmations?: number) {
+  private waitConfirmation(operation: WalletOperation, confirmations?: number) {
     // TODO: use a service event instead of dispatching
     this.store.dispatch(confirmPayment({
       hash: operation.opHash,

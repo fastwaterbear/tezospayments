@@ -8,7 +8,7 @@ import {
 } from '@tezospayments/common';
 
 import type { ServicesProvider } from '../servicesProvider';
-import type { OperationDto, ServiceDto, ServicesBigMapKeyValuePairDto } from './dtos';
+import type { OperationDto, SendDonationParameterDto, SendPaymentParameterDto, ServiceDto, ServicesBigMapKeyValuePairDto } from './dtos';
 
 export class TzKTDataProvider implements ServicesProvider {
   readonly tokenWhiteList: ReadonlyMap<string, Token>;
@@ -17,6 +17,7 @@ export class TzKTDataProvider implements ServicesProvider {
     readonly network: Network,
     readonly baseUrl: string,
     readonly servicesFactoryContractAddress: string,
+    readonly minimumSupportedServiceVersion: number
   ) {
     this.tokenWhiteList = tokenWhitelistMap.get(this.network) || optimization.emptyMap;
   }
@@ -24,6 +25,11 @@ export class TzKTDataProvider implements ServicesProvider {
   async getService(serviceContractAddress: string): Promise<Service> {
     const response = await fetch(`${this.baseUrl}/v1/contracts/${serviceContractAddress}/storage`);
     const serviceDto: ServiceDto = await response.json();
+    if ('version' in serviceDto && +serviceDto.version < this.minimumSupportedServiceVersion) {
+      // Only for Dev
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return null!;
+    }
 
     const result = this.mapServiceDtoToService(serviceDto, serviceContractAddress, this.network);
     if (!result)
@@ -44,13 +50,13 @@ export class TzKTDataProvider implements ServicesProvider {
     const keyValue: ServicesBigMapKeyValuePairDto = await response.json();
     const contractAddresses = keyValue.value;
 
-    return Promise.all(contractAddresses.map(contractAddress => this.getService(contractAddress)));
+    return (await Promise.all(contractAddresses.map(contractAddress => this.getService(contractAddress)))).filter(Boolean);
   }
 
   async getOperations(serviceContractAddress: string): Promise<readonly ServiceOperation[]> {
     const url = new URL(`v1/accounts/${serviceContractAddress}/operations`, this.baseUrl);
     url.searchParams.set('type', 'transaction');
-    url.searchParams.set('entrypoint', 'send_payment');
+    url.searchParams.set('entrypoint.in', 'send_payment,send_donation');
 
     const response = await fetch(url.href);
     const operations: OperationDto[] = await response.json();
@@ -106,13 +112,14 @@ export class TzKTDataProvider implements ServicesProvider {
       ? this.tokenWhiteList.get(operationDto.parameter.value.asset_value.token_address)?.metadata?.decimals || 0
       : tezosMeta.decimals;
     const amount = operationDto.parameter.value.asset_value ? operationDto.parameter.value.asset_value.value : operationDto.amount.toString();
+    const operationType = operationDto.parameter.entrypoint === 'send_payment' ? OperationType.Payment : OperationType.Donation;
 
     const operationBase: Operation = {
       hash: operationDto.hash,
-      type: +operationDto.parameter.value.operation_type,
+      type: operationType,
       direction: OperationDirection.Incoming,
       status: operationDto.status === 'applied' ? OperationStatus.Success : OperationStatus.Cancelled,
-      amount: new BigNumber(amount).div(10 ** decimals),
+      amount: converters.numberToTokensAmount(new BigNumber(amount), decimals),
       asset: operationDto.parameter.value.asset_value?.token_address,
       timestamp: operationDto.timestamp,
       date: new Date(operationDto.timestamp),
@@ -124,14 +131,16 @@ export class TzKTDataProvider implements ServicesProvider {
       case OperationType.Payment: {
         const paymentOperation = operationBase as Mutable<PaymentOperation>;
 
-        paymentOperation.paymentId = operationDto.parameter.value.payload.public;
+        paymentOperation.paymentId = (operationDto.parameter as SendPaymentParameterDto).value.id;
 
         return paymentOperation;
       }
       case OperationType.Donation: {
         const donationOperation = operationBase as Mutable<DonationOperation>;
 
-        donationOperation.payload = DonationOperation.parsePayload(operationDto.parameter.value.payload.public);
+        donationOperation.payload = DonationOperation.parsePayload(
+          (operationDto.parameter as SendDonationParameterDto).value.payload
+        );
 
         return donationOperation;
       }

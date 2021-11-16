@@ -3,13 +3,15 @@ import type { ContractAbstraction, ContractMethod, ContractProvider, MichelsonMa
 import type { ServiceOperationType } from '@tezospayments/common';
 
 export type TezosPaymentsFactoryImplementationContract<T extends ContractProvider | Wallet = ContractProvider> = ContractAbstraction<T> & {
-  methods: {
-    create_service(
-      encodedServiceMetadata: string,
-      allowTezos: boolean,
-      allowedAssets: readonly string[],
-      allowedOperationType: ServiceOperationType,
-      signingKeys: MichelsonMap<string, { public_key: string, name?: string } | undefined>
-    ): ContractMethod<T>;
+  methodsObject: {
+    create_service(params: {
+      metadata: string,
+      allowed_tokens: {
+        tez: boolean,
+        assets: readonly string[],
+      },
+      allowed_operation_type: ServiceOperationType,
+      signing_keys: MichelsonMap<string, { public_key: string, name?: string } | undefined>
+    }): ContractMethod<T>;
   }
 };

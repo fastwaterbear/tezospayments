@@ -21,7 +21,19 @@ export default [
     type: PaymentType.Donation,
     targetAddress: 'KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x',
     desiredAmount: new BigNumber(20238382),
-    desiredAsset: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2',
+    desiredAsset: {
+      address: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2',
+      id: null
+    }
+  },
+  {
+    type: PaymentType.Donation,
+    targetAddress: 'KT1J5rXFQMG2iHfA4EhpKdFyQVQAVY8wHf6x',
+    desiredAmount: new BigNumber(382.34345),
+    desiredAsset: {
+      address: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2',
+      id: 23
+    }
   },
   {
     type: PaymentType.Donation,

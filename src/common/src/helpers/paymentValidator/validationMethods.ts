@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 
 import { tezosInfo } from '../../models/blockchain';
-import { Payment } from '../../models/payment';
+import { DonationAsset, Payment, PaymentAsset } from '../../models/payment';
 import type { FailedValidationResults } from '../../models/validation';
 import { URL } from '../../native';
 import { guards } from '../../utils';
@@ -53,21 +53,39 @@ export const validateDesiredAmount = (
   return desiredAmount === undefined ? undefined : validateAmount(desiredAmount, errors);
 };
 
-export const validateAsset = (
-  asset: string | undefined,
-  errors: Errors<'invalidAsset' | 'assetHasInvalidLength' | 'assetIsNotContractAddress'>
+export const validatePaymentAsset = (
+  asset: PaymentAsset | undefined,
+  errors: Errors<
+    | 'invalidAsset'
+    | 'invalidAssetAddress' | 'assetAddressHasInvalidLength' | 'assetAddressIsNotContractAddress'
+    | 'invalidAssetId' | 'assetIdIsNegative' | 'assetIdIsNotInteger'
+    | 'invalidAssetDecimals' | 'assetDecimalsNumberIsNegative' | 'assetDecimalsNumberIsNotInteger'
+  >
 ): FailedValidationResults => {
   if (asset === undefined)
     return;
 
-  if (typeof asset !== 'string')
+  if (!guards.isPlainObject(asset))
     return [errors.invalidAsset];
 
-  if (asset.length !== tezosInfo.addressLength)
-    return [errors.assetHasInvalidLength];
+  return validateAsset(asset, errors) || validateAssetDecimals(asset.decimals, errors);
+};
 
-  if (!tezosInfo.contractAddressPrefixes.some(prefix => asset.startsWith(prefix)))
-    return [errors.assetIsNotContractAddress];
+export const validateDonationAsset = (
+  asset: DonationAsset | undefined,
+  errors: Errors<
+    | 'invalidAsset'
+    | 'invalidAssetAddress' | 'assetAddressHasInvalidLength' | 'assetAddressIsNotContractAddress'
+    | 'invalidAssetId' | 'assetIdIsNegative' | 'assetIdIsNotInteger'
+  >
+): FailedValidationResults => {
+  if (asset === undefined)
+    return;
+
+  if (!guards.isPlainObject(asset))
+    return [errors.invalidAsset];
+
+  return validateAsset(asset, errors);
 };
 
 export const validateCreatedDate = (
@@ -114,8 +132,63 @@ export const validateData = (
   errors: Errors<'invalidData'>
 ): FailedValidationResults => {
   if (data === undefined)
-    return undefined;
+    return;
 
   if (!guards.isPlainObject(data))
     return [errors.invalidData];
+};
+
+const validateAsset = (
+  asset: PaymentAsset | DonationAsset,
+  errors: Errors<
+    | 'invalidAssetAddress' | 'assetAddressHasInvalidLength' | 'assetAddressIsNotContractAddress'
+    | 'invalidAssetId' | 'assetIdIsNegative' | 'assetIdIsNotInteger'
+  >
+): FailedValidationResults => {
+  return validateAssetAddress(asset.address, errors) || validateAssetId(asset.id, errors);
+};
+
+const validateAssetAddress = (
+  assetAddress: string,
+  errors: Errors<'invalidAssetAddress' | 'assetAddressHasInvalidLength' | 'assetAddressIsNotContractAddress'>
+): FailedValidationResults => {
+  if (typeof assetAddress !== 'string')
+    return [errors.invalidAssetAddress];
+
+  if (assetAddress.length !== tezosInfo.addressLength)
+    return [errors.assetAddressHasInvalidLength];
+
+  if (!tezosInfo.contractAddressPrefixes.some(prefix => assetAddress.startsWith(prefix)))
+    return [errors.assetAddressIsNotContractAddress];
+};
+
+const validateAssetId = (
+  assetId: number | null,
+  errors: Errors<'invalidAssetId' | 'assetIdIsNegative' | 'assetIdIsNotInteger'>
+): FailedValidationResults => {
+  if (assetId === null)
+    return;
+
+  if (typeof assetId !== 'number' || Number.isNaN(assetId) || !Number.isFinite(assetId))
+    return [errors.invalidAssetId];
+
+  if (assetId < 0)
+    return [errors.assetIdIsNegative];
+
+  if (!Number.isInteger(assetId))
+    return [errors.assetIdIsNotInteger];
+};
+
+const validateAssetDecimals = (
+  assetDecimals: number,
+  errors: Errors<'invalidAssetDecimals' | 'assetDecimalsNumberIsNegative' | 'assetDecimalsNumberIsNotInteger'>
+): FailedValidationResults => {
+  if (typeof assetDecimals !== 'number' || Number.isNaN(assetDecimals) || !Number.isFinite(assetDecimals))
+    return [errors.invalidAssetDecimals];
+
+  if (assetDecimals < 0)
+    return [errors.assetDecimalsNumberIsNegative];
+
+  if (!Number.isInteger(assetDecimals))
+    return [errors.assetDecimalsNumberIsNotInteger];
 };

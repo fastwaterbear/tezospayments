@@ -29,22 +29,24 @@ export class ServicesService {
   async updateService(service: Service): Promise<TransactionWalletOperation> {
     const serviceContract = await this.getServiceContract(service.contractAddress);
     const encodedServiceMetadata = this.encodeMetadata(service);
-    return await serviceContract.methods.update_service_parameters(
-      encodedServiceMetadata,
-      service.allowedTokens.tez,
-      service.allowedTokens.assets,
-      service.allowedOperationType
-    ).send();
+    return await serviceContract.methodsObject.update_service_parameters({
+      metadata: encodedServiceMetadata,
+      allowed_tokens: {
+        tez: service.allowedTokens.tez,
+        assets: service.allowedTokens.assets
+      },
+      allowed_operation_type: service.allowedOperationType
+    }).send();
   }
 
   async setPaused(service: Service, paused: boolean): Promise<TransactionWalletOperation> {
     const serviceContract = await this.getServiceContract(service.contractAddress);
-    return await serviceContract.methods.set_pause(paused).send();
+    return await serviceContract.methodsObject.set_pause(paused).send();
   }
 
   async setDeleted(service: Service, deleted: boolean): Promise<TransactionWalletOperation> {
     const serviceContract = await this.getServiceContract(service.contractAddress);
-    return await serviceContract.methods.set_deleted(deleted).send();
+    return await serviceContract.methodsObject.set_deleted(deleted).send();
   }
 
   async createService(service: Service): Promise<TransactionWalletOperation> {
@@ -58,13 +60,15 @@ export class ServicesService {
     for (const signingKey of service.signingKeys.values())
       signingKeysMichelsonMap.set(signingKey.publicKey, { public_key: signingKey.publicKey, name: signingKey.name });
 
-    return await factoryImplementationContract.methods.create_service(
-      encodedServiceMetadata,
-      service.allowedTokens.tez,
-      service.allowedTokens.assets,
-      service.allowedOperationType,
-      signingKeysMichelsonMap
-    ).send();
+    return await factoryImplementationContract.methodsObject.create_service({
+      metadata: encodedServiceMetadata,
+      allowed_tokens: {
+        tez: service.allowedTokens.tez,
+        assets: service.allowedTokens.assets,
+      },
+      allowed_operation_type: service.allowedOperationType,
+      signing_keys: signingKeysMichelsonMap
+    }).send();
   }
 
   addApiKey(service: Service, signingKey: ServiceSigningKey): Promise<TransactionWalletOperation> {
@@ -86,7 +90,7 @@ export class ServicesService {
     signingKeyUpdatesMap: MichelsonMap<string, { public_key: string, name?: string } | undefined>
   ): Promise<TransactionWalletOperation> {
     const serviceContract = await this.getServiceContract(service.contractAddress);
-    return await serviceContract.methods.update_signing_keys(signingKeyUpdatesMap).send();
+    return await serviceContract.methodsObject.update_signing_keys(signingKeyUpdatesMap).send();
   }
 
   private encodeMetadata(service: Service): string {

@@ -74,6 +74,7 @@ export class WebApp {
 
   protected createReactAppContext(): ReactAppContext {
     return {
+      tezosWallet: this.tezosWallet,
       tezosExplorer: this.createTezosBlockchainUrlExplorer(this.network)
     };
   }
@@ -89,7 +90,11 @@ export class WebApp {
     const servicesProvider = this.createServicesProvider(this.network);
     this._services = {
       accountsService: new AccountsService(this.tezosToolkit, this.tezosWallet.client),
-      servicesService: new ServicesService(this.tezosToolkit, servicesProvider, networkConfig.servicesFactoryContractAddress)
+      servicesService: new ServicesService(
+        this.tezosToolkit,
+        servicesProvider,
+        networkConfig.servicesFactoryContractAddress
+      )
     };
   }
 
@@ -99,9 +104,9 @@ export class WebApp {
 
     switch (indexerName) {
       case 'tzKT':
-        return new TzKTDataProvider(network, networkConfig.indexerUrls.tzKT, networkConfig.servicesFactoryContractAddress);
+        return new TzKTDataProvider(network, networkConfig.indexerUrls.tzKT, networkConfig.servicesFactoryContractAddress, networkConfig.minimumSupportedServiceVersion);
       case 'betterCallDev':
-        return new BetterCallDevDataProvider(network, networkConfig.indexerUrls.betterCallDev, networkConfig.servicesFactoryContractAddress);
+        return new BetterCallDevDataProvider(network, networkConfig.indexerUrls.betterCallDev, networkConfig.servicesFactoryContractAddress, networkConfig.minimumSupportedServiceVersion);
       default:
         throw new Error('Unknown service provider');
     }

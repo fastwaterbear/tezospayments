@@ -1,5 +1,25 @@
-import { SerializedPayment } from '../../models';
+import { SerializedPayment, SerializedPaymentAsset, SerializedPaymentSignature } from '../../models';
 import { SerializedFieldType } from '../base64';
+
+const _serializedPaymentAssetFieldTypes: ReadonlyMap<
+  keyof SerializedPaymentAsset, SerializedFieldType | readonly SerializedFieldType[]
+> = new Map<keyof SerializedPaymentAsset, SerializedFieldType | readonly SerializedFieldType[]>()
+  // address
+  .set('a', 'string')
+  // decimals
+  .set('d', 'number')
+  // id
+  .set('i', ['number', 'undefined', 'null']);
+
+const _serializedPaymentSignatureFieldTypes: ReadonlyMap<
+  keyof SerializedPaymentSignature, SerializedFieldType | readonly SerializedFieldType[]
+> = new Map<keyof SerializedPaymentSignature, SerializedFieldType | readonly SerializedFieldType[]>()
+  // contract
+  .set('c', 'string')
+  // client
+  .set('cl', ['string', 'undefined', 'null'])
+  // signature.signingPublicKey
+  .set('k', 'string');
 
 export const serializedPaymentFieldTypes: ReadonlyMap<
   keyof SerializedPayment, SerializedFieldType | readonly SerializedFieldType[]
@@ -9,7 +29,8 @@ export const serializedPaymentFieldTypes: ReadonlyMap<
   // amount
   .set('a', 'string')
   // asset
-  .set('as', ['string', 'undefined', 'null'])
+  .set('as', ['object', 'undefined', 'null'])
+  // .set('as', serializedPaymentAssetFieldTypes)
   // data
   .set('d', ['object', 'undefined', 'null'])
   // successUrl
@@ -22,3 +43,4 @@ export const serializedPaymentFieldTypes: ReadonlyMap<
   .set('e', ['number', 'undefined', 'null'])
   // signature
   .set('s', 'object');
+  // .set('s', serializedPaymentSignatureFieldTypes);

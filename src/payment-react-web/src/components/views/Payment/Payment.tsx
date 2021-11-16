@@ -32,7 +32,7 @@ export const Payment = (props: PaymentProps) => {
       <ServiceInfoPure service={props.service} showDescription={false} />
     </View.Side>
     <View.Side isRight={true}>
-      <TotalAmount value={props.payment.amount} asset={props.payment.asset}
+      <TotalAmount value={props.payment.amount} assetAddress={props.payment.asset?.address}
         network={props.service.network} />
       <PayButtonPure networkPayment={networkPayment} text="Pay" />
       <FooterPure />

@@ -37,6 +37,7 @@ export const services = {
     title: 'API Keys',
     addKey: 'Add Key',
     saveKeys: 'Save Keys',
+    generateKeys: 'Generate Keys',
     name: 'Name',
     algorithm: 'Algorithm',
     publicKey: 'Public Key',

@@ -6,7 +6,7 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "dependencies": {
-    "@airgap/beacon-sdk": "^2.3.4",
+    "@airgap/beacon-sdk": "^2.3.7",
     "@taquito/beacon-wallet": "^10.2.1",
     "@tezospayments/common": "^0.3.1",
     "antd": "^4.16.13",
