@@ -7,7 +7,7 @@
     "@reduxjs/toolkit": "^1.6.2",
     "@tezospayments/react-web-core": "*",
     "react-redux": "^7.2.5",
-    "tezospayments": "^0.2.0"
+    "tezospayments": "^0.3.0"
   },
   "devDependencies": {
     "@types/react-redux": "^7.1.19"
