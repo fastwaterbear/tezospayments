@@ -27,7 +27,7 @@ export const tokensAmountToNat = (tokensAmount: BigNumber | number, decimals: nu
 };
 
 export const numberToTokensAmount = (value: BigNumber | number, decimals: number): BigNumber => {
-  return new BigNumber(value).div(10 ** decimals).integerValue();
+  return new BigNumber(value).div(10 ** decimals);
 };
 
 export const tezToMutez = (tez: BigNumber | number): BigNumber => tokensAmountToNat(tez, 6);
