@@ -1,6 +1,6 @@
 {
   "name": "@tezospayments/common",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Shared code for the Tezos Payments service.",
   "main": "dist/index.cjs.js",
   "module": "dist/index.mjs",
@@ -28,6 +28,9 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.15.3",
+    "@taquito/michel-codec": "^10.2.1",
+    "@taquito/signer": "^10.2.1",
+    "@taquito/taquito": "^10.2.1",
     "bignumber.js": "^9.0.1",
     "clsx": "^1.1.1",
     "lodash.isplainobject": "^4.0.6"

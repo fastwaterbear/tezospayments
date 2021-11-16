@@ -1,13 +1,17 @@
 import type { Donation } from './donation';
 export declare type SerializedDonation = {
     /**
+     * data
+     */
+    d?: Donation['data'];
+    /**
      * desiredAmount
      */
     da?: string;
     /**
      * desiredAsset
      */
-    das?: string;
+    das?: SerializedDonationAsset;
     /**
      * successUrl
      */
@@ -16,11 +20,29 @@ export declare type SerializedDonation = {
      * cancelUrl
      */
     cu?: string;
+    /**
+     * signature
+     */
+    s?: SerializedDonationSignature;
 };
-export declare type LegacySerializedDonation = {
-    desiredAmount?: string;
-    desiredAsset?: string;
-    successUrl?: string;
-    cancelUrl?: string;
-};
+export interface SerializedDonationAsset {
+    /**
+     * address
+     */
+    a: string;
+    /**
+     * id
+     */
+    i?: number;
+}
+export interface SerializedDonationSignature {
+    /**
+     * client
+     */
+    cl: string;
+    /**
+     * signingPublicKey
+     */
+    k: string;
+}
 export declare type NonSerializedDonationSlice = Pick<Donation, 'targetAddress'>;

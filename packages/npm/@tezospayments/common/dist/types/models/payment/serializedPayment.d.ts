@@ -9,17 +9,17 @@ export declare type SerializedPayment = {
      */
     a: string;
     /**
-     * data
-     */
-    d: Payment['data'];
-    /**
      * created
      */
     c: number;
     /**
+     * data
+     */
+    d?: Payment['data'];
+    /**
      * asset
      */
-    as?: string;
+    as?: SerializedPaymentAsset;
     /**
      * successUrl
      */
@@ -32,14 +32,37 @@ export declare type SerializedPayment = {
      * expired
      */
     e?: number;
+    /**
+     * signature
+     */
+    s: SerializedPaymentSignature;
 };
-export declare type LegacySerializedPayment = {
-    amount: string;
-    data: Payment['data'];
-    created: number;
-    asset?: string;
-    successUrl?: string;
-    cancelUrl?: string;
-    expired?: number;
-};
+export interface SerializedPaymentAsset {
+    /**
+     * address
+     */
+    a: string;
+    /**
+     * decimals
+     */
+    d: number;
+    /**
+     * id
+     */
+    i?: number;
+}
+export interface SerializedPaymentSignature {
+    /**
+     * contract
+     */
+    c: string;
+    /**
+     * client
+     */
+    cl?: string;
+    /**
+     * signingPublicKey
+     */
+    k: string;
+}
 export declare type NonSerializedPaymentSlice = Pick<Payment, 'targetAddress'>;

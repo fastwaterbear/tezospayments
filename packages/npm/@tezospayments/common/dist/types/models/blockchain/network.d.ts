@@ -3,10 +3,6 @@ declare const networksInternal: {
         readonly id: "NetXz969SFaFn8k";
         readonly name: "granadanet";
     };
-    readonly edo2net: {
-        readonly id: "NetXSgo1ZT2DRUG";
-        readonly name: "edo2net";
-    };
 };
 interface NetworkInternal {
     readonly id: string;
@@ -23,13 +19,10 @@ export interface CustomNetwork {
     readonly name: string;
 }
 export declare const networks: Networks;
-export declare const networksCollection: ({
+export declare const networksCollection: {
     readonly id: "NetXz969SFaFn8k";
     readonly name: "granadanet";
-} | {
-    readonly id: "NetXSgo1ZT2DRUG";
-    readonly name: "edo2net";
-})[];
+}[];
 export declare const networkIdRegExp: RegExp;
 export declare const networkNameRegExp: RegExp;
 export {};

@@ -1,7 +1,10 @@
+import BigNumber from 'bignumber.js';
 export declare const stringToUint8Array: (hex: string) => Uint8Array;
 export declare const stringToBytes: (value: string) => string;
 export declare const bytesToString: (value: string) => string;
 export declare const objectToBytes: (value: Record<string, unknown>) => string;
 export declare const bytesToObject: <T extends Record<string, unknown> = Record<string, unknown>>(value: string) => T | null;
-export declare function tezToMutez(tez: number): number;
-export declare function tezToMutez(tez: bigint): bigint;
+export declare const tokensAmountToNat: (tokensAmount: BigNumber | number, decimals: number) => BigNumber;
+export declare const numberToTokensAmount: (value: BigNumber | number, decimals: number) => BigNumber;
+export declare const tezToMutez: (tez: BigNumber | number) => BigNumber;
+export declare const mutezToTez: (mutez: BigNumber | number) => BigNumber;

@@ -9,7 +9,7 @@ export interface TokenFA12 extends TokenBase {
 }
 export interface TokenFA2 extends TokenBase {
     readonly type: 'fa2';
-    readonly fa2TokenId: number;
+    readonly id: number;
 }
 export declare type Token = TokenFA12 | TokenFA2;
 export declare type TokenMetadata = {
@@ -19,6 +19,7 @@ export declare type TokenMetadata = {
     readonly thumbnailUri: string;
 };
 export declare const tezosMeta: TokenMetadata;
+export declare const unknownAssetMeta: TokenMetadata;
 export declare const tokenWhitelist: readonly Token[];
-export declare const tokenWhitelistMap: ReadonlyMap<Token['contractAddress'], Token>;
+export declare const tokenWhitelistMap: ReadonlyMap<Network, ReadonlyMap<Token['contractAddress'], Token>>;
 export {};

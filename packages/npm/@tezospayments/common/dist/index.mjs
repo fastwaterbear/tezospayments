@@ -1,9 +1,10 @@
 import _defineProperty from '@babel/runtime/helpers/defineProperty';
 export { default as combineClassNames } from 'clsx';
 import { Buffer } from 'buffer';
-import isPlainObjectLodashFunction from 'lodash.isplainobject';
 import BigNumber from 'bignumber.js';
+import isPlainObjectLodashFunction from 'lodash.isplainobject';
 import { URL as URL$1 } from 'url';
+import { packDataBytes } from '@taquito/michel-codec';
 
 const isBase64UrlFormatSupported = Buffer.isEncoding('base64url');
 const decode = (base64String, format = 'base64') => {
@@ -67,9 +68,14 @@ const bytesToObject = value => {
     return null;
   }
 };
-function tezToMutez(tez) {
-  return typeof tez === 'number' ? tez * 1000000 : tez * BigInt(1000000);
-}
+const tokensAmountToNat = (tokensAmount, decimals) => {
+  return new BigNumber(tokensAmount).multipliedBy(10 ** decimals).integerValue();
+};
+const numberToTokensAmount = (value, decimals) => {
+  return new BigNumber(value).integerValue().div(10 ** decimals);
+};
+const tezToMutez = tez => tokensAmountToNat(tez, 6);
+const mutezToTez = mutez => numberToTokensAmount(mutez, 6);
 
 var converters = /*#__PURE__*/Object.freeze({
   __proto__: null,
@@ -78,7 +84,10 @@ var converters = /*#__PURE__*/Object.freeze({
   bytesToString: bytesToString,
   objectToBytes: objectToBytes,
   bytesToObject: bytesToObject,
-  tezToMutez: tezToMutez
+  tokensAmountToNat: tokensAmountToNat,
+  numberToTokensAmount: numberToTokensAmount,
+  tezToMutez: tezToMutez,
+  mutezToTez: mutezToTez
 });
 
 const isArray = arg => {
@@ -144,15 +153,18 @@ const memoize = (func, equalityCheck = defaultEqualityCheck) => {
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 const emptyArray = [];
 const emptyObject = {};
 const emptyMap = new Map();
 const emptySet = new Set();
+const zeroBigNumber = new BigNumber(0);
 var optimization = {
   emptyArray,
   emptyMap,
   emptySet,
-  emptyObject
+  emptyObject,
+  zeroBigNumber
 };
 
 const is = (x, y) => {
@@ -368,10 +380,6 @@ const networksInternal = {
   granadanet: {
     id: 'NetXz969SFaFn8k',
     name: 'granadanet'
-  },
-  edo2net: {
-    id: 'NetXSgo1ZT2DRUG',
-    name: 'edo2net'
   }
 };
 const networks = networksInternal;
@@ -384,6 +392,12 @@ const tezosMeta = {
   name: 'Tezos',
   decimals: 6,
   thumbnailUri: 'https://dashboard.tezospayments.com/tokens/tezos.png'
+};
+const unknownAssetMeta = {
+  name: 'Unknown',
+  symbol: 'Unknown',
+  decimals: 0,
+  thumbnailUri: 'https://dashboard.tezospayments.com/tokens/unknown.png'
 };
 const tokenWhitelist = [// {
 //   network: networks.mainnet,
@@ -409,18 +423,39 @@ const tokenWhitelist = [// {
 //   },
 // },
 {
-  network: networks.edo2net,
-  type: 'fa2',
-  contractAddress: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2',
-  fa2TokenId: 0,
+  network: networks.granadanet,
+  type: 'fa1.2',
+  contractAddress: 'KT1KcuD9MmgZuGcptdD3qRqxXpGg4WxFsfVc',
   metadata: {
     decimals: 0,
-    symbol: 'MBRG',
-    name: 'MAX BURGER',
+    symbol: 'fa12',
+    name: 'Test fa12',
     thumbnailUri: 'https://dashboard.tezospayments.com/tokens/unknown.png'
   }
+}, {
+  network: networks.granadanet,
+  type: 'fa2',
+  contractAddress: 'KT1BBfxboq63dbaKCAc4uwVKLFzVn1b4fy37',
+  id: 0,
+  metadata: {
+    decimals: 0,
+    symbol: 'fa20',
+    name: 'Test fa20',
+    thumbnailUri: 'https://dashboard.tezospayments.com/tokens/unknown.png'
+  }
+}, {
+  network: networks.granadanet,
+  type: 'fa2',
+  contractAddress: 'KT1PMAT81mmL6NFp9rVU3xoVzU2dRdcXt4R9',
+  id: 0,
+  metadata: {
+    decimals: 6,
+    symbol: 'USDS',
+    name: 'Stably USD',
+    thumbnailUri: 'https://quipuswap.com/tokens/stably.png'
+  }
 }];
-const tokenWhitelistMap = new Map(tokenWhitelist.map(token => [token.contractAddress, token]));
+const tokenWhitelistMap = new Map(networksCollection.map(nc => [nc, new Map(tokenWhitelist.filter(t => t.network === nc).map(t => [t.contractAddress, t]))]));
 
 const contractAddressPrefixes = ['KT'];
 const implicitAddressPrefixes = ['tz1', 'tz2', 'tz3'];
@@ -464,11 +499,15 @@ const validateAmount = (amount, errors) => {
 const validateDesiredAmount = (desiredAmount, errors) => {
   return desiredAmount === undefined ? undefined : validateAmount(desiredAmount, errors);
 };
-const validateAsset = (asset, errors) => {
+const validatePaymentAsset = (asset, errors) => {
   if (asset === undefined) return;
-  if (typeof asset !== 'string') return [errors.invalidAsset];
-  if (asset.length !== tezosInfo.addressLength) return [errors.assetHasInvalidLength];
-  if (!tezosInfo.contractAddressPrefixes.some(prefix => asset.startsWith(prefix))) return [errors.assetIsNotContractAddress];
+  if (!isPlainObject(asset)) return [errors.invalidAsset];
+  return validateAsset(asset, errors) || validateAssetDecimals(asset.decimals, errors);
+};
+const validateDonationAsset = (asset, errors) => {
+  if (asset === undefined) return;
+  if (!isPlainObject(asset)) return [errors.invalidAsset];
+  return validateAsset(asset, errors);
 };
 const validateCreatedDate = (date, errors) => {
   if (!(date instanceof Date) || isNaN(date.getTime())) return [errors.invalidCreatedDate];
@@ -487,36 +526,38 @@ const validateExpiredDate = (expiredDate, createdDate, minimumPaymentLifetime, e
   }
 };
 const validateData = (data, errors) => {
-  if (!isPlainObject(data) || Object.keys(data).some(key => key !== 'public' && key !== 'private')) return [errors.invalidData];
-  const publicData = data.public;
-  const privateData = data.private;
-  if (!(publicData || privateData)) return [errors.invalidData];
-
-  if (publicData !== undefined) {
-    if (!isPlainObject(publicData)) return [errors.invalidPublicData];
-    if (!isFlatObject(publicData)) return [errors.publicDataShouldBeFlat];
-  }
-
-  if (privateData !== undefined) {
-    if (!isPlainObject(privateData)) return [errors.invalidPrivateData];
-    if (!isFlatObject(privateData)) return [errors.privateDataShouldBeFlat];
-  }
+  if (data === undefined) return;
+  if (!isPlainObject(data)) return [errors.invalidData];
 };
 
-const isFlatObject = obj => {
-  for (const propertyName of Object.getOwnPropertyNames(obj)) {
-    const property = obj[propertyName];
-    if (typeof property === 'object' || typeof property === 'function') return false;
-  }
+const validateAsset = (asset, errors) => {
+  return validateAssetAddress(asset.address, errors) || validateAssetId(asset.id, errors);
+};
 
-  return true;
+const validateAssetAddress = (assetAddress, errors) => {
+  if (typeof assetAddress !== 'string') return [errors.invalidAssetAddress];
+  if (assetAddress.length !== tezosInfo.addressLength) return [errors.assetAddressHasInvalidLength];
+  if (!tezosInfo.contractAddressPrefixes.some(prefix => assetAddress.startsWith(prefix))) return [errors.assetAddressIsNotContractAddress];
+};
+
+const validateAssetId = (assetId, errors) => {
+  if (assetId === null) return;
+  if (typeof assetId !== 'number' || Number.isNaN(assetId) || !Number.isFinite(assetId)) return [errors.invalidAssetId];
+  if (assetId < 0) return [errors.assetIdIsNegative];
+  if (!Number.isInteger(assetId)) return [errors.assetIdIsNotInteger];
+};
+
+const validateAssetDecimals = (assetDecimals, errors) => {
+  if (typeof assetDecimals !== 'number' || Number.isNaN(assetDecimals) || !Number.isFinite(assetDecimals)) return [errors.invalidAssetDecimals];
+  if (assetDecimals < 0) return [errors.assetDecimalsNumberIsNegative];
+  if (!Number.isInteger(assetDecimals)) return [errors.assetDecimalsNumberIsNotInteger];
 };
 
 class PaymentValidator extends PaymentValidatorBase {
   constructor(...args) {
     super(...args);
 
-    _defineProperty(this, "validationMethods", [payment => payment.type !== PaymentType.Payment ? [PaymentValidator.errors.invalidType] : undefined, payment => validateTargetAddress(payment.targetAddress, PaymentValidator.errors), payment => validateId(payment.id, PaymentValidator.errors), payment => validateAmount(payment.amount, PaymentValidator.errors), payment => validateData(payment.data, PaymentValidator.errors), payment => validateAsset(payment.asset, PaymentValidator.errors), payment => validateUrl(payment.successUrl, PaymentValidator.successUrlErrors), payment => validateUrl(payment.cancelUrl, PaymentValidator.cancelUrlErrors), payment => validateCreatedDate(payment.created, PaymentValidator.errors), payment => validateExpiredDate(payment.expired, payment.created, PaymentValidator.minimumPaymentLifetime, PaymentValidator.errors)]);
+    _defineProperty(this, "validationMethods", [payment => payment.type !== PaymentType.Payment ? [PaymentValidator.errors.invalidType] : undefined, payment => validateTargetAddress(payment.targetAddress, PaymentValidator.errors), payment => validateId(payment.id, PaymentValidator.errors), payment => validateAmount(payment.amount, PaymentValidator.errors), payment => validatePaymentAsset(payment.asset, PaymentValidator.errors), payment => validateData(payment.data, PaymentValidator.errors), payment => validateUrl(payment.successUrl, PaymentValidator.successUrlErrors), payment => validateUrl(payment.cancelUrl, PaymentValidator.cancelUrlErrors), payment => validateCreatedDate(payment.created, PaymentValidator.errors), payment => validateExpiredDate(payment.expired, payment.created, PaymentValidator.minimumPaymentLifetime, PaymentValidator.errors)]);
 
     _defineProperty(this, "invalidPaymentObjectError", PaymentValidator.errors.invalidPaymentObject);
   }
@@ -534,13 +575,16 @@ _defineProperty(PaymentValidator, "errors", {
   invalidAmount: 'Amount is invalid',
   amountIsNonPositive: 'Amount is less than or equal to zero',
   invalidData: 'Payment data is invalid',
-  invalidPublicData: 'Payment public data is invalid',
-  invalidPrivateData: 'Payment private data is invalid',
-  publicDataShouldBeFlat: 'Public data should be flat',
-  privateDataShouldBeFlat: 'Private data should be flat',
-  invalidAsset: 'Asset address is invalid',
-  assetIsNotContractAddress: 'Asset address isn\'t a contract address',
-  assetHasInvalidLength: 'Asset address has an invalid address',
+  invalidAsset: 'Asset is invalid',
+  invalidAssetAddress: 'Asset address is invalid',
+  assetAddressIsNotContractAddress: 'Asset address isn\'t a contract address',
+  assetAddressHasInvalidLength: 'Asset address has an invalid address',
+  invalidAssetId: 'Asset Id is invalid',
+  assetIdIsNegative: 'Asset Id is negative',
+  assetIdIsNotInteger: 'Asset Id isn\'t an integer',
+  invalidAssetDecimals: 'Asset number of decimals is invalid',
+  assetDecimalsNumberIsNegative: 'Asset number of decimals is negative',
+  assetDecimalsNumberIsNotInteger: 'Asset number of decimals isn\'t an integer',
   invalidSuccessUrl: 'Success URL is invalid',
   successUrlHasInvalidProtocol: 'Success URL has an invalid protocol',
   invalidCancelUrl: 'Cancel URL is invalid',
@@ -566,7 +610,7 @@ class DonationValidator extends PaymentValidatorBase {
   constructor(...args) {
     super(...args);
 
-    _defineProperty(this, "validationMethods", [donation => donation.type !== PaymentType.Donation ? [DonationValidator.errors.invalidType] : undefined, donation => validateTargetAddress(donation.targetAddress, DonationValidator.errors), donation => validateDesiredAmount(donation.desiredAmount, DonationValidator.errors), donation => validateAsset(donation.desiredAsset, DonationValidator.errors), donation => validateUrl(donation.successUrl, DonationValidator.successUrlErrors), donation => validateUrl(donation.cancelUrl, DonationValidator.cancelUrlErrors)]);
+    _defineProperty(this, "validationMethods", [donation => donation.type !== PaymentType.Donation ? [DonationValidator.errors.invalidType] : undefined, donation => validateData(donation.data, DonationValidator.errors), donation => validateTargetAddress(donation.targetAddress, DonationValidator.errors), donation => validateDesiredAmount(donation.desiredAmount, DonationValidator.errors), donation => validateDonationAsset(donation.desiredAsset, DonationValidator.errors), donation => validateUrl(donation.successUrl, DonationValidator.successUrlErrors), donation => validateUrl(donation.cancelUrl, DonationValidator.cancelUrlErrors)]);
 
     _defineProperty(this, "invalidPaymentObjectError", DonationValidator.errors.invalidDonationObject);
   }
@@ -576,14 +620,19 @@ class DonationValidator extends PaymentValidatorBase {
 _defineProperty(DonationValidator, "errors", {
   invalidDonationObject: 'Donation is undefined or not object',
   invalidType: 'Donation type is invalid',
+  invalidData: 'Donation data is invalid',
   invalidAmount: 'Desired amount is invalid',
   amountIsNonPositive: 'Desired amount is less than or equal to zero',
   invalidTargetAddress: 'Target address is invalid',
   targetAddressIsNotNetworkAddress: 'Target address isn\'t a network address',
   targetAddressHasInvalidLength: 'Target address has an invalid address',
-  invalidAsset: 'Desired asset address is invalid',
-  assetIsNotContractAddress: 'Desired asset address isn\'t a contract address',
-  assetHasInvalidLength: 'Desired asset address has an invalid address',
+  invalidAsset: 'Desired asset is invalid',
+  invalidAssetAddress: 'Desired asset address is invalid',
+  assetAddressIsNotContractAddress: 'Desired asset address isn\'t a contract address',
+  assetAddressHasInvalidLength: 'Desired asset address has an invalid address',
+  invalidAssetId: 'Asset Id is invalid',
+  assetIdIsNegative: 'Asset Id is negative',
+  assetIdIsNotInteger: 'Asset Id isn\'t an integer',
   invalidSuccessUrl: 'Success URL is invalid',
   successUrlHasInvalidProtocol: 'Success URL has an invalid protocol',
   invalidCancelUrl: 'Cancel URL is invalid',
@@ -688,16 +737,27 @@ class Base64Deserializer {
 
 }
 
+new Map() // address
+.set('a', 'string') // decimals
+.set('d', 'number') // id
+.set('i', ['number', 'undefined', 'null']);
+
+new Map() // contract
+.set('c', 'string') // client
+.set('cl', ['string', 'undefined', 'null']) // signature.signingPublicKey
+.set('k', 'string');
+
 const serializedPaymentFieldTypes = new Map() // id
 .set('i', 'string') // amount
-.set('a', 'string') // data
-.set('d', 'object') // asset
-.set('as', ['string', 'undefined', 'null']) // successUrl
+.set('a', 'string') // asset
+.set('as', ['object', 'undefined', 'null']) // .set('as', serializedPaymentAssetFieldTypes)
+// data
+.set('d', ['object', 'undefined', 'null']) // successUrl
 .set('su', ['string', 'undefined', 'null']) // cancelUrl
 .set('cu', ['string', 'undefined', 'null']) // created
 .set('c', 'number') // expired
-.set('e', ['number', 'undefined', 'null']);
-const legacySerializedPaymentFieldTypes = new Map().set('amount', 'string').set('data', 'object').set('asset', ['string', 'undefined', 'null']).set('successUrl', ['string', 'undefined', 'null']).set('cancelUrl', ['string', 'undefined', 'null']).set('created', 'number').set('expired', ['number', 'undefined', 'null']);
+.set('e', ['number', 'undefined', 'null']) // signature
+.set('s', 'object'); // .set('s', serializedPaymentSignatureFieldTypes);
 
 class PaymentSerializer {
   serialize(payment) {
@@ -715,12 +775,29 @@ class PaymentSerializer {
     return {
       i: payment.id,
       a: payment.amount.toString(),
+      as: payment.asset ? this.mapPaymentAssetToSerializedPaymentAsset(payment.asset) : undefined,
       d: payment.data,
-      as: payment.asset,
       su: (_payment$successUrl = payment.successUrl) === null || _payment$successUrl === void 0 ? void 0 : _payment$successUrl.toString(),
       cu: (_payment$cancelUrl = payment.cancelUrl) === null || _payment$cancelUrl === void 0 ? void 0 : _payment$cancelUrl.toString(),
       c: payment.created.getTime(),
-      e: (_payment$expired = payment.expired) === null || _payment$expired === void 0 ? void 0 : _payment$expired.getTime()
+      e: (_payment$expired = payment.expired) === null || _payment$expired === void 0 ? void 0 : _payment$expired.getTime(),
+      s: this.mapPaymentSignatureToSerializedPaymentSignature(payment.signature)
+    };
+  }
+
+  mapPaymentAssetToSerializedPaymentAsset(paymentAsset) {
+    return {
+      a: paymentAsset.address,
+      d: paymentAsset.decimals,
+      i: paymentAsset.id !== null ? paymentAsset.id : undefined
+    };
+  }
+
+  mapPaymentSignatureToSerializedPaymentSignature(paymentSignature) {
+    return {
+      k: paymentSignature.signingPublicKey,
+      c: paymentSignature.contract,
+      cl: paymentSignature.client
     };
   }
 
@@ -743,13 +820,30 @@ class PaymentDeserializer {
       type: PaymentType.Payment,
       id: serializedPayment.i,
       amount: new BigNumber(serializedPayment.a),
+      asset: serializedPayment.as ? this.mapSerializedPaymentAssetToPaymentAsset(serializedPayment.as) : undefined,
       data: serializedPayment.d,
-      asset: serializedPayment.as,
       successUrl: serializedPayment.su ? new URL(serializedPayment.su) : undefined,
       cancelUrl: serializedPayment.cu ? new URL(serializedPayment.cu) : undefined,
       created: new Date(serializedPayment.c),
       expired: serializedPayment.e ? new Date(serializedPayment.e) : undefined,
-      targetAddress: nonSerializedPaymentSlice.targetAddress
+      targetAddress: nonSerializedPaymentSlice.targetAddress,
+      signature: this.mapSerializedPaymentSignatureToPaymentSignature(serializedPayment.s)
+    };
+  }
+
+  mapSerializedPaymentAssetToPaymentAsset(serializedPaymentAsset) {
+    return {
+      address: serializedPaymentAsset.a,
+      decimals: serializedPaymentAsset.d,
+      id: serializedPaymentAsset.i !== undefined ? serializedPaymentAsset.i : null
+    };
+  }
+
+  mapSerializedPaymentSignatureToPaymentSignature(serializedPaymentSignature) {
+    return {
+      signingPublicKey: serializedPaymentSignature.k,
+      contract: serializedPaymentSignature.c,
+      client: serializedPaymentSignature.cl
     };
   }
 
@@ -757,41 +851,22 @@ class PaymentDeserializer {
 
 _defineProperty(PaymentDeserializer, "serializedPaymentBase64Deserializer", new Base64Deserializer(serializedPaymentFieldTypes));
 
-class LegacyPaymentDeserializer {
-  deserialize(serializedPaymentBase64, nonSerializedPaymentSlice) {
-    try {
-      const serializedPayment = LegacyPaymentDeserializer.serializedPaymentBase64Deserializer.deserialize(serializedPaymentBase64);
-      return serializedPayment ? this.mapSerializedPaymentToPayment(serializedPayment, nonSerializedPaymentSlice) : null;
-    } catch {
-      return null;
-    }
-  }
+new Map() // address
+.set('a', 'string') // id
+.set('i', ['number', 'undefined', 'null']);
 
-  mapSerializedPaymentToPayment(serializedPayment, nonSerializedPaymentSlice) {
-    return {
-      type: PaymentType.Payment,
-      id: 'legacy-payment',
-      amount: new BigNumber(serializedPayment.amount),
-      data: serializedPayment.data,
-      asset: serializedPayment.asset,
-      successUrl: serializedPayment.successUrl ? new URL(serializedPayment.successUrl) : undefined,
-      cancelUrl: serializedPayment.cancelUrl ? new URL(serializedPayment.cancelUrl) : undefined,
-      created: new Date(serializedPayment.created),
-      expired: serializedPayment.expired ? new Date(serializedPayment.expired) : undefined,
-      targetAddress: nonSerializedPaymentSlice.targetAddress
-    };
-  }
+new Map() // client
+.set('cl', 'string') // signature.signingPublicKey
+.set('k', 'string');
 
-}
-
-_defineProperty(LegacyPaymentDeserializer, "serializedPaymentBase64Deserializer", new Base64Deserializer(legacySerializedPaymentFieldTypes));
-
-const serializedDonationFieldTypes = new Map() // desiredAmount
+const serializedDonationFieldTypes = new Map() // data
+.set('d', ['object', 'undefined', 'null']) // desiredAmount
 .set('da', ['string', 'undefined', 'null']) // desiredAsset
-.set('das', ['string', 'undefined', 'null']) // successUrl
+.set('das', ['object', 'undefined', 'null']) // .set('das', serializedDonationAssetFieldTypes)
+// successUrl
 .set('su', ['string', 'undefined', 'null']) // cancelUrl
-.set('cu', ['string', 'undefined', 'null']);
-const legacySerializedDonationFieldTypes = new Map().set('desiredAmount', ['string', 'undefined', 'null']).set('desiredAsset', ['string', 'undefined', 'null']).set('successUrl', ['string', 'undefined', 'null']).set('cancelUrl', ['string', 'undefined', 'null']);
+.set('cu', ['string', 'undefined', 'null']) // signature
+.set('s', ['object', 'undefined', 'null']); // .set('da', serializedDonationSignatureFieldTypes)
 
 const serializedEmptyObjectBase64 = 'e30';
 class DonationSerializer {
@@ -809,10 +884,26 @@ class DonationSerializer {
     var _donation$desiredAmou, _donation$successUrl, _donation$cancelUrl;
 
     return {
+      d: donation.data,
       da: (_donation$desiredAmou = donation.desiredAmount) === null || _donation$desiredAmou === void 0 ? void 0 : _donation$desiredAmou.toString(),
-      das: donation.desiredAsset,
+      das: donation.desiredAsset ? this.mapDonationAssetToSerializedDonationAsset(donation.desiredAsset) : undefined,
       su: (_donation$successUrl = donation.successUrl) === null || _donation$successUrl === void 0 ? void 0 : _donation$successUrl.toString(),
-      cu: (_donation$cancelUrl = donation.cancelUrl) === null || _donation$cancelUrl === void 0 ? void 0 : _donation$cancelUrl.toString()
+      cu: (_donation$cancelUrl = donation.cancelUrl) === null || _donation$cancelUrl === void 0 ? void 0 : _donation$cancelUrl.toString(),
+      s: donation.signature ? this.mapDonationSignatureToSerializedDonationSignature(donation.signature) : undefined
+    };
+  }
+
+  mapDonationAssetToSerializedDonationAsset(donationAsset) {
+    return {
+      a: donationAsset.address,
+      i: donationAsset.id !== null ? donationAsset.id : undefined
+    };
+  }
+
+  mapDonationSignatureToSerializedDonationSignature(donationSignature) {
+    return {
+      k: donationSignature.signingPublicKey,
+      cl: donationSignature.client
     };
   }
 
@@ -833,11 +924,27 @@ class DonationDeserializer {
   mapSerializedDonationToDonation(serializedDonation, nonSerializedDonationSlice) {
     return {
       type: PaymentType.Donation,
+      data: serializedDonation.d,
       desiredAmount: serializedDonation.da ? new BigNumber(serializedDonation.da) : undefined,
-      desiredAsset: serializedDonation.das,
+      desiredAsset: serializedDonation.das ? this.mapSerializedDonationAssetToDonationAsset(serializedDonation.das) : undefined,
       successUrl: serializedDonation.su ? new URL(serializedDonation.su) : undefined,
       cancelUrl: serializedDonation.cu ? new URL(serializedDonation.cu) : undefined,
-      targetAddress: nonSerializedDonationSlice.targetAddress
+      targetAddress: nonSerializedDonationSlice.targetAddress,
+      signature: serializedDonation.s ? this.mapSerializedDonationSignatureToDonationSignature(serializedDonation.s) : undefined
+    };
+  }
+
+  mapSerializedDonationAssetToDonationAsset(serializedDonationAsset) {
+    return {
+      address: serializedDonationAsset.a,
+      id: serializedDonationAsset.i !== undefined ? serializedDonationAsset.i : null
+    };
+  }
+
+  mapSerializedDonationSignatureToDonationSignature(serializedDonationSignature) {
+    return {
+      signingPublicKey: serializedDonationSignature.k,
+      client: serializedDonationSignature.cl
     };
   }
 
@@ -845,78 +952,33 @@ class DonationDeserializer {
 
 _defineProperty(DonationDeserializer, "serializedDonationBase64Deserializer", new Base64Deserializer(serializedDonationFieldTypes));
 
-class LegacyDonationDeserializer {
-  deserialize(serializedDonationBase64, nonSerializedDonationSlice) {
-    try {
-      const serializedDonation = LegacyDonationDeserializer.serializedDonationBase64Deserializer.deserialize(serializedDonationBase64);
-      return serializedDonation ? this.mapSerializedDonationToDonation(serializedDonation, nonSerializedDonationSlice) : null;
-    } catch {
-      return null;
-    }
-  }
-
-  mapSerializedDonationToDonation(serializedDonation, nonSerializedDonationSlice) {
-    return {
-      type: PaymentType.Donation,
-      desiredAmount: serializedDonation.desiredAmount ? new BigNumber(serializedDonation.desiredAmount) : undefined,
-      desiredAsset: serializedDonation.desiredAsset,
-      successUrl: serializedDonation.successUrl ? new URL(serializedDonation.successUrl) : undefined,
-      cancelUrl: serializedDonation.cancelUrl ? new URL(serializedDonation.cancelUrl) : undefined,
-      targetAddress: nonSerializedDonationSlice.targetAddress
-    };
-  }
-
-}
-
-_defineProperty(LegacyDonationDeserializer, "serializedDonationBase64Deserializer", new Base64Deserializer(legacySerializedDonationFieldTypes));
-
 class Payment extends StateModel {
   static validate(payment) {
-    return this.defaultValidator.validate(payment);
+    return Payment.defaultValidator.validate(payment);
   }
 
-  static deserialize(serializedPayment, nonSerializedPaymentSlice, isLegacy = false) {
-    return !isLegacy ? Payment.defaultDeserializer.deserialize(serializedPayment, nonSerializedPaymentSlice) : Payment.defaultLegacyDeserializer.deserialize(serializedPayment, nonSerializedPaymentSlice);
-  }
-
-  static publicDataExists(paymentOrPaymentDataOrPaymentData) {
-    return this.publicDataExistsInternal(paymentOrPaymentDataOrPaymentData);
-  }
-
-  static privateDataExists(payment) {
-    return !!payment.data.private;
-  }
-
-  static publicDataExistsInternal(paymentOrPaymentDataOrPaymentData) {
-    return !!(Payment.isPayment(paymentOrPaymentDataOrPaymentData) ? paymentOrPaymentDataOrPaymentData.data.public : paymentOrPaymentDataOrPaymentData.public);
-  }
-
-  static isPayment(paymentOrPaymentDataOrPaymentData) {
-    return !!paymentOrPaymentDataOrPaymentData.amount;
+  static deserialize(serializedPayment, nonSerializedPaymentSlice) {
+    return Payment.defaultDeserializer.deserialize(serializedPayment, nonSerializedPaymentSlice);
   }
 
 }
 
 _defineProperty(Payment, "defaultDeserializer", new PaymentDeserializer());
 
-_defineProperty(Payment, "defaultLegacyDeserializer", new LegacyPaymentDeserializer());
-
 _defineProperty(Payment, "defaultValidator", new PaymentValidator());
 
 class Donation extends StateModel {
   static validate(donation) {
-    return this.defaultValidator.validate(donation);
+    return Donation.defaultValidator.validate(donation);
   }
 
-  static deserialize(serializedDonation, nonSerializedDonationSlice, isLegacy = false) {
-    return !isLegacy ? Donation.defaultDeserializer.deserialize(serializedDonation, nonSerializedDonationSlice) : Donation.defaultLegacyDeserializer.deserialize(serializedDonation, nonSerializedDonationSlice);
+  static deserialize(serializedDonation, nonSerializedDonationSlice) {
+    return Donation.defaultDeserializer.deserialize(serializedDonation, nonSerializedDonationSlice);
   }
 
 }
 
 _defineProperty(Donation, "defaultDeserializer", new DonationDeserializer());
-
-_defineProperty(Donation, "defaultLegacyDeserializer", new LegacyDonationDeserializer());
 
 _defineProperty(Donation, "defaultValidator", new DonationValidator());
 
@@ -945,36 +1007,46 @@ var ServiceOperationType;
 const emptyService = {
   name: '',
   description: '',
-  links: [],
+  links: optimization.emptyArray,
   version: 0,
   metadata: '',
   contractAddress: '',
   allowedTokens: {
     tez: true,
-    assets: []
+    assets: optimization.emptyArray
   },
   allowedOperationType: ServiceOperationType.Payment,
   owner: '',
   paused: false,
   deleted: false,
-  network: networks.edo2net,
-  signingKeys: {}
+  network: networks.granadanet,
+  signingKeys: optimization.emptyMap
 };
 
-class ServiceOperation extends StateModel {
-  static publicPayloadExists(operation) {
-    return !!operation.payload.public;
-  }
+var OperationType;
 
-  static privatePayloadExists(operation) {
-    return !!operation.payload.private;
-  }
+(function (OperationType) {
+  OperationType[OperationType["Payment"] = 1] = "Payment";
+  OperationType[OperationType["Donation"] = 2] = "Donation";
+})(OperationType || (OperationType = {}));
 
-  static isPayloadDecoded(data) {
-    return !!data.value;
-  }
+var OperationDirection;
 
-  static parseServiceOperationPayload(encodedValue) {
+(function (OperationDirection) {
+  OperationDirection[OperationDirection["Incoming"] = 0] = "Incoming";
+  OperationDirection[OperationDirection["Outgoing"] = 1] = "Outgoing";
+})(OperationDirection || (OperationDirection = {}));
+
+var OperationStatus;
+
+(function (OperationStatus) {
+  OperationStatus[OperationStatus["Pending"] = 0] = "Pending";
+  OperationStatus[OperationStatus["Success"] = 1] = "Success";
+  OperationStatus[OperationStatus["Cancelled"] = 2] = "Cancelled";
+})(OperationStatus || (OperationStatus = {}));
+
+class DonationOperation extends StateModel {
+  static parsePayload(encodedValue) {
     const valueString = bytesToString(encodedValue);
     let value = null;
 
@@ -993,20 +1065,120 @@ class ServiceOperation extends StateModel {
 
 }
 
-var ServiceOperationDirection;
+class DonationSignPayloadEncoder {
+  encode(donation) {
+    return {
+      clientSignPayload: this.getClientSignPayload(donation)
+    };
+  }
 
-(function (ServiceOperationDirection) {
-  ServiceOperationDirection[ServiceOperationDirection["Incoming"] = 0] = "Incoming";
-  ServiceOperationDirection[ServiceOperationDirection["Outgoing"] = 1] = "Outgoing";
-})(ServiceOperationDirection || (ServiceOperationDirection = {}));
+  getClientSignPayload(donation) {
+    return (donation.successUrl ? donation.successUrl.href : '') + (donation.cancelUrl ? donation.cancelUrl.href : '') || null;
+  }
 
-var ServiceOperationStatus;
+}
 
-(function (ServiceOperationStatus) {
-  ServiceOperationStatus[ServiceOperationStatus["Pending"] = 0] = "Pending";
-  ServiceOperationStatus[ServiceOperationStatus["Success"] = 1] = "Success";
-  ServiceOperationStatus[ServiceOperationStatus["Cancelled"] = 2] = "Cancelled";
-})(ServiceOperationStatus || (ServiceOperationStatus = {}));
+const contractPaymentInTezSignPayloadMichelsonType = {
+  prim: 'pair',
+  args: [{
+    prim: 'pair',
+    args: [{
+      prim: 'string'
+    }, {
+      prim: 'address'
+    }]
+  }, {
+    prim: 'mutez'
+  }]
+};
+const contractPaymentInAssetSignPayloadMichelsonType = {
+  prim: 'pair',
+  args: [{
+    prim: 'pair',
+    args: [{
+      prim: 'pair',
+      args: [{
+        prim: 'string'
+      }, {
+        prim: 'address'
+      }]
+    }, {
+      prim: 'pair',
+      args: [{
+        prim: 'nat'
+      }, {
+        prim: 'address'
+      }]
+    }]
+  }, {
+    prim: 'option',
+    args: [{
+      prim: 'nat'
+    }]
+  }]
+};
 
-export { Base64Deserializer, Base64Serializer, Donation, DonationDeserializer, DonationSerializer, DonationValidator, IconId, KeyType, LegacyDonationDeserializer, LegacyPaymentDeserializer, Payment, PaymentDeserializer, PaymentSerializer, PaymentType, PaymentUrlType, PaymentValidator, ServiceLinkHelper, ServiceOperation, ServiceOperationDirection, ServiceOperationStatus, ServiceOperationType, StateModel, base64, converters, emptyService, getEncodedPaymentUrlType, getParameterizedRoute, guards, memoize, index as native, networkIdRegExp, networkNameRegExp, networks, networksCollection, optimization, shallowEqual, text, tezosInfo, tezosMeta, tokenWhitelist, tokenWhitelistMap, wait };
+class PaymentSignPayloadEncoder {
+  encode(payment) {
+    return {
+      contractSignPayload: this.getContractSignPayload(payment),
+      clientSignPayload: this.getClientSignPayload(payment)
+    };
+  }
+
+  getContractSignPayload(payment) {
+    const signPayload = payment.asset ? packDataBytes({
+      prim: 'Pair',
+      args: [{
+        prim: 'Pair',
+        args: [{
+          prim: 'Pair',
+          args: [{
+            string: payment.id
+          }, {
+            string: payment.targetAddress
+          }]
+        }, {
+          prim: 'Pair',
+          args: [{
+            int: tokensAmountToNat(payment.amount, payment.asset.decimals).toString(10)
+          }, {
+            string: payment.asset.address
+          }]
+        }]
+      }, payment.asset.id !== undefined && payment.asset.id !== null ? {
+        prim: 'Some',
+        args: [{
+          int: payment.asset.id.toString()
+        }]
+      } : {
+        prim: 'None'
+      }]
+    }, contractPaymentInAssetSignPayloadMichelsonType) : packDataBytes({
+      prim: 'Pair',
+      args: [{
+        prim: 'Pair',
+        args: [{
+          string: payment.id
+        }, {
+          string: payment.targetAddress
+        }]
+      }, {
+        int: tezToMutez(payment.amount).toString(10)
+      }]
+    }, contractPaymentInTezSignPayloadMichelsonType);
+    return '0x' + signPayload.bytes;
+  }
+
+  getClientSignPayload(payment) {
+    return (payment.successUrl ? payment.successUrl.href : '') + (payment.cancelUrl ? payment.cancelUrl.href : '') || null;
+  }
+
+}
+
+_defineProperty(PaymentSignPayloadEncoder, "contractPaymentInTezSignPayloadMichelsonType", contractPaymentInTezSignPayloadMichelsonType);
+
+_defineProperty(PaymentSignPayloadEncoder, "contractPaymentInAssetSignPayloadMichelsonType", contractPaymentInAssetSignPayloadMichelsonType);
+
+export { Base64Deserializer, Base64Serializer, Donation, DonationDeserializer, DonationOperation, DonationSerializer, DonationSignPayloadEncoder, DonationValidator, IconId, KeyType, OperationDirection, OperationStatus, OperationType, Payment, PaymentDeserializer, PaymentSerializer, PaymentSignPayloadEncoder, PaymentType, PaymentUrlType, PaymentValidator, ServiceLinkHelper, ServiceOperationType, StateModel, base64, converters, emptyService, getEncodedPaymentUrlType, getParameterizedRoute, guards, memoize, index as native, networkIdRegExp, networkNameRegExp, networks, networksCollection, optimization, shallowEqual, text, tezosInfo, tezosMeta, tokenWhitelist, tokenWhitelistMap, unknownAssetMeta, wait };
 //# sourceMappingURL=index.mjs.map

@@ -2,7 +2,7 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.tezosPaymentsCommon = {}));
-}(this, (function (exports) { 'use strict';
+})(this, (function (exports) { 'use strict';
 
   function _defineProperty(obj, key, value) {
     if (key in obj) {
@@ -295,7 +295,8 @@
 
     const base64 = base64Js;
     const ieee754$1 = ieee754;
-    const customInspectSymbol = typeof Symbol === 'function' && typeof Symbol['for'] === 'function' ? Symbol['for']('nodejs.util.inspect.custom') // eslint-disable-line dot-notation
+    const customInspectSymbol = typeof Symbol === 'function' && typeof Symbol['for'] === 'function' // eslint-disable-line dot-notation
+    ? Symbol['for']('nodejs.util.inspect.custom') // eslint-disable-line dot-notation
     : null;
     exports.Buffer = Buffer;
     exports.SlowBuffer = SlowBuffer;
@@ -2406,462 +2407,6 @@
     decode: decode$1,
     encode: encode$1
   });
-
-  const stringToUint8Array = hex => {
-    var _hex$match;
-
-    const integers = (_hex$match = hex.match(/[\da-f]{2}/gi)) === null || _hex$match === void 0 ? void 0 : _hex$match.map(val => parseInt(val, 16)); // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-
-    return new Uint8Array(integers);
-  };
-  const stringToBytes = value => buffer.Buffer.from(value, 'utf8').toString('hex');
-  const bytesToString = value => buffer.Buffer.from(stringToUint8Array(value)).toString('utf8');
-  const objectToBytes = value => stringToBytes(JSON.stringify(value));
-  const bytesToObject = value => {
-    try {
-      return JSON.parse(bytesToString(value));
-    } catch {
-      return null;
-    }
-  };
-  function tezToMutez(tez) {
-    return typeof tez === 'number' ? tez * 1000000 : tez * BigInt(1000000);
-  }
-
-  var converters = /*#__PURE__*/Object.freeze({
-    __proto__: null,
-    stringToUint8Array: stringToUint8Array,
-    stringToBytes: stringToBytes,
-    bytesToString: bytesToString,
-    objectToBytes: objectToBytes,
-    bytesToObject: bytesToObject,
-    tezToMutez: tezToMutez
-  });
-
-  /**
-   * lodash (Custom Build) <https://lodash.com/>
-   * Build: `lodash modularize exports="npm" -o ./`
-   * Copyright jQuery Foundation and other contributors <https://jquery.org/>
-   * Released under MIT license <https://lodash.com/license>
-   * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
-   * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
-   */
-  /** `Object#toString` result references. */
-
-  var objectTag = '[object Object]';
-  /**
-   * Checks if `value` is a host object in IE < 9.
-   *
-   * @private
-   * @param {*} value The value to check.
-   * @returns {boolean} Returns `true` if `value` is a host object, else `false`.
-   */
-
-  function isHostObject(value) {
-    // Many host objects are `Object` objects that can coerce to strings
-    // despite having improperly defined `toString` methods.
-    var result = false;
-
-    if (value != null && typeof value.toString != 'function') {
-      try {
-        result = !!(value + '');
-      } catch (e) {}
-    }
-
-    return result;
-  }
-  /**
-   * Creates a unary function that invokes `func` with its argument transformed.
-   *
-   * @private
-   * @param {Function} func The function to wrap.
-   * @param {Function} transform The argument transform.
-   * @returns {Function} Returns the new function.
-   */
-
-
-  function overArg(func, transform) {
-    return function (arg) {
-      return func(transform(arg));
-    };
-  }
-  /** Used for built-in method references. */
-
-
-  var funcProto = Function.prototype,
-      objectProto = Object.prototype;
-  /** Used to resolve the decompiled source of functions. */
-
-  var funcToString = funcProto.toString;
-  /** Used to check objects for own properties. */
-
-  var hasOwnProperty$1 = objectProto.hasOwnProperty;
-  /** Used to infer the `Object` constructor. */
-
-  var objectCtorString = funcToString.call(Object);
-  /**
-   * Used to resolve the
-   * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
-   * of values.
-   */
-
-  var objectToString = objectProto.toString;
-  /** Built-in value references. */
-
-  var getPrototype = overArg(Object.getPrototypeOf, Object);
-  /**
-   * Checks if `value` is object-like. A value is object-like if it's not `null`
-   * and has a `typeof` result of "object".
-   *
-   * @static
-   * @memberOf _
-   * @since 4.0.0
-   * @category Lang
-   * @param {*} value The value to check.
-   * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
-   * @example
-   *
-   * _.isObjectLike({});
-   * // => true
-   *
-   * _.isObjectLike([1, 2, 3]);
-   * // => true
-   *
-   * _.isObjectLike(_.noop);
-   * // => false
-   *
-   * _.isObjectLike(null);
-   * // => false
-   */
-
-  function isObjectLike(value) {
-    return !!value && typeof value == 'object';
-  }
-  /**
-   * Checks if `value` is a plain object, that is, an object created by the
-   * `Object` constructor or one with a `[[Prototype]]` of `null`.
-   *
-   * @static
-   * @memberOf _
-   * @since 0.8.0
-   * @category Lang
-   * @param {*} value The value to check.
-   * @returns {boolean} Returns `true` if `value` is a plain object, else `false`.
-   * @example
-   *
-   * function Foo() {
-   *   this.a = 1;
-   * }
-   *
-   * _.isPlainObject(new Foo);
-   * // => false
-   *
-   * _.isPlainObject([1, 2, 3]);
-   * // => false
-   *
-   * _.isPlainObject({ 'x': 0, 'y': 0 });
-   * // => true
-   *
-   * _.isPlainObject(Object.create(null));
-   * // => true
-   */
-
-
-  function isPlainObject$1(value) {
-    if (!isObjectLike(value) || objectToString.call(value) != objectTag || isHostObject(value)) {
-      return false;
-    }
-
-    var proto = getPrototype(value);
-
-    if (proto === null) {
-      return true;
-    }
-
-    var Ctor = hasOwnProperty$1.call(proto, 'constructor') && proto.constructor;
-    return typeof Ctor == 'function' && Ctor instanceof Ctor && funcToString.call(Ctor) == objectCtorString;
-  }
-
-  var lodash_isplainobject = isPlainObject$1;
-
-  const isArray = arg => {
-    return Array.isArray(arg);
-  };
-  const isReadonlyArray = arg => {
-    return Array.isArray(arg);
-  };
-  const isPlainObject = value => {
-    return lodash_isplainobject(value);
-  };
-
-  var guards = /*#__PURE__*/Object.freeze({
-    __proto__: null,
-    isArray: isArray,
-    isReadonlyArray: isReadonlyArray,
-    isPlainObject: isPlainObject
-  });
-
-  const defaultEqualityCheck = (a, b) => a === b;
-
-  const areArgumentsShallowlyEqual = (equalityCheck, prev, next) => {
-    if (prev === null || next === null || prev.length !== next.length) {
-      return false;
-    } // Do this in a for loop (and not a `forEach` or an `every`) so we can determine equality as fast as possible.
-
-
-    const length = prev.length;
-
-    for (let i = 0; i < length; i++) {
-      if (!equalityCheck(prev[i], next[i])) {
-        return false;
-      }
-    }
-
-    return true;
-  };
-  /* eslint-disable prefer-rest-params  */
-
-  /* eslint-disable prefer-spread */
-
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-
-
-  const memoize = (func, equalityCheck = defaultEqualityCheck) => {
-    let lastArgs = null;
-    let lastResult = null;
-    return function () {
-      if (!areArgumentsShallowlyEqual(equalityCheck, lastArgs, arguments)) {
-        // apply arguments instead of spreading for performance.
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        lastResult = func.apply(null, arguments);
-      }
-
-      lastArgs = arguments;
-      return lastResult;
-    };
-  };
-  /* eslint-enable prefer-spread */
-
-  /* eslint-enable prefer-rest-params */
-
-  /* eslint-enable @typescript-eslint/no-explicit-any */
-
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  const emptyArray = [];
-  const emptyObject = {};
-  const emptyMap = new Map();
-  const emptySet = new Set();
-  var optimization = {
-    emptyArray,
-    emptyMap,
-    emptySet,
-    emptyObject
-  };
-
-  const is = (x, y) => {
-    return x === y ? x !== 0 || y !== 0 || 1 / x === 1 / y // eslint-disable-next-line no-self-compare
-    : x !== x && y !== y;
-  };
-
-  function shallowEqual(objA, objB) {
-    if (is(objA, objB)) return true;
-    if (typeof objA !== 'object' || objA === null || typeof objB !== 'object' || objB === null) return false;
-    const keysA = Object.keys(objA);
-    const keysB = Object.keys(objB);
-    if (keysA.length !== keysB.length) return false;
-
-    for (let i = 0; i < keysA.length; i++) {
-      /* eslint-disable @typescript-eslint/no-explicit-any */
-
-      /* eslint-disable @typescript-eslint/no-non-null-assertion */
-      if (!Object.prototype.hasOwnProperty.call(objB, keysA[i]) || !is(objA[keysA[i]], objB[keysA[i]])) return false;
-      /* eslint-enable @typescript-eslint/no-non-null-assertion */
-
-      /* eslint-enable @typescript-eslint/no-explicit-any */
-    }
-
-    return true;
-  }
-
-  const capitalize = value => {
-    var _value$;
-
-    return value && ((_value$ = value[0]) === null || _value$ === void 0 ? void 0 : _value$.toLocaleUpperCase()) + value.slice(1);
-  };
-  const getAvatarText = (value, maxLength = 2) => {
-    if (!value || !maxLength) return '';
-    let result = '';
-
-    for (let i = 0, j = 0, isWord = false; i < value.length; i++) {
-      if (!isWord && value[i] !== ' ') {
-        isWord = true; // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-
-        result += value[i];
-        if (++j === maxLength) return result;
-      } else if (isWord && value[i] === ' ') {
-        isWord = false;
-      }
-    }
-
-    return result;
-  };
-
-  const stringPad = (string, isStart, maxLength, fillString = ' ') => {
-    if (String.prototype.padStart !== undefined) return string.padStart(maxLength, fillString);
-    const stringLength = string.length; // eslint-disable-next-line eqeqeq
-
-    if (maxLength <= stringLength || fillString == '') return string;
-    const fillLength = maxLength - stringLength;
-    let filler = fillString.repeat(Math.ceil(fillLength / fillString.length));
-    if (filler.length > fillLength) filler = filler.slice(0, fillLength);
-    return isStart ? filler + string : string + filler;
-  };
-
-  const padStart = (string, maxLength, fillString = ' ') => String.prototype.padStart !== undefined ? string.padStart(maxLength, fillString) : stringPad(string, true, maxLength, fillString);
-  const padEnd = (string, maxLength, fillString = ' ') => String.prototype.padEnd !== undefined ? string.padEnd(maxLength, fillString) : stringPad(string, false, maxLength, fillString);
-
-  var text = /*#__PURE__*/Object.freeze({
-    __proto__: null,
-    capitalize: capitalize,
-    getAvatarText: getAvatarText,
-    padStart: padStart,
-    padEnd: padEnd
-  });
-
-  const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-  exports.IconId = void 0;
-
-  (function (IconId) {
-    IconId[IconId["Common"] = 0] = "Common";
-    IconId[IconId["Email"] = 1] = "Email";
-    IconId[IconId["Telegram"] = 2] = "Telegram";
-    IconId[IconId["Facebook"] = 3] = "Facebook";
-    IconId[IconId["Twitter"] = 4] = "Twitter";
-    IconId[IconId["Instagram"] = 5] = "Instagram";
-    IconId[IconId["GitHub"] = 6] = "GitHub";
-    IconId[IconId["Reddit"] = 7] = "Reddit";
-  })(exports.IconId || (exports.IconId = {}));
-
-  const getInvalidLinkInfo = link => ({
-    rawLink: link,
-    formattedLink: '#',
-    displayLink: 'Invalid Link',
-    icon: exports.IconId.Common
-  });
-
-  const prepareFormattedLink = memoize(link => link.trim());
-  const prepareDisplayLink = memoize(link => link.trim().replace(/\/$/, ''));
-
-  const socialMediaLinkInfoProvider = (link, baseUrl, icon) => {
-    if (!link.startsWith(baseUrl)) return false;
-    const formattedLink = prepareFormattedLink(link);
-    if (formattedLink === baseUrl) return false;
-    return {
-      rawLink: link,
-      formattedLink,
-      displayLink: prepareDisplayLink(link).replace(baseUrl, ''),
-      icon
-    };
-  };
-
-  const telegramLinkInfoProvider = link => socialMediaLinkInfoProvider(link, 'https://t.me/', exports.IconId.Telegram);
-
-  const facebookLinkInfoProvider = link => socialMediaLinkInfoProvider(link, 'https://facebook.com/', exports.IconId.Facebook);
-
-  const twitterLinkInfoProvider = link => socialMediaLinkInfoProvider(link, 'https://twitter.com/', exports.IconId.Twitter);
-
-  const instagramLinkInfoProvider = link => socialMediaLinkInfoProvider(link, 'https://instagram.com/', exports.IconId.Instagram);
-
-  const gitHubLinkInfoProvider = link => socialMediaLinkInfoProvider(link, 'https://github.com/', exports.IconId.GitHub);
-
-  const redditLinkInfoProvider = link => socialMediaLinkInfoProvider(link, 'https://www.reddit.com/', exports.IconId.Reddit); // This regex should not use for email validation
-
-
-  const emailCheckingRegEx = /^[^\s/@]+@[^\s@/]+$/;
-
-  const emailLinkInfoProvider = link => {
-    const preparedFormattedLink = prepareFormattedLink(link);
-    return emailCheckingRegEx.test(preparedFormattedLink) && {
-      rawLink: link,
-      formattedLink: `mailto:${preparedFormattedLink}`,
-      displayLink: prepareDisplayLink(link),
-      icon: exports.IconId.Email
-    };
-  };
-
-  const javascriptLinkInfoProvider = link => link.startsWith('javascript') ? getInvalidLinkInfo(link) : false; // https://datatracker.ietf.org/doc/html/rfc3986#section-3.1
-
-
-  const urlSchemeRegEx = /^([a-z][a-z0-9+\-.]*):/;
-
-  const commonLinkInfoProvider = link => {
-    const formattedLink = prepareFormattedLink(link);
-    return urlSchemeRegEx.test(formattedLink) && {
-      rawLink: link,
-      formattedLink,
-      displayLink: prepareDisplayLink(link),
-      icon: exports.IconId.Common
-    };
-  };
-
-  const editLinkInfoProvider = link => {
-    const formattedLink = prepareFormattedLink(link);
-    return {
-      rawLink: link,
-      formattedLink,
-      displayLink: prepareDisplayLink(link),
-      icon: exports.IconId.Common
-    };
-  };
-
-  class ServiceLinkHelper {
-    // Order is important
-    getLinkInfo(link, isEditMode = false) {
-      for (const provider of ServiceLinkHelper.linkInfoProviders) {
-        const linkInfo = provider(link);
-        if (linkInfo) return this.linkInfoIsValid(linkInfo) ? linkInfo : null;
-      }
-
-      if (isEditMode) return editLinkInfoProvider(link);
-      return null;
-    }
-
-    linkInfoIsValid(linkInfo) {
-      return linkInfo.formattedLink !== '#';
-    }
-
-  }
-
-  _defineProperty(ServiceLinkHelper, "linkInfoProviders", [// Disallowed
-  javascriptLinkInfoProvider, // Allowed
-  telegramLinkInfoProvider, facebookLinkInfoProvider, twitterLinkInfoProvider, instagramLinkInfoProvider, gitHubLinkInfoProvider, emailLinkInfoProvider, redditLinkInfoProvider, commonLinkInfoProvider]);
-
-  exports.PaymentType = void 0;
-
-  (function (PaymentType) {
-    PaymentType[PaymentType["Payment"] = 1] = "Payment";
-    PaymentType[PaymentType["Donation"] = 2] = "Donation";
-  })(exports.PaymentType || (exports.PaymentType = {}));
-
-  class PaymentValidatorBase {
-    validate(payment, bail = false) {
-      if (!isPlainObject(payment)) return [this.invalidPaymentObjectError];
-      let failedValidationResults;
-
-      for (const validationMethod of this.validationMethods) {
-        const currentFailedValidationResults = validationMethod(payment);
-
-        if (currentFailedValidationResults) {
-          if (!bail) return currentFailedValidationResults;
-          failedValidationResults = (failedValidationResults || []).concat(currentFailedValidationResults);
-        }
-      }
-
-      return failedValidationResults;
-    }
-
-  }
 
   var bignumber = {exports: {}};
 
@@ -5533,6 +5078,473 @@
 
   var BigNumber = bignumber.exports;
 
+  const stringToUint8Array = hex => {
+    var _hex$match;
+
+    const integers = (_hex$match = hex.match(/[\da-f]{2}/gi)) === null || _hex$match === void 0 ? void 0 : _hex$match.map(val => parseInt(val, 16)); // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
+    return new Uint8Array(integers);
+  };
+  const stringToBytes = value => buffer.Buffer.from(value, 'utf8').toString('hex');
+  const bytesToString = value => buffer.Buffer.from(stringToUint8Array(value)).toString('utf8');
+  const objectToBytes = value => stringToBytes(JSON.stringify(value));
+  const bytesToObject = value => {
+    try {
+      return JSON.parse(bytesToString(value));
+    } catch {
+      return null;
+    }
+  };
+  const tokensAmountToNat = (tokensAmount, decimals) => {
+    return new BigNumber(tokensAmount).multipliedBy(10 ** decimals).integerValue();
+  };
+  const numberToTokensAmount = (value, decimals) => {
+    return new BigNumber(value).integerValue().div(10 ** decimals);
+  };
+  const tezToMutez = tez => tokensAmountToNat(tez, 6);
+  const mutezToTez = mutez => numberToTokensAmount(mutez, 6);
+
+  var converters = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    stringToUint8Array: stringToUint8Array,
+    stringToBytes: stringToBytes,
+    bytesToString: bytesToString,
+    objectToBytes: objectToBytes,
+    bytesToObject: bytesToObject,
+    tokensAmountToNat: tokensAmountToNat,
+    numberToTokensAmount: numberToTokensAmount,
+    tezToMutez: tezToMutez,
+    mutezToTez: mutezToTez
+  });
+
+  /**
+   * lodash (Custom Build) <https://lodash.com/>
+   * Build: `lodash modularize exports="npm" -o ./`
+   * Copyright jQuery Foundation and other contributors <https://jquery.org/>
+   * Released under MIT license <https://lodash.com/license>
+   * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+   * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+   */
+  /** `Object#toString` result references. */
+
+  var objectTag = '[object Object]';
+  /**
+   * Checks if `value` is a host object in IE < 9.
+   *
+   * @private
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is a host object, else `false`.
+   */
+
+  function isHostObject(value) {
+    // Many host objects are `Object` objects that can coerce to strings
+    // despite having improperly defined `toString` methods.
+    var result = false;
+
+    if (value != null && typeof value.toString != 'function') {
+      try {
+        result = !!(value + '');
+      } catch (e) {}
+    }
+
+    return result;
+  }
+  /**
+   * Creates a unary function that invokes `func` with its argument transformed.
+   *
+   * @private
+   * @param {Function} func The function to wrap.
+   * @param {Function} transform The argument transform.
+   * @returns {Function} Returns the new function.
+   */
+
+
+  function overArg(func, transform) {
+    return function (arg) {
+      return func(transform(arg));
+    };
+  }
+  /** Used for built-in method references. */
+
+
+  var funcProto = Function.prototype,
+      objectProto = Object.prototype;
+  /** Used to resolve the decompiled source of functions. */
+
+  var funcToString = funcProto.toString;
+  /** Used to check objects for own properties. */
+
+  var hasOwnProperty$1 = objectProto.hasOwnProperty;
+  /** Used to infer the `Object` constructor. */
+
+  var objectCtorString = funcToString.call(Object);
+  /**
+   * Used to resolve the
+   * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+   * of values.
+   */
+
+  var objectToString = objectProto.toString;
+  /** Built-in value references. */
+
+  var getPrototype = overArg(Object.getPrototypeOf, Object);
+  /**
+   * Checks if `value` is object-like. A value is object-like if it's not `null`
+   * and has a `typeof` result of "object".
+   *
+   * @static
+   * @memberOf _
+   * @since 4.0.0
+   * @category Lang
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+   * @example
+   *
+   * _.isObjectLike({});
+   * // => true
+   *
+   * _.isObjectLike([1, 2, 3]);
+   * // => true
+   *
+   * _.isObjectLike(_.noop);
+   * // => false
+   *
+   * _.isObjectLike(null);
+   * // => false
+   */
+
+  function isObjectLike(value) {
+    return !!value && typeof value == 'object';
+  }
+  /**
+   * Checks if `value` is a plain object, that is, an object created by the
+   * `Object` constructor or one with a `[[Prototype]]` of `null`.
+   *
+   * @static
+   * @memberOf _
+   * @since 0.8.0
+   * @category Lang
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is a plain object, else `false`.
+   * @example
+   *
+   * function Foo() {
+   *   this.a = 1;
+   * }
+   *
+   * _.isPlainObject(new Foo);
+   * // => false
+   *
+   * _.isPlainObject([1, 2, 3]);
+   * // => false
+   *
+   * _.isPlainObject({ 'x': 0, 'y': 0 });
+   * // => true
+   *
+   * _.isPlainObject(Object.create(null));
+   * // => true
+   */
+
+
+  function isPlainObject$1(value) {
+    if (!isObjectLike(value) || objectToString.call(value) != objectTag || isHostObject(value)) {
+      return false;
+    }
+
+    var proto = getPrototype(value);
+
+    if (proto === null) {
+      return true;
+    }
+
+    var Ctor = hasOwnProperty$1.call(proto, 'constructor') && proto.constructor;
+    return typeof Ctor == 'function' && Ctor instanceof Ctor && funcToString.call(Ctor) == objectCtorString;
+  }
+
+  var lodash_isplainobject = isPlainObject$1;
+
+  const isArray = arg => {
+    return Array.isArray(arg);
+  };
+  const isReadonlyArray = arg => {
+    return Array.isArray(arg);
+  };
+  const isPlainObject = value => {
+    return lodash_isplainobject(value);
+  };
+
+  var guards = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    isArray: isArray,
+    isReadonlyArray: isReadonlyArray,
+    isPlainObject: isPlainObject
+  });
+
+  const defaultEqualityCheck = (a, b) => a === b;
+
+  const areArgumentsShallowlyEqual = (equalityCheck, prev, next) => {
+    if (prev === null || next === null || prev.length !== next.length) {
+      return false;
+    } // Do this in a for loop (and not a `forEach` or an `every`) so we can determine equality as fast as possible.
+
+
+    const length = prev.length;
+
+    for (let i = 0; i < length; i++) {
+      if (!equalityCheck(prev[i], next[i])) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+  /* eslint-disable prefer-rest-params  */
+
+  /* eslint-disable prefer-spread */
+
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+
+
+  const memoize = (func, equalityCheck = defaultEqualityCheck) => {
+    let lastArgs = null;
+    let lastResult = null;
+    return function () {
+      if (!areArgumentsShallowlyEqual(equalityCheck, lastArgs, arguments)) {
+        // apply arguments instead of spreading for performance.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        lastResult = func.apply(null, arguments);
+      }
+
+      lastArgs = arguments;
+      return lastResult;
+    };
+  };
+  /* eslint-enable prefer-spread */
+
+  /* eslint-enable prefer-rest-params */
+
+  /* eslint-enable @typescript-eslint/no-explicit-any */
+
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+
+  const emptyArray = [];
+  const emptyObject = {};
+  const emptyMap = new Map();
+  const emptySet = new Set();
+  const zeroBigNumber = new BigNumber(0);
+  var optimization = {
+    emptyArray,
+    emptyMap,
+    emptySet,
+    emptyObject,
+    zeroBigNumber
+  };
+
+  const is = (x, y) => {
+    return x === y ? x !== 0 || y !== 0 || 1 / x === 1 / y // eslint-disable-next-line no-self-compare
+    : x !== x && y !== y;
+  };
+
+  function shallowEqual(objA, objB) {
+    if (is(objA, objB)) return true;
+    if (typeof objA !== 'object' || objA === null || typeof objB !== 'object' || objB === null) return false;
+    const keysA = Object.keys(objA);
+    const keysB = Object.keys(objB);
+    if (keysA.length !== keysB.length) return false;
+
+    for (let i = 0; i < keysA.length; i++) {
+      /* eslint-disable @typescript-eslint/no-explicit-any */
+
+      /* eslint-disable @typescript-eslint/no-non-null-assertion */
+      if (!Object.prototype.hasOwnProperty.call(objB, keysA[i]) || !is(objA[keysA[i]], objB[keysA[i]])) return false;
+      /* eslint-enable @typescript-eslint/no-non-null-assertion */
+
+      /* eslint-enable @typescript-eslint/no-explicit-any */
+    }
+
+    return true;
+  }
+
+  const capitalize = value => {
+    var _value$;
+
+    return value && ((_value$ = value[0]) === null || _value$ === void 0 ? void 0 : _value$.toLocaleUpperCase()) + value.slice(1);
+  };
+  const getAvatarText = (value, maxLength = 2) => {
+    if (!value || !maxLength) return '';
+    let result = '';
+
+    for (let i = 0, j = 0, isWord = false; i < value.length; i++) {
+      if (!isWord && value[i] !== ' ') {
+        isWord = true; // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
+        result += value[i];
+        if (++j === maxLength) return result;
+      } else if (isWord && value[i] === ' ') {
+        isWord = false;
+      }
+    }
+
+    return result;
+  };
+
+  const stringPad = (string, isStart, maxLength, fillString = ' ') => {
+    if (String.prototype.padStart !== undefined) return string.padStart(maxLength, fillString);
+    const stringLength = string.length; // eslint-disable-next-line eqeqeq
+
+    if (maxLength <= stringLength || fillString == '') return string;
+    const fillLength = maxLength - stringLength;
+    let filler = fillString.repeat(Math.ceil(fillLength / fillString.length));
+    if (filler.length > fillLength) filler = filler.slice(0, fillLength);
+    return isStart ? filler + string : string + filler;
+  };
+
+  const padStart = (string, maxLength, fillString = ' ') => String.prototype.padStart !== undefined ? string.padStart(maxLength, fillString) : stringPad(string, true, maxLength, fillString);
+  const padEnd = (string, maxLength, fillString = ' ') => String.prototype.padEnd !== undefined ? string.padEnd(maxLength, fillString) : stringPad(string, false, maxLength, fillString);
+
+  var text = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    capitalize: capitalize,
+    getAvatarText: getAvatarText,
+    padStart: padStart,
+    padEnd: padEnd
+  });
+
+  const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+  exports.IconId = void 0;
+
+  (function (IconId) {
+    IconId[IconId["Common"] = 0] = "Common";
+    IconId[IconId["Email"] = 1] = "Email";
+    IconId[IconId["Telegram"] = 2] = "Telegram";
+    IconId[IconId["Facebook"] = 3] = "Facebook";
+    IconId[IconId["Twitter"] = 4] = "Twitter";
+    IconId[IconId["Instagram"] = 5] = "Instagram";
+    IconId[IconId["GitHub"] = 6] = "GitHub";
+    IconId[IconId["Reddit"] = 7] = "Reddit";
+  })(exports.IconId || (exports.IconId = {}));
+
+  const getInvalidLinkInfo = link => ({
+    rawLink: link,
+    formattedLink: '#',
+    displayLink: 'Invalid Link',
+    icon: exports.IconId.Common
+  });
+
+  const prepareFormattedLink = memoize(link => link.trim());
+  const prepareDisplayLink = memoize(link => link.trim().replace(/\/$/, ''));
+
+  const socialMediaLinkInfoProvider = (link, baseUrl, icon) => {
+    if (!link.startsWith(baseUrl)) return false;
+    const formattedLink = prepareFormattedLink(link);
+    if (formattedLink === baseUrl) return false;
+    return {
+      rawLink: link,
+      formattedLink,
+      displayLink: prepareDisplayLink(link).replace(baseUrl, ''),
+      icon
+    };
+  };
+
+  const telegramLinkInfoProvider = link => socialMediaLinkInfoProvider(link, 'https://t.me/', exports.IconId.Telegram);
+
+  const facebookLinkInfoProvider = link => socialMediaLinkInfoProvider(link, 'https://facebook.com/', exports.IconId.Facebook);
+
+  const twitterLinkInfoProvider = link => socialMediaLinkInfoProvider(link, 'https://twitter.com/', exports.IconId.Twitter);
+
+  const instagramLinkInfoProvider = link => socialMediaLinkInfoProvider(link, 'https://instagram.com/', exports.IconId.Instagram);
+
+  const gitHubLinkInfoProvider = link => socialMediaLinkInfoProvider(link, 'https://github.com/', exports.IconId.GitHub);
+
+  const redditLinkInfoProvider = link => socialMediaLinkInfoProvider(link, 'https://www.reddit.com/', exports.IconId.Reddit); // This regex should not use for email validation
+
+
+  const emailCheckingRegEx = /^[^\s/@]+@[^\s@/]+$/;
+
+  const emailLinkInfoProvider = link => {
+    const preparedFormattedLink = prepareFormattedLink(link);
+    return emailCheckingRegEx.test(preparedFormattedLink) && {
+      rawLink: link,
+      formattedLink: `mailto:${preparedFormattedLink}`,
+      displayLink: prepareDisplayLink(link),
+      icon: exports.IconId.Email
+    };
+  };
+
+  const javascriptLinkInfoProvider = link => link.startsWith('javascript') ? getInvalidLinkInfo(link) : false; // https://datatracker.ietf.org/doc/html/rfc3986#section-3.1
+
+
+  const urlSchemeRegEx = /^([a-z][a-z0-9+\-.]*):/;
+
+  const commonLinkInfoProvider = link => {
+    const formattedLink = prepareFormattedLink(link);
+    return urlSchemeRegEx.test(formattedLink) && {
+      rawLink: link,
+      formattedLink,
+      displayLink: prepareDisplayLink(link),
+      icon: exports.IconId.Common
+    };
+  };
+
+  const editLinkInfoProvider = link => {
+    const formattedLink = prepareFormattedLink(link);
+    return {
+      rawLink: link,
+      formattedLink,
+      displayLink: prepareDisplayLink(link),
+      icon: exports.IconId.Common
+    };
+  };
+
+  class ServiceLinkHelper {
+    // Order is important
+    getLinkInfo(link, isEditMode = false) {
+      for (const provider of ServiceLinkHelper.linkInfoProviders) {
+        const linkInfo = provider(link);
+        if (linkInfo) return this.linkInfoIsValid(linkInfo) ? linkInfo : null;
+      }
+
+      if (isEditMode) return editLinkInfoProvider(link);
+      return null;
+    }
+
+    linkInfoIsValid(linkInfo) {
+      return linkInfo.formattedLink !== '#';
+    }
+
+  }
+
+  _defineProperty(ServiceLinkHelper, "linkInfoProviders", [// Disallowed
+  javascriptLinkInfoProvider, // Allowed
+  telegramLinkInfoProvider, facebookLinkInfoProvider, twitterLinkInfoProvider, instagramLinkInfoProvider, gitHubLinkInfoProvider, emailLinkInfoProvider, redditLinkInfoProvider, commonLinkInfoProvider]);
+
+  exports.PaymentType = void 0;
+
+  (function (PaymentType) {
+    PaymentType[PaymentType["Payment"] = 1] = "Payment";
+    PaymentType[PaymentType["Donation"] = 2] = "Donation";
+  })(exports.PaymentType || (exports.PaymentType = {}));
+
+  class PaymentValidatorBase {
+    validate(payment, bail = false) {
+      if (!isPlainObject(payment)) return [this.invalidPaymentObjectError];
+      let failedValidationResults;
+
+      for (const validationMethod of this.validationMethods) {
+        const currentFailedValidationResults = validationMethod(payment);
+
+        if (currentFailedValidationResults) {
+          if (!bail) return currentFailedValidationResults;
+          failedValidationResults = (failedValidationResults || []).concat(currentFailedValidationResults);
+        }
+      }
+
+      return failedValidationResults;
+    }
+
+  }
+
   const networksInternal = {
     // mainnet: {
     //   id: 'NetXdQprcVkpaWU',
@@ -5541,10 +5553,6 @@
     granadanet: {
       id: 'NetXz969SFaFn8k',
       name: 'granadanet'
-    },
-    edo2net: {
-      id: 'NetXSgo1ZT2DRUG',
-      name: 'edo2net'
     }
   };
   const networks = networksInternal;
@@ -5557,6 +5565,12 @@
     name: 'Tezos',
     decimals: 6,
     thumbnailUri: 'https://dashboard.tezospayments.com/tokens/tezos.png'
+  };
+  const unknownAssetMeta = {
+    name: 'Unknown',
+    symbol: 'Unknown',
+    decimals: 0,
+    thumbnailUri: 'https://dashboard.tezospayments.com/tokens/unknown.png'
   };
   const tokenWhitelist = [// {
   //   network: networks.mainnet,
@@ -5582,18 +5596,39 @@
   //   },
   // },
   {
-    network: networks.edo2net,
-    type: 'fa2',
-    contractAddress: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2',
-    fa2TokenId: 0,
+    network: networks.granadanet,
+    type: 'fa1.2',
+    contractAddress: 'KT1KcuD9MmgZuGcptdD3qRqxXpGg4WxFsfVc',
     metadata: {
       decimals: 0,
-      symbol: 'MBRG',
-      name: 'MAX BURGER',
+      symbol: 'fa12',
+      name: 'Test fa12',
       thumbnailUri: 'https://dashboard.tezospayments.com/tokens/unknown.png'
     }
+  }, {
+    network: networks.granadanet,
+    type: 'fa2',
+    contractAddress: 'KT1BBfxboq63dbaKCAc4uwVKLFzVn1b4fy37',
+    id: 0,
+    metadata: {
+      decimals: 0,
+      symbol: 'fa20',
+      name: 'Test fa20',
+      thumbnailUri: 'https://dashboard.tezospayments.com/tokens/unknown.png'
+    }
+  }, {
+    network: networks.granadanet,
+    type: 'fa2',
+    contractAddress: 'KT1PMAT81mmL6NFp9rVU3xoVzU2dRdcXt4R9',
+    id: 0,
+    metadata: {
+      decimals: 6,
+      symbol: 'USDS',
+      name: 'Stably USD',
+      thumbnailUri: 'https://quipuswap.com/tokens/stably.png'
+    }
   }];
-  const tokenWhitelistMap = new Map(tokenWhitelist.map(token => [token.contractAddress, token]));
+  const tokenWhitelistMap = new Map(networksCollection.map(nc => [nc, new Map(tokenWhitelist.filter(t => t.network === nc).map(t => [t.contractAddress, t]))]));
 
   const contractAddressPrefixes = ['KT'];
   const implicitAddressPrefixes = ['tz1', 'tz2', 'tz3'];
@@ -7016,11 +7051,15 @@
   const validateDesiredAmount = (desiredAmount, errors) => {
     return desiredAmount === undefined ? undefined : validateAmount(desiredAmount, errors);
   };
-  const validateAsset = (asset, errors) => {
+  const validatePaymentAsset = (asset, errors) => {
     if (asset === undefined) return;
-    if (typeof asset !== 'string') return [errors.invalidAsset];
-    if (asset.length !== tezosInfo.addressLength) return [errors.assetHasInvalidLength];
-    if (!tezosInfo.contractAddressPrefixes.some(prefix => asset.startsWith(prefix))) return [errors.assetIsNotContractAddress];
+    if (!isPlainObject(asset)) return [errors.invalidAsset];
+    return validateAsset(asset, errors) || validateAssetDecimals(asset.decimals, errors);
+  };
+  const validateDonationAsset = (asset, errors) => {
+    if (asset === undefined) return;
+    if (!isPlainObject(asset)) return [errors.invalidAsset];
+    return validateAsset(asset, errors);
   };
   const validateCreatedDate = (date, errors) => {
     if (!(date instanceof Date) || isNaN(date.getTime())) return [errors.invalidCreatedDate];
@@ -7039,36 +7078,38 @@
     }
   };
   const validateData = (data, errors) => {
-    if (!isPlainObject(data) || Object.keys(data).some(key => key !== 'public' && key !== 'private')) return [errors.invalidData];
-    const publicData = data.public;
-    const privateData = data.private;
-    if (!(publicData || privateData)) return [errors.invalidData];
-
-    if (publicData !== undefined) {
-      if (!isPlainObject(publicData)) return [errors.invalidPublicData];
-      if (!isFlatObject(publicData)) return [errors.publicDataShouldBeFlat];
-    }
-
-    if (privateData !== undefined) {
-      if (!isPlainObject(privateData)) return [errors.invalidPrivateData];
-      if (!isFlatObject(privateData)) return [errors.privateDataShouldBeFlat];
-    }
+    if (data === undefined) return;
+    if (!isPlainObject(data)) return [errors.invalidData];
   };
 
-  const isFlatObject = obj => {
-    for (const propertyName of Object.getOwnPropertyNames(obj)) {
-      const property = obj[propertyName];
-      if (typeof property === 'object' || typeof property === 'function') return false;
-    }
+  const validateAsset = (asset, errors) => {
+    return validateAssetAddress(asset.address, errors) || validateAssetId(asset.id, errors);
+  };
 
-    return true;
+  const validateAssetAddress = (assetAddress, errors) => {
+    if (typeof assetAddress !== 'string') return [errors.invalidAssetAddress];
+    if (assetAddress.length !== tezosInfo.addressLength) return [errors.assetAddressHasInvalidLength];
+    if (!tezosInfo.contractAddressPrefixes.some(prefix => assetAddress.startsWith(prefix))) return [errors.assetAddressIsNotContractAddress];
+  };
+
+  const validateAssetId = (assetId, errors) => {
+    if (assetId === null) return;
+    if (typeof assetId !== 'number' || Number.isNaN(assetId) || !Number.isFinite(assetId)) return [errors.invalidAssetId];
+    if (assetId < 0) return [errors.assetIdIsNegative];
+    if (!Number.isInteger(assetId)) return [errors.assetIdIsNotInteger];
+  };
+
+  const validateAssetDecimals = (assetDecimals, errors) => {
+    if (typeof assetDecimals !== 'number' || Number.isNaN(assetDecimals) || !Number.isFinite(assetDecimals)) return [errors.invalidAssetDecimals];
+    if (assetDecimals < 0) return [errors.assetDecimalsNumberIsNegative];
+    if (!Number.isInteger(assetDecimals)) return [errors.assetDecimalsNumberIsNotInteger];
   };
 
   class PaymentValidator extends PaymentValidatorBase {
     constructor(...args) {
       super(...args);
 
-      _defineProperty(this, "validationMethods", [payment => payment.type !== exports.PaymentType.Payment ? [PaymentValidator.errors.invalidType] : undefined, payment => validateTargetAddress(payment.targetAddress, PaymentValidator.errors), payment => validateId(payment.id, PaymentValidator.errors), payment => validateAmount(payment.amount, PaymentValidator.errors), payment => validateData(payment.data, PaymentValidator.errors), payment => validateAsset(payment.asset, PaymentValidator.errors), payment => validateUrl(payment.successUrl, PaymentValidator.successUrlErrors), payment => validateUrl(payment.cancelUrl, PaymentValidator.cancelUrlErrors), payment => validateCreatedDate(payment.created, PaymentValidator.errors), payment => validateExpiredDate(payment.expired, payment.created, PaymentValidator.minimumPaymentLifetime, PaymentValidator.errors)]);
+      _defineProperty(this, "validationMethods", [payment => payment.type !== exports.PaymentType.Payment ? [PaymentValidator.errors.invalidType] : undefined, payment => validateTargetAddress(payment.targetAddress, PaymentValidator.errors), payment => validateId(payment.id, PaymentValidator.errors), payment => validateAmount(payment.amount, PaymentValidator.errors), payment => validatePaymentAsset(payment.asset, PaymentValidator.errors), payment => validateData(payment.data, PaymentValidator.errors), payment => validateUrl(payment.successUrl, PaymentValidator.successUrlErrors), payment => validateUrl(payment.cancelUrl, PaymentValidator.cancelUrlErrors), payment => validateCreatedDate(payment.created, PaymentValidator.errors), payment => validateExpiredDate(payment.expired, payment.created, PaymentValidator.minimumPaymentLifetime, PaymentValidator.errors)]);
 
       _defineProperty(this, "invalidPaymentObjectError", PaymentValidator.errors.invalidPaymentObject);
     }
@@ -7086,13 +7127,16 @@
     invalidAmount: 'Amount is invalid',
     amountIsNonPositive: 'Amount is less than or equal to zero',
     invalidData: 'Payment data is invalid',
-    invalidPublicData: 'Payment public data is invalid',
-    invalidPrivateData: 'Payment private data is invalid',
-    publicDataShouldBeFlat: 'Public data should be flat',
-    privateDataShouldBeFlat: 'Private data should be flat',
-    invalidAsset: 'Asset address is invalid',
-    assetIsNotContractAddress: 'Asset address isn\'t a contract address',
-    assetHasInvalidLength: 'Asset address has an invalid address',
+    invalidAsset: 'Asset is invalid',
+    invalidAssetAddress: 'Asset address is invalid',
+    assetAddressIsNotContractAddress: 'Asset address isn\'t a contract address',
+    assetAddressHasInvalidLength: 'Asset address has an invalid address',
+    invalidAssetId: 'Asset Id is invalid',
+    assetIdIsNegative: 'Asset Id is negative',
+    assetIdIsNotInteger: 'Asset Id isn\'t an integer',
+    invalidAssetDecimals: 'Asset number of decimals is invalid',
+    assetDecimalsNumberIsNegative: 'Asset number of decimals is negative',
+    assetDecimalsNumberIsNotInteger: 'Asset number of decimals isn\'t an integer',
     invalidSuccessUrl: 'Success URL is invalid',
     successUrlHasInvalidProtocol: 'Success URL has an invalid protocol',
     invalidCancelUrl: 'Cancel URL is invalid',
@@ -7118,7 +7162,7 @@
     constructor(...args) {
       super(...args);
 
-      _defineProperty(this, "validationMethods", [donation => donation.type !== exports.PaymentType.Donation ? [DonationValidator.errors.invalidType] : undefined, donation => validateTargetAddress(donation.targetAddress, DonationValidator.errors), donation => validateDesiredAmount(donation.desiredAmount, DonationValidator.errors), donation => validateAsset(donation.desiredAsset, DonationValidator.errors), donation => validateUrl(donation.successUrl, DonationValidator.successUrlErrors), donation => validateUrl(donation.cancelUrl, DonationValidator.cancelUrlErrors)]);
+      _defineProperty(this, "validationMethods", [donation => donation.type !== exports.PaymentType.Donation ? [DonationValidator.errors.invalidType] : undefined, donation => validateData(donation.data, DonationValidator.errors), donation => validateTargetAddress(donation.targetAddress, DonationValidator.errors), donation => validateDesiredAmount(donation.desiredAmount, DonationValidator.errors), donation => validateDonationAsset(donation.desiredAsset, DonationValidator.errors), donation => validateUrl(donation.successUrl, DonationValidator.successUrlErrors), donation => validateUrl(donation.cancelUrl, DonationValidator.cancelUrlErrors)]);
 
       _defineProperty(this, "invalidPaymentObjectError", DonationValidator.errors.invalidDonationObject);
     }
@@ -7128,14 +7172,19 @@
   _defineProperty(DonationValidator, "errors", {
     invalidDonationObject: 'Donation is undefined or not object',
     invalidType: 'Donation type is invalid',
+    invalidData: 'Donation data is invalid',
     invalidAmount: 'Desired amount is invalid',
     amountIsNonPositive: 'Desired amount is less than or equal to zero',
     invalidTargetAddress: 'Target address is invalid',
     targetAddressIsNotNetworkAddress: 'Target address isn\'t a network address',
     targetAddressHasInvalidLength: 'Target address has an invalid address',
-    invalidAsset: 'Desired asset address is invalid',
-    assetIsNotContractAddress: 'Desired asset address isn\'t a contract address',
-    assetHasInvalidLength: 'Desired asset address has an invalid address',
+    invalidAsset: 'Desired asset is invalid',
+    invalidAssetAddress: 'Desired asset address is invalid',
+    assetAddressIsNotContractAddress: 'Desired asset address isn\'t a contract address',
+    assetAddressHasInvalidLength: 'Desired asset address has an invalid address',
+    invalidAssetId: 'Asset Id is invalid',
+    assetIdIsNegative: 'Asset Id is negative',
+    assetIdIsNotInteger: 'Asset Id isn\'t an integer',
     invalidSuccessUrl: 'Success URL is invalid',
     successUrlHasInvalidProtocol: 'Success URL has an invalid protocol',
     invalidCancelUrl: 'Cancel URL is invalid',
@@ -7240,16 +7289,27 @@
 
   }
 
+  new Map() // address
+  .set('a', 'string') // decimals
+  .set('d', 'number') // id
+  .set('i', ['number', 'undefined', 'null']);
+
+  new Map() // contract
+  .set('c', 'string') // client
+  .set('cl', ['string', 'undefined', 'null']) // signature.signingPublicKey
+  .set('k', 'string');
+
   const serializedPaymentFieldTypes = new Map() // id
   .set('i', 'string') // amount
-  .set('a', 'string') // data
-  .set('d', 'object') // asset
-  .set('as', ['string', 'undefined', 'null']) // successUrl
+  .set('a', 'string') // asset
+  .set('as', ['object', 'undefined', 'null']) // .set('as', serializedPaymentAssetFieldTypes)
+  // data
+  .set('d', ['object', 'undefined', 'null']) // successUrl
   .set('su', ['string', 'undefined', 'null']) // cancelUrl
   .set('cu', ['string', 'undefined', 'null']) // created
   .set('c', 'number') // expired
-  .set('e', ['number', 'undefined', 'null']);
-  const legacySerializedPaymentFieldTypes = new Map().set('amount', 'string').set('data', 'object').set('asset', ['string', 'undefined', 'null']).set('successUrl', ['string', 'undefined', 'null']).set('cancelUrl', ['string', 'undefined', 'null']).set('created', 'number').set('expired', ['number', 'undefined', 'null']);
+  .set('e', ['number', 'undefined', 'null']) // signature
+  .set('s', 'object'); // .set('s', serializedPaymentSignatureFieldTypes);
 
   class PaymentSerializer {
     serialize(payment) {
@@ -7267,12 +7327,29 @@
       return {
         i: payment.id,
         a: payment.amount.toString(),
+        as: payment.asset ? this.mapPaymentAssetToSerializedPaymentAsset(payment.asset) : undefined,
         d: payment.data,
-        as: payment.asset,
         su: (_payment$successUrl = payment.successUrl) === null || _payment$successUrl === void 0 ? void 0 : _payment$successUrl.toString(),
         cu: (_payment$cancelUrl = payment.cancelUrl) === null || _payment$cancelUrl === void 0 ? void 0 : _payment$cancelUrl.toString(),
         c: payment.created.getTime(),
-        e: (_payment$expired = payment.expired) === null || _payment$expired === void 0 ? void 0 : _payment$expired.getTime()
+        e: (_payment$expired = payment.expired) === null || _payment$expired === void 0 ? void 0 : _payment$expired.getTime(),
+        s: this.mapPaymentSignatureToSerializedPaymentSignature(payment.signature)
+      };
+    }
+
+    mapPaymentAssetToSerializedPaymentAsset(paymentAsset) {
+      return {
+        a: paymentAsset.address,
+        d: paymentAsset.decimals,
+        i: paymentAsset.id !== null ? paymentAsset.id : undefined
+      };
+    }
+
+    mapPaymentSignatureToSerializedPaymentSignature(paymentSignature) {
+      return {
+        k: paymentSignature.signingPublicKey,
+        c: paymentSignature.contract,
+        cl: paymentSignature.client
       };
     }
 
@@ -7295,13 +7372,30 @@
         type: exports.PaymentType.Payment,
         id: serializedPayment.i,
         amount: new BigNumber(serializedPayment.a),
+        asset: serializedPayment.as ? this.mapSerializedPaymentAssetToPaymentAsset(serializedPayment.as) : undefined,
         data: serializedPayment.d,
-        asset: serializedPayment.as,
         successUrl: serializedPayment.su ? new URL(serializedPayment.su) : undefined,
         cancelUrl: serializedPayment.cu ? new URL(serializedPayment.cu) : undefined,
         created: new Date(serializedPayment.c),
         expired: serializedPayment.e ? new Date(serializedPayment.e) : undefined,
-        targetAddress: nonSerializedPaymentSlice.targetAddress
+        targetAddress: nonSerializedPaymentSlice.targetAddress,
+        signature: this.mapSerializedPaymentSignatureToPaymentSignature(serializedPayment.s)
+      };
+    }
+
+    mapSerializedPaymentAssetToPaymentAsset(serializedPaymentAsset) {
+      return {
+        address: serializedPaymentAsset.a,
+        decimals: serializedPaymentAsset.d,
+        id: serializedPaymentAsset.i !== undefined ? serializedPaymentAsset.i : null
+      };
+    }
+
+    mapSerializedPaymentSignatureToPaymentSignature(serializedPaymentSignature) {
+      return {
+        signingPublicKey: serializedPaymentSignature.k,
+        contract: serializedPaymentSignature.c,
+        client: serializedPaymentSignature.cl
       };
     }
 
@@ -7309,41 +7403,22 @@
 
   _defineProperty(PaymentDeserializer, "serializedPaymentBase64Deserializer", new Base64Deserializer(serializedPaymentFieldTypes));
 
-  class LegacyPaymentDeserializer {
-    deserialize(serializedPaymentBase64, nonSerializedPaymentSlice) {
-      try {
-        const serializedPayment = LegacyPaymentDeserializer.serializedPaymentBase64Deserializer.deserialize(serializedPaymentBase64);
-        return serializedPayment ? this.mapSerializedPaymentToPayment(serializedPayment, nonSerializedPaymentSlice) : null;
-      } catch {
-        return null;
-      }
-    }
+  new Map() // address
+  .set('a', 'string') // id
+  .set('i', ['number', 'undefined', 'null']);
 
-    mapSerializedPaymentToPayment(serializedPayment, nonSerializedPaymentSlice) {
-      return {
-        type: exports.PaymentType.Payment,
-        id: 'legacy-payment',
-        amount: new BigNumber(serializedPayment.amount),
-        data: serializedPayment.data,
-        asset: serializedPayment.asset,
-        successUrl: serializedPayment.successUrl ? new URL(serializedPayment.successUrl) : undefined,
-        cancelUrl: serializedPayment.cancelUrl ? new URL(serializedPayment.cancelUrl) : undefined,
-        created: new Date(serializedPayment.created),
-        expired: serializedPayment.expired ? new Date(serializedPayment.expired) : undefined,
-        targetAddress: nonSerializedPaymentSlice.targetAddress
-      };
-    }
+  new Map() // client
+  .set('cl', 'string') // signature.signingPublicKey
+  .set('k', 'string');
 
-  }
-
-  _defineProperty(LegacyPaymentDeserializer, "serializedPaymentBase64Deserializer", new Base64Deserializer(legacySerializedPaymentFieldTypes));
-
-  const serializedDonationFieldTypes = new Map() // desiredAmount
+  const serializedDonationFieldTypes = new Map() // data
+  .set('d', ['object', 'undefined', 'null']) // desiredAmount
   .set('da', ['string', 'undefined', 'null']) // desiredAsset
-  .set('das', ['string', 'undefined', 'null']) // successUrl
+  .set('das', ['object', 'undefined', 'null']) // .set('das', serializedDonationAssetFieldTypes)
+  // successUrl
   .set('su', ['string', 'undefined', 'null']) // cancelUrl
-  .set('cu', ['string', 'undefined', 'null']);
-  const legacySerializedDonationFieldTypes = new Map().set('desiredAmount', ['string', 'undefined', 'null']).set('desiredAsset', ['string', 'undefined', 'null']).set('successUrl', ['string', 'undefined', 'null']).set('cancelUrl', ['string', 'undefined', 'null']);
+  .set('cu', ['string', 'undefined', 'null']) // signature
+  .set('s', ['object', 'undefined', 'null']); // .set('da', serializedDonationSignatureFieldTypes)
 
   const serializedEmptyObjectBase64 = 'e30';
   class DonationSerializer {
@@ -7361,10 +7436,26 @@
       var _donation$desiredAmou, _donation$successUrl, _donation$cancelUrl;
 
       return {
+        d: donation.data,
         da: (_donation$desiredAmou = donation.desiredAmount) === null || _donation$desiredAmou === void 0 ? void 0 : _donation$desiredAmou.toString(),
-        das: donation.desiredAsset,
+        das: donation.desiredAsset ? this.mapDonationAssetToSerializedDonationAsset(donation.desiredAsset) : undefined,
         su: (_donation$successUrl = donation.successUrl) === null || _donation$successUrl === void 0 ? void 0 : _donation$successUrl.toString(),
-        cu: (_donation$cancelUrl = donation.cancelUrl) === null || _donation$cancelUrl === void 0 ? void 0 : _donation$cancelUrl.toString()
+        cu: (_donation$cancelUrl = donation.cancelUrl) === null || _donation$cancelUrl === void 0 ? void 0 : _donation$cancelUrl.toString(),
+        s: donation.signature ? this.mapDonationSignatureToSerializedDonationSignature(donation.signature) : undefined
+      };
+    }
+
+    mapDonationAssetToSerializedDonationAsset(donationAsset) {
+      return {
+        a: donationAsset.address,
+        i: donationAsset.id !== null ? donationAsset.id : undefined
+      };
+    }
+
+    mapDonationSignatureToSerializedDonationSignature(donationSignature) {
+      return {
+        k: donationSignature.signingPublicKey,
+        cl: donationSignature.client
       };
     }
 
@@ -7385,11 +7476,27 @@
     mapSerializedDonationToDonation(serializedDonation, nonSerializedDonationSlice) {
       return {
         type: exports.PaymentType.Donation,
+        data: serializedDonation.d,
         desiredAmount: serializedDonation.da ? new BigNumber(serializedDonation.da) : undefined,
-        desiredAsset: serializedDonation.das,
+        desiredAsset: serializedDonation.das ? this.mapSerializedDonationAssetToDonationAsset(serializedDonation.das) : undefined,
         successUrl: serializedDonation.su ? new URL(serializedDonation.su) : undefined,
         cancelUrl: serializedDonation.cu ? new URL(serializedDonation.cu) : undefined,
-        targetAddress: nonSerializedDonationSlice.targetAddress
+        targetAddress: nonSerializedDonationSlice.targetAddress,
+        signature: serializedDonation.s ? this.mapSerializedDonationSignatureToDonationSignature(serializedDonation.s) : undefined
+      };
+    }
+
+    mapSerializedDonationAssetToDonationAsset(serializedDonationAsset) {
+      return {
+        address: serializedDonationAsset.a,
+        id: serializedDonationAsset.i !== undefined ? serializedDonationAsset.i : null
+      };
+    }
+
+    mapSerializedDonationSignatureToDonationSignature(serializedDonationSignature) {
+      return {
+        signingPublicKey: serializedDonationSignature.k,
+        client: serializedDonationSignature.cl
       };
     }
 
@@ -7397,78 +7504,33 @@
 
   _defineProperty(DonationDeserializer, "serializedDonationBase64Deserializer", new Base64Deserializer(serializedDonationFieldTypes));
 
-  class LegacyDonationDeserializer {
-    deserialize(serializedDonationBase64, nonSerializedDonationSlice) {
-      try {
-        const serializedDonation = LegacyDonationDeserializer.serializedDonationBase64Deserializer.deserialize(serializedDonationBase64);
-        return serializedDonation ? this.mapSerializedDonationToDonation(serializedDonation, nonSerializedDonationSlice) : null;
-      } catch {
-        return null;
-      }
-    }
-
-    mapSerializedDonationToDonation(serializedDonation, nonSerializedDonationSlice) {
-      return {
-        type: exports.PaymentType.Donation,
-        desiredAmount: serializedDonation.desiredAmount ? new BigNumber(serializedDonation.desiredAmount) : undefined,
-        desiredAsset: serializedDonation.desiredAsset,
-        successUrl: serializedDonation.successUrl ? new URL(serializedDonation.successUrl) : undefined,
-        cancelUrl: serializedDonation.cancelUrl ? new URL(serializedDonation.cancelUrl) : undefined,
-        targetAddress: nonSerializedDonationSlice.targetAddress
-      };
-    }
-
-  }
-
-  _defineProperty(LegacyDonationDeserializer, "serializedDonationBase64Deserializer", new Base64Deserializer(legacySerializedDonationFieldTypes));
-
   class Payment extends StateModel {
     static validate(payment) {
-      return this.defaultValidator.validate(payment);
+      return Payment.defaultValidator.validate(payment);
     }
 
-    static deserialize(serializedPayment, nonSerializedPaymentSlice, isLegacy = false) {
-      return !isLegacy ? Payment.defaultDeserializer.deserialize(serializedPayment, nonSerializedPaymentSlice) : Payment.defaultLegacyDeserializer.deserialize(serializedPayment, nonSerializedPaymentSlice);
-    }
-
-    static publicDataExists(paymentOrPaymentDataOrPaymentData) {
-      return this.publicDataExistsInternal(paymentOrPaymentDataOrPaymentData);
-    }
-
-    static privateDataExists(payment) {
-      return !!payment.data.private;
-    }
-
-    static publicDataExistsInternal(paymentOrPaymentDataOrPaymentData) {
-      return !!(Payment.isPayment(paymentOrPaymentDataOrPaymentData) ? paymentOrPaymentDataOrPaymentData.data.public : paymentOrPaymentDataOrPaymentData.public);
-    }
-
-    static isPayment(paymentOrPaymentDataOrPaymentData) {
-      return !!paymentOrPaymentDataOrPaymentData.amount;
+    static deserialize(serializedPayment, nonSerializedPaymentSlice) {
+      return Payment.defaultDeserializer.deserialize(serializedPayment, nonSerializedPaymentSlice);
     }
 
   }
 
   _defineProperty(Payment, "defaultDeserializer", new PaymentDeserializer());
 
-  _defineProperty(Payment, "defaultLegacyDeserializer", new LegacyPaymentDeserializer());
-
   _defineProperty(Payment, "defaultValidator", new PaymentValidator());
 
   class Donation extends StateModel {
     static validate(donation) {
-      return this.defaultValidator.validate(donation);
+      return Donation.defaultValidator.validate(donation);
     }
 
-    static deserialize(serializedDonation, nonSerializedDonationSlice, isLegacy = false) {
-      return !isLegacy ? Donation.defaultDeserializer.deserialize(serializedDonation, nonSerializedDonationSlice) : Donation.defaultLegacyDeserializer.deserialize(serializedDonation, nonSerializedDonationSlice);
+    static deserialize(serializedDonation, nonSerializedDonationSlice) {
+      return Donation.defaultDeserializer.deserialize(serializedDonation, nonSerializedDonationSlice);
     }
 
   }
 
   _defineProperty(Donation, "defaultDeserializer", new DonationDeserializer());
-
-  _defineProperty(Donation, "defaultLegacyDeserializer", new LegacyDonationDeserializer());
 
   _defineProperty(Donation, "defaultValidator", new DonationValidator());
 
@@ -7497,36 +7559,46 @@
   const emptyService = {
     name: '',
     description: '',
-    links: [],
+    links: optimization.emptyArray,
     version: 0,
     metadata: '',
     contractAddress: '',
     allowedTokens: {
       tez: true,
-      assets: []
+      assets: optimization.emptyArray
     },
     allowedOperationType: exports.ServiceOperationType.Payment,
     owner: '',
     paused: false,
     deleted: false,
-    network: networks.edo2net,
-    signingKeys: {}
+    network: networks.granadanet,
+    signingKeys: optimization.emptyMap
   };
 
-  class ServiceOperation extends StateModel {
-    static publicPayloadExists(operation) {
-      return !!operation.payload.public;
-    }
+  exports.OperationType = void 0;
 
-    static privatePayloadExists(operation) {
-      return !!operation.payload.private;
-    }
+  (function (OperationType) {
+    OperationType[OperationType["Payment"] = 1] = "Payment";
+    OperationType[OperationType["Donation"] = 2] = "Donation";
+  })(exports.OperationType || (exports.OperationType = {}));
 
-    static isPayloadDecoded(data) {
-      return !!data.value;
-    }
+  exports.OperationDirection = void 0;
 
-    static parseServiceOperationPayload(encodedValue) {
+  (function (OperationDirection) {
+    OperationDirection[OperationDirection["Incoming"] = 0] = "Incoming";
+    OperationDirection[OperationDirection["Outgoing"] = 1] = "Outgoing";
+  })(exports.OperationDirection || (exports.OperationDirection = {}));
+
+  exports.OperationStatus = void 0;
+
+  (function (OperationStatus) {
+    OperationStatus[OperationStatus["Pending"] = 0] = "Pending";
+    OperationStatus[OperationStatus["Success"] = 1] = "Success";
+    OperationStatus[OperationStatus["Cancelled"] = 2] = "Cancelled";
+  })(exports.OperationStatus || (exports.OperationStatus = {}));
+
+  class DonationOperation extends StateModel {
+    static parsePayload(encodedValue) {
       const valueString = bytesToString(encodedValue);
       let value = null;
 
@@ -7545,35 +7617,7204 @@
 
   }
 
-  exports.ServiceOperationDirection = void 0;
+  class DonationSignPayloadEncoder {
+    encode(donation) {
+      return {
+        clientSignPayload: this.getClientSignPayload(donation)
+      };
+    }
 
-  (function (ServiceOperationDirection) {
-    ServiceOperationDirection[ServiceOperationDirection["Incoming"] = 0] = "Incoming";
-    ServiceOperationDirection[ServiceOperationDirection["Outgoing"] = 1] = "Outgoing";
-  })(exports.ServiceOperationDirection || (exports.ServiceOperationDirection = {}));
+    getClientSignPayload(donation) {
+      return (donation.successUrl ? donation.successUrl.href : '') + (donation.cancelUrl ? donation.cancelUrl.href : '') || null;
+    }
 
-  exports.ServiceOperationStatus = void 0;
+  }
 
-  (function (ServiceOperationStatus) {
-    ServiceOperationStatus[ServiceOperationStatus["Pending"] = 0] = "Pending";
-    ServiceOperationStatus[ServiceOperationStatus["Success"] = 1] = "Success";
-    ServiceOperationStatus[ServiceOperationStatus["Cancelled"] = 2] = "Cancelled";
-  })(exports.ServiceOperationStatus || (exports.ServiceOperationStatus = {}));
+  // Michelson abstract syntax tree types https://tezos.gitlab.io/whitedoc/michelson.html#concrete-syntax
+  var sourceReference = Symbol("source_reference");
+  /*! *****************************************************************************
+  Copyright (c) Microsoft Corporation.
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+  REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+  AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+  INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+  LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+  OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+  PERFORMANCE OF THIS SOFTWARE.
+  ***************************************************************************** */
+
+  /* global Reflect, Promise */
+
+  var extendStatics = function (d, b) {
+    extendStatics = Object.setPrototypeOf || {
+      __proto__: []
+    } instanceof Array && function (d, b) {
+      d.__proto__ = b;
+    } || function (d, b) {
+      for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
+    };
+
+    return extendStatics(d, b);
+  };
+
+  function __extends(d, b) {
+    if (typeof b !== "function" && b !== null) throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+    extendStatics(d, b);
+
+    function __() {
+      this.constructor = d;
+    }
+
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  }
+
+  var __assign = function () {
+    __assign = Object.assign || function __assign(t) {
+      for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+
+      return t;
+    };
+
+    return __assign.apply(this, arguments);
+  };
+
+  function __rest(s, e) {
+    var t = {};
+
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+
+    if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+      if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+    }
+    return t;
+  }
+
+  function __generator(thisArg, body) {
+    var _ = {
+      label: 0,
+      sent: function () {
+        if (t[0] & 1) throw t[1];
+        return t[1];
+      },
+      trys: [],
+      ops: []
+    },
+        f,
+        y,
+        t,
+        g;
+    return g = {
+      next: verb(0),
+      "throw": verb(1),
+      "return": verb(2)
+    }, typeof Symbol === "function" && (g[Symbol.iterator] = function () {
+      return this;
+    }), g;
+
+    function verb(n) {
+      return function (v) {
+        return step([n, v]);
+      };
+    }
+
+    function step(op) {
+      if (f) throw new TypeError("Generator is already executing.");
+
+      while (_) try {
+        if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+        if (y = 0, t) op = [op[0] & 2, t.value];
+
+        switch (op[0]) {
+          case 0:
+          case 1:
+            t = op;
+            break;
+
+          case 4:
+            _.label++;
+            return {
+              value: op[1],
+              done: false
+            };
+
+          case 5:
+            _.label++;
+            y = op[1];
+            op = [0];
+            continue;
+
+          case 7:
+            op = _.ops.pop();
+
+            _.trys.pop();
+
+            continue;
+
+          default:
+            if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+              _ = 0;
+              continue;
+            }
+
+            if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
+              _.label = op[1];
+              break;
+            }
+
+            if (op[0] === 6 && _.label < t[1]) {
+              _.label = t[1];
+              t = op;
+              break;
+            }
+
+            if (t && _.label < t[2]) {
+              _.label = t[2];
+
+              _.ops.push(op);
+
+              break;
+            }
+
+            if (t[2]) _.ops.pop();
+
+            _.trys.pop();
+
+            continue;
+        }
+
+        op = body.call(thisArg, _);
+      } catch (e) {
+        op = [6, e];
+        y = 0;
+      } finally {
+        f = t = 0;
+      }
+
+      if (op[0] & 5) throw op[1];
+      return {
+        value: op[0] ? op[1] : void 0,
+        done: true
+      };
+    }
+  }
+
+  function __values(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator,
+        m = s && o[s],
+        i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+      next: function () {
+        if (o && i >= o.length) o = void 0;
+        return {
+          value: o && o[i++],
+          done: !o
+        };
+      }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+  }
+
+  function __read(o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o),
+        r,
+        ar = [],
+        e;
+
+    try {
+      while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    } catch (error) {
+      e = {
+        error: error
+      };
+    } finally {
+      try {
+        if (r && !r.done && (m = i["return"])) m.call(i);
+      } finally {
+        if (e) throw e.error;
+      }
+    }
+
+    return ar;
+  }
+
+  function __spreadArray(to, from) {
+    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++) to[j] = from[i];
+
+    return to;
+  }
+
+  var ScanError =
+  /** @class */
+  function (_super) {
+    __extends(ScanError, _super);
+
+    function ScanError(src, idx, message) {
+      var _this = _super.call(this, message) || this;
+
+      _this.src = src;
+      _this.idx = idx;
+      Object.setPrototypeOf(_this, ScanError.prototype);
+      return _this;
+    }
+
+    return ScanError;
+  }(Error);
+
+  var Literal;
+
+  (function (Literal) {
+    Literal[Literal["Comment"] = 0] = "Comment";
+    Literal[Literal["Number"] = 1] = "Number";
+    Literal[Literal["String"] = 2] = "String";
+    Literal[Literal["Bytes"] = 3] = "Bytes";
+    Literal[Literal["Ident"] = 4] = "Ident";
+  })(Literal || (Literal = {}));
+
+  var isSpace = new RegExp("\\s");
+  var isIdentStart = new RegExp("[:@%_A-Za-z]");
+  var isIdent = new RegExp("[@%_\\.A-Za-z0-9]");
+  var isDigit = new RegExp("[0-9]");
+  var isHex = new RegExp("[0-9a-fA-F]");
+
+  function scan(src, scanComments) {
+    var i, s, start, ii, esc;
+
+    if (scanComments === void 0) {
+      scanComments = false;
+    }
+
+    return __generator(this, function (_a) {
+      switch (_a.label) {
+        case 0:
+          i = 0;
+          _a.label = 1;
+
+        case 1:
+          if (!(i < src.length)) return [3
+          /*break*/
+          , 19]; // Skip space
+
+          while (i < src.length && isSpace.test(src[i])) {
+            i++;
+          }
+
+          if (i === src.length) {
+            return [2
+            /*return*/
+            ];
+          }
+
+          s = src[i];
+          start = i;
+          if (!isIdentStart.test(s)) return [3
+          /*break*/
+          , 3]; // Identifier
+
+          i++;
+
+          while (i < src.length && isIdent.test(src[i])) {
+            i++;
+          }
+
+          return [4
+          /*yield*/
+          , {
+            t: Literal.Ident,
+            v: src.slice(start, i),
+            first: start,
+            last: i
+          }];
+
+        case 2:
+          _a.sent();
+
+          return [3
+          /*break*/
+          , 18];
+
+        case 3:
+          if (!(src.length - i > 1 && src.substr(i, 2) === "0x")) return [3
+          /*break*/
+          , 5]; // Bytes
+
+          i += 2;
+
+          while (i < src.length && isHex.test(src[i])) {
+            i++;
+          }
+
+          if ((i - start & 1) !== 0) {
+            throw new ScanError(src, i, "Bytes literal length is expected to be power of two");
+          }
+
+          return [4
+          /*yield*/
+          , {
+            t: Literal.Bytes,
+            v: src.slice(start, i),
+            first: start,
+            last: i
+          }];
+
+        case 4:
+          _a.sent();
+
+          return [3
+          /*break*/
+          , 18];
+
+        case 5:
+          if (!(isDigit.test(s) || s === "-")) return [3
+          /*break*/
+          , 7]; // Number
+
+          if (s === "-") {
+            i++;
+          }
+
+          ii = i;
+
+          while (i < src.length && isDigit.test(src[i])) {
+            i++;
+          }
+
+          if (ii === i) {
+            throw new ScanError(src, i, "Number literal is too short");
+          }
+
+          return [4
+          /*yield*/
+          , {
+            t: Literal.Number,
+            v: src.slice(start, i),
+            first: start,
+            last: i
+          }];
+
+        case 6:
+          _a.sent();
+
+          return [3
+          /*break*/
+          , 18];
+
+        case 7:
+          if (!(s === "\"")) return [3
+          /*break*/
+          , 9]; // String
+
+          i++;
+          esc = false;
+
+          for (; i < src.length && (esc || src[i] !== "\""); i++) {
+            if (!esc && src[i] === "\\") {
+              esc = true;
+            } else {
+              esc = false;
+            }
+          }
+
+          if (i === src.length) {
+            throw new ScanError(src, i, "Unterminated string literal");
+          }
+
+          i++;
+          return [4
+          /*yield*/
+          , {
+            t: Literal.String,
+            v: src.slice(start, i),
+            first: start,
+            last: i
+          }];
+
+        case 8:
+          _a.sent();
+
+          return [3
+          /*break*/
+          , 18];
+
+        case 9:
+          if (!(s === "#")) return [3
+          /*break*/
+          , 12]; // Comment
+
+          i++;
+
+          while (i < src.length && src[i] !== "\n") {
+            i++;
+          }
+
+          if (!scanComments) return [3
+          /*break*/
+          , 11];
+          return [4
+          /*yield*/
+          , {
+            t: Literal.Comment,
+            v: src.slice(start, i),
+            first: start,
+            last: i
+          }];
+
+        case 10:
+          _a.sent();
+
+          _a.label = 11;
+
+        case 11:
+          return [3
+          /*break*/
+          , 18];
+
+        case 12:
+          if (!(src.length - i > 1 && src.substr(i, 2) === "/*")) return [3
+          /*break*/
+          , 15]; // C style comment
+
+          i += 2;
+
+          while (i < src.length && !(src.length - i > 1 && src.substr(i, 2) === "*/")) {
+            i++;
+          }
+
+          if (i === src.length) {
+            throw new ScanError(src, i, "Unterminated C style comment");
+          }
+
+          i += 2;
+          if (!scanComments) return [3
+          /*break*/
+          , 14];
+          return [4
+          /*yield*/
+          , {
+            t: Literal.Comment,
+            v: src.slice(start, i),
+            first: start,
+            last: i
+          }];
+
+        case 13:
+          _a.sent();
+
+          _a.label = 14;
+
+        case 14:
+          return [3
+          /*break*/
+          , 18];
+
+        case 15:
+          if (!(s === "(" || s === ")" || s === "{" || s === "}" || s === ";")) return [3
+          /*break*/
+          , 17];
+          i++;
+          return [4
+          /*yield*/
+          , {
+            t: s,
+            v: s,
+            first: start,
+            last: i
+          }];
+
+        case 16:
+          _a.sent();
+
+          return [3
+          /*break*/
+          , 18];
+
+        case 17:
+          throw new ScanError(src, i, "Invalid character at offset " + i + ": `" + s + "'");
+
+        case 18:
+          return [3
+          /*break*/
+          , 1];
+
+        case 19:
+          return [2
+          /*return*/
+          ];
+      }
+    });
+  } // Michelson types
+
+
+  var refContract = Symbol("ref_contract");
+  var Protocol;
+
+  (function (Protocol) {
+    Protocol["Pt24m4xi"] = "Pt24m4xiPbLDhVgVfABUjirbmda3yohdN82Sp9FeuAXJ4eV9otd";
+    Protocol["PsBABY5H"] = "PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95qb3m53QJiXGmrbU";
+    Protocol["PsBabyM1"] = "PsBabyM1eUXZseaJdmXFApDSBqj8YBfwELoxZHHW77EMcAbbwAS";
+    Protocol["PsCARTHA"] = "PsCARTHAGazKbHtnKfLzQg3kms52kSRpgnDY982a9oYsSXRLQEb";
+    Protocol["PsDELPH1"] = "PsDELPH1Kxsxt8f9eWbxQeRxkjfbxoqM52jvs5Y5fBxWWh4ifpo";
+    Protocol["PtEdo2Zk"] = "PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA";
+    Protocol["PsFLorena"] = "PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i";
+    Protocol["PtGRANADs"] = "PtGRANADsDU8R9daYKAgWnQYAJ64omN1o3KMGVCykShA97vQbvV";
+    Protocol["PtHangzH"] = "PtHangzHogokSuiMHemCuowEavgYTP8J5qQ9fQS793MHYFpCY3r";
+  })(Protocol || (Protocol = {}));
+
+  var DefaultProtocol = Protocol.PsDELPH1;
+
+  var MacroError =
+  /** @class */
+  function (_super) {
+    __extends(MacroError, _super);
+
+    function MacroError(prim, message) {
+      var _this = _super.call(this, message) || this;
+
+      _this.prim = prim;
+      Object.setPrototypeOf(_this, MacroError.prototype);
+      return _this;
+    }
+
+    return MacroError;
+  }(Error);
+
+  function assertArgs$1(ex, n) {
+    var _a, _b;
+
+    if (n === 0 && ex.args === undefined || ((_a = ex.args) === null || _a === void 0 ? void 0 : _a.length) === n) {
+      return true;
+    }
+
+    throw new MacroError(ex, "macro " + ex.prim + " expects " + n + " arguments, was given " + ((_b = ex.args) === null || _b === void 0 ? void 0 : _b.length));
+  }
+
+  function assertNoAnnots(ex) {
+    if (ex.annots === undefined) {
+      return true;
+    }
+
+    throw new MacroError(ex, "unexpected annotation on macro " + ex.prim + ": " + ex.annots);
+  }
+
+  function assertIntArg(ex, arg) {
+    if ("int" in arg) {
+      return true;
+    }
+
+    throw new MacroError(ex, "macro " + ex.prim + " expects int argument");
+  }
+
+  function parsePairUnpairExpr(p, expr, annotations, agg) {
+    var i = 0;
+    var ai = 0;
+    var ann = [null, null]; // Left expression
+
+    var lexpr;
+
+    if (i === expr.length) {
+      throw new MacroError(p, "unexpected end: " + p.prim);
+    }
+
+    var c = expr[i++];
+
+    switch (c) {
+      case "P":
+        var _a = parsePairUnpairExpr(p, expr.slice(i), annotations.slice(ai), agg),
+            r = _a.r,
+            n = _a.n,
+            an = _a.an;
+
+        lexpr = r;
+        i += n;
+        ai += an;
+        break;
+
+      case "A":
+        if (ai !== annotations.length) {
+          ann[0] = annotations[ai++];
+        }
+
+        break;
+
+      default:
+        throw new MacroError(p, p.prim + ": unexpected character: " + c);
+    } // Right expression
+
+
+    var rexpr;
+
+    if (i === expr.length) {
+      throw new MacroError(p, "unexpected end: " + p.prim);
+    }
+
+    c = expr[i++];
+
+    switch (c) {
+      case "P":
+        var _b = parsePairUnpairExpr(p, expr.slice(i), annotations.slice(ai), agg),
+            r = _b.r,
+            n = _b.n,
+            an = _b.an;
+
+        rexpr = r.map(function (_a) {
+          var _b = __read(_a, 2),
+              v = _b[0],
+              a = _b[1];
+
+          return [v + 1, a];
+        });
+        i += n;
+        ai += an;
+        break;
+
+      case "I":
+        if (ai !== annotations.length) {
+          ann[1] = annotations[ai++];
+        }
+
+        break;
+
+      default:
+        throw new MacroError(p, p.prim + ": unexpected character: " + c);
+    }
+
+    return {
+      r: agg(lexpr, rexpr, [0, ann]),
+      n: i,
+      an: ai
+    };
+  }
+
+  function parseSetMapCadr(p, expr, vann, term) {
+    var c = expr[0];
+
+    switch (c) {
+      case "A":
+        return expr.length > 1 ? [{
+          prim: "DUP"
+        }, {
+          prim: "DIP",
+          args: [[{
+            prim: "CAR",
+            annots: ["@%%"]
+          }, parseSetMapCadr(p, expr.slice(1), [], term)]]
+        }, {
+          prim: "CDR",
+          annots: ["@%%"]
+        }, {
+          prim: "SWAP"
+        }, {
+          prim: "PAIR",
+          annots: __spreadArray(["%@", "%@"], __read(vann))
+        }] : term.a;
+
+      case "D":
+        return expr.length > 1 ? [{
+          prim: "DUP"
+        }, {
+          prim: "DIP",
+          args: [[{
+            prim: "CDR",
+            annots: ["@%%"]
+          }, parseSetMapCadr(p, expr.slice(1), [], term)]]
+        }, {
+          prim: "CAR",
+          annots: ["@%%"]
+        }, {
+          prim: "PAIR",
+          annots: __spreadArray(["%@", "%@"], __read(vann))
+        }] : term.d;
+
+      default:
+        throw new MacroError(p, p.prim + ": unexpected character: " + c);
+    }
+  }
+
+  function trimLast(a, v) {
+    var l = a.length;
+
+    while (l > 0 && a[l - 1] === v) {
+      l--;
+    }
+
+    return a.slice(0, l);
+  }
+
+  function filterAnnotations(a) {
+    var e_1, _a;
+
+    var fields = [];
+    var rest = [];
+
+    if (a !== undefined) {
+      try {
+        for (var a_1 = __values(a), a_1_1 = a_1.next(); !a_1_1.done; a_1_1 = a_1.next()) {
+          var v = a_1_1.value;
+          (v.length !== 0 && v[0] === "%" ? fields : rest).push(v);
+        }
+      } catch (e_1_1) {
+        e_1 = {
+          error: e_1_1
+        };
+      } finally {
+        try {
+          if (a_1_1 && !a_1_1.done && (_a = a_1.return)) _a.call(a_1);
+        } finally {
+          if (e_1) throw e_1.error;
+        }
+      }
+    }
+
+    return {
+      fields: fields,
+      rest: rest
+    };
+  }
+
+  function mkPrim(_a) {
+    var prim = _a.prim,
+        annots = _a.annots,
+        args = _a.args;
+    return __assign(__assign({
+      prim: prim
+    }, annots && {
+      annots: annots
+    }), args && {
+      args: args
+    });
+  }
+
+  var pairRe = /^P[PAI]{3,}R$/;
+  var unpairRe = /^UNP[PAI]{2,}R$/;
+  var cadrRe = /^C[AD]{2,}R$/;
+  var setCadrRe = /^SET_C[AD]+R$/;
+  var mapCadrRe = /^MAP_C[AD]+R$/;
+  var diipRe = /^DI{2,}P$/;
+  var duupRe = /^DU+P$/;
+
+  function expandMacros(ex, opt) {
+    var proto = (opt === null || opt === void 0 ? void 0 : opt.protocol) || DefaultProtocol;
+
+    function mayRename(annots) {
+      return annots !== undefined ? [{
+        prim: "RENAME",
+        annots: annots
+      }] : [];
+    }
+
+    switch (ex.prim) {
+      // Compare
+      case "CMPEQ":
+      case "CMPNEQ":
+      case "CMPLT":
+      case "CMPGT":
+      case "CMPLE":
+      case "CMPGE":
+        if (assertArgs$1(ex, 0)) {
+          return [{
+            prim: "COMPARE"
+          }, mkPrim({
+            prim: ex.prim.slice(3),
+            annots: ex.annots
+          })];
+        }
+
+        break;
+
+      case "IFEQ":
+      case "IFNEQ":
+      case "IFLT":
+      case "IFGT":
+      case "IFLE":
+      case "IFGE":
+        if (assertArgs$1(ex, 2)) {
+          return [{
+            prim: ex.prim.slice(2)
+          }, mkPrim({
+            prim: "IF",
+            annots: ex.annots,
+            args: ex.args
+          })];
+        }
+
+        break;
+
+      case "IFCMPEQ":
+      case "IFCMPNEQ":
+      case "IFCMPLT":
+      case "IFCMPGT":
+      case "IFCMPLE":
+      case "IFCMPGE":
+        if (assertArgs$1(ex, 2)) {
+          return [{
+            prim: "COMPARE"
+          }, {
+            prim: ex.prim.slice(5)
+          }, mkPrim({
+            prim: "IF",
+            annots: ex.annots,
+            args: ex.args
+          })];
+        }
+
+        break;
+      // Fail
+
+      case "FAIL":
+        if (assertArgs$1(ex, 0) && assertNoAnnots(ex)) {
+          return [{
+            prim: "UNIT"
+          }, {
+            prim: "FAILWITH"
+          }];
+        }
+
+        break;
+      // Assertion macros
+
+      case "ASSERT":
+        if (assertArgs$1(ex, 0) && assertNoAnnots(ex)) {
+          return [{
+            prim: "IF",
+            args: [[], [[{
+              prim: "UNIT"
+            }, {
+              prim: "FAILWITH"
+            }]]]
+          }];
+        }
+
+        break;
+
+      case "ASSERT_EQ":
+      case "ASSERT_NEQ":
+      case "ASSERT_LT":
+      case "ASSERT_GT":
+      case "ASSERT_LE":
+      case "ASSERT_GE":
+        if (assertArgs$1(ex, 0) && assertNoAnnots(ex)) {
+          return [{
+            prim: ex.prim.slice(7)
+          }, {
+            prim: "IF",
+            args: [[], [[{
+              prim: "UNIT"
+            }, {
+              prim: "FAILWITH"
+            }]]]
+          }];
+        }
+
+        break;
+
+      case "ASSERT_CMPEQ":
+      case "ASSERT_CMPNEQ":
+      case "ASSERT_CMPLT":
+      case "ASSERT_CMPGT":
+      case "ASSERT_CMPLE":
+      case "ASSERT_CMPGE":
+        if (assertArgs$1(ex, 0) && assertNoAnnots(ex)) {
+          return [[{
+            prim: "COMPARE"
+          }, {
+            prim: ex.prim.slice(10)
+          }], {
+            prim: "IF",
+            args: [[], [[{
+              prim: "UNIT"
+            }, {
+              prim: "FAILWITH"
+            }]]]
+          }];
+        }
+
+        break;
+
+      case "ASSERT_NONE":
+        if (assertArgs$1(ex, 0) && assertNoAnnots(ex)) {
+          return [{
+            prim: "IF_NONE",
+            args: [[], [[{
+              prim: "UNIT"
+            }, {
+              prim: "FAILWITH"
+            }]]]
+          }];
+        }
+
+        break;
+
+      case "ASSERT_SOME":
+        if (assertArgs$1(ex, 0)) {
+          return [{
+            prim: "IF_NONE",
+            args: [[[{
+              prim: "UNIT"
+            }, {
+              prim: "FAILWITH"
+            }]], mayRename(ex.annots)]
+          }];
+        }
+
+        break;
+
+      case "ASSERT_LEFT":
+        if (assertArgs$1(ex, 0)) {
+          return [{
+            prim: "IF_LEFT",
+            args: [mayRename(ex.annots), [[{
+              prim: "UNIT"
+            }, {
+              prim: "FAILWITH"
+            }]]]
+          }];
+        }
+
+        break;
+
+      case "ASSERT_RIGHT":
+        if (assertArgs$1(ex, 0)) {
+          return [{
+            prim: "IF_LEFT",
+            args: [[[{
+              prim: "UNIT"
+            }, {
+              prim: "FAILWITH"
+            }]], mayRename(ex.annots)]
+          }];
+        }
+
+        break;
+      // Syntactic conveniences
+
+      case "IF_SOME":
+        if (assertArgs$1(ex, 2)) {
+          return [mkPrim({
+            prim: "IF_NONE",
+            annots: ex.annots,
+            args: [ex.args[1], ex.args[0]]
+          })];
+        }
+
+        break;
+
+      case "IF_RIGHT":
+        if (assertArgs$1(ex, 2)) {
+          return [mkPrim({
+            prim: "IF_LEFT",
+            annots: ex.annots,
+            args: [ex.args[1], ex.args[0]]
+          })];
+        }
+
+        break;
+      // CAR/CDR n
+
+      case "CAR":
+      case "CDR":
+        if (ex.args !== undefined) {
+          if (assertArgs$1(ex, 1) && assertIntArg(ex, ex.args[0])) {
+            var n = parseInt(ex.args[0].int, 10);
+            return mkPrim({
+              prim: "GET",
+              args: [{
+                int: ex.prim === "CAR" ? String(n * 2 + 1) : String(n * 2)
+              }],
+              annots: ex.annots
+            });
+          }
+        } else {
+          return ex;
+        }
+
+    } // More syntactic conveniences
+    // PAPPAIIR macro
+
+
+    if (pairRe.test(ex.prim)) {
+      if (assertArgs$1(ex, 0)) {
+        var _a = filterAnnotations(ex.annots),
+            fields = _a.fields,
+            rest_1 = _a.rest;
+
+        var r_1 = parsePairUnpairExpr(ex, ex.prim.slice(1), fields, function (l, r, top) {
+          return __spreadArray(__spreadArray(__spreadArray([], __read(l || [])), __read(r || [])), [top]);
+        }).r;
+        return r_1.map(function (_a, i) {
+          var _b = __read(_a, 2),
+              v = _b[0],
+              a = _b[1];
+
+          var ann = __spreadArray(__spreadArray([], __read(trimLast(a, null).map(function (v) {
+            return v === null ? "%" : v;
+          }))), __read(v === 0 && i === r_1.length - 1 ? rest_1 : []));
+
+          var leaf = mkPrim({
+            prim: "PAIR",
+            annots: ann.length !== 0 ? ann : undefined
+          });
+          return v === 0 ? leaf : {
+            prim: "DIP",
+            args: v === 1 ? [[leaf]] : [{
+              int: String(v)
+            }, [leaf]]
+          };
+        });
+      }
+    } // UNPAPPAIIR macro
+
+
+    if (unpairRe.test(ex.prim)) {
+      if (proto === Protocol.PtEdo2Zk || proto === Protocol.PsFLorena || proto === Protocol.PtGRANADs || proto === Protocol.PtHangzH) {
+        if (ex.prim === "UNPAIR") {
+          return ex;
+        }
+
+        if (assertArgs$1(ex, 0)) {
+          // 008_edo: annotations are deprecated
+          var r = parsePairUnpairExpr(ex, ex.prim.slice(3), [], function (l, r, top) {
+            return __spreadArray(__spreadArray([top], __read(r || [])), __read(l || []));
+          }).r;
+          return r.map(function (_a) {
+            var _b = __read(_a, 1),
+                v = _b[0];
+
+            var leaf = mkPrim({
+              prim: "UNPAIR"
+            });
+            return v === 0 ? leaf : {
+              prim: "DIP",
+              args: v === 1 ? [[leaf]] : [{
+                int: String(v)
+              }, [leaf]]
+            };
+          });
+        }
+      } else if (assertArgs$1(ex, 0)) {
+        var r = parsePairUnpairExpr(ex, ex.prim.slice(3), ex.annots || [], function (l, r, top) {
+          return __spreadArray(__spreadArray([top], __read(r || [])), __read(l || []));
+        }).r;
+        return r.map(function (_a) {
+          var _b = __read(_a, 2),
+              v = _b[0],
+              a = _b[1];
+
+          var leaf = [{
+            prim: "DUP"
+          }, mkPrim({
+            prim: "CAR",
+            annots: a[0] !== null ? [a[0]] : undefined
+          }), {
+            prim: "DIP",
+            args: [[mkPrim({
+              prim: "CDR",
+              annots: a[1] !== null ? [a[1]] : undefined
+            })]]
+          }];
+          return v === 0 ? leaf : {
+            prim: "DIP",
+            args: v === 1 ? [[leaf]] : [{
+              int: String(v)
+            }, [leaf]]
+          };
+        });
+      }
+    } // C[AD]+R macro
+
+
+    if (cadrRe.test(ex.prim)) {
+      if (assertArgs$1(ex, 0)) {
+        var ch_1 = __spreadArray([], __read(ex.prim.slice(1, ex.prim.length - 1)));
+
+        return ch_1.map(function (c, i) {
+          var ann = i === ch_1.length - 1 ? ex.annots : undefined;
+
+          switch (c) {
+            case "A":
+              return mkPrim({
+                prim: "CAR",
+                annots: ann
+              });
+
+            case "D":
+              return mkPrim({
+                prim: "CDR",
+                annots: ann
+              });
+
+            default:
+              throw new MacroError(ex, "unexpected character: " + c);
+          }
+        });
+      }
+    } // SET_C[AD]+R macro
+
+
+    if (setCadrRe.test(ex.prim)) {
+      if (assertArgs$1(ex, 0)) {
+        var _b = filterAnnotations(ex.annots),
+            fields = _b.fields,
+            rest = _b.rest;
+
+        if (fields.length > 1) {
+          throw new MacroError(ex, "unexpected annotation on macro " + ex.prim + ": " + fields);
+        }
+
+        var term = fields.length !== 0 ? {
+          a: [{
+            prim: "DUP"
+          }, {
+            prim: "CAR",
+            annots: fields
+          }, {
+            prim: "DROP"
+          }, {
+            prim: "CDR",
+            annots: ["@%%"]
+          }, {
+            prim: "SWAP"
+          }, {
+            prim: "PAIR",
+            annots: [fields[0], "%@"]
+          }],
+          d: [{
+            prim: "DUP"
+          }, {
+            prim: "CDR",
+            annots: fields
+          }, {
+            prim: "DROP"
+          }, {
+            prim: "CAR",
+            annots: ["@%%"]
+          }, {
+            prim: "PAIR",
+            annots: ["%@", fields[0]]
+          }]
+        } : {
+          a: [{
+            prim: "CDR",
+            annots: ["@%%"]
+          }, {
+            prim: "SWAP"
+          }, {
+            prim: "PAIR",
+            annots: ["%", "%@"]
+          }],
+          d: [{
+            prim: "CAR",
+            annots: ["@%%"]
+          }, {
+            prim: "PAIR",
+            annots: ["%@", "%"]
+          }]
+        };
+        return parseSetMapCadr(ex, ex.prim.slice(5, ex.prim.length - 1), rest, term);
+      }
+    } // MAP_C[AD]+R macro
+
+
+    if (mapCadrRe.test(ex.prim)) {
+      if (assertArgs$1(ex, 1)) {
+        var fields = filterAnnotations(ex.annots).fields;
+
+        if (fields.length > 1) {
+          throw new MacroError(ex, "unexpected annotation on macro " + ex.prim + ": " + fields);
+        }
+
+        var term = {
+          a: [{
+            prim: "DUP"
+          }, {
+            prim: "CDR",
+            annots: ["@%%"]
+          }, {
+            prim: "DIP",
+            args: [[mkPrim({
+              prim: "CAR",
+              annots: fields.length !== 0 ? ["@" + fields[0].slice(1)] : undefined
+            }), ex.args[0]]]
+          }, {
+            prim: "SWAP"
+          }, {
+            prim: "PAIR",
+            annots: [fields.length !== 0 ? fields[0] : "%", "%@"]
+          }],
+          d: [{
+            prim: "DUP"
+          }, mkPrim({
+            prim: "CDR",
+            annots: fields.length !== 0 ? ["@" + fields[0].slice(1)] : undefined
+          }), ex.args[0], {
+            prim: "SWAP"
+          }, {
+            prim: "CAR",
+            annots: ["@%%"]
+          }, {
+            prim: "PAIR",
+            annots: ["%@", fields.length !== 0 ? fields[0] : "%"]
+          }]
+        };
+        return parseSetMapCadr(ex, ex.prim.slice(5, ex.prim.length - 1), [], term);
+      }
+    } // Expand deprecated DI...IP to [DIP n]
+
+
+    if (diipRe.test(ex.prim)) {
+      if (assertArgs$1(ex, 1)) {
+        var n = 0;
+
+        while (ex.prim[1 + n] === "I") {
+          n++;
+        }
+
+        return mkPrim({
+          prim: "DIP",
+          args: [{
+            int: String(n)
+          }, ex.args[0]]
+        });
+      }
+    } // Expand DU...UP and DUP n
+
+
+    if (duupRe.test(ex.prim)) {
+      var n = 0;
+
+      while (ex.prim[1 + n] === "U") {
+        n++;
+      }
+
+      if (proto === Protocol.PtEdo2Zk || proto === Protocol.PsFLorena || proto === Protocol.PtGRANADs || proto === Protocol.PtHangzH) {
+        if (n === 1) {
+          return ex;
+        }
+
+        if (assertArgs$1(ex, 0)) {
+          return mkPrim({
+            prim: "DUP",
+            args: [{
+              int: String(n)
+            }],
+            annots: ex.annots
+          });
+        }
+      } else {
+        if (n === 1) {
+          if (ex.args === undefined) {
+            return ex; // skip
+          }
+
+          if (assertArgs$1(ex, 1) && assertIntArg(ex, ex.args[0])) {
+            n = parseInt(ex.args[0].int, 10);
+          }
+        } else {
+          assertArgs$1(ex, 0);
+        }
+
+        if (n === 1) {
+          return [mkPrim({
+            prim: "DUP",
+            annots: ex.annots
+          })];
+        } else if (n === 2) {
+          return [{
+            prim: "DIP",
+            args: [[mkPrim({
+              prim: "DUP",
+              annots: ex.annots
+            })]]
+          }, {
+            prim: "SWAP"
+          }];
+        } else {
+          return [{
+            prim: "DIP",
+            args: [{
+              int: String(n - 1)
+            }, [mkPrim({
+              prim: "DUP",
+              annots: ex.annots
+            })]]
+          }, {
+            prim: "DIG",
+            args: [{
+              int: String(n)
+            }]
+          }];
+        }
+      }
+    }
+
+    return ex;
+  }
+
+  var MichelineParseError =
+  /** @class */
+  function (_super) {
+    __extends(MichelineParseError, _super);
+    /**
+     * @param token A token caused the error
+     * @param message An error message
+     */
+
+
+    function MichelineParseError(token, message) {
+      var _this = _super.call(this, message) || this;
+
+      _this.token = token;
+      Object.setPrototypeOf(_this, MichelineParseError.prototype);
+      return _this;
+    }
+
+    return MichelineParseError;
+  }(Error);
+
+  var JSONParseError =
+  /** @class */
+  function (_super) {
+    __extends(JSONParseError, _super);
+    /**
+     * @param node A node caused the error
+     * @param message An error message
+     */
+
+
+    function JSONParseError(node, message) {
+      var _this = _super.call(this, message) || this;
+
+      _this.node = node;
+      Object.setPrototypeOf(_this, JSONParseError.prototype);
+      return _this;
+    }
+
+    return JSONParseError;
+  }(Error);
+
+  var errEOF = new MichelineParseError(null, 'Unexpected EOF');
+
+  function isAnnotation(tok) {
+    return tok.t === Literal.Ident && (tok.v[0] === '@' || tok.v[0] === '%' || tok.v[0] === ':');
+  }
+
+  var intRe = new RegExp('^-?[0-9]+$');
+  var bytesRe = new RegExp('^([0-9a-fA-F]{2})*$');
+  /**
+   * Converts and validates Michelson expressions between JSON-based Michelson and Micheline
+   *
+   * Pretty Print a Michelson Smart Contract:
+   * ```
+   * const contract = await Tezos.contract.at("KT1Vsw3kh9638gqWoHTjvHCoHLPKvCbMVbCg");
+   * const p = new Parser();
+   *
+   * const michelsonCode = p.parseJSON(contract.script.code);
+   * const storage = p.parseJSON(contract.script.storage);
+   *
+   * console.log("Pretty print Michelson smart contract:");
+   * console.log(emitMicheline(michelsonCode, {indent:"    ", newline: "\n",}));
+   *
+   * console.log("Pretty print Storage:");
+   * console.log(emitMicheline(storage, {indent:"    ", newline: "\n",}));
+   * ```
+   *
+   * Encode a Michelson expression for inital storage of a smart contract
+   * ```
+   * const src = `(Pair (Pair { Elt 1
+   *                (Pair (Pair "tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN" "tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx")
+   *                      0x0501000000026869) }
+   *          10000000)
+   *    (Pair 2 333))`;
+   *
+   * const p = new Parser();
+   *
+   * const exp = p.parseMichelineExpression(src);
+   * console.log(JSON.stringify(exp));
+   * ```
+   */
+
+  var Parser =
+  /** @class */
+  function () {
+    function Parser(opt) {
+      this.opt = opt;
+    }
+
+    Parser.prototype.expand = function (ex) {
+      var _a, _b;
+
+      if (((_a = this.opt) === null || _a === void 0 ? void 0 : _a.expandMacros) !== undefined ? (_b = this.opt) === null || _b === void 0 ? void 0 : _b.expandMacros : true) {
+        var ret = expandMacros(ex, this.opt);
+
+        if (ret !== ex) {
+          ret[sourceReference] = __assign(__assign({}, ex[sourceReference] || {
+            first: 0,
+            last: 0
+          }), {
+            macro: ex
+          });
+        }
+
+        return ret;
+      } else {
+        return ex;
+      }
+    };
+
+    Parser.prototype.parseListExpr = function (scanner, start) {
+      var _a;
+
+      var _b;
+
+      var ref = {
+        first: start.first,
+        last: start.last
+      };
+      var expectBracket = start.t === "(";
+      var tok;
+
+      if (expectBracket) {
+        tok = scanner.next();
+
+        if (tok.done) {
+          throw errEOF;
+        }
+
+        ref.last = tok.value.last;
+      } else {
+        tok = {
+          value: start
+        };
+      }
+
+      if (tok.value.t !== Literal.Ident) {
+        throw new MichelineParseError(tok.value, "not an identifier: " + tok.value.v);
+      }
+
+      var ret = (_a = {
+        prim: tok.value.v
+      }, _a[sourceReference] = ref, _a);
+
+      for (;;) {
+        var tok_1 = scanner.next();
+
+        if (tok_1.done) {
+          if (expectBracket) {
+            throw errEOF;
+          }
+
+          break;
+        } else if (tok_1.value.t === ')') {
+          if (!expectBracket) {
+            throw new MichelineParseError(tok_1.value, "unexpected closing bracket");
+          }
+
+          ref.last = tok_1.value.last;
+          break;
+        } else if (isAnnotation(tok_1.value)) {
+          ret.annots = ret.annots || [];
+          ret.annots.push(tok_1.value.v);
+          ref.last = tok_1.value.last;
+        } else {
+          ret.args = ret.args || [];
+          var arg = this.parseExpr(scanner, tok_1.value);
+          ref.last = ((_b = arg[sourceReference]) === null || _b === void 0 ? void 0 : _b.last) || ref.last;
+          ret.args.push(arg);
+        }
+      }
+
+      return this.expand(ret);
+    };
+
+    Parser.prototype.parseArgs = function (scanner, start) {
+      var _a;
+
+      var _b; // Identifier with arguments
+
+
+      var ref = {
+        first: start.first,
+        last: start.last
+      };
+      var p = (_a = {
+        prim: start.v
+      }, _a[sourceReference] = ref, _a);
+
+      for (;;) {
+        var t = scanner.next();
+
+        if (t.done || t.value.t === '}' || t.value.t === ';') {
+          return [p, t];
+        }
+
+        if (isAnnotation(t.value)) {
+          ref.last = t.value.last;
+          p.annots = p.annots || [];
+          p.annots.push(t.value.v);
+        } else {
+          var arg = this.parseExpr(scanner, t.value);
+          ref.last = ((_b = arg[sourceReference]) === null || _b === void 0 ? void 0 : _b.last) || ref.last;
+          p.args = p.args || [];
+          p.args.push(arg);
+        }
+      }
+    };
+
+    Parser.prototype.parseSequenceExpr = function (scanner, start) {
+      var _a, _b;
+
+      var ref = {
+        first: start.first,
+        last: start.last
+      };
+      var seq = [];
+      seq[sourceReference] = ref;
+      var expectBracket = start.t === "{";
+      var tok = start.t === "{" ? null : {
+        value: start
+      };
+
+      for (;;) {
+        if (tok === null) {
+          tok = scanner.next();
+
+          if (!tok.done) {
+            ref.last = tok.value.last;
+          }
+        }
+
+        if (tok.done) {
+          if (expectBracket) {
+            throw errEOF;
+          } else {
+            return seq;
+          }
+        }
+
+        if (tok.value.t === "}") {
+          if (!expectBracket) {
+            throw new MichelineParseError(tok.value, "unexpected closing bracket");
+          } else {
+            return seq;
+          }
+        } else if (tok.value.t === Literal.Ident) {
+          // Identifier with arguments
+          var _c = __read(this.parseArgs(scanner, tok.value), 2),
+              itm = _c[0],
+              n = _c[1];
+
+          ref.last = ((_a = itm[sourceReference]) === null || _a === void 0 ? void 0 : _a.last) || ref.last;
+          seq.push(this.expand(itm));
+          tok = n;
+        } else {
+          // Other
+          var ex = this.parseExpr(scanner, tok.value);
+          ref.last = ((_b = ex[sourceReference]) === null || _b === void 0 ? void 0 : _b.last) || ref.last;
+          seq.push(ex);
+          tok = null;
+        }
+
+        if (tok === null) {
+          tok = scanner.next();
+
+          if (!tok.done) {
+            ref.last = tok.value.last;
+          }
+        }
+
+        if (!tok.done && tok.value.t === ";") {
+          tok = null;
+        }
+      }
+    };
+
+    Parser.prototype.parseExpr = function (scanner, tok) {
+      var _a, _b, _c, _d;
+
+      switch (tok.t) {
+        case Literal.Ident:
+          return this.expand((_a = {
+            prim: tok.v
+          }, _a[sourceReference] = {
+            first: tok.first,
+            last: tok.last
+          }, _a));
+
+        case Literal.Number:
+          return _b = {
+            int: tok.v
+          }, _b[sourceReference] = {
+            first: tok.first,
+            last: tok.last
+          }, _b;
+
+        case Literal.String:
+          return _c = {
+            string: JSON.parse(tok.v)
+          }, _c[sourceReference] = {
+            first: tok.first,
+            last: tok.last
+          }, _c;
+
+        case Literal.Bytes:
+          return _d = {
+            bytes: tok.v.slice(2)
+          }, _d[sourceReference] = {
+            first: tok.first,
+            last: tok.last
+          }, _d;
+
+        case '{':
+          return this.parseSequenceExpr(scanner, tok);
+
+        default:
+          return this.parseListExpr(scanner, tok);
+      }
+    };
+    /**
+     * Parses a Micheline sequence expression, such as smart contract source. Enclosing curly brackets may be omitted.
+     * @param src A Micheline sequence `{parameter ...; storage int; code { DUP ; ...};}` or `parameter ...; storage int; code { DUP ; ...};`
+     */
+
+
+    Parser.prototype.parseSequence = function (src) {
+      // tslint:disable-next-line: strict-type-predicates
+      if (typeof src !== "string") {
+        throw new TypeError("string type was expected, got " + typeof src + " instead");
+      }
+
+      var scanner = scan(src);
+      var tok = scanner.next();
+
+      if (tok.done) {
+        return null;
+      }
+
+      return this.parseSequenceExpr(scanner, tok.value);
+    };
+    /**
+     * Parse a Micheline sequence expression. Enclosing curly brackets may be omitted.
+     * @param src A Michelson list expression such as `(Pair {Elt "0" 0} 0)` or `Pair {Elt "0" 0} 0`
+     * @returns An AST node or null for empty document.
+     */
+
+
+    Parser.prototype.parseList = function (src) {
+      // tslint:disable-next-line: strict-type-predicates
+      if (typeof src !== "string") {
+        throw new TypeError("string type was expected, got " + typeof src + " instead");
+      }
+
+      var scanner = scan(src);
+      var tok = scanner.next();
+
+      if (tok.done) {
+        return null;
+      }
+
+      return this.parseListExpr(scanner, tok.value);
+    };
+    /**
+     * Parse any Michelson expression
+     * @param src A Michelson expression such as `(Pair {Elt "0" 0} 0)` or `{parameter ...; storage int; code { DUP ; ...};}`
+     * @returns An AST node or null for empty document.
+     */
+
+
+    Parser.prototype.parseMichelineExpression = function (src) {
+      // tslint:disable-next-line: strict-type-predicates
+      if (typeof src !== "string") {
+        throw new TypeError("string type was expected, got " + typeof src + " instead");
+      }
+
+      var scanner = scan(src);
+      var tok = scanner.next();
+
+      if (tok.done) {
+        return null;
+      }
+
+      return this.parseExpr(scanner, tok.value);
+    };
+    /**
+     * Parse a Micheline sequence expression, such as smart contract source. Enclosing curly brackets may be omitted.
+     * An alias for `parseSequence`
+     * @param src A Micheline sequence `{parameter ...; storage int; code { DUP ; ...};}` or `parameter ...; storage int; code { DUP ; ...};`
+     */
+
+
+    Parser.prototype.parseScript = function (src) {
+      return this.parseSequence(src);
+    };
+    /**
+     * Parse a Micheline sequence expression. Enclosing curly brackets may be omitted.
+     * An alias for `parseList`
+     * @param src A Michelson list expression such as `(Pair {Elt "0" 0} 0)` or `Pair {Elt "0" 0} 0`
+     * @returns An AST node or null for empty document.
+     */
+
+
+    Parser.prototype.parseData = function (src) {
+      return this.parseList(src);
+    };
+    /**
+     * Takes a JSON-encoded Michelson, validates it, strips away unneeded properties and optionally expands macros (See {@link ParserOptions}).
+     * @param src An object containing JSON-encoded Michelson, usually returned by `JSON.parse()`
+     */
+
+
+    Parser.prototype.parseJSON = function (src) {
+      var e_1, _a, e_2, _b, e_3, _c; // tslint:disable-next-line: strict-type-predicates
+
+
+      if (typeof src !== "object") {
+        throw new TypeError("object type was expected, got " + typeof src + " instead");
+      }
+
+      if (Array.isArray(src)) {
+        var ret = [];
+
+        try {
+          for (var src_1 = __values(src), src_1_1 = src_1.next(); !src_1_1.done; src_1_1 = src_1.next()) {
+            var n = src_1_1.value;
+
+            if (n === null || typeof n !== 'object') {
+              throw new JSONParseError(n, "unexpected sequence element: " + n);
+            }
+
+            ret.push(this.parseJSON(n));
+          }
+        } catch (e_1_1) {
+          e_1 = {
+            error: e_1_1
+          };
+        } finally {
+          try {
+            if (src_1_1 && !src_1_1.done && (_a = src_1.return)) _a.call(src_1);
+          } finally {
+            if (e_1) throw e_1.error;
+          }
+        }
+
+        return ret;
+      } else if ('prim' in src) {
+        var p = src;
+
+        if (typeof p.prim === 'string' && (p.annots === undefined || Array.isArray(p.annots)) && (p.args === undefined || Array.isArray(p.args))) {
+          var ret = {
+            prim: p.prim
+          };
+
+          if (p.annots !== undefined) {
+            try {
+              for (var _d = __values(p.annots), _e = _d.next(); !_e.done; _e = _d.next()) {
+                var a = _e.value;
+
+                if (typeof a !== 'string') {
+                  throw new JSONParseError(a, "string expected: " + a);
+                }
+              }
+            } catch (e_2_1) {
+              e_2 = {
+                error: e_2_1
+              };
+            } finally {
+              try {
+                if (_e && !_e.done && (_b = _d.return)) _b.call(_d);
+              } finally {
+                if (e_2) throw e_2.error;
+              }
+            }
+
+            ret.annots = p.annots;
+          }
+
+          if (p.args !== undefined) {
+            ret.args = [];
+
+            try {
+              for (var _f = __values(p.args), _g = _f.next(); !_g.done; _g = _f.next()) {
+                var a = _g.value;
+
+                if (a === null || typeof a !== 'object') {
+                  throw new JSONParseError(a, "unexpected argument: " + a);
+                }
+
+                ret.args.push(this.parseJSON(a));
+              }
+            } catch (e_3_1) {
+              e_3 = {
+                error: e_3_1
+              };
+            } finally {
+              try {
+                if (_g && !_g.done && (_c = _f.return)) _c.call(_f);
+              } finally {
+                if (e_3) throw e_3.error;
+              }
+            }
+          }
+
+          return this.expand(ret);
+        }
+
+        throw new JSONParseError(src, "malformed prim expression: " + src);
+      } else if ('string' in src) {
+        if (typeof src.string === 'string') {
+          return {
+            string: src.string
+          };
+        }
+
+        throw new JSONParseError(src, "malformed string literal: " + src);
+      } else if ('int' in src) {
+        if (typeof src.int === 'string' && intRe.test(src.int)) {
+          return {
+            int: src.int
+          };
+        }
+
+        throw new JSONParseError(src, "malformed int literal: " + src);
+      } else if ('bytes' in src) {
+        if (typeof src.bytes === 'string' && bytesRe.test(src.bytes)) {
+          return {
+            bytes: src.bytes
+          };
+        }
+
+        throw new JSONParseError(src, "malformed bytes literal: " + src);
+      } else {
+        throw new JSONParseError(src, "unexpected object: " + src);
+      }
+    };
+
+    return Parser;
+  }();
+
+  /** @class */
+  (function () {
+    function Formatter(opt, lev) {
+      if (lev === void 0) {
+        lev = 0;
+      }
+
+      this.opt = opt;
+      this.lev = lev;
+    }
+
+    Formatter.prototype.indent = function (n) {
+      var _a;
+
+      if (n === void 0) {
+        n = 0;
+      }
+
+      var ret = "";
+
+      if (((_a = this.opt) === null || _a === void 0 ? void 0 : _a.indent) !== undefined) {
+        for (var i = this.lev + n; i > 0; i--) {
+          ret += this.opt.indent;
+        }
+      }
+
+      return ret;
+    };
+
+    Object.defineProperty(Formatter.prototype, "lf", {
+      get: function () {
+        var _a;
+
+        return ((_a = this.opt) === null || _a === void 0 ? void 0 : _a.newline) || "";
+      },
+      enumerable: false,
+      configurable: true
+    });
+    Object.defineProperty(Formatter.prototype, "lfsp", {
+      get: function () {
+        var _a;
+
+        return ((_a = this.opt) === null || _a === void 0 ? void 0 : _a.newline) || " ";
+      },
+      enumerable: false,
+      configurable: true
+    });
+
+    Formatter.prototype.down = function (n) {
+      return new Formatter(this.opt, this.lev + n);
+    };
+
+    return Formatter;
+  })();
+
+  var H = [0x6a09e667 | 0, 0xbb67ae85 | 0, 0x3c6ef372 | 0, 0xa54ff53a | 0, 0x510e527f | 0, 0x9b05688c | 0, 0x1f83d9ab | 0, 0x5be0cd19 | 0];
+  var K = [0x428a2f98 | 0, 0x71374491 | 0, 0xb5c0fbcf | 0, 0xe9b5dba5 | 0, 0x3956c25b | 0, 0x59f111f1 | 0, 0x923f82a4 | 0, 0xab1c5ed5 | 0, 0xd807aa98 | 0, 0x12835b01 | 0, 0x243185be | 0, 0x550c7dc3 | 0, 0x72be5d74 | 0, 0x80deb1fe | 0, 0x9bdc06a7 | 0, 0xc19bf174 | 0, 0xe49b69c1 | 0, 0xefbe4786 | 0, 0x0fc19dc6 | 0, 0x240ca1cc | 0, 0x2de92c6f | 0, 0x4a7484aa | 0, 0x5cb0a9dc | 0, 0x76f988da | 0, 0x983e5152 | 0, 0xa831c66d | 0, 0xb00327c8 | 0, 0xbf597fc7 | 0, 0xc6e00bf3 | 0, 0xd5a79147 | 0, 0x06ca6351 | 0, 0x14292967 | 0, 0x27b70a85 | 0, 0x2e1b2138 | 0, 0x4d2c6dfc | 0, 0x53380d13 | 0, 0x650a7354 | 0, 0x766a0abb | 0, 0x81c2c92e | 0, 0x92722c85 | 0, 0xa2bfe8a1 | 0, 0xa81a664b | 0, 0xc24b8b70 | 0, 0xc76c51a3 | 0, 0xd192e819 | 0, 0xd6990624 | 0, 0xf40e3585 | 0, 0x106aa070 | 0, 0x19a4c116 | 0, 0x1e376c08 | 0, 0x2748774c | 0, 0x34b0bcb5 | 0, 0x391c0cb3 | 0, 0x4ed8aa4a | 0, 0x5b9cca4f | 0, 0x682e6ff3 | 0, 0x748f82ee | 0, 0x78a5636f | 0, 0x84c87814 | 0, 0x8cc70208 | 0, 0x90befffa | 0, 0xa4506ceb | 0, 0xbef9a3f7 | 0, 0xc67178f2 | 0]; // https://tools.ietf.org/html/rfc6234
+
+  function sha256(msg) {
+    var e_1, _a; // pad the message
+
+
+    var r = (msg.length + 9) % 64;
+    var pad = r === 0 ? 0 : 64 - r;
+
+    if (msg.length > 268435455) {
+      throw new Error("sha256: message length is too big: " + msg.length);
+    }
+
+    var l = msg.length << 3;
+
+    var buffer = __spreadArray(__spreadArray(__spreadArray(__spreadArray([], __read(msg)), [0x80]), __read(new Array(pad).fill(0))), [0, 0, 0, 0, l >> 24 & 0xff, l >> 16 & 0xff, l >> 8 & 0xff, l & 0xff]);
+
+    function ror(x, n) {
+      return x >>> n | x << 32 - n;
+    }
+
+    var h = __spreadArray([], __read(H));
+
+    var w = new Array(64);
+    var v = new Array(8);
+
+    for (var offset = 0; offset < buffer.length; offset += 64) {
+      var q = offset;
+      var i = 0;
+
+      while (i < 16) {
+        w[i] = buffer[q] << 24 | buffer[q + 1] << 16 | buffer[q + 2] << 8 | buffer[q + 3];
+        q += 4;
+        i++;
+      }
+
+      while (i < 64) {
+        var s0 = ror(w[i - 15], 7) ^ ror(w[i - 15], 18) ^ w[i - 15] >>> 3;
+        var s1 = ror(w[i - 2], 17) ^ ror(w[i - 2], 19) ^ w[i - 2] >>> 10;
+        w[i] = (s1 | 0) + w[i - 7] + s0 + w[i - 16] | 0;
+        i++;
+      }
+
+      for (var i_1 = 0; i_1 < 8; i_1++) {
+        v[i_1] = h[i_1];
+      }
+
+      for (var i_2 = 0; i_2 < 64; i_2++) {
+        var b0 = ror(v[0], 2) ^ ror(v[0], 13) ^ ror(v[0], 22);
+        var b1 = ror(v[4], 6) ^ ror(v[4], 11) ^ ror(v[4], 25);
+        var t1 = v[7] + b1 + (v[4] & v[5] ^ ~v[4] & v[6]) + K[i_2] + w[i_2] | 0;
+        var t2 = b0 + (v[0] & v[1] ^ v[0] & v[2] ^ v[1] & v[2]) | 0;
+        v[7] = v[6];
+        v[6] = v[5];
+        v[5] = v[4];
+        v[4] = v[3] + t1 | 0;
+        v[3] = v[2];
+        v[2] = v[1];
+        v[1] = v[0];
+        v[0] = t1 + t2 | 0;
+      }
+
+      for (var i_3 = 0; i_3 < 8; i_3++) {
+        h[i_3] = h[i_3] + v[i_3] | 0;
+      }
+    }
+
+    var digest = [];
+
+    try {
+      for (var h_1 = __values(h), h_1_1 = h_1.next(); !h_1_1.done; h_1_1 = h_1.next()) {
+        var v_1 = h_1_1.value;
+        digest.push(v_1 >> 24 & 0xff);
+        digest.push(v_1 >> 16 & 0xff);
+        digest.push(v_1 >> 8 & 0xff);
+        digest.push(v_1 & 0xff);
+      }
+    } catch (e_1_1) {
+      e_1 = {
+        error: e_1_1
+      };
+    } finally {
+      try {
+        if (h_1_1 && !h_1_1.done && (_a = h_1.return)) _a.call(h_1);
+      } finally {
+        if (e_1) throw e_1.error;
+      }
+    }
+
+    return digest;
+  }
+
+  var base58alphabetFwd = [0, 1, 2, 3, 4, 5, 6, 7, 8, -1, -1, -1, -1, -1, -1, -1, 9, 10, 11, 12, 13, 14, 15, 16, -1, 17, 18, 19, 20, 21, -1, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, -1, -1, -1, -1, -1, -1, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, -1, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57];
+
+  function byteAt(src, i) {
+    var c = src.charCodeAt(i) - 49;
+
+    if (c >= base58alphabetFwd.length || base58alphabetFwd[c] === -1) {
+      throw new Error("Base58 decoding error: unexpected character at position " + i + ": " + src[i]);
+    }
+
+    return base58alphabetFwd[c];
+  }
+
+  function decodeBase58(src) {
+    var acc = [];
+    var i = 0; // count and skip leading zeros
+
+    while (i < src.length && byteAt(src, i) === 0) {
+      i++;
+    }
+
+    var zeros = i;
+
+    while (i < src.length) {
+      var carry = byteAt(src, i++);
+      /*
+      for every symbol x
+      acc = acc * 58 + x
+      where acc is a little endian arbitrary length integer
+      */
+
+      var ii = 0;
+
+      while (carry !== 0 || ii < acc.length) {
+        var m = (acc[ii] || 0) * 58 + carry;
+        acc[ii++] = m % 256;
+        carry = Math.floor(m / 256);
+      }
+    }
+
+    while (zeros-- > 0) {
+      acc.push(0);
+    }
+
+    return acc.reverse();
+  }
+
+  function decodeBase58Check(src) {
+    var buffer = decodeBase58(src);
+
+    if (buffer.length < 4) {
+      throw new Error("Base58Check decoding error: data is too short " + buffer.length);
+    }
+
+    var data = buffer.slice(0, buffer.length - 4);
+    var sum = buffer.slice(buffer.length - 4);
+    var computed = sha256(sha256(data));
+
+    if (sum[0] !== computed[0] || sum[1] !== computed[1] || sum[2] !== computed[2] || sum[3] !== computed[3]) {
+      throw new Error("Base58Check decoding error: invalid checksum");
+    }
+
+    return data;
+  }
+
+  var MichelsonError =
+  /** @class */
+  function (_super) {
+    __extends(MichelsonError, _super);
+    /**
+     * @param val Value of a AST node caused the error
+     * @param path Path to a node caused the error
+     * @param message An error message
+     */
+
+
+    function MichelsonError(val, message) {
+      var _this = _super.call(this, message) || this;
+
+      _this.val = val;
+      Object.setPrototypeOf(_this, MichelsonError.prototype);
+      return _this;
+    }
+
+    return MichelsonError;
+  }(Error);
+
+  var MichelsonTypeError =
+  /** @class */
+  function (_super) {
+    __extends(MichelsonTypeError, _super);
+    /**
+     * @param val Value of a type node caused the error
+     * @param data Value of a data node caused the error
+     * @param message An error message
+     */
+
+
+    function MichelsonTypeError(val, data, message) {
+      var _this = _super.call(this, val, message) || this;
+
+      if (data !== undefined) {
+        _this.data = data;
+      }
+
+      Object.setPrototypeOf(_this, MichelsonTypeError.prototype);
+      return _this;
+    }
+
+    return MichelsonTypeError;
+  }(MichelsonError); // Ad hoc big integer parser
+
+
+  var LongInteger =
+  /** @class */
+  function () {
+    function LongInteger(arg) {
+      this.neg = false;
+      this.buf = [];
+
+      if (arg === undefined) {
+        return;
+      }
+
+      if (typeof arg === "string") {
+        for (var i = 0; i < arg.length; i++) {
+          var c = arg.charCodeAt(i);
+
+          if (i === 0 && c === 0x2d) {
+            this.neg = true;
+          } else {
+            if (c < 0x30 || c > 0x39) {
+              throw new Error("unexpected character in integer constant: " + arg[i]);
+            }
+
+            this.append(c - 0x30);
+          }
+        }
+      } else if (arg < 0) {
+        this.neg = true;
+        this.append(-arg);
+      } else {
+        this.append(arg);
+      }
+    }
+
+    LongInteger.prototype.append = function (c) {
+      var i = 0;
+
+      while (c !== 0 || i < this.buf.length) {
+        var m = (this.buf[i] || 0) * 10 + c;
+        this.buf[i++] = m % 256;
+        c = Math.floor(m / 256);
+      }
+    };
+
+    LongInteger.prototype.cmp = function (arg) {
+      if (this.neg !== arg.neg) {
+        return (arg.neg ? 1 : 0) - (this.neg ? 1 : 0);
+      } else {
+        var ret = 0;
+
+        if (this.buf.length !== arg.buf.length) {
+          ret = this.buf.length < arg.buf.length ? -1 : 1;
+        } else if (this.buf.length !== 0) {
+          var i = arg.buf.length - 1;
+
+          while (i >= 0 && this.buf[i] === arg.buf[i]) {
+            i--;
+          }
+
+          ret = i < 0 ? 0 : this.buf[i] < arg.buf[i] ? -1 : 1;
+        }
+
+        return !this.neg ? ret : ret === 0 ? 0 : -ret;
+      }
+    };
+
+    Object.defineProperty(LongInteger.prototype, "sign", {
+      get: function () {
+        return this.buf.length === 0 ? 0 : this.neg ? -1 : 1;
+      },
+      enumerable: false,
+      configurable: true
+    });
+    return LongInteger;
+  }();
+
+  function parseBytes(s) {
+    var ret = [];
+
+    for (var i = 0; i < s.length; i += 2) {
+      var x = parseInt(s.slice(i, i + 2), 16);
+
+      if (Number.isNaN(x)) {
+        return null;
+      }
+
+      ret.push(x);
+    }
+
+    return ret;
+  }
+
+  function compareBytes(a, b) {
+    if (a.length !== b.length) {
+      return a.length < b.length ? -1 : 1;
+    } else if (a.length !== 0) {
+      var i = 0;
+
+      while (i < a.length && a[i] === b[i]) {
+        i++;
+      }
+
+      return i === a.length ? 0 : a[i] < b[i] ? -1 : 1;
+    } else {
+      return 0;
+    }
+  }
+
+  function isDecimal(x) {
+    try {
+      // tslint:disable-next-line: no-unused-expression
+      new LongInteger(x);
+      return true;
+    } catch (_a) {
+      return false;
+    }
+  }
+
+  function isNatural(x) {
+    try {
+      return new LongInteger(x).sign >= 0;
+    } catch (_a) {
+      return false;
+    }
+  }
+
+  var annRe = /^(@%|@%%|%@|[@:%]([_0-9a-zA-Z][_0-9a-zA-Z\.%@]*)?)$/;
+
+  function unpackAnnotations(p, opt) {
+    var e_1, _a;
+
+    if (Array.isArray(p)) {
+      return {};
+    }
+
+    var field;
+    var type;
+    var vars;
+
+    if (p.annots !== undefined) {
+      try {
+        for (var _b = __values(p.annots), _c = _b.next(); !_c.done; _c = _b.next()) {
+          var v = _c.value;
+
+          if (v.length !== 0) {
+            if (!annRe.test(v) || !(opt === null || opt === void 0 ? void 0 : opt.specialVar) && (v === "@%" || v === "@%%") || !(opt === null || opt === void 0 ? void 0 : opt.specialFields) && v === "%@") {
+              throw new MichelsonError(p, p.prim + ": unexpected annotation: " + v);
+            }
+
+            switch (v[0]) {
+              case "%":
+                if ((opt === null || opt === void 0 ? void 0 : opt.emptyFields) || v.length > 1) {
+                  field = field || [];
+                  field.push(v);
+                }
+
+                break;
+
+              case ":":
+                if (v.length > 1) {
+                  type = type || [];
+                  type.push(v);
+                }
+
+                break;
+
+              case "@":
+                if ((opt === null || opt === void 0 ? void 0 : opt.emptyVar) || v.length > 1) {
+                  vars = vars || [];
+                  vars.push(v);
+                }
+
+                break;
+            }
+          }
+        }
+      } catch (e_1_1) {
+        e_1 = {
+          error: e_1_1
+        };
+      } finally {
+        try {
+          if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+        } finally {
+          if (e_1) throw e_1.error;
+        }
+      }
+    }
+
+    return {
+      f: field,
+      t: type,
+      v: vars
+    };
+  }
+
+  var tezosPrefix = {
+    BlockHash: [32, [1, 52]],
+    OperationHash: [32, [5, 116]],
+    OperationListHash: [32, [133, 233]],
+    OperationListListHash: [32, [29, 159, 109]],
+    ProtocolHash: [32, [2, 170]],
+    ContextHash: [32, [79, 199]],
+    ED25519PublicKeyHash: [20, [6, 161, 159]],
+    SECP256K1PublicKeyHash: [20, [6, 161, 161]],
+    P256PublicKeyHash: [20, [6, 161, 164]],
+    ContractHash: [20, [2, 90, 121]],
+    CryptoboxPublicKeyHash: [16, [153, 103]],
+    ED25519Seed: [32, [13, 15, 58, 7]],
+    ED25519PublicKey: [32, [13, 15, 37, 217]],
+    SECP256K1SecretKey: [32, [17, 162, 224, 201]],
+    P256SecretKey: [32, [16, 81, 238, 189]],
+    ED25519EncryptedSeed: [56, [7, 90, 60, 179, 41]],
+    SECP256K1EncryptedSecretKey: [56, [9, 237, 241, 174, 150]],
+    P256EncryptedSecretKey: [56, [9, 48, 57, 115, 171]],
+    SECP256K1PublicKey: [33, [3, 254, 226, 86]],
+    P256PublicKey: [33, [3, 178, 139, 127]],
+    SECP256K1Scalar: [33, [38, 248, 136]],
+    SECP256K1Element: [33, [5, 92, 0]],
+    ED25519SecretKey: [64, [43, 246, 78, 7]],
+    ED25519Signature: [64, [9, 245, 205, 134, 18]],
+    SECP256K1Signature: [64, [13, 115, 101, 19, 63]],
+    P256Signature: [64, [54, 240, 44, 52]],
+    GenericSignature: [64, [4, 130, 43]],
+    ChainID: [4, [87, 82, 0]]
+  };
+
+  function checkDecodeTezosID(id) {
+    var e_2, _a;
+
+    var types = [];
+
+    for (var _i = 1; _i < arguments.length; _i++) {
+      types[_i - 1] = arguments[_i];
+    }
+
+    var buf = decodeBase58Check(id);
+
+    try {
+      for (var types_1 = __values(types), types_1_1 = types_1.next(); !types_1_1.done; types_1_1 = types_1.next()) {
+        var t = types_1_1.value;
+
+        var _b = __read(tezosPrefix[t], 2),
+            plen = _b[0],
+            p = _b[1];
+
+        if (buf.length === plen + p.length) {
+          var i = 0;
+
+          while (i < p.length && buf[i] === p[i]) {
+            i++;
+          }
+
+          if (i === p.length) {
+            return [t, buf.slice(p.length)];
+          }
+        }
+      }
+    } catch (e_2_1) {
+      e_2 = {
+        error: e_2_1
+      };
+    } finally {
+      try {
+        if (types_1_1 && !types_1_1.done && (_a = types_1.return)) _a.call(types_1);
+      } finally {
+        if (e_2) throw e_2.error;
+      }
+    }
+
+    return null;
+  }
+
+  function unpackComb(id, v) {
+    var vv = v;
+    var args = Array.isArray(vv) ? vv : vv.args;
+
+    if (args.length === 2) {
+      // it's a way to make a union of two interfaces not an interface with two independent properties of union types
+      var ret = id === "pair" ? {
+        prim: "pair",
+        args: args
+      } : {
+        prim: "Pair",
+        args: args
+      };
+      return ret;
+    }
+
+    return __assign(__assign({}, Array.isArray(vv) ? {
+      prim: id
+    } : vv), {
+      args: [args[0], {
+        prim: id,
+        args: args.slice(1)
+      }]
+    });
+  }
+
+  function isPairType(t) {
+    return Array.isArray(t) || t.prim === "pair";
+  }
+
+  function isPairData(d) {
+    return Array.isArray(d) || "prim" in d && d.prim === "Pair";
+  }
+
+  var rfc3339Re = /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])[T ]([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?(Z|[+-]([01][0-9]|2[0-3]):([0-5][0-9]))$/;
+
+  function parseDate(a) {
+    if ("string" in a) {
+      if (isNatural(a.string)) {
+        return new Date(parseInt(a.string, 10));
+      } else if (rfc3339Re.test(a.string)) {
+        var x = new Date(a.string);
+
+        if (!Number.isNaN(x.valueOf)) {
+          return x;
+        }
+      }
+    } else if (isNatural(a.int)) {
+      return new Date(parseInt(a.int, 10));
+    }
+
+    return null;
+  }
+
+  function parseHex(s) {
+    var res = [];
+
+    for (var i = 0; i < s.length; i += 2) {
+      var ss = s.slice(i, i + 2);
+      var x = parseInt(ss, 16);
+
+      if (Number.isNaN(x)) {
+        throw new Error("can't parse hex byte: " + ss);
+      }
+
+      res.push(x);
+    }
+
+    return res;
+  }
+
+  function hexBytes(bytes) {
+    return bytes.map(function (x) {
+      return (x >> 4 & 0xf).toString(16) + (x & 0xf).toString(16);
+    }).join("");
+  } // Michelson validator
+
+
+  var noArgInstructionIDs = {
+    "ABS": true,
+    "ADD": true,
+    "ADDRESS": true,
+    "AMOUNT": true,
+    "AND": true,
+    "APPLY": true,
+    "BALANCE": true,
+    "BLAKE2B": true,
+    "CAR": true,
+    "CDR": true,
+    "CHAIN_ID": true,
+    "CHECK_SIGNATURE": true,
+    "COMPARE": true,
+    "CONCAT": true,
+    "CONS": true,
+    "EDIV": true,
+    "EQ": true,
+    "EXEC": true,
+    "FAILWITH": true,
+    "GE": true,
+    "GET_AND_UPDATE": true,
+    "GT": true,
+    "HASH_KEY": true,
+    "IMPLICIT_ACCOUNT": true,
+    "INT": true,
+    "ISNAT": true,
+    "JOIN_TICKETS": true,
+    "KECCAK": true,
+    "LE": true,
+    "LEVEL": true,
+    "LSL": true,
+    "LSR": true,
+    "LT": true,
+    "MEM": true,
+    "MUL": true,
+    "NEG": true,
+    "NEQ": true,
+    "NEVER": true,
+    "NOT": true,
+    "NOW": true,
+    "OR": true,
+    "PACK": true,
+    "PAIRING_CHECK": true,
+    "READ_TICKET": true,
+    "SAPLING_VERIFY_UPDATE": true,
+    "SELF": true,
+    "SELF_ADDRESS": true,
+    "SENDER": true,
+    "SET_DELEGATE": true,
+    "SHA256": true,
+    "SHA3": true,
+    "SHA512": true,
+    "SIZE": true,
+    "SLICE": true,
+    "SOME": true,
+    "SOURCE": true,
+    "SPLIT_TICKET": true,
+    "SUB": true,
+    "SWAP": true,
+    "TICKET": true,
+    "TOTAL_VOTING_POWER": true,
+    "TRANSFER_TOKENS": true,
+    "UNIT": true,
+    "VOTING_POWER": true,
+    "XOR": true,
+    "RENAME": true
+  };
+  var instructionIDs = Object.assign({}, noArgInstructionIDs, {
+    "CONTRACT": true,
+    "CREATE_CONTRACT": true,
+    "DIG": true,
+    "DIP": true,
+    "DROP": true,
+    "DUG": true,
+    "DUP": true,
+    "EMPTY_BIG_MAP": true,
+    "EMPTY_MAP": true,
+    "EMPTY_SET": true,
+    "GET": true,
+    "IF": true,
+    "IF_CONS": true,
+    "IF_LEFT": true,
+    "IF_NONE": true,
+    "ITER": true,
+    "LAMBDA": true,
+    "LEFT": true,
+    "LOOP": true,
+    "LOOP_LEFT": true,
+    "MAP": true,
+    "NIL": true,
+    "NONE": true,
+    "PAIR": true,
+    "PUSH": true,
+    "RIGHT": true,
+    "SAPLING_EMPTY_STATE": true,
+    "UNPACK": true,
+    "UNPAIR": true,
+    "UPDATE": true,
+    "CAST": true
+  });
+  var simpleComparableTypeIDs = {
+    "unit": true,
+    "never": true,
+    "bool": true,
+    "int": true,
+    "nat": true,
+    "string": true,
+    "chain_id": true,
+    "bytes": true,
+    "mutez": true,
+    "key_hash": true,
+    "key": true,
+    "signature": true,
+    "timestamp": true,
+    "address": true
+  };
+  var typeIDs = Object.assign({}, simpleComparableTypeIDs, {
+    "or": true,
+    "pair": true,
+    "set": true,
+    "big_map": true,
+    "contract": true,
+    "lambda": true,
+    "list": true,
+    "map": true,
+    "operation": true,
+    "option": true,
+    "bls12_381_g1": true,
+    "bls12_381_g2": true,
+    "bls12_381_fr": true,
+    "sapling_transaction": true,
+    "sapling_state": true,
+    "ticket": true
+  });
+
+  var MichelsonValidationError =
+  /** @class */
+  function (_super) {
+    __extends(MichelsonValidationError, _super);
+    /**
+     * @param val Value of a node caused the error
+     * @param message An error message
+     */
+
+
+    function MichelsonValidationError(val, message) {
+      var _this = _super.call(this, val, message) || this;
+
+      _this.val = val;
+      Object.setPrototypeOf(_this, MichelsonValidationError.prototype);
+      return _this;
+    }
+
+    return MichelsonValidationError;
+  }(MichelsonError);
+
+  function isPrim(ex) {
+    return "prim" in ex;
+  }
+
+  function isPrimOrSeq(ex) {
+    return Array.isArray(ex) || "prim" in ex;
+  }
+
+  function assertPrim(ex) {
+    if (isPrim(ex)) {
+      return true;
+    }
+
+    throw new MichelsonValidationError(ex, "prim expression expected");
+  }
+
+  function assertSeq(ex) {
+    if (Array.isArray(ex)) {
+      return true;
+    }
+
+    throw new MichelsonValidationError(ex, "sequence expression expected");
+  }
+
+  function assertPrimOrSeq(ex) {
+    if (isPrimOrSeq(ex)) {
+      return true;
+    }
+
+    throw new MichelsonValidationError(ex, "prim or sequence expression expected");
+  }
+
+  function assertNatural(i) {
+    if (i.int[0] === "-") {
+      throw new MichelsonValidationError(i, "natural number expected");
+    }
+  }
+
+  function assertIntLiteral(ex) {
+    if ("int" in ex) {
+      return true;
+    }
+
+    throw new MichelsonValidationError(ex, "int literal expected");
+  }
+
+  function assertArgs(ex, n) {
+    var _a;
+
+    if (n === 0 && ex.args === undefined || ((_a = ex.args) === null || _a === void 0 ? void 0 : _a.length) === n) {
+      return true;
+    }
+
+    throw new MichelsonValidationError(ex, n + " arguments expected");
+  }
+  /**
+   * Checks if the node is a valid Michelson code (sequence of instructions).
+   * This is a type guard function which either returns true of throws an exception.
+   * @param ex An AST node
+   */
+
+
+  function assertMichelsonInstruction(ex) {
+    var e_1, _a;
+
+    var _b, _c;
+
+    if (Array.isArray(ex)) {
+      try {
+        for (var ex_1 = __values(ex), ex_1_1 = ex_1.next(); !ex_1_1.done; ex_1_1 = ex_1.next()) {
+          var n = ex_1_1.value;
+
+          if (!Array.isArray(n) && !isPrim(n)) {
+            throw new MichelsonValidationError(ex, "sequence or prim expected");
+          }
+
+          assertMichelsonInstruction(n);
+        }
+      } catch (e_1_1) {
+        e_1 = {
+          error: e_1_1
+        };
+      } finally {
+        try {
+          if (ex_1_1 && !ex_1_1.done && (_a = ex_1.return)) _a.call(ex_1);
+        } finally {
+          if (e_1) throw e_1.error;
+        }
+      }
+
+      return true;
+    }
+
+    if (assertPrim(ex)) {
+      if (Object.prototype.hasOwnProperty.call(noArgInstructionIDs, ex.prim)) {
+        assertArgs(ex, 0);
+        return true;
+      }
+
+      switch (ex.prim) {
+        case "DROP":
+        case "PAIR":
+        case "UNPAIR":
+        case "DUP":
+        case "UPDATE":
+        case "GET":
+          if (ex.args !== undefined && assertArgs(ex, 1)) {
+            /* istanbul ignore else */
+            if (assertIntLiteral(ex.args[0])) {
+              assertNatural(ex.args[0]);
+            }
+          }
+
+          break;
+
+        case "DIG":
+        case "DUG":
+        case "SAPLING_EMPTY_STATE":
+          /* istanbul ignore else */
+          if (assertArgs(ex, 1)) {
+            /* istanbul ignore else */
+            if (assertIntLiteral(ex.args[0])) {
+              assertNatural(ex.args[0]);
+            }
+          }
+
+          break;
+
+        case "NONE":
+        case "LEFT":
+        case "RIGHT":
+        case "NIL":
+        case "CAST":
+          /* istanbul ignore else */
+          if (assertArgs(ex, 1)) {
+            assertMichelsonType(ex.args[0]);
+          }
+
+          break;
+
+        case "UNPACK":
+          /* istanbul ignore else */
+          if (assertArgs(ex, 1)) {
+            assertMichelsonPackableType(ex.args[0]);
+          }
+
+          break;
+
+        case "CONTRACT":
+          /* istanbul ignore else */
+          if (assertArgs(ex, 1)) {
+            assertMichelsonPassableType(ex.args[0]);
+          }
+
+          break;
+
+        case "IF_NONE":
+        case "IF_LEFT":
+        case "IF_CONS":
+        case "IF":
+          /* istanbul ignore else */
+          if (assertArgs(ex, 2)) {
+            /* istanbul ignore else */
+            if (assertSeq(ex.args[0])) {
+              assertMichelsonInstruction(ex.args[0]);
+            }
+            /* istanbul ignore else */
+
+
+            if (assertSeq(ex.args[1])) {
+              assertMichelsonInstruction(ex.args[1]);
+            }
+          }
+
+          break;
+
+        case "MAP":
+        case "ITER":
+        case "LOOP":
+        case "LOOP_LEFT":
+          /* istanbul ignore else */
+          if (assertArgs(ex, 1)) {
+            assertMichelsonInstruction(ex.args[0]);
+          }
+
+          break;
+
+        case "CREATE_CONTRACT":
+          /* istanbul ignore else */
+          if (assertArgs(ex, 1)) {
+            assertMichelsonContract(ex.args[0]);
+          }
+
+          break;
+
+        case "DIP":
+          if (((_b = ex.args) === null || _b === void 0 ? void 0 : _b.length) === 2) {
+            /* istanbul ignore else */
+            if (assertIntLiteral(ex.args[0])) {
+              assertNatural(ex.args[0]);
+            }
+            /* istanbul ignore else */
+
+
+            if (assertSeq(ex.args[1])) {
+              assertMichelsonInstruction(ex.args[1]);
+            }
+          } else if (((_c = ex.args) === null || _c === void 0 ? void 0 : _c.length) === 1) {
+            /* istanbul ignore else */
+            if (assertSeq(ex.args[0])) {
+              assertMichelsonInstruction(ex.args[0]);
+            }
+          } else {
+            throw new MichelsonValidationError(ex, "1 or 2 arguments expected");
+          }
+
+          break;
+
+        case "PUSH":
+          /* istanbul ignore else */
+          if (assertArgs(ex, 2)) {
+            assertMichelsonPushableType(ex.args[0]);
+            assertMichelsonData(ex.args[1]);
+          }
+
+          break;
+
+        case "EMPTY_SET":
+          /* istanbul ignore else */
+          if (assertArgs(ex, 1)) {
+            assertMichelsonComparableType(ex.args[0]);
+          }
+
+          break;
+
+        case "EMPTY_MAP":
+          /* istanbul ignore else */
+          if (assertArgs(ex, 2)) {
+            assertMichelsonComparableType(ex.args[0]);
+            assertMichelsonType(ex.args[1]);
+          }
+
+          break;
+
+        case "EMPTY_BIG_MAP":
+          /* istanbul ignore else */
+          if (assertArgs(ex, 2)) {
+            assertMichelsonComparableType(ex.args[0]);
+            assertMichelsonBigMapStorableType(ex.args[1]);
+          }
+
+          break;
+
+        case "LAMBDA":
+          /* istanbul ignore else */
+          if (assertArgs(ex, 3)) {
+            assertMichelsonType(ex.args[0]);
+            assertMichelsonType(ex.args[1]);
+            /* istanbul ignore else */
+
+            if (assertSeq(ex.args[2])) {
+              assertMichelsonInstruction(ex.args[2]);
+            }
+          }
+
+          break;
+
+        default:
+          throw new MichelsonValidationError(ex, "instruction expected");
+      }
+    }
+
+    return true;
+  }
+
+  function assertMichelsonComparableType(ex) {
+    /* istanbul ignore else */
+    if (assertPrimOrSeq(ex)) {
+      if (Array.isArray(ex) || ex.prim === "pair" || ex.prim === "or" || ex.prim === "option") {
+        traverseType(ex, function (ex) {
+          return assertMichelsonComparableType(ex);
+        });
+      } else if (!Object.prototype.hasOwnProperty.call(simpleComparableTypeIDs, ex.prim)) {
+        throw new MichelsonValidationError(ex, ex.prim + ": type is not comparable");
+      }
+    }
+
+    return true;
+  }
+
+  function assertMichelsonPackableType(ex) {
+    /* istanbul ignore else */
+    if (assertPrimOrSeq(ex)) {
+      if (isPrim(ex)) {
+        if (!Object.prototype.hasOwnProperty.call(typeIDs, ex.prim) || ex.prim === "big_map" || ex.prim === "operation" || ex.prim === "sapling_state" || ex.prim === "ticket") {
+          throw new MichelsonValidationError(ex, ex.prim + ": type can't be used inside PACK/UNPACK instructions");
+        }
+
+        traverseType(ex, function (ex) {
+          return assertMichelsonPackableType(ex);
+        });
+      }
+    }
+
+    return true;
+  }
+
+  function assertMichelsonPushableType(ex) {
+    /* istanbul ignore else */
+    if (assertPrimOrSeq(ex)) {
+      if (isPrim(ex)) {
+        if (!Object.prototype.hasOwnProperty.call(typeIDs, ex.prim) || ex.prim === "big_map" || ex.prim === "operation" || ex.prim === "sapling_state" || ex.prim === "ticket" || ex.prim === "contract") {
+          throw new MichelsonValidationError(ex, ex.prim + ": type can't be pushed");
+        }
+
+        traverseType(ex, function (ex) {
+          return assertMichelsonPushableType(ex);
+        });
+      }
+    }
+
+    return true;
+  }
+
+  function assertMichelsonStorableType(ex) {
+    /* istanbul ignore else */
+    if (assertPrimOrSeq(ex)) {
+      if (isPrim(ex)) {
+        if (!Object.prototype.hasOwnProperty.call(typeIDs, ex.prim) || ex.prim === "operation" || ex.prim === "contract") {
+          throw new MichelsonValidationError(ex, ex.prim + ": type can't be used as part of a storage");
+        }
+
+        traverseType(ex, function (ex) {
+          return assertMichelsonStorableType(ex);
+        });
+      }
+    }
+
+    return true;
+  }
+
+  function assertMichelsonPassableType(ex) {
+    /* istanbul ignore else */
+    if (assertPrimOrSeq(ex)) {
+      if (isPrim(ex)) {
+        if (!Object.prototype.hasOwnProperty.call(typeIDs, ex.prim) || ex.prim === "operation") {
+          throw new MichelsonValidationError(ex, ex.prim + ": type can't be used as part of a parameter");
+        }
+
+        traverseType(ex, function (ex) {
+          return assertMichelsonPassableType(ex);
+        });
+      }
+    }
+
+    return true;
+  }
+
+  function assertMichelsonBigMapStorableType(ex) {
+    /* istanbul ignore else */
+    if (assertPrimOrSeq(ex)) {
+      if (isPrim(ex)) {
+        if (!Object.prototype.hasOwnProperty.call(typeIDs, ex.prim) || ex.prim === "big_map" || ex.prim === "operation" || ex.prim === "sapling_state") {
+          throw new MichelsonValidationError(ex, ex.prim + ": type can't be used inside a big_map");
+        }
+
+        traverseType(ex, function (ex) {
+          return assertMichelsonBigMapStorableType(ex);
+        });
+      }
+    }
+
+    return true;
+  }
+  /**
+   * Checks if the node is a valid Michelson type expression.
+   * This is a type guard function which either returns true of throws an exception.
+   * @param ex An AST node
+   */
+
+
+  function assertMichelsonType(ex) {
+    /* istanbul ignore else */
+    if (assertPrimOrSeq(ex)) {
+      if (isPrim(ex)) {
+        if (!Object.prototype.hasOwnProperty.call(typeIDs, ex.prim)) {
+          throw new MichelsonValidationError(ex, "type expected");
+        }
+
+        traverseType(ex, function (ex) {
+          return assertMichelsonType(ex);
+        });
+      }
+    }
+
+    return true;
+  }
+
+  function traverseType(ex, cb) {
+    if (Array.isArray(ex) || ex.prim === "pair") {
+      var args = Array.isArray(ex) ? ex : ex.args;
+
+      if (args === undefined || args.length < 2) {
+        throw new MichelsonValidationError(ex, "at least 2 arguments expected");
+      }
+
+      args.forEach(function (a) {
+        if (assertPrimOrSeq(a)) {
+          cb(a);
+        }
+      });
+      return true;
+    }
+
+    switch (ex.prim) {
+      case "option":
+      case "list":
+        /* istanbul ignore else */
+        if (assertArgs(ex, 1) && assertPrimOrSeq(ex.args[0])) {
+          cb(ex.args[0]);
+        }
+
+        break;
+
+      case "contract":
+        /* istanbul ignore else */
+        if (assertArgs(ex, 1)) {
+          assertMichelsonPassableType(ex.args[0]);
+        }
+
+        break;
+
+      case "or":
+        /* istanbul ignore else */
+        if (assertArgs(ex, 2) && assertPrimOrSeq(ex.args[0]) && assertPrimOrSeq(ex.args[1])) {
+          cb(ex.args[0]);
+          cb(ex.args[1]);
+        }
+
+        break;
+
+      case "lambda":
+        /* istanbul ignore else */
+        if (assertArgs(ex, 2)) {
+          assertMichelsonType(ex.args[0]);
+          assertMichelsonType(ex.args[1]);
+        }
+
+        break;
+
+      case "set":
+        /* istanbul ignore else */
+        if (assertArgs(ex, 1)) {
+          assertMichelsonComparableType(ex.args[0]);
+        }
+
+        break;
+
+      case "map":
+        /* istanbul ignore else */
+        if (assertArgs(ex, 2) && assertPrimOrSeq(ex.args[0]) && assertPrimOrSeq(ex.args[1])) {
+          assertMichelsonComparableType(ex.args[0]);
+          cb(ex.args[1]);
+        }
+
+        break;
+
+      case "big_map":
+        /* istanbul ignore else */
+        if (assertArgs(ex, 2) && assertPrimOrSeq(ex.args[0]) && assertPrimOrSeq(ex.args[1])) {
+          assertMichelsonComparableType(ex.args[0]);
+          assertMichelsonBigMapStorableType(ex.args[1]);
+          cb(ex.args[1]);
+        }
+
+        break;
+
+      case "ticket":
+        /* istanbul ignore else */
+        if (assertArgs(ex, 1) && assertPrimOrSeq(ex.args[0])) {
+          assertMichelsonComparableType(ex.args[0]);
+        }
+
+        break;
+
+      case "sapling_state":
+      case "sapling_transaction":
+        if (assertArgs(ex, 1)) {
+          assertIntLiteral(ex.args[0]);
+        }
+
+        break;
+
+      default:
+        assertArgs(ex, 0);
+    }
+
+    return true;
+  }
+  /**
+   * Checks if the node is a valid Michelson data literal such as `(Pair {Elt "0" 0} 0)`.
+   * This is a type guard function which either returns true of throws an exception.
+   * @param ex An AST node
+   */
+
+
+  function assertMichelsonData(ex) {
+    var e_2, _a, e_3, _b;
+
+    if ("int" in ex || "string" in ex || "bytes" in ex) {
+      return true;
+    }
+
+    if (Array.isArray(ex)) {
+      var mapElts = 0;
+
+      try {
+        for (var ex_2 = __values(ex), ex_2_1 = ex_2.next(); !ex_2_1.done; ex_2_1 = ex_2.next()) {
+          var n = ex_2_1.value;
+
+          if (isPrim(n) && n.prim === "Elt") {
+            /* istanbul ignore else */
+            if (assertArgs(n, 2)) {
+              assertMichelsonData(n.args[0]);
+              assertMichelsonData(n.args[1]);
+            }
+
+            mapElts++;
+          } else {
+            assertMichelsonData(n);
+          }
+        }
+      } catch (e_2_1) {
+        e_2 = {
+          error: e_2_1
+        };
+      } finally {
+        try {
+          if (ex_2_1 && !ex_2_1.done && (_a = ex_2.return)) _a.call(ex_2);
+        } finally {
+          if (e_2) throw e_2.error;
+        }
+      }
+
+      if (mapElts !== 0 && mapElts !== ex.length) {
+        throw new MichelsonValidationError(ex, "data entries and map elements can't be intermixed");
+      }
+
+      return true;
+    }
+
+    if (isPrim(ex)) {
+      switch (ex.prim) {
+        case "Unit":
+        case "True":
+        case "False":
+        case "None":
+          assertArgs(ex, 0);
+          break;
+
+        case "Pair":
+          /* istanbul ignore else */
+          if (ex.args === undefined || ex.args.length < 2) {
+            throw new MichelsonValidationError(ex, "at least 2 arguments expected");
+          }
+
+          try {
+            for (var _c = __values(ex.args), _d = _c.next(); !_d.done; _d = _c.next()) {
+              var a = _d.value;
+              assertMichelsonData(a);
+            }
+          } catch (e_3_1) {
+            e_3 = {
+              error: e_3_1
+            };
+          } finally {
+            try {
+              if (_d && !_d.done && (_b = _c.return)) _b.call(_c);
+            } finally {
+              if (e_3) throw e_3.error;
+            }
+          }
+
+          break;
+
+        case "Left":
+        case "Right":
+        case "Some":
+          /* istanbul ignore else */
+          if (assertArgs(ex, 1)) {
+            assertMichelsonData(ex.args[0]);
+          }
+
+          break;
+
+        default:
+          if (Object.prototype.hasOwnProperty.call(instructionIDs, ex.prim)) {
+            assertMichelsonInstruction(ex);
+          } else {
+            throw new MichelsonValidationError(ex, "data entry or instruction expected");
+          }
+
+      }
+    } else {
+      throw new MichelsonValidationError(ex, "data entry expected");
+    }
+
+    return true;
+  }
+  /**
+   * Checks if the node is a valid Michelson smart contract source containing all required and valid properties such as `parameter`, `storage` and `code`.
+   * This is a type guard function which either returns true of throws an exception.
+   * @param ex An AST node
+   */
+
+
+  function assertMichelsonContract(ex) {
+    var e_4, _a;
+    /* istanbul ignore else */
+
+
+    if (assertSeq(ex)) {
+      var ent = {};
+
+      try {
+        for (var ex_3 = __values(ex), ex_3_1 = ex_3.next(); !ex_3_1.done; ex_3_1 = ex_3.next()) {
+          var sec = ex_3_1.value;
+
+          if (assertPrim(sec)) {
+            if (sec.prim !== "code" && sec.prim !== "parameter" && sec.prim !== "storage") {
+              throw new MichelsonValidationError(ex, "unexpected contract section: " + sec.prim);
+            }
+
+            if (sec.prim in ent) {
+              throw new MichelsonValidationError(ex, "duplicate contract section: " + sec.prim);
+            }
+
+            ent[sec.prim] = true;
+            /* istanbul ignore else */
+
+            if (assertArgs(sec, 1)) {
+              switch (sec.prim) {
+                case "code":
+                  /* istanbul ignore else */
+                  if (assertSeq(sec.args[0])) {
+                    assertMichelsonInstruction(sec.args[0]);
+                  }
+
+                  break;
+
+                case "parameter":
+                  assertMichelsonPassableType(sec.args[0]);
+                  break;
+
+                case "storage":
+                  assertMichelsonStorableType(sec.args[0]);
+              }
+            }
+          }
+        }
+      } catch (e_4_1) {
+        e_4 = {
+          error: e_4_1
+        };
+      } finally {
+        try {
+          if (ex_3_1 && !ex_3_1.done && (_a = ex_3.return)) _a.call(ex_3);
+        } finally {
+          if (e_4) throw e_4.error;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  function isInstruction(p) {
+    return Object.prototype.hasOwnProperty.call(instructionIDs, p.prim);
+  }
+
+  function assertDataListIfAny(d) {
+    var e_5, _a;
+
+    if (!Array.isArray(d)) {
+      return false;
+    }
+
+    try {
+      for (var d_1 = __values(d), d_1_1 = d_1.next(); !d_1_1.done; d_1_1 = d_1.next()) {
+        var v = d_1_1.value;
+
+        if ("prim" in v) {
+          if (isInstruction(v)) {
+            throw new MichelsonError(d, "Instruction outside of a lambda: " + JSON.stringify(d));
+          } else if (v.prim === "Elt") {
+            throw new MichelsonError(d, "Elt item outside of a map literal: " + JSON.stringify(d));
+          }
+        }
+      }
+    } catch (e_5_1) {
+      e_5 = {
+        error: e_5_1
+      };
+    } finally {
+      try {
+        if (d_1_1 && !d_1_1.done && (_a = d_1.return)) _a.call(d_1);
+      } finally {
+        if (e_5) throw e_5.error;
+      }
+    }
+
+    return true;
+  }
+
+  var primitives = ["parameter", "storage", "code", "False", "Elt", "Left", "None", "Pair", "Right", "Some", "True", "Unit", "PACK", "UNPACK", "BLAKE2B", "SHA256", "SHA512", "ABS", "ADD", "AMOUNT", "AND", "BALANCE", "CAR", "CDR", "CHECK_SIGNATURE", "COMPARE", "CONCAT", "CONS", "CREATE_ACCOUNT", "CREATE_CONTRACT", "IMPLICIT_ACCOUNT", "DIP", "DROP", "DUP", "EDIV", "EMPTY_MAP", "EMPTY_SET", "EQ", "EXEC", "FAILWITH", "GE", "GET", "GT", "HASH_KEY", "IF", "IF_CONS", "IF_LEFT", "IF_NONE", "INT", "LAMBDA", "LE", "LEFT", "LOOP", "LSL", "LSR", "LT", "MAP", "MEM", "MUL", "NEG", "NEQ", "NIL", "NONE", "NOT", "NOW", "OR", "PAIR", "PUSH", "RIGHT", "SIZE", "SOME", "SOURCE", "SENDER", "SELF", "STEPS_TO_QUOTA", "SUB", "SWAP", "TRANSFER_TOKENS", "SET_DELEGATE", "UNIT", "UPDATE", "XOR", "ITER", "LOOP_LEFT", "ADDRESS", "CONTRACT", "ISNAT", "CAST", "RENAME", "bool", "contract", "int", "key", "key_hash", "lambda", "list", "map", "big_map", "nat", "option", "or", "pair", "set", "signature", "string", "bytes", "mutez", "timestamp", "unit", "operation", "address", "SLICE", "DIG", "DUG", "EMPTY_BIG_MAP", "APPLY", "chain_id", "CHAIN_ID", "LEVEL", "SELF_ADDRESS", "never", "NEVER", "UNPAIR", "VOTING_POWER", "TOTAL_VOTING_POWER", "KECCAK", "SHA3", "PAIRING_CHECK", "bls12_381_g1", "bls12_381_g2", "bls12_381_fr", "sapling_state", "sapling_transaction", "SAPLING_EMPTY_STATE", "SAPLING_VERIFY_UPDATE", "ticket", "TICKET", "READ_TICKET", "SPLIT_TICKET", "JOIN_TICKETS", "GET_AND_UPDATE"];
+  var primTags = Object.assign.apply(Object, __spreadArray([{}], __read(primitives.map(function (v, i) {
+    var _a;
+
+    return _a = {}, _a[v] = i, _a;
+  }))));
+  var Tag;
+
+  (function (Tag) {
+    Tag[Tag["Int"] = 0] = "Int";
+    Tag[Tag["String"] = 1] = "String";
+    Tag[Tag["Sequence"] = 2] = "Sequence";
+    Tag[Tag["Prim0"] = 3] = "Prim0";
+    Tag[Tag["Prim0Annot"] = 4] = "Prim0Annot";
+    Tag[Tag["Prim1"] = 5] = "Prim1";
+    Tag[Tag["Prim1Annot"] = 6] = "Prim1Annot";
+    Tag[Tag["Prim2"] = 7] = "Prim2";
+    Tag[Tag["Prim2Annot"] = 8] = "Prim2Annot";
+    Tag[Tag["Prim"] = 9] = "Prim";
+    Tag[Tag["Bytes"] = 10] = "Bytes";
+  })(Tag || (Tag = {}));
+
+  var Writer =
+  /** @class */
+  function () {
+    function Writer() {
+      this.buffer = [];
+    }
+
+    Object.defineProperty(Writer.prototype, "length", {
+      get: function () {
+        return this.buffer.length;
+      },
+      enumerable: false,
+      configurable: true
+    });
+
+    Writer.prototype.writeBytes = function (val) {
+      var _a;
+
+      (_a = this.buffer).push.apply(_a, __spreadArray([], __read(val.map(function (v) {
+        return v & 0xff;
+      }))));
+    };
+
+    Writer.prototype.writeUint8 = function (val) {
+      var v = val | 0;
+      this.buffer.push(v & 0xff);
+    };
+
+    Writer.prototype.writeUint16 = function (val) {
+      var v = val | 0;
+      this.buffer.push(v >> 8 & 0xff);
+      this.buffer.push(v & 0xff);
+    };
+
+    Writer.prototype.writeUint32 = function (val) {
+      var v = val | 0;
+      this.buffer.push(v >> 24 & 0xff);
+      this.buffer.push(v >> 16 & 0xff);
+      this.buffer.push(v >> 8 & 0xff);
+      this.buffer.push(v & 0xff);
+    };
+
+    Writer.prototype.writeInt8 = function (val) {
+      this.writeUint8(val);
+    };
+
+    Writer.prototype.writeInt16 = function (val) {
+      this.writeUint16(val);
+    };
+
+    Writer.prototype.writeInt32 = function (val) {
+      this.writeUint32(val);
+    };
+
+    return Writer;
+  }();
+
+  var boundsErr = new Error("bounds out of range");
+
+  var Reader =
+  /** @class */
+  function () {
+    function Reader(buffer, idx, cap) {
+      if (idx === void 0) {
+        idx = 0;
+      }
+
+      if (cap === void 0) {
+        cap = buffer.length;
+      }
+
+      this.buffer = buffer;
+      this.idx = idx;
+      this.cap = cap;
+    }
+
+    Object.defineProperty(Reader.prototype, "length", {
+      /** Remaining length */
+      get: function () {
+        return this.cap - this.idx;
+      },
+      enumerable: false,
+      configurable: true
+    });
+
+    Reader.prototype.readBytes = function (len) {
+      if (this.cap - this.idx < len) {
+        throw boundsErr;
+      }
+
+      var ret = this.buffer.slice(this.idx, this.idx + len);
+      this.idx += len;
+      return ret;
+    };
+
+    Reader.prototype.reader = function (len) {
+      if (this.cap - this.idx < len) {
+        throw boundsErr;
+      }
+
+      var ret = new Reader(this.buffer, this.idx, this.idx + len);
+      this.idx += len;
+      return ret;
+    };
+
+    Reader.prototype.copy = function () {
+      return new Reader(this.buffer, this.idx, this.cap);
+    };
+
+    Reader.prototype.readUint8 = function () {
+      if (this.cap - this.idx < 1) {
+        throw boundsErr;
+      }
+
+      return this.buffer[this.idx++] >>> 0;
+    };
+
+    Reader.prototype.readUint16 = function () {
+      if (this.cap - this.idx < 2) {
+        throw boundsErr;
+      }
+
+      var x0 = this.buffer[this.idx++];
+      var x1 = this.buffer[this.idx++];
+      return (x0 << 8 | x1) >>> 0;
+    };
+
+    Reader.prototype.readUint32 = function () {
+      if (this.cap - this.idx < 4) {
+        throw boundsErr;
+      }
+
+      var x0 = this.buffer[this.idx++];
+      var x1 = this.buffer[this.idx++];
+      var x2 = this.buffer[this.idx++];
+      var x3 = this.buffer[this.idx++];
+      return (x0 << 24 | x1 << 16 | x2 << 8 | x3) >>> 0;
+    };
+
+    Reader.prototype.readInt8 = function () {
+      if (this.cap - this.idx < 1) {
+        throw boundsErr;
+      }
+
+      var x = this.buffer[this.idx++];
+      return x << 24 >> 24;
+    };
+
+    Reader.prototype.readInt16 = function () {
+      if (this.cap - this.idx < 2) {
+        throw boundsErr;
+      }
+
+      var x0 = this.buffer[this.idx++];
+      var x1 = this.buffer[this.idx++];
+      return (x0 << 8 | x1) << 16 >> 16;
+    };
+
+    Reader.prototype.readInt32 = function () {
+      if (this.cap - this.idx < 4) {
+        throw boundsErr;
+      }
+
+      var x0 = this.buffer[this.idx++];
+      var x1 = this.buffer[this.idx++];
+      var x2 = this.buffer[this.idx++];
+      var x3 = this.buffer[this.idx++];
+      return x0 << 24 | x1 << 16 | x2 << 8 | x3;
+    };
+
+    return Reader;
+  }();
+
+  var ContractID;
+
+  (function (ContractID) {
+    ContractID[ContractID["Implicit"] = 0] = "Implicit";
+    ContractID[ContractID["Originated"] = 1] = "Originated";
+  })(ContractID || (ContractID = {}));
+
+  var PublicKeyHashID;
+
+  (function (PublicKeyHashID) {
+    PublicKeyHashID[PublicKeyHashID["ED25519"] = 0] = "ED25519";
+    PublicKeyHashID[PublicKeyHashID["SECP256K1"] = 1] = "SECP256K1";
+    PublicKeyHashID[PublicKeyHashID["P256"] = 2] = "P256";
+  })(PublicKeyHashID || (PublicKeyHashID = {}));
+
+  function readPublicKeyHash(rd) {
+    var type;
+    var tag = rd.readUint8();
+
+    switch (tag) {
+      case PublicKeyHashID.ED25519:
+        type = "ED25519PublicKeyHash";
+        break;
+
+      case PublicKeyHashID.SECP256K1:
+        type = "SECP256K1PublicKeyHash";
+        break;
+
+      case PublicKeyHashID.P256:
+        type = "P256PublicKeyHash";
+        break;
+
+      default:
+        throw new Error("unknown public key hash tag: " + tag);
+    }
+
+    return {
+      type: type,
+      hash: rd.readBytes(20)
+    };
+  }
+
+  function readAddress(rd) {
+    var address;
+    var tag = rd.readUint8();
+
+    switch (tag) {
+      case ContractID.Implicit:
+        address = readPublicKeyHash(rd);
+        break;
+
+      case ContractID.Originated:
+        address = {
+          type: "ContractHash",
+          hash: rd.readBytes(20)
+        };
+        rd.readBytes(1);
+        break;
+
+      default:
+        throw new Error("unknown address tag: " + tag);
+    }
+
+    if (rd.length !== 0) {
+      // entry point
+      var dec = new TextDecoder();
+      address.entryPoint = dec.decode(new Uint8Array(rd.readBytes(rd.length)));
+    }
+
+    return address;
+  }
+
+  function writePublicKeyHash(a, w) {
+    var tag;
+
+    switch (a.type) {
+      case "ED25519PublicKeyHash":
+        tag = PublicKeyHashID.ED25519;
+        break;
+
+      case "SECP256K1PublicKeyHash":
+        tag = PublicKeyHashID.SECP256K1;
+        break;
+
+      case "P256PublicKeyHash":
+        tag = PublicKeyHashID.P256;
+        break;
+
+      default:
+        throw new Error("unexpected address type: " + a.type);
+    }
+
+    w.writeUint8(tag);
+    w.writeBytes(Array.from(a.hash));
+  }
+
+  function writeAddress(a, w) {
+    if (a.type === "ContractHash") {
+      w.writeUint8(ContractID.Originated);
+      w.writeBytes(Array.from(a.hash));
+      w.writeUint8(0);
+    } else {
+      w.writeUint8(ContractID.Implicit);
+      writePublicKeyHash(a, w);
+    }
+
+    if (a.entryPoint !== undefined && a.entryPoint !== "" && a.entryPoint !== "default") {
+      var enc = new TextEncoder();
+      var bytes = enc.encode(a.entryPoint);
+      w.writeBytes(Array.from(bytes));
+    }
+  }
+
+  var PublicKeyID;
+
+  (function (PublicKeyID) {
+    PublicKeyID[PublicKeyID["ED25519"] = 0] = "ED25519";
+    PublicKeyID[PublicKeyID["SECP256K1"] = 1] = "SECP256K1";
+    PublicKeyID[PublicKeyID["P256"] = 2] = "P256";
+  })(PublicKeyID || (PublicKeyID = {}));
+
+  function readPublicKey(rd) {
+    var ln;
+    var type;
+    var tag = rd.readUint8();
+
+    switch (tag) {
+      case PublicKeyID.ED25519:
+        type = "ED25519PublicKey";
+        ln = 32;
+        break;
+
+      case PublicKeyID.SECP256K1:
+        type = "SECP256K1PublicKey";
+        ln = 33;
+        break;
+
+      case PublicKeyID.P256:
+        type = "P256PublicKey";
+        ln = 33;
+        break;
+
+      default:
+        throw new Error("unknown public key tag: " + tag);
+    }
+
+    return {
+      type: type,
+      publicKey: rd.readBytes(ln)
+    };
+  }
+
+  function writePublicKey(pk, w) {
+    var tag;
+
+    switch (pk.type) {
+      case "ED25519PublicKey":
+        tag = PublicKeyID.ED25519;
+        break;
+
+      case "SECP256K1PublicKey":
+        tag = PublicKeyID.SECP256K1;
+        break;
+
+      case "P256PublicKey":
+        tag = PublicKeyID.P256;
+        break;
+
+      default:
+        throw new Error("unexpected public key type: " + pk.type);
+    }
+
+    w.writeUint8(tag);
+    w.writeBytes(Array.from(pk.publicKey));
+  }
+
+  function writeExpr(expr, wr, tf) {
+    var e_1, _a, e_2, _b, e_3, _c;
+
+    var _d, _e;
+
+    var _f = __read(tf(expr), 2),
+        e = _f[0],
+        args = _f[1];
+
+    if (Array.isArray(e)) {
+      var w = new Writer();
+
+      try {
+        for (var e_4 = __values(e), e_4_1 = e_4.next(); !e_4_1.done; e_4_1 = e_4.next()) {
+          var v = e_4_1.value;
+          var a = args.next();
+
+          if (a.done) {
+            throw new Error("REPORT ME: iterator is done");
+          }
+
+          writeExpr(v, w, a.value);
+        }
+      } catch (e_1_1) {
+        e_1 = {
+          error: e_1_1
+        };
+      } finally {
+        try {
+          if (e_4_1 && !e_4_1.done && (_a = e_4.return)) _a.call(e_4);
+        } finally {
+          if (e_1) throw e_1.error;
+        }
+      }
+
+      wr.writeUint8(Tag.Sequence);
+      wr.writeUint32(w.length);
+      wr.writeBytes(w.buffer);
+      return;
+    }
+
+    if ("string" in e) {
+      var enc = new TextEncoder();
+      var bytes = enc.encode(e.string);
+      wr.writeUint8(Tag.String);
+      wr.writeUint32(bytes.length);
+      wr.writeBytes(Array.from(bytes));
+      return;
+    }
+
+    if ("int" in e) {
+      wr.writeUint8(Tag.Int);
+      var val = BigInt(e.int);
+      var sign = val < 0;
+
+      if (sign) {
+        val = -val;
+      }
+
+      var i = 0;
+
+      do {
+        var bits = i === 0 ? BigInt(6) : BigInt(7);
+        var byte = val & (BigInt(1) << bits) - BigInt(1);
+        val >>= bits;
+
+        if (val) {
+          byte |= BigInt(0x80);
+        }
+
+        if (i === 0 && sign) {
+          byte |= BigInt(0x40);
+        }
+
+        wr.writeUint8(Number(byte));
+        i++;
+      } while (val);
+
+      return;
+    }
+
+    if ("bytes" in e) {
+      var bytes = parseHex(e.bytes);
+      wr.writeUint8(Tag.Bytes);
+      wr.writeUint32(bytes.length);
+      wr.writeBytes(bytes);
+      return;
+    }
+
+    var prim = primTags[e.prim];
+
+    if (prim === undefined) {
+      throw new TypeError("Can't encode primary: " + e.prim);
+    }
+
+    var tag = (((_d = e.args) === null || _d === void 0 ? void 0 : _d.length) || 0) < 3 ? Tag.Prim0 + (((_e = e.args) === null || _e === void 0 ? void 0 : _e.length) || 0) * 2 + (e.annots === undefined || e.annots.length === 0 ? 0 : 1) : Tag.Prim;
+    wr.writeUint8(tag);
+    wr.writeUint8(prim);
+
+    if (e.args !== undefined) {
+      if (e.args.length < 3) {
+        try {
+          for (var _g = __values(e.args), _h = _g.next(); !_h.done; _h = _g.next()) {
+            var v = _h.value;
+            var a = args.next();
+
+            if (a.done) {
+              throw new Error("REPORT ME: iterator is done");
+            }
+
+            writeExpr(v, wr, a.value);
+          }
+        } catch (e_2_1) {
+          e_2 = {
+            error: e_2_1
+          };
+        } finally {
+          try {
+            if (_h && !_h.done && (_b = _g.return)) _b.call(_g);
+          } finally {
+            if (e_2) throw e_2.error;
+          }
+        }
+      } else {
+        var w = new Writer();
+
+        try {
+          for (var _j = __values(e.args), _k = _j.next(); !_k.done; _k = _j.next()) {
+            var v = _k.value;
+            var a = args.next();
+
+            if (a.done) {
+              throw new Error("REPORT ME: iterator is done");
+            }
+
+            writeExpr(v, w, a.value);
+          }
+        } catch (e_3_1) {
+          e_3 = {
+            error: e_3_1
+          };
+        } finally {
+          try {
+            if (_k && !_k.done && (_c = _j.return)) _c.call(_j);
+          } finally {
+            if (e_3) throw e_3.error;
+          }
+        }
+
+        wr.writeUint32(w.length);
+        wr.writeBytes(w.buffer);
+      }
+    }
+
+    if (e.annots !== undefined && e.annots.length !== 0) {
+      var enc = new TextEncoder();
+      var bytes = enc.encode(e.annots.join(" "));
+      wr.writeUint32(bytes.length);
+      wr.writeBytes(Array.from(bytes));
+    } else if (e.args !== undefined && e.args.length >= 3) {
+      wr.writeUint32(0);
+    }
+  }
+
+  var isOrData = function (e) {
+    return "prim" in e && (e.prim === "Left" || e.prim === "Right");
+  };
+
+  var isOptionData = function (e) {
+    return "prim" in e && (e.prim === "Some" || e.prim === "None");
+  };
+
+  var getWriteTransformFunc = function (t) {
+    if (isPairType(t)) {
+      return function (d) {
+        if (!isPairData(d)) {
+          throw new MichelsonTypeError(t, d, "pair expected: " + JSON.stringify(d));
+        }
+
+        assertDataListIfAny(d); // combs aren't used in pack format
+
+        var tc = unpackComb("pair", t);
+        var dc = unpackComb("Pair", d);
+        return [dc, function () {
+          var _a, _b, a, e_5_1;
+
+          var e_5, _c;
+
+          return __generator(this, function (_d) {
+            switch (_d.label) {
+              case 0:
+                _d.trys.push([0, 5, 6, 7]);
+
+                _a = __values(tc.args), _b = _a.next();
+                _d.label = 1;
+
+              case 1:
+                if (!!_b.done) return [3
+                /*break*/
+                , 4];
+                a = _b.value;
+                return [4
+                /*yield*/
+                , getWriteTransformFunc(a)];
+
+              case 2:
+                _d.sent();
+
+                _d.label = 3;
+
+              case 3:
+                _b = _a.next();
+                return [3
+                /*break*/
+                , 1];
+
+              case 4:
+                return [3
+                /*break*/
+                , 7];
+
+              case 5:
+                e_5_1 = _d.sent();
+                e_5 = {
+                  error: e_5_1
+                };
+                return [3
+                /*break*/
+                , 7];
+
+              case 6:
+                try {
+                  if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
+                } finally {
+                  if (e_5) throw e_5.error;
+                }
+
+                return [7
+                /*endfinally*/
+                ];
+
+              case 7:
+                return [2
+                /*return*/
+                ];
+            }
+          });
+        }()];
+      };
+    }
+
+    switch (t.prim) {
+      case "or":
+        return function (d) {
+          if (!isOrData(d)) {
+            throw new MichelsonTypeError(t, d, "or expected: " + JSON.stringify(d));
+          }
+
+          return [d, function () {
+            return __generator(this, function (_a) {
+              switch (_a.label) {
+                case 0:
+                  return [4
+                  /*yield*/
+                  , getWriteTransformFunc(t.args[d.prim === "Left" ? 0 : 1])];
+
+                case 1:
+                  _a.sent();
+
+                  return [2
+                  /*return*/
+                  ];
+              }
+            });
+          }()];
+        };
+
+      case "option":
+        return function (d) {
+          if (!isOptionData(d)) {
+            throw new MichelsonTypeError(t, d, "option expected: " + JSON.stringify(d));
+          }
+
+          return [d, function () {
+            var dd;
+            return __generator(this, function (_a) {
+              switch (_a.label) {
+                case 0:
+                  dd = d;
+                  if (!(dd.prim === "Some")) return [3
+                  /*break*/
+                  , 2];
+                  return [4
+                  /*yield*/
+                  , getWriteTransformFunc(t.args[0])];
+
+                case 1:
+                  _a.sent();
+
+                  _a.label = 2;
+
+                case 2:
+                  return [2
+                  /*return*/
+                  ];
+              }
+            });
+          }()];
+        };
+
+      case "list":
+      case "set":
+        return function (d) {
+          if (!Array.isArray(d)) {
+            throw new MichelsonTypeError(t, d, t.prim + " expected: " + JSON.stringify(d));
+          }
+
+          return [d, function () {
+            var d_1, d_1_1, e_6_1;
+
+            var e_6, _a;
+
+            return __generator(this, function (_b) {
+              switch (_b.label) {
+                case 0:
+                  _b.trys.push([0, 5, 6, 7]);
+
+                  d_1 = __values(d), d_1_1 = d_1.next();
+                  _b.label = 1;
+
+                case 1:
+                  if (!!d_1_1.done) return [3
+                  /*break*/
+                  , 4];
+                  return [4
+                  /*yield*/
+                  , getWriteTransformFunc(t.args[0])];
+
+                case 2:
+                  _b.sent();
+
+                  _b.label = 3;
+
+                case 3:
+                  d_1_1 = d_1.next();
+                  return [3
+                  /*break*/
+                  , 1];
+
+                case 4:
+                  return [3
+                  /*break*/
+                  , 7];
+
+                case 5:
+                  e_6_1 = _b.sent();
+                  e_6 = {
+                    error: e_6_1
+                  };
+                  return [3
+                  /*break*/
+                  , 7];
+
+                case 6:
+                  try {
+                    if (d_1_1 && !d_1_1.done && (_a = d_1.return)) _a.call(d_1);
+                  } finally {
+                    if (e_6) throw e_6.error;
+                  }
+
+                  return [7
+                  /*endfinally*/
+                  ];
+
+                case 7:
+                  return [2
+                  /*return*/
+                  ];
+              }
+            });
+          }()];
+        };
+
+      case "map":
+        return function (d) {
+          if (!Array.isArray(d)) {
+            throw new MichelsonTypeError(t, d, "map expected: " + JSON.stringify(d));
+          }
+
+          return [d, function () {
+            var d_2, d_2_1, e_7_1;
+
+            var e_7, _a;
+
+            return __generator(this, function (_b) {
+              switch (_b.label) {
+                case 0:
+                  _b.trys.push([0, 5, 6, 7]);
+
+                  d_2 = __values(d), d_2_1 = d_2.next();
+                  _b.label = 1;
+
+                case 1:
+                  if (!!d_2_1.done) return [3
+                  /*break*/
+                  , 4];
+                  return [4
+                  /*yield*/
+                  , function (elt) {
+                    if (!("prim" in elt) || elt.prim !== "Elt") {
+                      throw new MichelsonTypeError(t, elt, "map element expected: " + JSON.stringify(elt));
+                    }
+
+                    return [elt, function () {
+                      var _a, _b, a, e_8_1;
+
+                      var e_8, _c;
+
+                      return __generator(this, function (_d) {
+                        switch (_d.label) {
+                          case 0:
+                            _d.trys.push([0, 5, 6, 7]);
+
+                            _a = __values(t.args), _b = _a.next();
+                            _d.label = 1;
+
+                          case 1:
+                            if (!!_b.done) return [3
+                            /*break*/
+                            , 4];
+                            a = _b.value;
+                            return [4
+                            /*yield*/
+                            , getWriteTransformFunc(a)];
+
+                          case 2:
+                            _d.sent();
+
+                            _d.label = 3;
+
+                          case 3:
+                            _b = _a.next();
+                            return [3
+                            /*break*/
+                            , 1];
+
+                          case 4:
+                            return [3
+                            /*break*/
+                            , 7];
+
+                          case 5:
+                            e_8_1 = _d.sent();
+                            e_8 = {
+                              error: e_8_1
+                            };
+                            return [3
+                            /*break*/
+                            , 7];
+
+                          case 6:
+                            try {
+                              if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
+                            } finally {
+                              if (e_8) throw e_8.error;
+                            }
+
+                            return [7
+                            /*endfinally*/
+                            ];
+
+                          case 7:
+                            return [2
+                            /*return*/
+                            ];
+                        }
+                      });
+                    }()];
+                  }];
+
+                case 2:
+                  _b.sent();
+
+                  _b.label = 3;
+
+                case 3:
+                  d_2_1 = d_2.next();
+                  return [3
+                  /*break*/
+                  , 1];
+
+                case 4:
+                  return [3
+                  /*break*/
+                  , 7];
+
+                case 5:
+                  e_7_1 = _b.sent();
+                  e_7 = {
+                    error: e_7_1
+                  };
+                  return [3
+                  /*break*/
+                  , 7];
+
+                case 6:
+                  try {
+                    if (d_2_1 && !d_2_1.done && (_a = d_2.return)) _a.call(d_2);
+                  } finally {
+                    if (e_7) throw e_7.error;
+                  }
+
+                  return [7
+                  /*endfinally*/
+                  ];
+
+                case 7:
+                  return [2
+                  /*return*/
+                  ];
+              }
+            });
+          }()];
+        };
+
+      case "chain_id":
+        return function (d) {
+          if (!("bytes" in d) && !("string" in d)) {
+            throw new MichelsonTypeError(t, d, "chain id expected: " + JSON.stringify(d));
+          }
+
+          var bytes;
+
+          if ("string" in d) {
+            var id = checkDecodeTezosID(d.string, "ChainID");
+
+            if (id === null) {
+              throw new MichelsonTypeError(t, d, "chain id base58 expected: " + d.string);
+            }
+
+            bytes = {
+              bytes: hexBytes(id[1])
+            };
+          } else {
+            bytes = d;
+          }
+
+          return [bytes, [][Symbol.iterator]()];
+        };
+
+      case "signature":
+        return function (d) {
+          if (!("bytes" in d) && !("string" in d)) {
+            throw new MichelsonTypeError(t, d, "signature expected: " + JSON.stringify(d));
+          }
+
+          var bytes;
+
+          if ("string" in d) {
+            var sig = checkDecodeTezosID(d.string, "ED25519Signature", "SECP256K1Signature", "P256Signature", "GenericSignature");
+
+            if (sig === null) {
+              throw new MichelsonTypeError(t, d, "signature base58 expected: " + d.string);
+            }
+
+            bytes = {
+              bytes: hexBytes(sig[1])
+            };
+          } else {
+            bytes = d;
+          }
+
+          return [bytes, [][Symbol.iterator]()];
+        };
+
+      case "key_hash":
+        return function (d) {
+          if (!("bytes" in d) && !("string" in d)) {
+            throw new MichelsonTypeError(t, d, "key hash expected: " + JSON.stringify(d));
+          }
+
+          var bytes;
+
+          if ("string" in d) {
+            var pkh = checkDecodeTezosID(d.string, "ED25519PublicKeyHash", "SECP256K1PublicKeyHash", "P256PublicKeyHash");
+
+            if (pkh === null) {
+              throw new MichelsonTypeError(t, d, "key hash base58 expected: " + d.string);
+            }
+
+            var w = new Writer();
+            writePublicKeyHash({
+              type: pkh[0],
+              hash: pkh[1]
+            }, w);
+            bytes = {
+              bytes: hexBytes(w.buffer)
+            };
+          } else {
+            bytes = d;
+          }
+
+          return [bytes, [][Symbol.iterator]()];
+        };
+
+      case "key":
+        return function (d) {
+          if (!("bytes" in d) && !("string" in d)) {
+            throw new MichelsonTypeError(t, d, "public key expected: " + JSON.stringify(d));
+          }
+
+          var bytes;
+
+          if ("string" in d) {
+            var key = checkDecodeTezosID(d.string, "ED25519PublicKey", "SECP256K1PublicKey", "P256PublicKey");
+
+            if (key === null) {
+              throw new MichelsonTypeError(t, d, "public key base58 expected: " + d.string);
+            }
+
+            var w = new Writer();
+            writePublicKey({
+              type: key[0],
+              publicKey: key[1]
+            }, w);
+            bytes = {
+              bytes: hexBytes(w.buffer)
+            };
+          } else {
+            bytes = d;
+          }
+
+          return [bytes, [][Symbol.iterator]()];
+        };
+
+      case "address":
+        return function (d) {
+          if (!("bytes" in d) && !("string" in d)) {
+            throw new MichelsonTypeError(t, d, "address expected: " + JSON.stringify(d));
+          }
+
+          var bytes;
+
+          if ("string" in d) {
+            var s = d.string.split("%");
+            var address = checkDecodeTezosID(s[0], "ED25519PublicKeyHash", "SECP256K1PublicKeyHash", "P256PublicKeyHash", "ContractHash");
+
+            if (address === null) {
+              throw new MichelsonTypeError(t, d, "address base58 expected: " + d.string);
+            }
+
+            var w = new Writer();
+            writeAddress({
+              type: address[0],
+              hash: address[1],
+              entryPoint: s.length > 1 ? s[1] : undefined
+            }, w);
+            bytes = {
+              bytes: hexBytes(w.buffer)
+            };
+          } else {
+            bytes = d;
+          }
+
+          return [bytes, [][Symbol.iterator]()];
+        };
+
+      case "timestamp":
+        return function (d) {
+          if (!("string" in d) && !("int" in d)) {
+            throw new MichelsonTypeError(t, d, "timestamp expected: " + JSON.stringify(d));
+          }
+
+          var int;
+
+          if ("string" in d) {
+            var p = parseDate(d);
+
+            if (p === null) {
+              throw new MichelsonTypeError(t, d, "can't parse date: " + d.string);
+            }
+
+            int = {
+              int: String(Math.floor(p.getTime() / 1000))
+            };
+          } else {
+            int = d;
+          }
+
+          return [int, [][Symbol.iterator]()];
+        };
+
+      default:
+        return writePassThrough;
+    }
+  };
+
+  var isPushInstruction = function (e) {
+    return "prim" in e && e.prim === "PUSH";
+  };
+
+  var writePassThrough = function (e) {
+    if (isPushInstruction(e)) {
+      assertMichelsonInstruction(e); // capture inlined type definition
+
+      return [e, function () {
+        return __generator(this, function (_a) {
+          switch (_a.label) {
+            case 0:
+              return [4
+              /*yield*/
+              , writePassThrough];
+
+            case 1:
+              _a.sent();
+
+              return [4
+              /*yield*/
+              , getWriteTransformFunc(e.args[0])];
+
+            case 2:
+              _a.sent();
+
+              return [2
+              /*return*/
+              ];
+          }
+        });
+      }()];
+    }
+
+    return [e, function () {
+      return __generator(this, function (_a) {
+        switch (_a.label) {
+          case 0:
+            return [4
+            /*yield*/
+            , writePassThrough];
+
+          case 1:
+            _a.sent();
+
+            return [3
+            /*break*/
+            , 0];
+
+          case 2:
+            return [2
+            /*return*/
+            ];
+        }
+      });
+    }()];
+  };
+  /**
+   * Serializes any value of packable type to its optimized binary representation
+   * identical to the one used by PACK and UNPACK Michelson instructions.
+   * Without a type definition (not recommended) the data will be encoded as a binary form of a generic Michelson expression.
+   * Type definition allows some types like `timestamp` and `address` and other base58 representable types to be encoded to
+   * corresponding optimized binary forms borrowed from the Tezos protocol
+   *
+   * ```typescript
+   * const data: MichelsonData = {
+   *     string: "KT1RvkwF4F7pz1gCoxkyZrG1RkrxQy3gmFTv%foo"
+   * };
+   *
+   * const typ: MichelsonType = {
+   *     prim: "address"
+   * };
+   *
+   * const packed = packData(data, typ);
+   *
+   * // 050a0000001901be41ee922ddd2cf33201e49d32da0afec571dce300666f6f
+   * ```
+   *
+   * Without a type definition the base58 encoded address will be treated as a string
+   * ```typescript
+   * const data: MichelsonData = {
+   *     string: "KT1RvkwF4F7pz1gCoxkyZrG1RkrxQy3gmFTv%foo"
+   * };
+   *
+   * const packed = packData(data);
+   *
+   * // 0501000000284b543152766b7746344637707a3167436f786b795a724731526b7278517933676d46547625666f6f
+   * ```
+   * @param d Data object
+   * @param t Optional type definition
+   * @returns Binary representation as numeric array
+   */
+
+
+  function packData(d, t) {
+    var w = new Writer();
+    w.writeUint8(5);
+    writeExpr(d, w, t !== undefined ? getWriteTransformFunc(t) : writePassThrough);
+    return w.buffer;
+  }
+  /**
+   * Serializes any value of packable type to its optimized binary representation
+   * identical to the one used by PACK and UNPACK Michelson instructions.
+   * Same as {@link packData} but returns a `bytes` Michelson data literal instead of an array
+   *
+   * ```typescript
+   * const data: MichelsonData = {
+   *     string: "2019-09-26T10:59:51Z"
+   * };
+   *
+   * const typ: MichelsonType = {
+   *     prim: "timestamp"
+   * };
+   *
+   * const packed = packDataBytes(data, typ);
+   *
+   * // { bytes: "0500a7e8e4d80b" }
+   * ```
+   * @param d Data object
+   * @param t Optional type definition
+   * @returns Binary representation as a bytes literal
+   */
+
+
+  function packDataBytes(d, t) {
+    return {
+      bytes: hexBytes(packData(d, t))
+    };
+  }
+
+
+  function decodeAddressBytes(b) {
+    var bytes = parseBytes(b.bytes);
+
+    if (bytes === null) {
+      throw new Error("can't parse bytes: \"" + b.bytes + "\"");
+    }
+
+    var rd = new Reader(new Uint8Array(bytes));
+    return readAddress(rd);
+  }
+
+  function decodePublicKeyHashBytes(b) {
+    var bytes = parseBytes(b.bytes);
+
+    if (bytes === null) {
+      throw new Error("can't parse bytes: \"" + b.bytes + "\"");
+    }
+
+    var rd = new Reader(new Uint8Array(bytes));
+    return readPublicKeyHash(rd);
+  }
+
+  function decodePublicKeyBytes(b) {
+    var bytes = parseBytes(b.bytes);
+
+    if (bytes === null) {
+      throw new Error("can't parse bytes: \"" + b.bytes + "\"");
+    }
+
+    var rd = new Reader(new Uint8Array(bytes));
+    return readPublicKey(rd);
+  }
+
+  var MichelsonInstructionError =
+  /** @class */
+  function (_super) {
+    __extends(MichelsonInstructionError, _super);
+    /**
+     * @param val Value of a type node caused the error
+     * @param stackState Current stack state
+     * @param message An error message
+     */
+
+
+    function MichelsonInstructionError(val, stackState, message) {
+      var _this = _super.call(this, val, message) || this;
+
+      _this.stackState = stackState;
+      Object.setPrototypeOf(_this, MichelsonInstructionError.prototype);
+      return _this;
+    }
+
+    return MichelsonInstructionError;
+  }(MichelsonError); // 'sequence as a pair' edo syntax helpers
+
+
+  function typeID(t) {
+    return Array.isArray(t) ? "pair" : t.prim;
+  }
+
+  function typeArgs(t) {
+    return "prim" in t ? t.args : t;
+  }
+
+  function assertScalarTypesEqual(a, b, field) {
+    if (field === void 0) {
+      field = false;
+    }
+
+    if (typeID(a) !== typeID(b)) {
+      throw new MichelsonTypeError(a, undefined, "types mismatch: " + typeID(a) + " != " + typeID(b));
+    }
+
+    var ann = [unpackAnnotations(a), unpackAnnotations(b)];
+
+    if (ann[0].t && ann[1].t && ann[0].t[0] !== ann[1].t[0]) {
+      throw new MichelsonTypeError(a, undefined, typeID(a) + ": type names mismatch: " + ann[0].t[0] + " != " + ann[1].t[0]);
+    }
+
+    if (field && ann[0].f && ann[1].f && ann[0].f[0] !== ann[1].f[0]) {
+      throw new MichelsonTypeError(a, undefined, typeID(a) + ": field names mismatch: " + ann[0].f[0] + " != " + ann[1].f);
+    }
+
+    if (isPairType(a)) {
+      var aArgs = unpackComb("pair", a);
+      var bArgs = unpackComb("pair", b);
+      assertScalarTypesEqual(aArgs.args[0], bArgs.args[0], true);
+      assertScalarTypesEqual(aArgs.args[1], bArgs.args[1], true);
+      return;
+    }
+
+    switch (a.prim) {
+      case "option":
+      case "list":
+      case "contract":
+      case "set":
+      case "ticket":
+        assertScalarTypesEqual(a.args[0], b.args[0]);
+        break;
+
+      case "or":
+        assertScalarTypesEqual(a.args[0], b.args[0], true);
+        assertScalarTypesEqual(a.args[1], b.args[1], true);
+        break;
+
+      case "lambda":
+      case "map":
+      case "big_map":
+        assertScalarTypesEqual(a.args[0], b.args[0]);
+        assertScalarTypesEqual(a.args[1], b.args[1]);
+        break;
+
+      case "sapling_state":
+      case "sapling_transaction":
+        if (parseInt(a.args[0].int, 10) !== parseInt(b.args[0].int, 10)) {
+          throw new MichelsonTypeError(a, undefined, typeID(a) + ": type argument mismatch: " + a.args[0].int + " != " + b.args[0].int);
+        }
+
+    }
+  }
+
+  function assertStacksEqual(a, b) {
+    if (a.length !== b.length) {
+      throw new MichelsonTypeError(a, undefined, "stack length mismatch: " + a.length + " != " + b.length);
+    }
+
+    for (var i = 0; i < a.length; i++) {
+      assertScalarTypesEqual(a[i], b[i]);
+    }
+  }
+
+  function assertTypeAnnotationsValid(t, field) {
+    var e_1, _a, e_2, _b;
+
+    var _c, _d, _e;
+
+    if (field === void 0) {
+      field = false;
+    }
+
+    if (!Array.isArray(t)) {
+      var ann = unpackAnnotations(t);
+
+      if ((((_c = ann.t) === null || _c === void 0 ? void 0 : _c.length) || 0) > 1) {
+        throw new MichelsonTypeError(t, undefined, t.prim + ": at most one type annotation allowed: " + t.annots);
+      }
+
+      if (field) {
+        if ((((_d = ann.f) === null || _d === void 0 ? void 0 : _d.length) || 0) > 1) {
+          throw new MichelsonTypeError(t, undefined, t.prim + ": at most one field annotation allowed: " + t.annots);
+        }
+      } else {
+        if ((((_e = ann.f) === null || _e === void 0 ? void 0 : _e.length) || 0) > 0) {
+          throw new MichelsonTypeError(t, undefined, t.prim + ": field annotations aren't allowed: " + t.annots);
+        }
+      }
+    }
+
+    if (isPairType(t)) {
+      var args = typeArgs(t);
+
+      try {
+        for (var args_1 = __values(args), args_1_1 = args_1.next(); !args_1_1.done; args_1_1 = args_1.next()) {
+          var a = args_1_1.value;
+          assertTypeAnnotationsValid(a, true);
+        }
+      } catch (e_1_1) {
+        e_1 = {
+          error: e_1_1
+        };
+      } finally {
+        try {
+          if (args_1_1 && !args_1_1.done && (_a = args_1.return)) _a.call(args_1);
+        } finally {
+          if (e_1) throw e_1.error;
+        }
+      }
+
+      return;
+    }
+
+    switch (t.prim) {
+      case "option":
+      case "list":
+      case "contract":
+      case "set":
+        assertTypeAnnotationsValid(t.args[0]);
+        break;
+
+      case "or":
+        try {
+          for (var _f = __values(t.args), _g = _f.next(); !_g.done; _g = _f.next()) {
+            var a = _g.value;
+            assertTypeAnnotationsValid(a, true);
+          }
+        } catch (e_2_1) {
+          e_2 = {
+            error: e_2_1
+          };
+        } finally {
+          try {
+            if (_g && !_g.done && (_b = _f.return)) _b.call(_f);
+          } finally {
+            if (e_2) throw e_2.error;
+          }
+        }
+
+        break;
+
+      case "lambda":
+      case "map":
+      case "big_map":
+        assertTypeAnnotationsValid(t.args[0]);
+        assertTypeAnnotationsValid(t.args[1]);
+    }
+  } // Data integrity check
+
+
+  function compareMichelsonData(t, a, b) {
+    if (isPairType(t)) {
+      if (isPairData(a) && isPairData(b)) {
+        assertDataListIfAny(a);
+        assertDataListIfAny(b);
+        var tComb = unpackComb("pair", t);
+        var aComb = unpackComb("Pair", a);
+        var bComb = unpackComb("Pair", b);
+        var x = compareMichelsonData(tComb.args[0], aComb.args[0], bComb.args[0]);
+
+        if (x !== 0) {
+          return x;
+        }
+
+        return compareMichelsonData(tComb.args[0], aComb.args[1], bComb.args[1]);
+      }
+    } else {
+      switch (t.prim) {
+        case "int":
+        case "nat":
+        case "mutez":
+          if ("int" in a && "int" in b) {
+            return new LongInteger(a.int).cmp(new LongInteger(b.int));
+          }
+
+          break;
+
+        case "string":
+          if ("string" in a && "string" in b) {
+            var x = a.string.localeCompare(b.string);
+            return x < 0 ? -1 : x > 0 ? 1 : 0;
+          }
+
+          break;
+
+        case "bytes":
+          if ("bytes" in a && "bytes" in b) {
+            var aa = parseBytes(a.bytes);
+            var bb = parseBytes(b.bytes);
+
+            if (aa !== null && bb !== null) {
+              return compareBytes(aa, bb);
+            }
+          }
+
+          break;
+
+        case "bool":
+          if ("prim" in a && "prim" in b && (a.prim === "True" || a.prim === "False") && (b.prim === "True" || b.prim === "False")) {
+            return a.prim === b.prim ? 0 : a.prim === "False" ? -1 : 1;
+          }
+
+          break;
+
+        case "key":
+        case "key_hash":
+        case "address":
+        case "signature":
+        case "chain_id":
+          if (("string" in a || "bytes" in a) && ("string" in b || "bytes" in b)) {
+            return compareBytes("string" in a ? decodeBase58Check(a.string) : parseBytes(a.bytes) || [], "string" in b ? decodeBase58Check(b.string) : parseBytes(b.bytes) || []);
+          }
+
+          break;
+
+        case "timestamp":
+          if (("string" in a || "int" in a) && ("string" in b || "int" in b)) {
+            var aa = parseDate(a);
+            var bb = parseDate(b);
+
+            if (aa !== null && bb !== null) {
+              var x = aa.valueOf() - bb.valueOf();
+              return x < 0 ? -1 : x > 0 ? 1 : 0;
+            }
+          }
+
+          break;
+
+        case "unit":
+          if ("prim" in a && "prim" in b && a.prim === "Unit" && b.prim === "Unit") {
+            return 0;
+          }
+
+      }
+    } // Unlikely, types are expected to be verified before the function call
+
+
+    throw new MichelsonTypeError(t, undefined, typeID(t) + ": not comparable values: " + JSON.stringify(a) + ", " + JSON.stringify(b));
+  } // Simplified version of assertMichelsonInstruction() for previously validated data
+
+
+  function isFunction(d) {
+    var e_3, _a;
+
+    if (!Array.isArray(d)) {
+      return false;
+    }
+
+    try {
+      for (var d_1 = __values(d), d_1_1 = d_1.next(); !d_1_1.done; d_1_1 = d_1.next()) {
+        var v = d_1_1.value;
+
+        if (!(Array.isArray(v) && isFunction(v) || "prim" in v && isInstruction(v))) {
+          return false;
+        }
+      }
+    } catch (e_3_1) {
+      e_3 = {
+        error: e_3_1
+      };
+    } finally {
+      try {
+        if (d_1_1 && !d_1_1.done && (_a = d_1.return)) _a.call(d_1);
+      } finally {
+        if (e_3) throw e_3.error;
+      }
+    }
+
+    return true;
+  }
+
+  function assertDataValidInternal(d, t, ctx) {
+    var e_4, _a, e_5, _b;
+
+    if (isPairType(t)) {
+      if (isPairData(d)) {
+        assertDataListIfAny(d);
+        var dc = unpackComb("Pair", d);
+        var tc = unpackComb("pair", t);
+        assertDataValidInternal(dc.args[0], tc.args[0], ctx);
+        assertDataValidInternal(dc.args[1], tc.args[1], ctx);
+        return;
+      }
+
+      throw new MichelsonTypeError(t, d, "pair expected: " + JSON.stringify(d));
+    }
+
+    switch (t.prim) {
+      // Atomic literals
+      case "int":
+        if ("int" in d && isDecimal(d.int)) {
+          return;
+        }
+
+        throw new MichelsonTypeError(t, d, "integer value expected: " + JSON.stringify(d));
+
+      case "nat":
+      case "mutez":
+        if ("int" in d && isNatural(d.int)) {
+          return;
+        }
+
+        throw new MichelsonTypeError(t, d, "natural value expected: " + JSON.stringify(d));
+
+      case "string":
+        if ("string" in d) {
+          return;
+        }
+
+        throw new MichelsonTypeError(t, d, "string value expected: " + JSON.stringify(d));
+
+      case "bytes":
+      case "bls12_381_g1":
+      case "bls12_381_g2":
+        if ("bytes" in d && parseBytes(d.bytes) !== null) {
+          return;
+        }
+
+        throw new MichelsonTypeError(t, d, "bytes value expected: " + JSON.stringify(d));
+
+      case "bool":
+        if ("prim" in d && (d.prim === "True" || d.prim === "False")) {
+          return;
+        }
+
+        throw new MichelsonTypeError(t, d, "boolean value expected: " + JSON.stringify(d));
+
+      case "key_hash":
+        if ("string" in d && checkDecodeTezosID(d.string, "ED25519PublicKeyHash", "SECP256K1PublicKeyHash", "P256PublicKeyHash") !== null) {
+          return;
+        } else if ("bytes" in d) {
+          try {
+            decodePublicKeyHashBytes(d);
+            return;
+          } catch (err) {// ignore message
+          }
+        }
+
+        throw new MichelsonTypeError(t, d, "key hash expected: " + JSON.stringify(d));
+
+      case "timestamp":
+        if (("string" in d || "int" in d) && parseDate(d) !== null) {
+          return;
+        }
+
+        throw new MichelsonTypeError(t, d, "timestamp expected: " + JSON.stringify(d));
+
+      case "address":
+        if ("string" in d) {
+          var address = d.string;
+          var ep = d.string.indexOf("%");
+
+          if (ep >= 0) {
+            // trim entry point
+            address = d.string.slice(0, ep);
+          }
+
+          if (checkDecodeTezosID(address, "ED25519PublicKeyHash", "SECP256K1PublicKeyHash", "P256PublicKeyHash", "ContractHash") !== null) {
+            return;
+          }
+        } else if ("bytes" in d) {
+          try {
+            decodeAddressBytes(d);
+            return;
+          } catch (err) {// ignore message
+          }
+        }
+
+        throw new MichelsonTypeError(t, d, "address expected: " + JSON.stringify(d));
+
+      case "key":
+        if ("string" in d && checkDecodeTezosID(d.string, "ED25519PublicKey", "SECP256K1PublicKey", "P256PublicKey") !== null) {
+          return;
+        } else if ("bytes" in d) {
+          try {
+            decodePublicKeyBytes(d);
+            return;
+          } catch (err) {// ignore message
+          }
+        }
+
+        throw new MichelsonTypeError(t, d, "public key expected: " + JSON.stringify(d));
+
+      case "unit":
+        if ("prim" in d && d.prim === "Unit") {
+          return;
+        }
+
+        throw new MichelsonTypeError(t, d, "unit value expected: " + JSON.stringify(d));
+
+      case "signature":
+        if ("bytes" in d || "string" in d && checkDecodeTezosID(d.string, "ED25519Signature", "SECP256K1Signature", "P256Signature", "GenericSignature") !== null) {
+          return;
+        }
+
+        throw new MichelsonTypeError(t, d, "signature expected: " + JSON.stringify(d));
+
+      case "chain_id":
+        if ("bytes" in d || "string" in d) {
+          var x = "string" in d ? decodeBase58Check(d.string) : parseBytes(d.bytes);
+
+          if (x !== null) {
+            return;
+          }
+        }
+
+        throw new MichelsonTypeError(t, d, "chain id expected: " + JSON.stringify(d));
+
+      case "operation":
+        throw new MichelsonTypeError(t, d, "operation type can't be represented as a literal value");
+
+      case "contract":
+        throw new MichelsonTypeError(t, d, "contract type can't be represented as a literal value");
+      // Complex types
+
+      case "option":
+        if ("prim" in d) {
+          if (d.prim === "None") {
+            return;
+          } else if (d.prim === "Some") {
+            assertDataValidInternal(d.args[0], t.args[0], ctx);
+            return;
+          }
+        }
+
+        throw new MichelsonTypeError(t, d, "option expected: " + JSON.stringify(d));
+
+      case "list":
+      case "set":
+        if (assertDataListIfAny(d)) {
+          var prev = void 0;
+
+          try {
+            for (var d_2 = __values(d), d_2_1 = d_2.next(); !d_2_1.done; d_2_1 = d_2.next()) {
+              var v = d_2_1.value;
+              assertDataValidInternal(v, t.args[0], ctx);
+
+              if (t.prim === "set") {
+                if (prev === undefined) {
+                  prev = v;
+                } else if (compareMichelsonData(t.args[0], prev, v) > 0) {
+                  throw new MichelsonTypeError(t, d, "set elements must be ordered: " + JSON.stringify(d));
+                }
+              }
+            }
+          } catch (e_4_1) {
+            e_4 = {
+              error: e_4_1
+            };
+          } finally {
+            try {
+              if (d_2_1 && !d_2_1.done && (_a = d_2.return)) _a.call(d_2);
+            } finally {
+              if (e_4) throw e_4.error;
+            }
+          }
+
+          return;
+        }
+
+        throw new MichelsonTypeError(t, d, t.prim + " expected: " + JSON.stringify(d));
+
+      case "or":
+        if ("prim" in d) {
+          if (d.prim === "Left") {
+            assertDataValidInternal(d.args[0], t.args[0], ctx);
+            return;
+          } else if (d.prim === "Right") {
+            assertDataValidInternal(d.args[0], t.args[1], ctx);
+            return;
+          }
+        }
+
+        throw new MichelsonTypeError(t, d, "union (or) expected: " + JSON.stringify(d));
+
+      case "lambda":
+        if (isFunction(d)) {
+          var ret = functionTypeInternal(d, [t.args[0]], ctx);
+
+          if ("failed" in ret) {
+            throw new MichelsonTypeError(t, d, "function is failed with error type: " + ret.failed);
+          }
+
+          if (ret.length !== 1) {
+            throw new MichelsonTypeError(t, d, "function must return a value");
+          }
+
+          assertScalarTypesEqual(t.args[1], ret[0]);
+          return;
+        }
+
+        throw new MichelsonTypeError(t, d, "function expected: " + JSON.stringify(d));
+
+      case "map":
+      case "big_map":
+        if (Array.isArray(d)) {
+          var prev = void 0;
+
+          try {
+            for (var d_3 = __values(d), d_3_1 = d_3.next(); !d_3_1.done; d_3_1 = d_3.next()) {
+              var v = d_3_1.value;
+
+              if (!("prim" in v) || v.prim !== "Elt") {
+                throw new MichelsonTypeError(t, d, "map elements expected: " + JSON.stringify(d));
+              }
+
+              assertDataValidInternal(v.args[0], t.args[0], ctx);
+              assertDataValidInternal(v.args[1], t.args[1], ctx);
+
+              if (prev === undefined) {
+                prev = v;
+              } else if (compareMichelsonData(t.args[0], prev.args[0], v.args[0]) > 0) {
+                throw new MichelsonTypeError(t, d, "map elements must be ordered: " + JSON.stringify(d));
+              }
+            }
+          } catch (e_5_1) {
+            e_5 = {
+              error: e_5_1
+            };
+          } finally {
+            try {
+              if (d_3_1 && !d_3_1.done && (_b = d_3.return)) _b.call(d_3);
+            } finally {
+              if (e_5) throw e_5.error;
+            }
+          }
+
+          return;
+        }
+
+        throw new MichelsonTypeError(t, d, t.prim + " expected: " + JSON.stringify(d));
+
+      case "bls12_381_fr":
+        if ("int" in d && isDecimal(d.int) || "bytes" in d && parseBytes(d.bytes) !== null) {
+          return;
+        }
+
+        throw new MichelsonTypeError(t, d, "BLS12-381 element expected: " + JSON.stringify(d));
+
+      case "sapling_state":
+        if (Array.isArray(d)) {
+          return;
+        }
+
+        throw new MichelsonTypeError(t, d, "sapling state expected: " + JSON.stringify(d));
+
+      case "ticket":
+        assertDataValidInternal(d, {
+          prim: "pair",
+          args: [{
+            prim: "address"
+          }, t.args[0], {
+            prim: "nat"
+          }]
+        }, ctx);
+        return;
+
+      default:
+        throw new MichelsonTypeError(t, d, "unexpected type: " + typeID(t));
+    }
+  }
+
+  function instructionListType(inst, stack, ctx) {
+    var e_6, _a;
+
+    var ret = stack;
+    var s = stack;
+    var i = 0;
+
+    try {
+      for (var inst_1 = __values(inst), inst_1_1 = inst_1.next(); !inst_1_1.done; inst_1_1 = inst_1.next()) {
+        var op = inst_1_1.value;
+        var ft = functionTypeInternal(op, s, ctx);
+        ret = ft;
+
+        if ("failed" in ft) {
+          break;
+        }
+
+        s = ft;
+        i++;
+      }
+    } catch (e_6_1) {
+      e_6 = {
+        error: e_6_1
+      };
+    } finally {
+      try {
+        if (inst_1_1 && !inst_1_1.done && (_a = inst_1.return)) _a.call(inst_1);
+      } finally {
+        if (e_6) throw e_6.error;
+      }
+    }
+
+    if ("failed" in ret && i !== inst.length - 1) {
+      throw new MichelsonInstructionError(inst, ret, "FAIL must appear in a tail position");
+    }
+
+    if ((ctx === null || ctx === void 0 ? void 0 : ctx.traceCallback) !== undefined) {
+      var trace = {
+        op: inst,
+        in: stack,
+        out: ret
+      };
+      ctx.traceCallback(trace);
+    }
+
+    return ret;
+  }
+
+  function functionTypeInternal(inst, stack, ctx) {
+    var proto = (ctx === null || ctx === void 0 ? void 0 : ctx.protocol) || DefaultProtocol;
+
+    if (Array.isArray(inst)) {
+      return instructionListType(inst, stack, ctx);
+    }
+
+    var instruction = inst; // Make it const for type guarding
+    // make sure the stack has enough number of arguments of specific types
+
+    function args(n) {
+      var e_7, _a;
+
+      var typeIds = [];
+
+      for (var _i = 1; _i < arguments.length; _i++) {
+        typeIds[_i - 1] = arguments[_i];
+      }
+
+      if (stack.length < typeIds.length + n) {
+        throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": stack must have at least " + typeIds.length + " element(s)");
+      }
+
+      var i = n;
+
+      try {
+        for (var typeIds_1 = __values(typeIds), typeIds_1_1 = typeIds_1.next(); !typeIds_1_1.done; typeIds_1_1 = typeIds_1.next()) {
+          var ids = typeIds_1_1.value;
+
+          if (ids !== null && ids.length !== 0) {
+            var ii = 0;
+
+            while (ii < ids.length && ids[ii] !== typeID(stack[i])) {
+              ii++;
+            }
+
+            if (ii === ids.length) {
+              throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": stack type mismatch: [" + i + "] expected to be " + ids + ", got " + typeID(stack[i]) + " instead");
+            }
+          }
+
+          i++;
+        }
+      } catch (e_7_1) {
+        e_7 = {
+          error: e_7_1
+        };
+      } finally {
+        try {
+          if (typeIds_1_1 && !typeIds_1_1.done && (_a = typeIds_1.return)) _a.call(typeIds_1);
+        } finally {
+          if (e_7) throw e_7.error;
+        }
+      }
+
+      return stack.slice(n, typeIds.length + n);
+    }
+
+    function rethrow(fn) {
+      return function () {
+        var args = [];
+
+        for (var _i = 0; _i < arguments.length; _i++) {
+          args[_i] = arguments[_i];
+        }
+
+        try {
+          return fn.apply(void 0, __spreadArray([], __read(args)));
+        } catch (err) {
+          if (err instanceof MichelsonError) {
+            throw new MichelsonInstructionError(instruction, stack, err.message);
+          } else {
+            throw err;
+          }
+        }
+      };
+    }
+
+    function rethrowTypeGuard(fn) {
+      return function (arg) {
+        try {
+          return fn(arg);
+        } catch (err) {
+          if (err instanceof MichelsonError) {
+            throw new MichelsonInstructionError(instruction, stack, err.message);
+          } else {
+            throw err;
+          }
+        }
+      };
+    }
+
+    var argAnn = rethrow(unpackAnnotations);
+    var ensureStacksEqual = rethrow(assertStacksEqual);
+    var ensureTypesEqual = rethrow(assertScalarTypesEqual);
+    var ensureComparableType = rethrowTypeGuard(assertMichelsonComparableType);
+    var ensurePackableType = rethrowTypeGuard(assertMichelsonPackableType);
+    var ensureStorableType = rethrowTypeGuard(assertMichelsonStorableType);
+    var ensurePushableType = rethrowTypeGuard(assertMichelsonPushableType);
+    var ensureBigMapStorableType = rethrowTypeGuard(assertMichelsonBigMapStorableType); // unpack instruction annotations and assert their maximum number
+
+    function instructionAnn(num, opt) {
+      var a = argAnn(instruction, __assign(__assign({}, opt), {
+        emptyFields: num.f !== undefined && num.f > 1,
+        emptyVar: num.v !== undefined && num.v > 1
+      }));
+
+      var assertNum = function (a, n, type) {
+        if (a && a.length > (n || 0)) {
+          throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": at most " + (n || 0) + " " + type + " annotations allowed");
+        }
+      };
+
+      assertNum(a.f, num.f, "field");
+      assertNum(a.t, num.t, "type");
+      assertNum(a.v, num.v, "variable");
+      return a;
+    } // also keeps annotation class if null is provided
+
+
+    function annotate(tt, a) {
+      var tx = tt;
+      var t = Array.isArray(tx) ? {
+        prim: "pair",
+        args: tx
+      } : tx;
+      var src = argAnn(t);
+      var ann = a.v !== undefined || a.t !== undefined || a.f !== undefined ? __spreadArray(__spreadArray(__spreadArray([], __read((a.v === null ? src.v : a.v) || [])), __read((a.t === null ? src.t : a.t) || [])), __read((a.f === null ? src.f : a.f) || [])) : undefined;
+      t.annots;
+
+      var rest = __rest(t, ["annots"]);
+
+      return __assign(__assign({}, rest), ann && ann.length !== 0 && {
+        annots: ann
+      });
+    } // shortcut to copy at most one variable annotation from the instruction to the type
+
+
+    function annotateVar(t, def) {
+      var ia = instructionAnn({
+        v: 1
+      });
+      return annotate(t, {
+        v: ia.v !== undefined ? ia.v : def !== undefined ? [def] : null,
+        t: null
+      });
+    } // annotate CAR/CDR/UNPAIR/GET
+
+
+    function annotateField(arg, field, insAnn, n, defField) {
+      var _a, _b, _c, _d;
+
+      var fieldAnn = (_a = argAnn(field).f) === null || _a === void 0 ? void 0 : _a[0]; // field's field annotation
+
+      var insFieldAnn = (_b = insAnn.f) === null || _b === void 0 ? void 0 : _b[n];
+
+      if (insFieldAnn !== undefined && insFieldAnn !== "%" && fieldAnn !== undefined && insFieldAnn !== fieldAnn) {
+        throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": field names doesn't match: " + insFieldAnn + " !== " + fieldAnn);
+      }
+
+      var insVarAnn = (_c = insAnn.v) === null || _c === void 0 ? void 0 : _c[n]; // nth instruction's variable annotation
+
+      var varAnn = (_d = argAnn(arg).v) === null || _d === void 0 ? void 0 : _d[0]; // instruction argument's variable annotation
+
+      return annotate(field, {
+        t: null,
+        v: insVarAnn ? insVarAnn === "@%" ? fieldAnn ? ["@" + fieldAnn.slice(1)] : undefined : insVarAnn === "@%%" ? varAnn ? ["@" + varAnn.slice(1) + "." + (fieldAnn ? fieldAnn.slice(1) : defField)] : fieldAnn ? ["@" + fieldAnn.slice(1)] : undefined : [insVarAnn] : null
+      });
+    } // comb helper functions
+
+
+    function getN(src, n, i) {
+      if (i === void 0) {
+        i = n;
+      }
+
+      var p = unpackComb("pair", src);
+
+      if (i === 1) {
+        return [p.args[0]];
+      } else if (i === 2) {
+        return p.args;
+      }
+
+      var right = p.args[1];
+
+      if (isPairType(right)) {
+        return __spreadArray([p.args[0]], __read(getN(right, n, i - 1)));
+      } else {
+        throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": at least " + n + " fields are expected");
+      }
+    }
+
+    function getNth(src, n, i) {
+      if (i === void 0) {
+        i = n;
+      }
+
+      if (i === 0) {
+        return src;
+      }
+
+      var p = unpackComb("pair", src);
+
+      if (i === 1) {
+        return p.args[0];
+      }
+
+      var right = p.args[1];
+
+      if (isPairType(right)) {
+        return getNth(right, n, i - 2);
+      } else if (i === 2) {
+        return right;
+      }
+
+      throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": at least " + (n + 1) + " fields are expected");
+    }
+
+    function updateNth(src, x, n, i) {
+      if (i === void 0) {
+        i = n;
+      }
+
+      if (i === 0) {
+        return x;
+      }
+
+      var p = unpackComb("pair", src);
+
+      if (i === 1) {
+        return __assign(__assign({}, p), {
+          args: [x, p.args[1]]
+        });
+      }
+
+      var right = p.args[1];
+
+      if (isPairType(right)) {
+        return __assign(__assign({}, p), {
+          args: [p.args[0], updateNth(right, x, n, i - 2)]
+        });
+      } else if (i === 2) {
+        return __assign(__assign({}, p), {
+          args: [p.args[0], x]
+        });
+      }
+
+      throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": at least " + (n + 1) + " fields are expected");
+    }
+
+    var varSuffix = function (a, suffix) {
+      return ["@" + (a.v ? a.v[0].slice(1) + "." : "") + suffix];
+    };
+
+    function branchType(br0, br1) {
+      if ("failed" in br0 || "failed" in br1) {
+        // Might be useful for debugging
+        if ("failed" in br0 && "failed" in br1) {
+          try {
+            assertScalarTypesEqual(br0.failed, br1.failed);
+            return br0;
+          } catch (_a) {
+            return {
+              failed: {
+                prim: "or",
+                args: [br0.failed, br1.failed]
+              }
+            };
+          }
+        } else {
+          return "failed" in br0 ? br1 : br0;
+        }
+      } else {
+        ensureStacksEqual(br0, br1);
+        return br0;
+      }
+    }
+
+    var retStack = function (instruction) {
+      var _a, _b;
+
+      var _c, _d, _e, _f, _g;
+
+      switch (instruction.prim) {
+        case "DUP":
+          {
+            var n = instruction.args ? parseInt(instruction.args[0].int, 10) : 1;
+
+            if (n === 0) {
+              throw new MichelsonInstructionError(instruction, stack, "DUP 0 is forbidden");
+            }
+
+            var s_1 = args(n - 1, null)[0];
+
+            if (typeID(s_1) === "ticket") {
+              throw new MichelsonInstructionError(instruction, stack, "ticket can't be DUPed");
+            }
+
+            return __spreadArray([s_1], __read(stack));
+          }
+
+        case "SWAP":
+          {
+            var s_2 = args(0, null, null);
+            instructionAnn({});
+            return __spreadArray([s_2[1], s_2[0]], __read(stack.slice(2)));
+          }
+
+        case "SOME":
+          return __spreadArray([annotate({
+            prim: "option",
+            args: [args(0, null)[0]]
+          }, instructionAnn({
+            t: 1,
+            v: 1
+          }))], __read(stack.slice(1)));
+
+        case "UNIT":
+          return __spreadArray([annotate({
+            prim: "unit"
+          }, instructionAnn({
+            v: 1,
+            t: 1
+          }))], __read(stack));
+
+        case "PAIR":
+          {
+            var n = instruction.args ? parseInt(instruction.args[0].int, 10) : 2;
+
+            if (n < 2) {
+              throw new MichelsonInstructionError(instruction, stack, "PAIR " + n + " is forbidden");
+            }
+
+            var s_3 = args.apply(void 0, __spreadArray([0], __read(new Array(n).fill(null))));
+            var ia_1 = instructionAnn({
+              f: n,
+              t: 1,
+              v: 1
+            }, {
+              specialFields: true
+            });
+
+            var trim_1 = function (s) {
+              var i = s.lastIndexOf(".");
+              return s.slice(i > 0 ? i + 1 : 1);
+            };
+
+            var retArgs = s_3.map(function (v, i) {
+              var _a;
+
+              var va = argAnn(v);
+              var f = ia_1.f && ia_1.f.length > i && ia_1.f[i] !== "%" ? ia_1.f[i] === "%@" ? va.v ? ["%" + trim_1(((_a = va.v) === null || _a === void 0 ? void 0 : _a[0]) || "")] : undefined : [ia_1.f[i]] : undefined;
+              return annotate(v, {
+                v: null,
+                t: null,
+                f: f
+              });
+            });
+            return __spreadArray([annotate({
+              prim: "pair",
+              args: retArgs
+            }, {
+              t: ia_1.t,
+              v: ia_1.v
+            })], __read(stack.slice(n)));
+          }
+
+        case "UNPAIR":
+          {
+            var n = instruction.args ? parseInt(instruction.args[0].int, 10) : 2;
+
+            if (n < 2) {
+              throw new MichelsonInstructionError(instruction, stack, "UNPAIR " + n + " is forbidden");
+            }
+
+            var s_4 = args(0, ["pair"])[0];
+            var ia_2 = instructionAnn({
+              f: 2,
+              v: 2
+            }, {
+              specialVar: true
+            });
+            var fields = getN(s_4, n);
+            return __spreadArray(__spreadArray([], __read(fields.map(function (field, i) {
+              return annotateField(s_4, field, ia_2, i, i === 0 ? "car" : "cdr");
+            }))), __read(stack.slice(1)));
+          }
+
+        case "CAR":
+        case "CDR":
+          {
+            var s_5 = unpackComb("pair", args(0, ["pair"])[0]);
+            var field = s_5.args[instruction.prim === "CAR" ? 0 : 1];
+            var ia = instructionAnn({
+              f: 1,
+              v: 1
+            }, {
+              specialVar: true
+            });
+            return __spreadArray([annotateField(s_5, field, ia, 0, instruction.prim.toLocaleLowerCase())], __read(stack.slice(1)));
+          }
+
+        case "CONS":
+          {
+            var s_6 = args(0, null, ["list"]);
+            ensureTypesEqual(s_6[0], s_6[1].args[0]);
+            return __spreadArray([annotateVar({
+              prim: "list",
+              args: [s_6[1].args[0]]
+            })], __read(stack.slice(2)));
+          }
+
+        case "SIZE":
+          args(0, ["string", "list", "set", "map", "bytes"]);
+          return __spreadArray([annotateVar({
+            prim: "nat"
+          })], __read(stack.slice(1)));
+
+        case "MEM":
+          {
+            var s_7 = args(0, null, ["set", "map", "big_map"]);
+            ensureComparableType(s_7[0]);
+            ensureTypesEqual(s_7[0], s_7[1].args[0]);
+            return __spreadArray([annotateVar({
+              prim: "bool"
+            })], __read(stack.slice(2)));
+          }
+
+        case "GET":
+          if (instruction.args) {
+            // comb operation
+            var n = parseInt(instruction.args[0].int, 10);
+            var s_8 = args(0, ["pair"])[0];
+            return __spreadArray([annotateVar(getNth(s_8, n))], __read(stack.slice(1)));
+          } else {
+            // map operation
+            var s_9 = args(0, null, ["map", "big_map"]);
+            ensureComparableType(s_9[0]);
+            ensureTypesEqual(s_9[0], s_9[1].args[0]);
+            return __spreadArray([annotateVar({
+              prim: "option",
+              args: [s_9[1].args[1]]
+            })], __read(stack.slice(2)));
+          }
+
+        case "UPDATE":
+          if (instruction.args) {
+            // comb operation
+            var n = parseInt(instruction.args[0].int, 10);
+            var s_10 = args(0, null, ["pair"]);
+            return __spreadArray([annotateVar(updateNth(s_10[1], s_10[0], n))], __read(stack.slice(2)));
+          } else {
+            // map operation
+            var s0 = args(0, null, ["bool", "option"]);
+            ensureComparableType(s0[0]);
+
+            if (s0[1].prim === "bool") {
+              var s1_1 = args(2, ["set"]);
+              ensureTypesEqual(s0[0], s1_1[0].args[0]);
+              return __spreadArray([annotateVar({
+                prim: "set",
+                args: [annotate(s0[0], {
+                  t: null
+                })]
+              })], __read(stack.slice(3)));
+            }
+
+            var s1 = args(2, ["map", "big_map"]);
+            ensureTypesEqual(s0[0], s1[0].args[0]);
+
+            if (s1[0].prim === "map") {
+              return __spreadArray([annotateVar({
+                prim: "map",
+                args: [annotate(s0[0], {
+                  t: null
+                }), annotate(s0[1].args[0], {
+                  t: null
+                })]
+              })], __read(stack.slice(3)));
+            }
+
+            ensureBigMapStorableType(s0[1].args[0]);
+            return __spreadArray([annotateVar({
+              prim: "big_map",
+              args: [annotate(s0[0], {
+                t: null
+              }), annotate(s0[1].args[0], {
+                t: null
+              })]
+            })], __read(stack.slice(3)));
+          }
+
+        case "GET_AND_UPDATE":
+          {
+            var ia = instructionAnn({
+              v: 2
+            });
+            var s_11 = args(0, null, ["option"], ["map", "big_map"]);
+            ensureComparableType(s_11[0]);
+            ensureTypesEqual(s_11[0], s_11[2].args[0]);
+            ensureTypesEqual(s_11[1].args[0], s_11[2].args[1]);
+            var va = (_c = ia.v) === null || _c === void 0 ? void 0 : _c.map(function (v) {
+              return v !== "@" ? [v] : undefined;
+            });
+
+            if (s_11[2].prim === "map") {
+              return __spreadArray([annotate({
+                prim: "option",
+                args: [s_11[2].args[1]]
+              }, {
+                v: va === null || va === void 0 ? void 0 : va[0]
+              }), annotate({
+                prim: "map",
+                args: [annotate(s_11[0], {
+                  t: null
+                }), annotate(s_11[1].args[0], {
+                  t: null
+                })]
+              }, {
+                v: va === null || va === void 0 ? void 0 : va[1]
+              })], __read(stack.slice(3)));
+            }
+
+            ensureBigMapStorableType(s_11[1].args[0]);
+            return __spreadArray([annotate({
+              prim: "option",
+              args: [s_11[2].args[1]]
+            }, {
+              v: va === null || va === void 0 ? void 0 : va[0]
+            }), annotate({
+              prim: "big_map",
+              args: [annotate(s_11[0], {
+                t: null
+              }), annotate(s_11[1].args[0], {
+                t: null
+              })]
+            }, {
+              v: va === null || va === void 0 ? void 0 : va[1]
+            })], __read(stack.slice(3)));
+          }
+
+        case "EXEC":
+          {
+            var s_12 = args(0, null, ["lambda"]);
+            ensureTypesEqual(s_12[0], s_12[1].args[0]);
+            return __spreadArray([annotateVar(s_12[1].args[1])], __read(stack.slice(2)));
+          }
+
+        case "APPLY":
+          {
+            var s_13 = args(0, null, ["lambda"]);
+            ensureStorableType(s_13[0]);
+            ensurePushableType(s_13[0]);
+
+            if (!isPairType(s_13[1].args[0])) {
+              throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": function's argument must be a pair: " + typeID(s_13[1].args[0]));
+            }
+
+            var pt = s_13[1].args[0];
+            ensureTypesEqual(s_13[0], typeArgs(pt)[0]);
+            return __spreadArray([annotateVar({
+              prim: "lambda",
+              args: [typeArgs(pt)[1], s_13[1].args[1]]
+            })], __read(stack.slice(2)));
+          }
+
+        case "FAILWITH":
+          {
+            var s_14 = args(0, null)[0];
+
+            if (proto === Protocol.PtEdo2Zk || proto === Protocol.PsFLorena || proto === Protocol.PtGRANADs) {
+              ensurePackableType(s_14);
+            }
+
+            return {
+              failed: s_14
+            };
+          }
+
+        case "NEVER":
+          args(0, ["never"]);
+          return {
+            failed: {
+              prim: "never"
+            }
+          };
+
+        case "RENAME":
+          return __spreadArray([annotateVar(args(0, null)[0])], __read(stack.slice(1)));
+
+        case "CONCAT":
+          {
+            var s0 = args(0, ["string", "list", "bytes"]);
+
+            if (s0[0].prim === "list") {
+              if (typeID(s0[0].args[0]) !== "string" && typeID(s0[0].args[0]) !== "bytes") {
+                throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": can't concatenate list of " + typeID(s0[0].args[0]) + "'s");
+              }
+
+              return __spreadArray([annotateVar(s0[0].args[0])], __read(stack.slice(1)));
+            }
+
+            var s1 = args(1, ["string", "bytes"]);
+
+            if (s0[0].prim !== s1[0].prim) {
+              throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": can't concatenate " + s0[0].prim + " with " + s1[0].prim);
+            }
+
+            return __spreadArray([annotateVar(s1[0])], __read(stack.slice(2)));
+          }
+
+        case "SLICE":
+          return __spreadArray([annotateVar({
+            prim: "option",
+            args: [args(0, ["nat"], ["nat"], ["string", "bytes"])[2]]
+          }, "@slice")], __read(stack.slice(3)));
+
+        case "PACK":
+          {
+            var s_15 = args(0, null)[0];
+            ensurePackableType(s_15);
+            return __spreadArray([annotateVar({
+              prim: "bytes"
+            }, "@packed")], __read(stack.slice(1)));
+          }
+
+        case "ADD":
+          {
+            var s_16 = args(0, ["nat", "int", "timestamp", "mutez", "bls12_381_g1", "bls12_381_g2", "bls12_381_fr"], ["nat", "int", "timestamp", "mutez", "bls12_381_g1", "bls12_381_g2", "bls12_381_fr"]);
+
+            if (s_16[0].prim === "nat" && s_16[1].prim === "int" || s_16[0].prim === "int" && s_16[1].prim === "nat") {
+              return __spreadArray([annotateVar({
+                prim: "int"
+              })], __read(stack.slice(2)));
+            } else if (s_16[0].prim === "int" && s_16[1].prim === "timestamp" || s_16[0].prim === "timestamp" && s_16[1].prim === "int") {
+              return __spreadArray([annotateVar({
+                prim: "timestamp"
+              })], __read(stack.slice(2)));
+            } else if ((s_16[0].prim === "int" || s_16[0].prim === "nat" || s_16[0].prim === "mutez" || s_16[0].prim === "bls12_381_g1" || s_16[0].prim === "bls12_381_g2" || s_16[0].prim === "bls12_381_fr") && s_16[0].prim === s_16[1].prim) {
+              return __spreadArray([annotateVar(s_16[0])], __read(stack.slice(2)));
+            }
+
+            throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": can't add " + s_16[0].prim + " to " + s_16[1].prim);
+          }
+
+        case "SUB":
+          {
+            var s_17 = args(0, ["nat", "int", "timestamp", "mutez"], ["nat", "int", "timestamp", "mutez"]);
+
+            if ((s_17[0].prim === "nat" || s_17[0].prim === "int") && (s_17[1].prim === "nat" || s_17[1].prim === "int") || s_17[0].prim === "timestamp" && s_17[1].prim === "timestamp") {
+              return __spreadArray([annotateVar({
+                prim: "int"
+              })], __read(stack.slice(2)));
+            } else if (s_17[0].prim === "timestamp" && s_17[1].prim === "int") {
+              return __spreadArray([annotateVar({
+                prim: "timestamp"
+              })], __read(stack.slice(2)));
+            } else if (s_17[0].prim === "mutez" && s_17[1].prim === "mutez") {
+              return __spreadArray([annotateVar({
+                prim: "mutez"
+              })], __read(stack.slice(2)));
+            }
+
+            throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": can't subtract " + s_17[0].prim + " from " + s_17[1].prim);
+          }
+
+        case "MUL":
+          {
+            var s_18 = args(0, ["nat", "int", "mutez", "bls12_381_g1", "bls12_381_g2", "bls12_381_fr"], ["nat", "int", "mutez", "bls12_381_g1", "bls12_381_g2", "bls12_381_fr"]);
+
+            if (s_18[0].prim === "nat" && s_18[1].prim === "int" || s_18[0].prim === "int" && s_18[1].prim === "nat") {
+              return __spreadArray([annotateVar({
+                prim: "int"
+              })], __read(stack.slice(2)));
+            } else if (s_18[0].prim === "nat" && s_18[1].prim === "mutez" || s_18[0].prim === "mutez" && s_18[1].prim === "nat") {
+              return __spreadArray([annotateVar({
+                prim: "mutez"
+              })], __read(stack.slice(2)));
+            } else if ((s_18[0].prim === "bls12_381_g1" || s_18[0].prim === "bls12_381_g2" || s_18[0].prim === "bls12_381_fr") && s_18[1].prim === "bls12_381_fr" || (s_18[0].prim === "nat" || s_18[0].prim === "int") && s_18[0].prim === s_18[1].prim) {
+              return __spreadArray([annotateVar(s_18[0])], __read(stack.slice(2)));
+            } else if ((s_18[0].prim === "nat" || s_18[0].prim === "int") && s_18[1].prim === "bls12_381_fr" || (s_18[1].prim === "nat" || s_18[1].prim === "int") && s_18[0].prim === "bls12_381_fr") {
+              return __spreadArray([annotateVar({
+                prim: "bls12_381_fr"
+              })], __read(stack.slice(2)));
+            }
+
+            throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": can't multiply " + s_18[0].prim + " by " + s_18[1].prim);
+          }
+
+        case "EDIV":
+          {
+            var res = function (a, b) {
+              return {
+                prim: "option",
+                args: [{
+                  prim: "pair",
+                  args: [{
+                    prim: a
+                  }, {
+                    prim: b
+                  }]
+                }]
+              };
+            };
+
+            var s_19 = args(0, ["nat", "int", "mutez"], ["nat", "int", "mutez"]);
+
+            if (s_19[0].prim === "nat" && s_19[1].prim === "nat") {
+              return __spreadArray([annotateVar(res("nat", "nat"))], __read(stack.slice(2)));
+            } else if ((s_19[0].prim === "nat" || s_19[0].prim === "int") && (s_19[1].prim === "nat" || s_19[1].prim === "int")) {
+              return __spreadArray([annotateVar(res("int", "nat"))], __read(stack.slice(2)));
+            } else if (s_19[0].prim === "mutez" && s_19[1].prim === "nat") {
+              return __spreadArray([annotateVar(res("mutez", "mutez"))], __read(stack.slice(2)));
+            } else if (s_19[0].prim === "mutez" && s_19[1].prim === "mutez") {
+              return __spreadArray([annotateVar(res("nat", "mutez"))], __read(stack.slice(2)));
+            }
+
+            throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": can't euclideally divide " + s_19[0].prim + " by " + s_19[1].prim);
+          }
+
+        case "ABS":
+          args(0, ["int"]);
+          return __spreadArray([annotateVar({
+            prim: "nat"
+          })], __read(stack.slice(1)));
+
+        case "ISNAT":
+          args(0, ["int"]);
+          return __spreadArray([annotateVar({
+            prim: "option",
+            args: [{
+              prim: "nat"
+            }]
+          })], __read(stack.slice(1)));
+
+        case "INT":
+          args(0, ["nat", "bls12_381_fr"]);
+          return __spreadArray([annotateVar({
+            prim: "int"
+          })], __read(stack.slice(1)));
+
+        case "NEG":
+          {
+            var s_20 = args(0, ["nat", "int", "bls12_381_g1", "bls12_381_g2", "bls12_381_fr"])[0];
+
+            if (s_20.prim === "nat" || s_20.prim === "int") {
+              return __spreadArray([annotateVar({
+                prim: "int"
+              })], __read(stack.slice(1)));
+            }
+
+            return __spreadArray([annotateVar(s_20)], __read(stack.slice(1)));
+          }
+
+        case "LSL":
+        case "LSR":
+          args(0, ["nat"], ["nat"]);
+          return __spreadArray([annotateVar({
+            prim: "nat"
+          })], __read(stack.slice(2)));
+
+        case "OR":
+        case "XOR":
+          {
+            var s_21 = args(0, ["nat", "bool"], ["nat", "bool"]);
+
+            if (s_21[0].prim !== s_21[1].prim) {
+              throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": both arguments must be of the same type: " + s_21[0].prim + ", " + s_21[1].prim);
+            }
+
+            return __spreadArray([annotateVar(s_21[1])], __read(stack.slice(2)));
+          }
+
+        case "AND":
+          {
+            var s_22 = args(0, ["nat", "bool", "int"], ["nat", "bool"]);
+
+            if ((s_22[0].prim !== "int" || s_22[1].prim !== "nat") && s_22[0].prim !== s_22[1].prim) {
+              throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": both arguments must be of the same type: " + s_22[0].prim + ", " + s_22[1].prim);
+            }
+
+            return __spreadArray([annotateVar(s_22[1])], __read(stack.slice(2)));
+          }
+
+        case "NOT":
+          {
+            var s_23 = args(0, ["nat", "bool", "int"])[0];
+
+            if (s_23.prim === "bool") {
+              return __spreadArray([annotateVar({
+                prim: "bool"
+              })], __read(stack.slice(1)));
+            }
+
+            return __spreadArray([annotateVar({
+              prim: "int"
+            })], __read(stack.slice(1)));
+          }
+
+        case "COMPARE":
+          {
+            var s_24 = args(0, null, null);
+            ensureComparableType(s_24[0]);
+            ensureComparableType(s_24[1]);
+            return __spreadArray([annotateVar({
+              prim: "int"
+            })], __read(stack.slice(2)));
+          }
+
+        case "EQ":
+        case "NEQ":
+        case "LT":
+        case "GT":
+        case "LE":
+        case "GE":
+          args(0, ["int"]);
+          return __spreadArray([annotateVar({
+            prim: "bool"
+          })], __read(stack.slice(1)));
+
+        case "SELF":
+          {
+            if ((ctx === null || ctx === void 0 ? void 0 : ctx.contract) === undefined) {
+              throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": contract required");
+            }
+
+            var ia = instructionAnn({
+              f: 1,
+              v: 1
+            });
+            var ep = contractEntryPoint(ctx.contract, (_d = ia.f) === null || _d === void 0 ? void 0 : _d[0]);
+
+            if (ep === null) {
+              throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": contract has no entrypoint " + ep);
+            }
+
+            return __spreadArray([annotate({
+              prim: "contract",
+              args: [ep]
+            }, {
+              v: ia.v ? ia.v : ["@self"]
+            })], __read(stack));
+          }
+
+        case "TRANSFER_TOKENS":
+          {
+            var s_25 = args(0, null, ["mutez"], ["contract"]);
+            ensureTypesEqual(s_25[0], s_25[2].args[0]);
+            return __spreadArray([annotateVar({
+              prim: "operation"
+            })], __read(stack.slice(3)));
+          }
+
+        case "SET_DELEGATE":
+          {
+            var s_26 = args(0, ["option"])[0];
+
+            if (typeID(s_26.args[0]) !== "key_hash") {
+              throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": key hash expected: " + typeID(s_26.args[0]));
+            }
+
+            return __spreadArray([annotateVar({
+              prim: "operation"
+            })], __read(stack.slice(1)));
+          }
+
+        case "IMPLICIT_ACCOUNT":
+          args(0, ["key_hash"]);
+          return __spreadArray([annotateVar({
+            prim: "contract",
+            args: [{
+              prim: "unit"
+            }]
+          })], __read(stack.slice(1)));
+
+        case "NOW":
+          return __spreadArray([annotateVar({
+            prim: "timestamp"
+          }, "@now")], __read(stack));
+
+        case "AMOUNT":
+          return __spreadArray([annotateVar({
+            prim: "mutez"
+          }, "@amount")], __read(stack));
+
+        case "BALANCE":
+          return __spreadArray([annotateVar({
+            prim: "mutez"
+          }, "@balance")], __read(stack));
+
+        case "CHECK_SIGNATURE":
+          args(0, ["key"], ["signature"], ["bytes"]);
+          return __spreadArray([annotateVar({
+            prim: "bool"
+          })], __read(stack.slice(3)));
+
+        case "BLAKE2B":
+        case "SHA256":
+        case "SHA512":
+        case "KECCAK":
+        case "SHA3":
+          args(0, ["bytes"]);
+          return __spreadArray([annotateVar({
+            prim: "bytes"
+          })], __read(stack.slice(1)));
+
+        case "HASH_KEY":
+          args(0, ["key"]);
+          return __spreadArray([annotateVar({
+            prim: "key_hash"
+          })], __read(stack.slice(1)));
+
+        case "SOURCE":
+          return __spreadArray([annotateVar({
+            prim: "address"
+          }, "@source")], __read(stack));
+
+        case "SENDER":
+          return __spreadArray([annotateVar({
+            prim: "address"
+          }, "@sender")], __read(stack));
+
+        case "ADDRESS":
+          {
+            var s_27 = args(0, ["contract"])[0];
+            var ia = instructionAnn({
+              v: 1
+            });
+            return __spreadArray([annotate((_a = {
+              prim: "address"
+            }, _a[refContract] = s_27, _a), {
+              v: ia.v ? ia.v : varSuffix(argAnn(s_27), "address")
+            })], __read(stack.slice(1)));
+          }
+
+        case "SELF_ADDRESS":
+          {
+            var addr = {
+              prim: "address"
+            };
+
+            if ((ctx === null || ctx === void 0 ? void 0 : ctx.contract) !== undefined) {
+              addr[refContract] = {
+                prim: "contract",
+                args: [contractSection(ctx.contract, "parameter").args[0]]
+              };
+            }
+
+            return __spreadArray([annotateVar(addr, "@address")], __read(stack));
+          }
+
+        case "CHAIN_ID":
+          return __spreadArray([annotateVar({
+            prim: "chain_id"
+          })], __read(stack));
+
+        case "DROP":
+          {
+            instructionAnn({});
+            var n = instruction.args !== undefined ? parseInt(instruction.args[0].int, 10) : 1;
+            args(n - 1, null);
+            return stack.slice(n);
+          }
+
+        case "DIG":
+          {
+            instructionAnn({});
+            var n = parseInt(instruction.args[0].int, 10);
+            return __spreadArray(__spreadArray([args(n, null)[0]], __read(stack.slice(0, n))), __read(stack.slice(n + 1)));
+          }
+
+        case "DUG":
+          {
+            instructionAnn({});
+            var n = parseInt(instruction.args[0].int, 10);
+            return __spreadArray(__spreadArray(__spreadArray([], __read(stack.slice(1, n + 1))), [args(0, null)[0]]), __read(stack.slice(n + 1)));
+          }
+
+        case "NONE":
+          assertTypeAnnotationsValid(instruction.args[0]);
+          return __spreadArray([annotate({
+            prim: "option",
+            args: [instruction.args[0]]
+          }, instructionAnn({
+            t: 1,
+            v: 1
+          }))], __read(stack));
+
+        case "LEFT":
+        case "RIGHT":
+          {
+            var s_28 = args(0, null)[0];
+            var ia = instructionAnn({
+              f: 2,
+              t: 1,
+              v: 1
+            }, {
+              specialFields: true
+            });
+            var va = argAnn(s_28);
+            var children = [annotate(s_28, {
+              t: null,
+              v: null,
+              f: ia.f && ia.f.length > 0 && ia.f[0] !== "%" ? ia.f[0] === "%@" ? va.v ? ["%" + va.v[0].slice(1)] : undefined : ia.f : undefined
+            }), annotate(instruction.args[0], {
+              t: null,
+              f: ia.f && ia.f.length > 1 && ia.f[1] !== "%" ? ia.f : undefined
+            })];
+            return __spreadArray([annotate({
+              prim: "or",
+              args: instruction.prim === "LEFT" ? children : [children[1], children[0]]
+            }, {
+              t: ia.t,
+              v: ia.v
+            })], __read(stack.slice(1)));
+          }
+
+        case "NIL":
+          assertTypeAnnotationsValid(instruction.args[0]);
+          return __spreadArray([annotate({
+            prim: "list",
+            args: [instruction.args[0]]
+          }, instructionAnn({
+            t: 1,
+            v: 1
+          }))], __read(stack));
+
+        case "UNPACK":
+          args(0, ["bytes"]);
+          assertTypeAnnotationsValid(instruction.args[0]);
+          return __spreadArray([annotateVar({
+            prim: "option",
+            args: [instruction.args[0]]
+          }, "@unpacked")], __read(stack.slice(1)));
+
+        case "CONTRACT":
+          {
+            var s_29 = args(0, ["address"])[0];
+            assertTypeAnnotationsValid(instruction.args[0]);
+            var ia = instructionAnn({
+              v: 1,
+              f: 1
+            });
+            var contract = s_29[refContract];
+
+            if (contract !== undefined) {
+              var ep = contractEntryPoint(contract, (_e = ia.f) === null || _e === void 0 ? void 0 : _e[0]);
+
+              if (ep === null) {
+                throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": contract has no entrypoint " + ep);
+              }
+
+              ensureTypesEqual(ep, instruction.args[0]);
+            }
+
+            return __spreadArray([annotate({
+              prim: "option",
+              args: [{
+                prim: "contract",
+                args: [instruction.args[0]]
+              }]
+            }, {
+              v: ia.v ? ia.v : varSuffix(argAnn(s_29), "contract")
+            })], __read(stack.slice(1)));
+          }
+
+        case "CAST":
+          instructionAnn({});
+          var s = args(0, null)[0];
+          assertTypeAnnotationsValid(instruction.args[0]);
+          ensureTypesEqual(instruction.args[0], s);
+          return __spreadArray([instruction.args[0]], __read(stack.slice(1)));
+
+        case "IF_NONE":
+          {
+            instructionAnn({});
+            var s_30 = args(0, ["option"])[0];
+            var tail = stack.slice(1);
+            var br0 = functionTypeInternal(instruction.args[0], tail, ctx);
+            var br1 = functionTypeInternal(instruction.args[1], __spreadArray([annotate(s_30.args[0], {
+              t: null,
+              v: varSuffix(argAnn(s_30), "some")
+            })], __read(tail)), ctx);
+            return branchType(br0, br1);
+          }
+
+        case "IF_LEFT":
+          {
+            instructionAnn({});
+            var s_31 = args(0, ["or"])[0];
+            var va = argAnn(s_31);
+            var lefta = argAnn(s_31.args[0]);
+            var righta = argAnn(s_31.args[1]);
+            var tail = stack.slice(1);
+            var br0 = functionTypeInternal(instruction.args[0], __spreadArray([annotate(s_31.args[0], {
+              t: null,
+              v: varSuffix(va, lefta.f ? lefta.f[0].slice(1) : "left")
+            })], __read(tail)), ctx);
+            var br1 = functionTypeInternal(instruction.args[1], __spreadArray([annotate(s_31.args[1], {
+              t: null,
+              v: varSuffix(va, righta.f ? righta.f[0].slice(1) : "right")
+            })], __read(tail)), ctx);
+            return branchType(br0, br1);
+          }
+
+        case "IF_CONS":
+          {
+            instructionAnn({});
+            var s_32 = args(0, ["list"])[0];
+            var va = argAnn(s_32);
+            var tail = stack.slice(1);
+            var br0 = functionTypeInternal(instruction.args[0], __spreadArray([annotate(s_32.args[0], {
+              t: null,
+              v: varSuffix(va, "hd")
+            }), annotate(s_32, {
+              t: null,
+              v: varSuffix(va, "tl")
+            })], __read(tail)), ctx);
+            var br1 = functionTypeInternal(instruction.args[1], tail, ctx);
+            return branchType(br0, br1);
+          }
+
+        case "IF":
+          {
+            instructionAnn({});
+            args(0, ["bool"]);
+            var tail = stack.slice(1);
+            var br0 = functionTypeInternal(instruction.args[0], tail, ctx);
+            var br1 = functionTypeInternal(instruction.args[1], tail, ctx);
+            return branchType(br0, br1);
+          }
+
+        case "MAP":
+          {
+            var s_33 = args(0, ["list", "map"])[0];
+            var tail = stack.slice(1);
+            var elt = s_33.prim === "map" ? {
+              prim: "pair",
+              args: s_33.args
+            } : s_33.args[0];
+            var body = functionTypeInternal(instruction.args[0], __spreadArray([annotate(elt, {
+              t: null,
+              v: varSuffix(argAnn(s_33), "elt")
+            })], __read(tail)), ctx);
+
+            if ("failed" in body) {
+              return body;
+            }
+
+            if (body.length < 1) {
+              throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": function must return a value");
+            }
+
+            ensureStacksEqual(body.slice(1), tail);
+
+            if (s_33.prim === "list") {
+              return __spreadArray([annotateVar({
+                prim: "list",
+                args: [body[0]]
+              })], __read(tail));
+            }
+
+            return __spreadArray([annotateVar({
+              prim: "map",
+              args: [s_33.args[0], body[0]]
+            })], __read(tail));
+          }
+
+        case "ITER":
+          {
+            instructionAnn({});
+            var s_34 = args(0, ["set", "list", "map"])[0];
+            var tail = stack.slice(1);
+            var elt = s_34.prim === "map" ? {
+              prim: "pair",
+              args: s_34.args
+            } : s_34.args[0];
+            var body = functionTypeInternal(instruction.args[0], __spreadArray([annotate(elt, {
+              t: null,
+              v: varSuffix(argAnn(s_34), "elt")
+            })], __read(tail)), ctx);
+
+            if ("failed" in body) {
+              return body;
+            }
+
+            ensureStacksEqual(body, tail);
+            return tail;
+          }
+
+        case "LOOP":
+          {
+            instructionAnn({});
+            args(0, ["bool"]);
+            var tail = stack.slice(1);
+            var body = functionTypeInternal(instruction.args[0], tail, ctx);
+
+            if ("failed" in body) {
+              return body;
+            }
+
+            ensureStacksEqual(body, __spreadArray([{
+              prim: "bool"
+            }], __read(tail)));
+            return tail;
+          }
+
+        case "LOOP_LEFT":
+          {
+            instructionAnn({});
+            var s_35 = args(0, ["or"])[0];
+            var tail = stack.slice(1);
+            var body = functionTypeInternal(instruction.args[0], __spreadArray([annotate(s_35.args[0], {
+              t: null,
+              v: varSuffix(argAnn(s_35), "left")
+            })], __read(tail)), ctx);
+
+            if ("failed" in body) {
+              return body;
+            }
+
+            ensureStacksEqual(body, __spreadArray([s_35], __read(tail)));
+            return __spreadArray([annotate(s_35.args[1], {
+              t: null,
+              v: instructionAnn({
+                v: 1
+              }).v
+            })], __read(tail));
+          }
+
+        case "DIP":
+          {
+            instructionAnn({});
+            var n = instruction.args.length === 2 ? parseInt(instruction.args[0].int, 10) : 1;
+            args(n - 1, null);
+            var head = stack.slice(0, n);
+            var tail = stack.slice(n); // ternary operator is a type guard so use it instead of just `instruction.args.length - 1`
+
+            var body = instruction.args.length === 2 ? functionTypeInternal(instruction.args[1], tail, ctx) : functionTypeInternal(instruction.args[0], tail, ctx);
+
+            if ("failed" in body) {
+              return body;
+            }
+
+            return __spreadArray(__spreadArray([], __read(head)), __read(body));
+          }
+
+        case "CREATE_CONTRACT":
+          {
+            var ia = instructionAnn({
+              v: 2
+            });
+            var s_36 = args(0, ["option"], ["mutez"], null);
+
+            if (typeID(s_36[0].args[0]) !== "key_hash") {
+              throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": key hash expected: " + typeID(s_36[0].args[0]));
+            }
+
+            if (ensureStorableType(s_36[2])) {
+              assertContractValid(instruction.args[0]);
+              assertScalarTypesEqual(contractSection(instruction.args[0], "storage").args[0], s_36[2]);
+            }
+
+            var va = (_f = ia.v) === null || _f === void 0 ? void 0 : _f.map(function (v) {
+              return v !== "@" ? [v] : undefined;
+            });
+            return __spreadArray([annotate({
+              prim: "operation"
+            }, {
+              v: va === null || va === void 0 ? void 0 : va[0]
+            }), annotate((_b = {
+              prim: "address"
+            }, _b[refContract] = {
+              prim: "contract",
+              args: [contractSection(instruction.args[0], "parameter").args[0]]
+            }, _b), {
+              v: va === null || va === void 0 ? void 0 : va[1]
+            })], __read(stack.slice(3)));
+          }
+
+        case "PUSH":
+          assertTypeAnnotationsValid(instruction.args[0]);
+          assertDataValidInternal(instruction.args[1], instruction.args[0], __assign(__assign({}, ctx), {
+            contract: undefined
+          }));
+          return __spreadArray([annotateVar(instruction.args[0])], __read(stack));
+
+        case "EMPTY_SET":
+          assertTypeAnnotationsValid(instruction.args[0]);
+          ensureComparableType(instruction.args[0]);
+          return __spreadArray([annotate({
+            prim: "set",
+            args: instruction.args
+          }, instructionAnn({
+            t: 1,
+            v: 1
+          }))], __read(stack));
+
+        case "EMPTY_MAP":
+          assertTypeAnnotationsValid(instruction.args[0]);
+          ensureComparableType(instruction.args[0]);
+          assertTypeAnnotationsValid(instruction.args[1]);
+          return __spreadArray([annotate({
+            prim: "map",
+            args: instruction.args
+          }, instructionAnn({
+            t: 1,
+            v: 1
+          }))], __read(stack));
+
+        case "EMPTY_BIG_MAP":
+          assertTypeAnnotationsValid(instruction.args[0]);
+          ensureComparableType(instruction.args[0]);
+          assertTypeAnnotationsValid(instruction.args[1]);
+          ensureBigMapStorableType(instruction.args[0]);
+          return __spreadArray([annotate({
+            prim: "big_map",
+            args: instruction.args
+          }, instructionAnn({
+            t: 1,
+            v: 1
+          }))], __read(stack));
+
+        case "LAMBDA":
+          {
+            assertTypeAnnotationsValid(instruction.args[0]);
+            assertTypeAnnotationsValid(instruction.args[1]);
+            var body = functionTypeInternal(instruction.args[2], [instruction.args[0]], __assign(__assign({}, ctx), {
+              contract: undefined
+            }));
+
+            if ("failed" in body) {
+              return body;
+            }
+
+            if (body.length !== 1) {
+              throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": function must return a value");
+            }
+
+            ensureTypesEqual(instruction.args[1], body[0]);
+            return __spreadArray([annotateVar({
+              prim: "lambda",
+              args: [instruction.args[0], instruction.args[1]]
+            })], __read(stack));
+          }
+
+        case "LEVEL":
+          return __spreadArray([annotateVar({
+            prim: "nat"
+          }, "@level")], __read(stack));
+
+        case "TOTAL_VOTING_POWER":
+          return __spreadArray([annotateVar({
+            prim: "nat"
+          })], __read(stack));
+
+        case "VOTING_POWER":
+          args(0, ["key_hash"]);
+          return __spreadArray([annotateVar({
+            prim: "nat"
+          })], __read(stack.slice(1)));
+
+        case "TICKET":
+          {
+            var s_37 = args(0, null, ["nat"])[0];
+            ensureComparableType(s_37);
+            return __spreadArray([annotate({
+              prim: "ticket",
+              args: [s_37]
+            }, instructionAnn({
+              t: 1,
+              v: 1
+            }))], __read(stack.slice(2)));
+          }
+
+        case "JOIN_TICKETS":
+          {
+            var s_38 = unpackComb("pair", args(0, ["pair"])[0]);
+
+            if (typeID(s_38.args[0]) !== "ticket") {
+              throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": ticket expected: " + typeID(s_38.args[0]));
+            }
+
+            ensureTypesEqual(s_38.args[0], s_38.args[1]);
+            return __spreadArray([annotateVar({
+              prim: "option",
+              args: [annotate(s_38.args[0], {
+                t: null
+              })]
+            })], __read(stack.slice(1)));
+          }
+
+        case "SPLIT_TICKET":
+          {
+            var s_39 = args(0, ["ticket"], ["pair"]);
+            var p = unpackComb("pair", s_39[1]);
+
+            if (typeID(p.args[0]) !== "nat") {
+              throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": nat expected: " + typeID(p.args[0]));
+            }
+
+            ensureTypesEqual(p.args[0], p.args[1]);
+            return __spreadArray([annotateVar({
+              prim: "option",
+              args: [{
+                prim: "pair",
+                args: [annotate(s_39[0], {
+                  t: null
+                }), annotate(s_39[0], {
+                  t: null
+                })]
+              }]
+            })], __read(stack.slice(2)));
+          }
+
+        case "READ_TICKET":
+          {
+            var ia = instructionAnn({
+              v: 2
+            });
+            var s_40 = args(0, ["ticket"])[0];
+            var va = (_g = ia.v) === null || _g === void 0 ? void 0 : _g.map(function (v) {
+              return v !== "@" ? [v] : undefined;
+            });
+            return __spreadArray([annotate({
+              prim: "pair",
+              args: [{
+                prim: "address"
+              }, annotate(s_40.args[0], {
+                t: null
+              }), {
+                prim: "nat"
+              }]
+            }, {
+              v: va === null || va === void 0 ? void 0 : va[0]
+            }), annotate(s_40, {
+              v: va === null || va === void 0 ? void 0 : va[1],
+              t: null
+            })], __read(stack.slice(1)));
+          }
+
+        case "PAIRING_CHECK":
+          {
+            var p = args(0, ["list"])[0].args[0];
+
+            if (!isPairType(p)) {
+              throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": pair expected: " + typeID(p));
+            }
+
+            var c = unpackComb("pair", p);
+
+            if (typeID(c.args[0]) !== "bls12_381_g1") {
+              throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": bls12_381_g1 expected: " + typeID(c.args[0]));
+            }
+
+            if (typeID(c.args[1]) !== "bls12_381_g2") {
+              throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": bls12_381_g2 expected: " + typeID(c.args[1]));
+            }
+
+            return __spreadArray([annotateVar({
+              prim: "bool"
+            })], __read(stack.slice(1)));
+          }
+
+        case "SAPLING_EMPTY_STATE":
+          return __spreadArray([annotate({
+            prim: "sapling_state",
+            args: [instruction.args[0]]
+          }, instructionAnn({
+            v: 1,
+            t: 1
+          }))], __read(stack));
+
+        case "SAPLING_VERIFY_UPDATE":
+          {
+            var s_41 = args(0, ["sapling_transaction"], ["sapling_state"]);
+
+            if (parseInt(s_41[0].args[0].int, 10) !== parseInt(s_41[1].args[0].int, 10)) {
+              throw new MichelsonInstructionError(instruction, stack, instruction.prim + ": sapling memo size mismatch: " + s_41[0].args[0].int + " != " + s_41[1].args[0].int);
+            }
+
+            return __spreadArray([annotateVar({
+              prim: "option",
+              args: [{
+                prim: "pair",
+                args: [{
+                  prim: "int"
+                }, annotate(s_41[1], {
+                  t: null
+                })]
+              }]
+            })], __read(stack.slice(2)));
+          }
+
+        default:
+          throw new MichelsonError(instruction, "unexpected instruction: " + instruction.prim);
+      }
+    }(instruction);
+
+    if ((ctx === null || ctx === void 0 ? void 0 : ctx.traceCallback) !== undefined) {
+      var trace = {
+        op: instruction,
+        in: stack,
+        out: retStack
+      };
+      ctx.traceCallback(trace);
+    }
+
+    return retStack;
+  }
+
+  function contractSection(contract, section) {
+    var e_8, _a;
+
+    try {
+      for (var contract_1 = __values(contract), contract_1_1 = contract_1.next(); !contract_1_1.done; contract_1_1 = contract_1.next()) {
+        var s = contract_1_1.value;
+
+        if (s.prim === section) {
+          return s;
+        }
+      }
+    } catch (e_8_1) {
+      e_8 = {
+        error: e_8_1
+      };
+    } finally {
+      try {
+        if (contract_1_1 && !contract_1_1.done && (_a = contract_1.return)) _a.call(contract_1);
+      } finally {
+        if (e_8) throw e_8.error;
+      }
+    }
+
+    throw new MichelsonError(contract, "missing contract section: " + section);
+  }
+
+  function isContract(v) {
+    var e_9, _a;
+
+    if (Array.isArray(v)) {
+      try {
+        for (var v_1 = __values(v), v_1_1 = v_1.next(); !v_1_1.done; v_1_1 = v_1.next()) {
+          var s = v_1_1.value;
+
+          if ("prim" in s && (s.prim === "parameter" || s.prim === "storage" || s.prim === "code")) {
+            return true;
+          }
+        }
+      } catch (e_9_1) {
+        e_9 = {
+          error: e_9_1
+        };
+      } finally {
+        try {
+          if (v_1_1 && !v_1_1.done && (_a = v_1.return)) _a.call(v_1);
+        } finally {
+          if (e_9) throw e_9.error;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  function contractEntryPoint(src, ep) {
+    ep = ep || "%default";
+    var entryPoint = contractEntryPoints(src).find(function (x) {
+      return x[0] === ep;
+    });
+
+    if (entryPoint !== undefined) {
+      return entryPoint[1];
+    } else if (ep === "%default") {
+      return isContract(src) ? contractSection(src, "parameter").args[0] : src;
+    }
+
+    return null;
+  }
+
+  function isOrType(t) {
+    return Array.isArray(t) || t.prim === "or";
+  }
+
+  function contractEntryPoints(src) {
+    if (isContract(src)) {
+      var param = contractSection(src, "parameter");
+      var ch = contractEntryPoints(param.args[0]);
+      var a = unpackAnnotations(param);
+      return a.f ? __spreadArray([[a.f[0], param.args[0]]], __read(ch)) : ch;
+    }
+
+    if (isOrType(src)) {
+      var args_2 = typeArgs(src);
+
+      var getArg = function (n) {
+        var a = unpackAnnotations(args_2[n]);
+
+        if (typeID(args_2[n]) === "or") {
+          var ch = contractEntryPoints(args_2[n]);
+          return a.f ? __spreadArray([[a.f[0], args_2[n]]], __read(ch)) : ch;
+        }
+
+        return a.f ? [[a.f[0], args_2[n]]] : [];
+      };
+
+      return __spreadArray(__spreadArray([], __read(getArg(0))), __read(getArg(1)));
+    }
+
+    return [];
+  } // Contract validation
+
+
+  function assertContractValid(contract, ctx) {
+    var parameter = contractSection(contract, "parameter").args[0];
+    assertTypeAnnotationsValid(parameter, true);
+    var storage = contractSection(contract, "storage").args[0];
+    assertTypeAnnotationsValid(storage);
+    var arg = {
+      "prim": "pair",
+      args: [__assign(__assign({}, parameter), {
+        annots: ["@parameter"]
+      }), __assign(__assign({}, storage), {
+        annots: ["@storage"]
+      })]
+    };
+    var code = contractSection(contract, "code").args[0];
+    var ret = functionTypeInternal(code, [arg], __assign(__assign({}, ctx), {
+      contract: contract
+    }));
+
+    if ("failed" in ret) {
+      return ret;
+    }
+
+    var expected = {
+      "prim": "pair",
+      args: [{
+        "prim": "list",
+        args: [{
+          "prim": "operation"
+        }]
+      }, storage]
+    };
+
+    try {
+      assertStacksEqual(ret, [expected]);
+    } catch (err) {
+      if (err instanceof MichelsonError) {
+        throw new MichelsonInstructionError(code, ret, err.message);
+      } else {
+        throw err;
+      }
+    }
+
+    return ret;
+  } // Exported wrapper functions
+
+
+  function assertDataValid(d, t, ctx) {
+    assertTypeAnnotationsValid(t);
+    assertDataValidInternal(d, t, ctx || null);
+  }
+
+  function functionType(inst, stack, ctx) {
+    var e_10, _a, e_11, _b;
+
+    try {
+      for (var stack_1 = __values(stack), stack_1_1 = stack_1.next(); !stack_1_1.done; stack_1_1 = stack_1.next()) {
+        var t = stack_1_1.value;
+        assertTypeAnnotationsValid(t);
+      }
+    } catch (e_10_1) {
+      e_10 = {
+        error: e_10_1
+      };
+    } finally {
+      try {
+        if (stack_1_1 && !stack_1_1.done && (_a = stack_1.return)) _a.call(stack_1);
+      } finally {
+        if (e_10) throw e_10.error;
+      }
+    }
+
+    if ((ctx === null || ctx === void 0 ? void 0 : ctx.contract) !== undefined) {
+      try {
+        for (var _c = __values(["parameter", "storage"]), _d = _c.next(); !_d.done; _d = _c.next()) {
+          var typesec = _d.value;
+          var sec = contractSection(ctx.contract, typesec).args[0];
+          assertTypeAnnotationsValid(sec);
+        }
+      } catch (e_11_1) {
+        e_11 = {
+          error: e_11_1
+        };
+      } finally {
+        try {
+          if (_d && !_d.done && (_b = _c.return)) _b.call(_c);
+        } finally {
+          if (e_11) throw e_11.error;
+        }
+      }
+    }
+
+    return functionTypeInternal(inst, stack, ctx || null);
+  }
+
+  function isDataValid(d, t, ctx) {
+    try {
+      assertDataValid(d, t, ctx);
+      return true;
+    } catch (_a) {
+      return false;
+    }
+  }
+
+  var Contract =
+  /** @class */
+  function () {
+    function Contract(contract, opt) {
+      this.contract = contract;
+      this.ctx = __assign({
+        contract: contract
+      }, opt);
+      this.output = assertContractValid(contract, this.ctx);
+    }
+
+    Contract.parse = function (src, opt) {
+      var p = new Parser(opt);
+      var expr = typeof src === "string" ? p.parseScript(src) : p.parseJSON(src);
+
+      if (expr === null) {
+        throw new Error("empty contract");
+      }
+
+      if (assertMichelsonContract(expr)) {
+        return new Contract(expr, opt);
+      }
+    };
+
+    Contract.parseTypeExpression = function (src, opt) {
+      var p = new Parser(opt);
+      var expr = typeof src === "string" ? p.parseScript(src) : p.parseJSON(src);
+
+      if (expr === null) {
+        throw new Error("empty type expression");
+      }
+
+      if (assertMichelsonType(expr) && assertTypeAnnotationsValid(expr)) {
+        return expr;
+      }
+
+      throw undefined;
+    };
+
+    Contract.parseDataExpression = function (src, opt) {
+      var p = new Parser(opt);
+      var expr = typeof src === "string" ? p.parseScript(src) : p.parseJSON(src);
+
+      if (expr === null) {
+        throw new Error("empty data expression");
+      }
+
+      if (assertMichelsonData(expr)) {
+        return expr;
+      }
+
+      throw undefined;
+    };
+
+    Contract.prototype.section = function (section) {
+      return contractSection(this.contract, section);
+    };
+
+    Contract.prototype.entryPoints = function () {
+      return contractEntryPoints(this.contract);
+    };
+
+    Contract.prototype.entryPoint = function (ep) {
+      return contractEntryPoint(this.contract, ep);
+    };
+
+    Contract.prototype.assertDataValid = function (d, t) {
+      assertDataValid(d, t, this.ctx);
+    };
+
+    Contract.prototype.isDataValid = function (d, t) {
+      return isDataValid(d, t, this.ctx);
+    };
+
+    Contract.prototype.assertParameterValid = function (ep, d) {
+      var t = this.entryPoint(ep || undefined);
+
+      if (t === null) {
+        throw new Error("contract has no entrypoint named " + ep);
+      }
+
+      this.assertDataValid(d, t);
+    };
+
+    Contract.prototype.isParameterValid = function (ep, d) {
+      try {
+        this.assertParameterValid(ep, d);
+        return true;
+      } catch (_a) {
+        return false;
+      }
+    };
+
+    Contract.prototype.functionType = function (inst, stack) {
+      return functionType(inst, stack, this.ctx);
+    };
+
+    return Contract;
+  }();
+
+  new Contract([{
+    prim: "parameter",
+    args: [{
+      prim: "unit"
+    }]
+  }, {
+    prim: "storage",
+    args: [{
+      prim: "unit"
+    }]
+  }, {
+    prim: "code",
+    args: [[{
+      prim: "CAR"
+    }, {
+      prim: "NIL",
+      args: [{
+        prim: "operation"
+      }]
+    }, {
+      prim: "PAIR"
+    }]]
+  }]);
+
+  const contractPaymentInTezSignPayloadMichelsonType = {
+    prim: 'pair',
+    args: [{
+      prim: 'pair',
+      args: [{
+        prim: 'string'
+      }, {
+        prim: 'address'
+      }]
+    }, {
+      prim: 'mutez'
+    }]
+  };
+  const contractPaymentInAssetSignPayloadMichelsonType = {
+    prim: 'pair',
+    args: [{
+      prim: 'pair',
+      args: [{
+        prim: 'pair',
+        args: [{
+          prim: 'string'
+        }, {
+          prim: 'address'
+        }]
+      }, {
+        prim: 'pair',
+        args: [{
+          prim: 'nat'
+        }, {
+          prim: 'address'
+        }]
+      }]
+    }, {
+      prim: 'option',
+      args: [{
+        prim: 'nat'
+      }]
+    }]
+  };
+
+  class PaymentSignPayloadEncoder {
+    encode(payment) {
+      return {
+        contractSignPayload: this.getContractSignPayload(payment),
+        clientSignPayload: this.getClientSignPayload(payment)
+      };
+    }
+
+    getContractSignPayload(payment) {
+      const signPayload = payment.asset ? packDataBytes({
+        prim: 'Pair',
+        args: [{
+          prim: 'Pair',
+          args: [{
+            prim: 'Pair',
+            args: [{
+              string: payment.id
+            }, {
+              string: payment.targetAddress
+            }]
+          }, {
+            prim: 'Pair',
+            args: [{
+              int: tokensAmountToNat(payment.amount, payment.asset.decimals).toString(10)
+            }, {
+              string: payment.asset.address
+            }]
+          }]
+        }, payment.asset.id !== undefined && payment.asset.id !== null ? {
+          prim: 'Some',
+          args: [{
+            int: payment.asset.id.toString()
+          }]
+        } : {
+          prim: 'None'
+        }]
+      }, contractPaymentInAssetSignPayloadMichelsonType) : packDataBytes({
+        prim: 'Pair',
+        args: [{
+          prim: 'Pair',
+          args: [{
+            string: payment.id
+          }, {
+            string: payment.targetAddress
+          }]
+        }, {
+          int: tezToMutez(payment.amount).toString(10)
+        }]
+      }, contractPaymentInTezSignPayloadMichelsonType);
+      return '0x' + signPayload.bytes;
+    }
+
+    getClientSignPayload(payment) {
+      return (payment.successUrl ? payment.successUrl.href : '') + (payment.cancelUrl ? payment.cancelUrl.href : '') || null;
+    }
+
+  }
+
+  _defineProperty(PaymentSignPayloadEncoder, "contractPaymentInTezSignPayloadMichelsonType", contractPaymentInTezSignPayloadMichelsonType);
+
+  _defineProperty(PaymentSignPayloadEncoder, "contractPaymentInAssetSignPayloadMichelsonType", contractPaymentInAssetSignPayloadMichelsonType);
 
   exports.Base64Deserializer = Base64Deserializer;
   exports.Base64Serializer = Base64Serializer;
   exports.Donation = Donation;
   exports.DonationDeserializer = DonationDeserializer;
+  exports.DonationOperation = DonationOperation;
   exports.DonationSerializer = DonationSerializer;
+  exports.DonationSignPayloadEncoder = DonationSignPayloadEncoder;
   exports.DonationValidator = DonationValidator;
-  exports.LegacyDonationDeserializer = LegacyDonationDeserializer;
-  exports.LegacyPaymentDeserializer = LegacyPaymentDeserializer;
   exports.Payment = Payment;
   exports.PaymentDeserializer = PaymentDeserializer;
   exports.PaymentSerializer = PaymentSerializer;
+  exports.PaymentSignPayloadEncoder = PaymentSignPayloadEncoder;
   exports.PaymentValidator = PaymentValidator;
   exports.ServiceLinkHelper = ServiceLinkHelper;
-  exports.ServiceOperation = ServiceOperation;
   exports.StateModel = StateModel;
   exports.base64 = base64;
   exports.combineClassNames = clsx_m;
@@ -7595,9 +14836,10 @@
   exports.tezosMeta = tezosMeta;
   exports.tokenWhitelist = tokenWhitelist;
   exports.tokenWhitelistMap = tokenWhitelistMap;
+  exports.unknownAssetMeta = unknownAssetMeta;
   exports.wait = wait;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));
 //# sourceMappingURL=index.umd.js.map

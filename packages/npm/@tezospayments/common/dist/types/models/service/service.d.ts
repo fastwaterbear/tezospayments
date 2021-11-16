@@ -18,8 +18,6 @@ export interface Service {
     readonly owner: string;
     readonly paused: boolean;
     readonly deleted: boolean;
-    readonly signingKeys: {
-        readonly [key: string]: ServiceSigningKey;
-    };
+    readonly signingKeys: ReadonlyMap<ServiceSigningKey['publicKey'], ServiceSigningKey>;
 }
 export declare const emptyService: Service;

@@ -1,7 +1,9 @@
-export { Payment } from './payment';
-export { Donation } from './donation';
 export { PaymentType } from './paymentBase';
 export type { PaymentBase } from './paymentBase';
-export type { SerializedPayment, LegacySerializedPayment, NonSerializedPaymentSlice } from './serializedPayment';
-export type { SerializedDonation, LegacySerializedDonation, NonSerializedDonationSlice } from './serializedDonation';
+export { Payment } from './payment';
+export type { UnsignedPayment, PaymentAsset } from './payment';
+export { Donation } from './donation';
+export type { UnsignedDonation, DonationAsset } from './donation';
 export { PaymentUrlType, getEncodedPaymentUrlType } from './paymentUrlType';
+export type { SerializedPayment, SerializedPaymentAsset, SerializedPaymentSignature, NonSerializedPaymentSlice } from './serializedPayment';
+export type { SerializedDonation, SerializedDonationAsset, SerializedDonationSignature, NonSerializedDonationSlice } from './serializedDonation';
