@@ -33,11 +33,15 @@ export const DirectLinkGenerator = ({ paymentOrDonation, serviceAddress }: Direc
   const getPaymentLink = useCallback(
     async () => {
       const network = currentAccount?.network || networks[config.tezos.defaultNetwork];
-      try {
-        if (paymentOrDonation.type === PaymentType.Donation)
-          return base64PaymentUrlFactory.createPaymentUrl(paymentOrDonation, network);
 
-        const result = await tezosPayments?.createPayment({
+      if (paymentOrDonation.type === PaymentType.Donation)
+        return base64PaymentUrlFactory.createPaymentUrl(paymentOrDonation, network);
+
+      if (!tezosPayments)
+        return '';
+
+      try {
+        const payment = await tezosPayments.createPayment({
           id: paymentOrDonation.id,
           amount: paymentOrDonation.amount.toString(),
           asset: paymentOrDonation.asset,
@@ -45,7 +49,7 @@ export const DirectLinkGenerator = ({ paymentOrDonation, serviceAddress }: Direc
           data: paymentOrDonation.data,
         });
 
-        return result?.url || '';
+        return payment.url;
       }
       catch (e) {
         console.error(e);
