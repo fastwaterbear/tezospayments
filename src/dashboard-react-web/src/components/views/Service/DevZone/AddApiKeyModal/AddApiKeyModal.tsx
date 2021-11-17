@@ -55,7 +55,7 @@ export const AddApiKeyModal = (props: AddApiKeyModalProps) => {
     props.onCancel();
   }, [dispatch, name, props, publicKey]);
 
-  return <Modal className="api-key-modal" title={`${servicesLangResources.devZone.addKey} (${langResources.common.comingSoon.toLowerCase()})`}
+  return <Modal className="api-key-modal" title={servicesLangResources.devZone.addKey}
     centered destroyOnClose visible={props.visible} onCancel={props.onCancel}
     footer={<div className="api-key-modal__footer">
       <Button key="back" onClick={props.onCancel}>
