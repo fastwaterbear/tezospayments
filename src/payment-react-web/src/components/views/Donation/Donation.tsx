@@ -37,11 +37,18 @@ export const Donation = (props: DonationProps) => {
 
   const handleDonationAmountChange = useCallback((rawValue: string) => {
     const amount = new BigNumber(new BigNumber(rawValue).toFormat(decimals, { groupSeparator: '', decimalSeparator: '.' }));
-    setNetworkDonation(previousNetworkDonation => ({ ...previousNetworkDonation, amount: amount.isPositive() ? amount : zeroAmount }));
+    setNetworkDonation(previousNetworkDonation => ({
+      ...previousNetworkDonation,
+      amount: amount.isPositive() ? amount : zeroAmount
+    } as NetworkDonation));
   }, [decimals]);
 
   const handleAssetChange = useCallback((asset: string) => {
-    setNetworkDonation(previousNetworkDonation => ({ ...previousNetworkDonation, asset: asset || undefined, amount: defaultAmount }));
+    setNetworkDonation(previousNetworkDonation => ({
+      ...previousNetworkDonation,
+      assetAddress: asset || undefined,
+      amount: defaultAmount
+    } as NetworkDonation));
   }, [defaultAmount]);
 
   return <View className="donation-view">
