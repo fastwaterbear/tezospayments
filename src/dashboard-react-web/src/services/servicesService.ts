@@ -33,7 +33,7 @@ export class ServicesService {
       metadata: encodedServiceMetadata,
       allowed_tokens: {
         tez: service.allowedTokens.tez,
-        assets: service.allowedTokens.assets
+        assets: [...service.allowedTokens.assets] // immerjs fix (without it we will fail in taquito on sorting the array)
       },
       allowed_operation_type: service.allowedOperationType
     }).send();
