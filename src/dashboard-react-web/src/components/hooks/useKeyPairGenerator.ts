@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 
-import { Ed25519KeyGenerator, EncodedKeyPair, KeyType } from '@tezospayments/common';
+import { Ed25519KeyGenerator, EncodedKeyPair, KeyType, EllipticCurveKeyGenerator } from '@tezospayments/common';
 
 interface KeyPairGenerators {
   readonly ed25519: Ed25519KeyGenerator;
+  readonly secp256k1: EllipticCurveKeyGenerator;
+  readonly p256: EllipticCurveKeyGenerator;
 }
 
 interface GenerateKeyPair {
@@ -13,7 +15,9 @@ interface GenerateKeyPair {
 type HookState = false | GenerateKeyPair;
 
 const keyPairGenerators: KeyPairGenerators = {
-  ed25519: new Ed25519KeyGenerator()
+  ed25519: new Ed25519KeyGenerator(),
+  secp256k1: new EllipticCurveKeyGenerator('secp256k1'),
+  p256: new EllipticCurveKeyGenerator('p256')
 };
 
 const loadKeyPairGenerators = () => keyPairGenerators.ed25519.initialize();
@@ -25,17 +29,9 @@ const generate: GenerateKeyPair = keyType => {
     case KeyType.Ed25519:
       return keyPairGenerators.ed25519.generate().encoded;
     case KeyType.Secp256k1:
-      return {
-        keyType: KeyType.Secp256k1,
-        privateKey: 'spsk1VyxSVYfX3CfNpSNDxBdR97LnAdQA59jWpc4HYXtYg1cX53V6Y',
-        publicKey: 'sppk7cjayJkatAA6Kzd9w6DSRrRDq6JoRAfugi1fqahpyjCBRCLGfob',
-      };
+      return keyPairGenerators.secp256k1.generate().encoded;
     case KeyType.P256:
-      return {
-        keyType: KeyType.P256,
-        publicKey: 'p2pk65H621C6fgfcuhiUcQmx3GRz8iNxjzMB1BG2WQKAYKEcbVzyJMD',
-        privateKey: 'p2sk2yHAwhsLaRCm8zAfN4K1Py7fBhxgR1kAB5SCYn9yGWofkjqNTN',
-      };
+      return keyPairGenerators.p256.generate().encoded;
 
     default:
       throw new Error('Unknown algorithm type');
