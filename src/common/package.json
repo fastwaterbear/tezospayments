@@ -33,10 +33,14 @@
     "@taquito/taquito": "^10.2.1",
     "bignumber.js": "^9.0.1",
     "clsx": "^1.1.1",
+    "elliptic": "^6.5.4",
+    "libsodium-wrappers": "0.7.8",
     "lodash.isplainobject": "^4.0.6"
   },
   "devDependencies": {
+    "@types/elliptic": "^6.4.14",
     "@types/jest": "^27.0.1",
+    "@types/libsodium-wrappers": "0.7.8",
     "@types/lodash.isplainobject": "^4.0.6",
     "babel-jest": "^27.0.6",
     "jest": "^27.0.6"
