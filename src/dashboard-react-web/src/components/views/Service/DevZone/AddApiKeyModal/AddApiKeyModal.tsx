@@ -1,12 +1,12 @@
 import { CopyOutlined } from '@ant-design/icons';
-import { Button, Divider, Input, Modal, Radio, RadioChangeEvent, Typography, Popconfirm } from 'antd';
-import React, { useCallback, useRef, useState } from 'react';
+import { Button, Divider, Input, Modal, Radio, RadioChangeEvent, Typography, Popconfirm, Spin } from 'antd';
+import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { KeyType, Service } from '@tezospayments/common';
+import { EncodedKeyPair, KeyType, Service } from '@tezospayments/common';
 
 import { addApiKey } from '../../../../../store/services/slice';
-import { useCurrentLanguageResources } from '../../../../hooks';
+import { useCurrentLanguageResources, useKeyPairGenerator } from '../../../../hooks';
 
 import './AddApiKeyModal.scss';
 
@@ -21,9 +21,13 @@ interface AddApiKeyModalProps {
 const algorithmOptions = Object.values(KeyType).map(v => ({ label: v, value: v }));
 
 export const AddApiKeyModal = (props: AddApiKeyModalProps) => {
+  const generateKeyPair = useKeyPairGenerator();
   const langResources = useCurrentLanguageResources();
   const commonLangResources = langResources.common;
   const servicesLangResources = langResources.views.services;
+  const [keyPair, setKeyPair] = useState<EncodedKeyPair>();
+  const publicKeyRef = useRef<Input>(null);
+  const secretKeyRef = useRef<Input>(null);
   const dispatch = useDispatch();
 
   const [algorithmType, setAlgorithmType] = useState(algorithmOptions[0]?.value || KeyType.Ed25519);
@@ -36,10 +40,9 @@ export const AddApiKeyModal = (props: AddApiKeyModalProps) => {
     setName(e.target.value);
   }, []);
 
-  const [publicKey, secretKey] = getKeys(algorithmType);
-
-  const publicKeyRef = useRef<Input>(null);
-  const secretKeyRef = useRef<Input>(null);
+  useEffect(() => {
+    generateKeyPair && setKeyPair(generateKeyPair(algorithmType));
+  }, [algorithmType, generateKeyPair]);
 
   const handleCopyClick = useCallback((ref: React.RefObject<Input>) => {
     const input = ref.current;
@@ -50,10 +53,33 @@ export const AddApiKeyModal = (props: AddApiKeyModalProps) => {
     }
   }, []);
 
+  const handleGenerateKeysButton = useCallback(() => {
+    generateKeyPair && setKeyPair(generateKeyPair(algorithmType));
+  }, [algorithmType, generateKeyPair]);
+
   const handleAddKeyConfirm = useCallback(() => {
-    dispatch(addApiKey({ service: props.service, signingKey: { name, publicKey } }));
+    if (keyPair?.publicKey)
+      dispatch(addApiKey({ service: props.service, signingKey: { name, publicKey: keyPair.publicKey } }));
+
     props.onCancel();
-  }, [dispatch, name, props, publicKey]);
+  }, [dispatch, name, props, keyPair]);
+
+  const editorsDisabled = !keyPair;
+  const modalBody = <>
+    <span className="api-key-modal__label">{servicesLangResources.devZone.name}:</span>
+    <Input disabled={editorsDisabled} autoFocus value={name} onChange={handleNameChanged} />
+    <span className="api-key-modal__label">{servicesLangResources.devZone.algorithm}:</span>
+    <div className="api-key-modal__algorithm-container">
+      <Radio.Group disabled={editorsDisabled} options={algorithmOptions} value={algorithmType} onChange={handleAlgorithmTypeChanges} />
+      <Button disabled={editorsDisabled} onClick={handleGenerateKeysButton}>{servicesLangResources.devZone.generateKeys}</Button>
+    </div>
+    <Divider />
+    <span className="api-key-modal__label">{servicesLangResources.devZone.publicKey}:</span>
+    <Search ref={publicKeyRef} disabled={editorsDisabled} readOnly value={keyPair?.publicKey} enterButton={<Button icon={<CopyOutlined />} />} onSearch={() => handleCopyClick(publicKeyRef)} />
+    <span className="api-key-modal__label">{servicesLangResources.devZone.secretKey}:</span>
+    <Search ref={secretKeyRef} disabled={editorsDisabled} readOnly value={keyPair?.privateKey} enterButton={<Button icon={<CopyOutlined />} />} onSearch={() => handleCopyClick(secretKeyRef)} />
+    <Typography.Text mark>{servicesLangResources.devZone.saveSecretKeyWarning}</Typography.Text>
+  </>;
 
   return <Modal className="api-key-modal" title={servicesLangResources.devZone.addKey}
     centered destroyOnClose visible={props.visible} onCancel={props.onCancel}
@@ -75,34 +101,12 @@ export const AddApiKeyModal = (props: AddApiKeyModalProps) => {
       </Popconfirm>
     </div>}
   >
-    <span className="api-key-modal__label">{servicesLangResources.devZone.name}:</span>
-    <Input autoFocus value={name} onChange={handleNameChanged} />
-    <span className="api-key-modal__label">{servicesLangResources.devZone.algorithm}:</span>
-    <div className="api-key-modal__algorithm-container">
-      <Radio.Group options={algorithmOptions} value={algorithmType} onChange={handleAlgorithmTypeChanges} />
-      <Button>{servicesLangResources.devZone.generateKeys}</Button>
-    </div>
-    <Divider />
-    <span className="api-key-modal__label">{servicesLangResources.devZone.publicKey}:</span>
-    <Search ref={publicKeyRef} readOnly value={publicKey} enterButton={<Button icon={<CopyOutlined />} />} onSearch={() => handleCopyClick(publicKeyRef)} />
-    <span className="api-key-modal__label">{servicesLangResources.devZone.secretKey}:</span>
-    <Search ref={secretKeyRef} readOnly value={secretKey} enterButton={<Button icon={<CopyOutlined />} />} onSearch={() => handleCopyClick(secretKeyRef)} />
-    <Typography.Text mark>{servicesLangResources.devZone.saveSecretKeyWarning}</Typography.Text>
+    {keyPair
+      ? modalBody
+      : <Spin size="large" >{modalBody}</Spin>
+    }
   </Modal>;
 };
 
 export const AddApiKeyModalPure = React.memo(AddApiKeyModal);
 
-const getKeys = (type: KeyType): [string, string] => {
-  switch (type) {
-    case KeyType.Ed25519:
-      return ['edpkvQXtVcy8YrBLmMhn8EDt4Zb46TWZX1QUxxepFzJgsWU6YKadJP', 'edskRwse4Z8ZZNCC7xzCEUrTBtCeEPhv8gfBiWrE8cysRQpz45HCQjChdDckNEBZZMCxjPMkHhmGkUnwBs22cKr2nrwiGfQHsP'];
-    case KeyType.Secp256k1:
-      return ['sppk7cjayJkatAA6Kzd9w6DSRrRDq6JoRAfugi1fqahpyjCBRCLGfob', 'spsk1VyxSVYfX3CfNpSNDxBdR97LnAdQA59jWpc4HYXtYg1cX53V6Y'];
-    case KeyType.P256:
-      return ['p2pk65H621C6fgfcuhiUcQmx3GRz8iNxjzMB1BG2WQKAYKEcbVzyJMD', 'p2sk2yHAwhsLaRCm8zAfN4K1Py7fBhxgR1kAB5SCYn9yGWofkjqNTN'];
-
-    default:
-      throw new Error('Unknown algorithm type');
-  }
-};
