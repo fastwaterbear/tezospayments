@@ -2,19 +2,19 @@ name: apps/demo-shop-next-js
 on:
   push:
     paths:
-      - 'apps/demo-next-js/**'
+      - 'apps/demo-shop-next-js/**'
       - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/demo-next-js.yml'
+      - '.github/workflows/demo-shop-next-js.yml'
     branches:
       - master
       - dev
   pull_request:
     paths:
-      - 'apps/demo-next-js/**'
+      - 'apps/demo-shop-next-js/**'
       - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/demo-next-js.yml'
+      - '.github/workflows/demo-shop-next-js.yml'
 env:
   node-version: 16
 
@@ -55,7 +55,7 @@ jobs:
         run: npm run build -w tezospayments
 
       - name: Build the demo app
-        run: npm run build -w @tezospayments/demo-next-js
+        run: npm run build -w @tezospayments/demo-shop-next-js
 
   lint:
     name: Lint
@@ -84,4 +84,4 @@ jobs:
         run: npm ci
 
       - name: Lint
-        run: npm run lint -w @tezospayments/demo-next-js # -- --max-warnings -1
+        run: npm run lint -w @tezospayments/demo-shop-next-js # -- --max-warnings -1
