@@ -1,4 +1,4 @@
-name: packages/js/tezospayments
+name: packages/tezospayments [js]
 on:
   push:
     paths:
