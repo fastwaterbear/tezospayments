@@ -3,7 +3,7 @@ import {
   getDefaultES, getDefaultESUmd,
   getESNext,
   getES5, getES5Umd
-} from '../../scripts/rollup.config.base.mjs';
+} from '../../../scripts/rollup.config.base.mjs';
 
 console.log('Is the Watch mode:', isWatchMode);
 
