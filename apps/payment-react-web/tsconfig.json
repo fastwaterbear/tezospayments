@@ -26,13 +26,10 @@
   ],
   "references": [
     {
-      "path": "../common"
+      "path": "../../packages/js/common"
     },
     {
-      "path": "../tezospayments"
-    },
-    {
-      "path": "../react-web-core"
+      "path": "../../packages/js/react-web-core"
     }
   ]
 }

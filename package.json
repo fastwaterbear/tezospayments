@@ -1,7 +1,8 @@
 {
   "name": "tezospayments",
   "workspaces": [
-    "src/*"
+    "apps/*",
+    "packages/js/*"
   ],
   "engines": {
     "node": ">=16.7.0",

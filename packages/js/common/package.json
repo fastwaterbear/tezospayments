@@ -1,7 +1,7 @@
 {
-  "name": "tezospayments",
-  "version": "0.3.0",
-  "description": "Package for payment generation in the Tezos Payments system.",
+  "name": "@tezospayments/common",
+  "version": "0.4.0",
+  "description": "Shared code for the Tezos Payments service.",
   "main": "dist/index.cjs.js",
   "module": "dist/index.mjs",
   "browser": "dist/index.esm.js",
@@ -27,11 +27,21 @@
     }
   },
   "dependencies": {
-    "@tezospayments/common": "^0.4.0",
-    "nanoid": "^3.1.25"
+    "@babel/runtime": "^7.15.3",
+    "@taquito/michel-codec": "^10.2.1",
+    "@taquito/signer": "^10.2.1",
+    "@taquito/taquito": "^10.2.1",
+    "bignumber.js": "^9.0.1",
+    "clsx": "^1.1.1",
+    "elliptic": "^6.5.4",
+    "libsodium-wrappers": "0.7.8",
+    "lodash.isplainobject": "^4.0.6"
   },
   "devDependencies": {
+    "@types/elliptic": "^6.4.14",
     "@types/jest": "^27.0.1",
+    "@types/libsodium-wrappers": "0.7.8",
+    "@types/lodash.isplainobject": "^4.0.6",
     "babel-jest": "^27.0.6",
     "jest": "^27.0.6"
   },
@@ -66,7 +76,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/fastwaterbear/tezospayments.git",
-    "directory": "src/tezospayments"
+    "directory": "packages/js/common"
   },
   "bugs": {
     "url": "https://github.com/fastwaterbear/tezospayments/issues"

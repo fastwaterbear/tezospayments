@@ -1,20 +1,26 @@
-name: apps/demo-next-js
+name: apps/dashboard-react-web
 on:
   push:
     paths:
-      - 'src/demo-next-js/**'
+      - 'packages/js/common/**'
+      - 'packages/js/react-web-core/**'
+      - 'packages/js/tezospayments/**'
+      - 'apps/dashboard-react-web/**'
       - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/demo-next-js.yml'
+      - '.github/workflows/dashboard-react-web.yml'
     branches:
       - master
       - dev
   pull_request:
     paths:
-      - 'src/demo-next-js/**'
+      - 'packages/js/common/**'
+      - 'packages/js/react-web-core/**'
+      - 'packages/js/tezospayments/**'
+      - 'apps/dashboard-react-web/**'
       - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/demo-next-js.yml'
+      - '.github/workflows/dashboard-react-web.yml'
 env:
   node-version: 16
 
@@ -54,8 +60,18 @@ jobs:
       - name: Build the tezospayments package
         run: npm run build -w tezospayments
 
-      - name: Build the demo app
-        run: npm run build -w @tezospayments/demo-next-js
+      - name: Build the @tezospayments/react-web-core package
+        run: npm run build -w @tezospayments/react-web-core
+
+      - name: Build the Dashboard app
+        run: npm run build -w @tezospayments/dashboard-react-web
+
+      - name: Upload the Dashboard app build as an artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: dashboard-react-web
+          path: apps/dashboard-react-web/build
+          retention-days: 10
 
   lint:
     name: Lint
@@ -84,4 +100,27 @@ jobs:
         run: npm ci
 
       - name: Lint
-        run: npm run lint -w @tezospayments/demo-next-js # -- --max-warnings -1
+        run: npm run lint -w @tezospayments/dashboard-react-web # -- --max-warnings -1
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Download the Dashboard app build from the artifacts storage
+        uses: actions/download-artifact@v2
+        with:
+          name: dashboard-react-web
+          path: apps/dashboard-react-web/build
+
+      - name: Push to the ${{ env.publish-branch }} branch
+        env:
+          publish-branch: dist
+        uses: peaceiris/actions-gh-pages@068dc23d9710f1ba62e86896f84735d869951305 # v3.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: apps/dashboard-react-web/build
+          destination_dir: apps/dashboard-react-web
+          exclude_assets: '**/*.LICENSE,**/*.LICENSE.txt'
+          publish_branch: ${{ env.publish-branch }}
