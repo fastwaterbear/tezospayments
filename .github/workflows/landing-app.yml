@@ -2,16 +2,16 @@ name: apps/landing
 on:
   push:
     paths:
-      - 'src/landing/**'
+      - 'apps/landing/**'
       - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/landing.yml'
+      - '.github/workflows/landing-app.yml'
     branches:
       - master
       - dev
   pull_request:
     paths:
-      - 'src/landing/**'
+      - 'apps/landing/**'
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/landing.yml'
@@ -55,7 +55,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: landing
-          path: src/landing/dist
+          path: apps/landing/dist
           retention-days: 10
 
   deploy:
@@ -68,7 +68,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: landing
-          path: src/landing/dist
+          path: apps/landing/dist
 
       - name: Push to the ${{ env.publish-branch }} branch
         env:
@@ -76,7 +76,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@068dc23d9710f1ba62e86896f84735d869951305 # v3.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: src/landing/dist
+          publish_dir: apps/landing/dist
           destination_dir: apps/landing
           exclude_assets: '**/*.LICENSE,**/*.LICENSE.txt'
           publish_branch: ${{ env.publish-branch }}

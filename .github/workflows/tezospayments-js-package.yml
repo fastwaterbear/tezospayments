@@ -1,12 +1,12 @@
-name: packages/tezospayments [npm]
+name: packages/js/tezospayments
 on:
   push:
     paths:
-      - 'src/common/**'
-      - 'src/tezospayments/**'
+      - 'packages/js/common/**'
+      - 'packages/js/tezospayments/**'
       - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/npm-tezospayments.yml'
+      - '.github/workflows/tezospayments-js-package.yml'
     branches:
       - master
       - dev
@@ -15,8 +15,8 @@ on:
       - 'npm/tezospayments@*.*.*-*'
   pull_request:
     paths:
-      - 'src/common/**'
-      - 'src/tezospayments/**'
+      - 'packages/js/common/**'
+      - 'packages/js/tezospayments/**'
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/npm-tezospayments.yml'
@@ -61,10 +61,10 @@ jobs:
         with:
           name: tezospayments
           path: |
-            src/tezospayments/dist
-            src/tezospayments/package.json
-            src/tezospayments/README.md
-            src/tezospayments/LICENSE
+            packages/js/tezospayments/dist
+            packages/js/tezospayments/package.json
+            packages/js/tezospayments/README.md
+            packages/js/tezospayments/LICENSE
           retention-days: 10
 
   test:

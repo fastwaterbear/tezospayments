@@ -15,7 +15,7 @@ Dev
 [![apps/dashboard-react-web](https://github.com/fastwaterbear/tezospayments/actions/workflows/dashboard-react-web.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/dashboard-react-web.yml)
 [![apps/payment-react-web](https://github.com/fastwaterbear/tezospayments/actions/workflows/payment-react-web.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/payment-react-web.yml)
 [![apps/landing](https://github.com/fastwaterbear/tezospayments/actions/workflows/landing.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/landing.yml)
-[![apps/demo-next-js](https://github.com/fastwaterbear/tezospayments/actions/workflows/demo-next-js.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/demo-next-js.yml)  
+[![apps/demo-shop-next-js](https://github.com/fastwaterbear/tezospayments/actions/workflows/demo-shop-next-js.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/demo-shop-next-js.yml)  
 [![packages/common](https://github.com/fastwaterbear/tezospayments/actions/workflows/common.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/common.yml)
 
 Tezos Payments is a decentralized service that allows anyone to accept payments, donations, or send invoices using all advantages of the Tezos system. To use the service you don't need to register as with traditional services, just use the existing Tezos accounts.
@@ -36,7 +36,7 @@ tezospayments/
 └── src/
     ├── common
     ├── dashboard-react-web
-    ├── demo-next-js
+    ├── demo-shop-next-js
     ├── landing
     └── payment-react-web
 ```
@@ -46,7 +46,7 @@ tezospayments/
 * `dashboard-react-web`. Web application.  
 Usage: React, Ant Design, Redux Toolkit, Taquito, Beacon SDK, TypeScript;
 
-* `demo-next-js`. Demo online store showing demo payments.  
+* `demo-shop-next-js`. Demo online store showing demo payments.  
 Usage: Next.js, React, Typescript;
 
 * `landing`. Simple landing page for the [tezospayments.com](https://tezospayments.com) site;

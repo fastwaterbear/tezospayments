@@ -27,10 +27,10 @@
     }
   },
   "dependencies": {
-    "@babel/runtime": "^7.15.3",
-    "@taquito/michel-codec": "^10.2.1",
-    "@taquito/signer": "^10.2.1",
-    "@taquito/taquito": "^10.2.1",
+    "@babel/runtime": "^7.16.3",
+    "@taquito/michel-codec": "^11.0.2",
+    "@taquito/signer": "^11.0.2",
+    "@taquito/taquito": "^11.0.2",
     "bignumber.js": "^9.0.1",
     "clsx": "^1.1.1",
     "elliptic": "^6.5.4",
@@ -39,11 +39,11 @@
   },
   "devDependencies": {
     "@types/elliptic": "^6.4.14",
-    "@types/jest": "^27.0.1",
+    "@types/jest": "^27.0.3",
     "@types/libsodium-wrappers": "0.7.8",
     "@types/lodash.isplainobject": "^4.0.6",
-    "babel-jest": "^27.0.6",
-    "jest": "^27.0.6"
+    "babel-jest": "^27.4.2",
+    "jest": "^27.4.3"
   },
   "scripts": {
     "build": "rollup --config",
@@ -76,7 +76,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/fastwaterbear/tezospayments.git",
-    "directory": "src/common"
+    "directory": "packages/js/common"
   },
   "bugs": {
     "url": "https://github.com/fastwaterbear/tezospayments/issues"

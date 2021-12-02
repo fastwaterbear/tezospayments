@@ -2,20 +2,20 @@ name: apps/payment-react-web
 on:
   push:
     paths:
-      - 'src/common/**'
-      - 'src/react-web-core/**'
-      - 'src/payment-react-web/**'
+      - 'packages/js/common/**'
+      - 'packages/js/react-web-core/**'
+      - 'apps/payment-react-web/**'
       - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/payment-react-web.yml'
+      - '.github/workflows/payment-react-web-app.yml'
     branches:
       - master
       - dev
   pull_request:
     paths:
-      - 'src/common/**'
-      - 'src/react-web-core/**'
-      - 'src/payment-react-web/**'
+      - 'packages/js/common/**'
+      - 'packages/js/react-web-core/**'
+      - 'apps/payment-react-web/**'
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/payment-react-web.yml'
@@ -65,7 +65,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: payment-react-web
-          path: src/payment-react-web/build
+          path: apps/payment-react-web/build
           retention-days: 10
 
   lint:
@@ -107,7 +107,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: payment-react-web
-          path: src/payment-react-web/build
+          path: apps/payment-react-web/build
 
       - name: Push to the ${{ env.publish-branch }} branch
         env:
@@ -115,7 +115,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@068dc23d9710f1ba62e86896f84735d869951305 # v3.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: src/payment-react-web/build
+          publish_dir: apps/payment-react-web/build
           destination_dir: apps/payment-react-web
           exclude_assets: '**/*.LICENSE,**/*.LICENSE.txt'
           publish_branch: ${{ env.publish-branch }}
