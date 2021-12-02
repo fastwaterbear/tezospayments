@@ -1,4 +1,4 @@
-name: packages/tezospayments [js]
+name: packages/js/tezospayments
 on:
   push:
     paths:
@@ -6,7 +6,7 @@ on:
       - 'packages/js/tezospayments/**'
       - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/npm-tezospayments.yml'
+      - '.github/workflows/tezospayments-js-package.yml'
     branches:
       - master
       - dev

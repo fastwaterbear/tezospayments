@@ -8,7 +8,7 @@ on:
       - 'apps/dashboard-react-web/**'
       - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/dashboard-react-web.yml'
+      - '.github/workflows/dashboard-react-web-app.yml'
     branches:
       - master
       - dev

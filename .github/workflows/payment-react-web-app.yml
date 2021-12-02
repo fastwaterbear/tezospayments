@@ -7,7 +7,7 @@ on:
       - 'apps/payment-react-web/**'
       - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/payment-react-web.yml'
+      - '.github/workflows/payment-react-web-app.yml'
     branches:
       - master
       - dev

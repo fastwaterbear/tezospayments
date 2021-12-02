@@ -5,7 +5,7 @@ on:
       - 'packages/js/common/**'
       - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/common.yml'
+      - '.github/workflows/common-js-package.yml'
     branches:
       - master
       - dev

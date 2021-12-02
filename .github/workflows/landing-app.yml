@@ -5,7 +5,7 @@ on:
       - 'apps/landing/**'
       - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/landing.yml'
+      - '.github/workflows/landing-app.yml'
     branches:
       - master
       - dev
