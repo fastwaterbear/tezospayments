@@ -14,7 +14,7 @@ on:
       - 'apps/demo-shop-next-js/**'
       - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/demo-shop-next-js.yml'
+      - '.github/workflows/demo-shop-next-js-app.yml'
 env:
   node-version: 16
 

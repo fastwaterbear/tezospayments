@@ -14,7 +14,7 @@ on:
       - 'apps/landing/**'
       - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/landing.yml'
+      - '.github/workflows/landing-app.yml'
 env:
   node-version: 16
 

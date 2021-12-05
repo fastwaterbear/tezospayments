@@ -20,7 +20,7 @@ on:
       - 'apps/dashboard-react-web/**'
       - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/dashboard-react-web.yml'
+      - '.github/workflows/dashboard-react-web-app.yml'
 env:
   node-version: 16
 
