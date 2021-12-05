@@ -5,4 +5,3 @@ namespace TezosPayments;
 public class TezosPayments
 {
 }
-
