@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <Product>TezosPayments</Product>
+    <Version>0.1.0</Version>
+    <Authors>Fast Water Bear</Authors>
+  </PropertyGroup>
+
 </Project>
