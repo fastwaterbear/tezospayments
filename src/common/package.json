@@ -28,9 +28,9 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.15.3",
-    "@taquito/michel-codec": "^10.2.1",
-    "@taquito/signer": "^10.2.1",
-    "@taquito/taquito": "^10.2.1",
+    "@taquito/michel-codec": "^11.0.2",
+    "@taquito/signer": "^11.0.2",
+    "@taquito/taquito": "^11.0.2",
     "bignumber.js": "^9.0.1",
     "clsx": "^1.1.1",
     "elliptic": "^6.5.4",

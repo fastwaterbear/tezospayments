@@ -10,9 +10,13 @@ import {
 } from '@tezospayments/react-web-core';
 
 import { config } from '../config';
+import type { Account } from '../models/blockchain';
 import { AccountsService } from '../services/accountsService';
 import { ServicesService } from '../services/servicesService';
 import { AppStore } from '../store';
+import { getCurrentAccount } from '../store/accounts/selectors';
+import { clearBalances, loadBalances } from '../store/balances/slice';
+import { clearServices, loadServices } from '../store/services/slice';
 import type { ReactAppContext } from './reactAppContext';
 import { ReadOnlySigner } from './readOnlySigner';
 
@@ -30,6 +34,7 @@ export class WebApp {
   private _network: Network | undefined;
   private _tezosToolkit: TezosToolkit | undefined;
   private _services: AppServices | undefined;
+  private currentAccountAddress: string | null;
   private onStoreChangedListener = this.onStoreChanged.bind(this);
   private unsubscribeStoreChanged: (() => void);
 
@@ -38,6 +43,7 @@ export class WebApp {
     this.history = this.createHistory();
     this.applyNetwork(networks[config.tezos.defaultNetwork]);
 
+    this.currentAccountAddress = null;
     this.unsubscribeStoreChanged = this.store.subscribe(this.onStoreChangedListener);
     this.reactAppContext = this.createReactAppContext();
   }
@@ -62,9 +68,19 @@ export class WebApp {
 
   protected onStoreChanged() {
     const appState = this.store.getState();
+    const currentAccountFromState = getCurrentAccount(appState);
+    const currentAccountAddressFromState = currentAccountFromState && currentAccountFromState.address;
 
-    if (appState.accountsState.currentAccount && appState.accountsState.currentAccount.network !== this.network) {
-      this.applyNetwork(appState.accountsState.currentAccount.network);
+    if (currentAccountAddressFromState !== this.currentAccountAddress) {
+      this.currentAccountAddress = currentAccountAddressFromState;
+      this.clearAccountData();
+
+      if (currentAccountFromState) {
+        if (currentAccountFromState.network !== this.network)
+          this.applyNetwork(currentAccountFromState.network);
+
+        this.fetchAccountData(currentAccountFromState);
+      }
     }
   }
 
@@ -96,6 +112,18 @@ export class WebApp {
         networkConfig.servicesFactoryContractAddress
       )
     };
+  }
+
+  protected async fetchAccountData(account: Account) {
+    await this.store.dispatch(loadServices(account));
+    await this.store.dispatch(loadBalances(account));
+  }
+
+  protected async clearAccountData() {
+    await Promise.all([
+      this.store.dispatch(clearBalances()),
+      this.store.dispatch(clearServices()),
+    ]);
   }
 
   private createServicesProvider(network: Network): ServicesProvider {

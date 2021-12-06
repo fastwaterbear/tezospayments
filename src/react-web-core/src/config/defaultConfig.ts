@@ -44,8 +44,7 @@ export const defaultConfig: DefaultAppConfig = {
         },
         rpcUrls: {
           ecadLabs: 'https://granadanet.api.tez.ie',
-          smartPy: 'https://granadanet.smartpy.io',
-          blockscale: 'https://rpczero.tzbeta.net',
+          smartPy: 'https://granadanet.smartpy.io'
         },
         indexerUrls: {
           tzKT: 'https://api.granadanet.tzkt.io',
@@ -57,6 +56,30 @@ export const defaultConfig: DefaultAppConfig = {
           tzStats: { baseUrl: 'https://granada.tzstats.com', title: 'TzStats' }
         },
         servicesFactoryContractAddress: 'KT1NxBzCJtvHFLKfiSAX3PGxdiJMAC8CtSZV'
+      },
+      hangzhounet: {
+        title: 'Hangzhou Testnet',
+        color: '#b83280',
+        minimumSupportedServiceVersion: 1,
+        default: {
+          rpc: 'smartPy',
+          indexer: 'tzKT',
+          explorer: 'tzKT'
+        },
+        rpcUrls: {
+          ecadLabs: 'https://hangzhounet.api.tez.ie',
+          smartPy: 'https://hangzhounet.smartpy.io'
+        },
+        indexerUrls: {
+          tzKT: 'https://api.hangzhou2net.tzkt.io',
+          betterCallDev: 'https://api.better-call.dev'
+        },
+        explorers: {
+          tzKT: { baseUrl: 'https://hangzhou2net.tzkt.io', title: 'TzKT' },
+          betterCallDev: { baseUrl: 'https://better-call.dev', title: 'Better Call Dev' },
+          tzStats: { baseUrl: 'https://hangzhou.tzstats.com', title: 'TzStats' }
+        },
+        servicesFactoryContractAddress: 'KT1BLQ4tfy5iizuCSaR5D8sSDiQSemhvnAif'
       }
     }
   }
