@@ -13,6 +13,6 @@ export const appReducer = combineReducers({
   operationsState: operationsSlice.reducer,
 });
 
-export type AppStore = EnhancedStore<AppState>;
+export type AppStore = EnhancedStore<AppState> & { dispatch: AppThunkDispatch };
 export type AppState = ReturnType<typeof appReducer>;
-export type AppDispatch = AppThunkDispatch & AppStore['dispatch'];
+export type AppDispatch = AppStore['dispatch'];

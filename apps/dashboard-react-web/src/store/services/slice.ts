@@ -3,11 +3,10 @@ import { WalletOperation } from '@taquito/taquito';
 
 import { Service, optimization, ServiceSigningKey, wait } from '@tezospayments/common';
 
-import { AppDispatch, AppState } from '..';
 import { Account } from '../../models/blockchain';
 import { getCurrentAccount } from '../accounts/selectors';
-import { clearBalances, loadBalances } from '../balances/slice';
-import { loadOperations } from '../operations/slice';
+import { AppDispatch, AppState } from '../index';
+import { clearOperations, loadOperations } from '../operations/slice';
 import { AppThunkAPI } from '../thunk';
 
 export enum PendingOperationStatus { loading, success, error }
@@ -41,7 +40,6 @@ export const loadServices = createAsyncThunk<readonly Service[], Account, AppThu
     const services = await app.services.servicesService.getServices(account);
 
     if (services.length) {
-      dispatch(loadBalances(account));
       dispatch(loadOperations({ servicesAddresses: services.map(s => s.contractAddress), network: account.network }));
     }
 
@@ -106,7 +104,7 @@ export const deleteApiKey = createAsyncThunk<void, { service: Service, publicKey
 export const clearServices = createAsyncThunk<void, void, AppThunkAPI>(
   `${namespace}/clearServices`,
   async (_, { dispatch }) => {
-    dispatch(clearBalances());
+    dispatch(clearOperations());
   }
 );
 

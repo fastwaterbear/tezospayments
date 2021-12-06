@@ -1,6 +1,6 @@
 import { DeepReadonly } from '@tezospayments/common';
 
-type RpcProvider = 'smartPy';
+type RpcProvider = 'ecadLabs' | 'smartPy';
 type IndexerProvider = 'tzKT' | 'betterCallDev';
 type ExplorerProvider = 'tzKT' | 'tzStats' | 'betterCallDev';
 
