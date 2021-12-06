@@ -25,7 +25,7 @@ export const ConnectDropdown = () => {
   const langResources = useCurrentLanguageResources();
   const connectLangResources = langResources.views.connect.actions.connect;
 
-  const networkTypes: Network[] = [];
+  const networkTypes: Network[] = [networks.hangzhounet];
   const connectMenuItems = networkTypes.map(t => {
     const network = config.tezos.networks[t.name];
 
