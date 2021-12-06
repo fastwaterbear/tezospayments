@@ -97,6 +97,29 @@ export const tokenWhitelist: readonly Token[] = [
       thumbnailUri: 'https://quipuswap.com/tokens/stably.png',
     },
   },
+  {
+    network: networks.hangzhounet,
+    type: 'fa1.2',
+    contractAddress: 'KT19sYK89XKYTeGHekWK9wL5iDHVF4YYf26t',
+    metadata: {
+      decimals: 6,
+      symbol: 'FA12',
+      name: 'Test FA 1.2',
+      thumbnailUri: 'https://dashboard.tezospayments.com/tokens/unknown.png',
+    },
+  },
+  {
+    network: networks.hangzhounet,
+    type: 'fa2',
+    contractAddress: 'KT1EKo1Eihucz9N4cQyaDKeYRoMzTEoiZRAT',
+    id: 0,
+    metadata: {
+      decimals: 6,
+      symbol: 'FA20',
+      name: 'Test FA 2.0',
+      thumbnailUri: 'https://dashboard.tezospayments.com/tokens/unknown.png',
+    },
+  },
 ];
 
 export const tokenWhitelistMap: ReadonlyMap<Network, ReadonlyMap<Token['contractAddress'], Token>> = new Map(
