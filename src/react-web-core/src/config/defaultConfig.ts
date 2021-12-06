@@ -79,7 +79,7 @@ export const defaultConfig: DefaultAppConfig = {
           betterCallDev: { baseUrl: 'https://better-call.dev', title: 'Better Call Dev' },
           tzStats: { baseUrl: 'https://hangzhou.tzstats.com', title: 'TzStats' }
         },
-        servicesFactoryContractAddress: 'KT1NxBzCJtvHFLKfiSAX3PGxdiJMAC8CtSZV'
+        servicesFactoryContractAddress: 'KT1BLQ4tfy5iizuCSaR5D8sSDiQSemhvnAif'
       }
     }
   }
