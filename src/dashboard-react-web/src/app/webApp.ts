@@ -115,10 +115,8 @@ export class WebApp {
   }
 
   protected async fetchAccountData(account: Account) {
-    await Promise.all([
-      this.store.dispatch(loadBalances(account)),
-      this.store.dispatch(loadServices(account)),
-    ]);
+    await this.store.dispatch(loadServices(account));
+    await this.store.dispatch(loadBalances(account));
   }
 
   protected async clearAccountData() {
