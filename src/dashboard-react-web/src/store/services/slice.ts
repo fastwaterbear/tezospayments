@@ -3,10 +3,10 @@ import { WalletOperation } from '@taquito/taquito';
 
 import { Service, optimization, ServiceSigningKey, wait } from '@tezospayments/common';
 
-import { AppDispatch, AppState } from '..';
 import { Account } from '../../models/blockchain';
 import { getCurrentAccount } from '../accounts/selectors';
 import { clearBalances, loadBalances } from '../balances/slice';
+import { AppDispatch, AppState } from '../index';
 import { loadOperations } from '../operations/slice';
 import { AppThunkAPI } from '../thunk';
 
