@@ -7,6 +7,9 @@ const tezosPayments = new TezosPayments({
   serviceContractAddress: process.env.TEZOSPAYMENTS_SERVICE_CONTRACT_ADDRESS,
   signing: {
     apiSecretKey: process.env.TEZOSPAYMENTS_API_KEY
+  },
+  defaultPaymentParameters: {
+    network: process.env.TEZOSPAYMENTS_NETWORK_NAME ? { name: process.env.TEZOSPAYMENTS_NETWORK_NAME } : undefined
   }
 });
 
