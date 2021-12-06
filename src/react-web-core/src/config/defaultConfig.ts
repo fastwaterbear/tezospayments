@@ -31,7 +31,7 @@ export const defaultConfig: DefaultAppConfig = {
     }
   },
   tezos: {
-    defaultNetwork: 'granadanet',
+    defaultNetwork: 'hangzhounet',
     networks: {
       granadanet: {
         title: 'Granada Testnet',
