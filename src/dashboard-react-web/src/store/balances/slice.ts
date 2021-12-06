@@ -48,6 +48,7 @@ export const balancesSlice = createSlice({
   reducers: {
     clearBalances: state => {
       state.tezos = optimization.zeroBigNumber;
+      state.tokens = optimization.emptyObject;
       state.initialized = false;
     }
   },

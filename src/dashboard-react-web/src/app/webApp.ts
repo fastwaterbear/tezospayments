@@ -15,6 +15,7 @@ import { AccountsService } from '../services/accountsService';
 import { ServicesService } from '../services/servicesService';
 import { AppStore } from '../store';
 import { getCurrentAccount } from '../store/accounts/selectors';
+import { clearBalances, loadBalances } from '../store/balances/slice';
 import { clearServices, loadServices } from '../store/services/slice';
 import type { ReactAppContext } from './reactAppContext';
 import { ReadOnlySigner } from './readOnlySigner';
@@ -114,11 +115,17 @@ export class WebApp {
   }
 
   protected async fetchAccountData(account: Account) {
-    await this.store.dispatch(loadServices(account));
+    await Promise.all([
+      this.store.dispatch(loadBalances(account)),
+      this.store.dispatch(loadServices(account)),
+    ]);
   }
 
   protected async clearAccountData() {
-    await this.store.dispatch(clearServices());
+    await Promise.all([
+      this.store.dispatch(clearBalances()),
+      this.store.dispatch(clearServices()),
+    ]);
   }
 
   private createServicesProvider(network: Network): ServicesProvider {
