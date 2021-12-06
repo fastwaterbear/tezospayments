@@ -38,12 +38,14 @@ export const defaultConfig: DefaultAppConfig = {
         color: '#667eea',
         minimumSupportedServiceVersion: 3,
         default: {
-          rpc: 'smartPy',
+          rpc: 'ecadLabs',
           indexer: 'tzKT',
           explorer: 'tzKT'
         },
         rpcUrls: {
-          smartPy: 'https://granadanet.smartpy.io'
+          ecadLabs: 'https://granadanet.api.tez.ie',
+          smartPy: 'https://granadanet.smartpy.io',
+          blockscale: 'https://rpczero.tzbeta.net',
         },
         indexerUrls: {
           tzKT: 'https://api.granadanet.tzkt.io',
