@@ -6,8 +6,9 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 
-import { ReactAppContext, WebApp } from './app';
+import { WebApp } from './app';
 import { App } from './components/App';
+import { AppContextProvider } from './components/AppContextProvider';
 import { AppConfig, config } from './config';
 import reportWebVitals from './reportWebVitals';
 import { appReducer } from './store';
@@ -43,9 +44,9 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={webApp.store}>
       <Router history={webApp.history}>
-        <ReactAppContext.Provider value={webApp.reactAppContext}>
+        <AppContextProvider getReactAppContext={() => webApp.reactAppContext} networkChangedEvent={webApp.networkChanged} >
           <App />
-        </ReactAppContext.Provider>
+        </AppContextProvider>
       </Router>
     </Provider>
   </React.StrictMode>,
