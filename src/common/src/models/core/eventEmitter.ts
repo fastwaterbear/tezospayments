@@ -27,10 +27,11 @@ export class EventEmitter<T extends readonly unknown[]> implements PublicEventEm
         if (!this.listeners.size)
             return;
 
-        if (this.listeners.size === 1)
+        if (this.listeners.size === 1) {
             this.listeners.values().next().value(...args);
-
-        // We copy listeners to prevent an unbounded loop if there is the adding of a new event handler inside the handler; 
-        [...this.listeners].forEach(listener => listener(...args));
+        } else {
+            // We copy listeners to prevent an unbounded loop if there is the adding of a new event handler inside the handler; 
+            [...this.listeners].forEach(listener => listener(...args));
+        }
     }
 }

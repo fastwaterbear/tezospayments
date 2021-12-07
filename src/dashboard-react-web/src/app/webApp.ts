@@ -3,7 +3,7 @@ import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit } from '@taquito/taquito';
 import { History, createBrowserHistory } from 'history';
 
-import { Network, networks } from '@tezospayments/common';
+import { EventEmitter, Network, networks, PublicEventEmitter } from '@tezospayments/common';
 import {
   ServicesProvider, TzKTDataProvider, BetterCallDevDataProvider,
   BlockchainUrlExplorer, TzStatsBlockchainUrlExplorer, BetterCallDevBlockchainUrlExplorer, TzKTBlockchainUrlExplorer
@@ -27,16 +27,18 @@ interface AppServices {
 
 export class WebApp {
   readonly store: AppStore;
-  readonly reactAppContext: ReactAppContext;
   readonly tezosWallet = new BeaconWallet({ name: config.app.name, colorMode: ColorMode.LIGHT });
   readonly history: History;
+  readonly networkChanged: PublicEventEmitter<readonly [newNetwork: Network, previousNetwork: Network]> = new EventEmitter();
+
+  private readonly onStoreChangedListener = this.onStoreChanged.bind(this);
+  private readonly unsubscribeStoreChanged: (() => void);
 
   private _network: Network | undefined;
   private _tezosToolkit: TezosToolkit | undefined;
   private _services: AppServices | undefined;
+  private _reactAppContext: ReactAppContext | undefined;
   private currentAccountAddress: string | null;
-  private onStoreChangedListener = this.onStoreChanged.bind(this);
-  private unsubscribeStoreChanged: (() => void);
 
   constructor(storeFactory: (app: WebApp) => AppStore) {
     this.store = storeFactory(this);
@@ -45,7 +47,6 @@ export class WebApp {
 
     this.currentAccountAddress = null;
     this.unsubscribeStoreChanged = this.store.subscribe(this.onStoreChangedListener);
-    this.reactAppContext = this.createReactAppContext();
   }
 
   get network() {
@@ -66,6 +67,16 @@ export class WebApp {
     return this._services;
   }
 
+  get reactAppContext() {
+    if (!this._reactAppContext)
+      throw this.getNetworkError();
+    return this._reactAppContext;
+  }
+
+  protected createHistory() {
+    return createBrowserHistory();
+  }
+
   protected onStoreChanged() {
     const appState = this.store.getState();
     const currentAccountFromState = getCurrentAccount(appState);
@@ -84,36 +95,6 @@ export class WebApp {
     }
   }
 
-  protected createHistory() {
-    return createBrowserHistory();
-  }
-
-  protected createReactAppContext(): ReactAppContext {
-    return {
-      tezosWallet: this.tezosWallet,
-      tezosExplorer: this.createTezosBlockchainUrlExplorer(this.network)
-    };
-  }
-
-  protected applyNetwork(network: Network) {
-    this._network = network;
-
-    const networkConfig = config.tezos.networks[this.network.name];
-    this._tezosToolkit = new TezosToolkit(networkConfig.rpcUrls[networkConfig.default.rpc]);
-    this.tezosToolkit.setSignerProvider(new ReadOnlySigner());
-    this.tezosToolkit.setWalletProvider(this.tezosWallet);
-
-    const servicesProvider = this.createServicesProvider(this.network);
-    this._services = {
-      accountsService: new AccountsService(this.tezosToolkit, this.tezosWallet.client),
-      servicesService: new ServicesService(
-        this.tezosToolkit,
-        servicesProvider,
-        networkConfig.servicesFactoryContractAddress
-      )
-    };
-  }
-
   protected async fetchAccountData(account: Account) {
     await this.store.dispatch(loadServices(account));
     await this.store.dispatch(loadBalances(account));
@@ -124,6 +105,41 @@ export class WebApp {
       this.store.dispatch(clearBalances()),
       this.store.dispatch(clearServices()),
     ]);
+  }
+
+  protected applyNetwork(network: Network) {
+    this._network = network;
+
+    const networkConfig = config.tezos.networks[this.network.name];
+    this._tezosToolkit = new TezosToolkit(networkConfig.rpcUrls[networkConfig.default.rpc]);
+    this.tezosToolkit.setSignerProvider(new ReadOnlySigner());
+    this.tezosToolkit.setWalletProvider(this.tezosWallet);
+
+    this._services = this.createServices();
+    this._reactAppContext = this.createReactAppContext();
+
+    (this.networkChanged as EventEmitter<readonly [newNetwork: Network, previousNetwork: Network]>).emit(this._network, network);
+  }
+
+  private createServices(): AppServices {
+    const networkConfig = config.tezos.networks[this.network.name];
+    const servicesProvider = this.createServicesProvider(this.network);
+
+    return {
+      accountsService: new AccountsService(this.tezosToolkit, this.tezosWallet.client),
+      servicesService: new ServicesService(
+        this.tezosToolkit,
+        servicesProvider,
+        networkConfig.servicesFactoryContractAddress
+      )
+    };
+  }
+
+  private createReactAppContext(): ReactAppContext {
+    return {
+      tezosWallet: this.tezosWallet,
+      tezosExplorer: this.createTezosBlockchainUrlExplorer(this.network)
+    };
   }
 
   private createServicesProvider(network: Network): ServicesProvider {
