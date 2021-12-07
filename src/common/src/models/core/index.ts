@@ -8,3 +8,5 @@ export type { Entity } from './entity';
 export type { NonEntity } from './nonEntity';
 
 export type { Money } from './money';
+export { EventEmitter } from './eventEmitter';
+export type { PublicEventEmitter } from './eventEmitter';
