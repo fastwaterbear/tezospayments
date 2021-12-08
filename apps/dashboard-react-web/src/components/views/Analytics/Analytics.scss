@@ -1,5 +1,12 @@
+$-gap-size: 8px;
+
 .analytics-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  row-gap: $-gap-size;
+}
+
+.analytics-container > * {
+  flex-basis: calc(50% - $-gap-size/2);
 }
