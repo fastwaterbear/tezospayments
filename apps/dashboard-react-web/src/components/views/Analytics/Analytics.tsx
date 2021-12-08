@@ -6,6 +6,8 @@ import { Donations } from './Donations';
 import { HeaderPure } from './Header';
 import { Services } from './Services';
 
+import './Analytics.scss';
+
 export const Analytics = () => {
   const langResources = useCurrentLanguageResources();
   const analyticsLangResources = langResources.views.analytics;
