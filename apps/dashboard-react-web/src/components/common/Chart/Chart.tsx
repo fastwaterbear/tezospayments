@@ -1,20 +1,26 @@
 import { init, getInstanceByDom, EChartsOption, ECharts, SetOptionOpts } from 'echarts';
 import React, { useRef, useEffect, CSSProperties } from 'react';
 
+import { combineClassNames } from '@tezospayments/common';
+
+import './Chart.scss';
+
 interface ChartProps {
   option: EChartsOption;
+  theme: 'light' | 'dark';
+  className?: string;
   style?: CSSProperties;
   settings?: SetOptionOpts;
   loading?: boolean;
-  theme?: 'light' | 'dark';
 }
 
 export const Chart = ({
   option,
+  theme,
+  className,
   style,
   settings,
   loading,
-  theme,
 }: ChartProps) => {
   const chartElRef = useRef<HTMLDivElement>(null);
 
@@ -49,7 +55,9 @@ export const Chart = ({
     }
   }, [loading, theme]);
 
-  return <div ref={chartElRef} style={{ width: '100%', height: '100px', ...style }} />;
+  return <div className={combineClassNames('chart-container', className)} >
+    <div ref={chartElRef} style={{ width: '100%', height: '100px', ...style }} />
+  </div>;
 };
 
 export const ChartPure = React.memo(Chart);
