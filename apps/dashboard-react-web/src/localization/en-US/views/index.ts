@@ -1,4 +1,5 @@
 export { overview } from './overview';
+export { analytics } from './analytics';
 export { createService } from './createService';
 export { connect } from './connect';
 export { header } from './header';

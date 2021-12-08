@@ -10,6 +10,7 @@ import { PrivateRouteContainer } from '../common';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { OverviewPure, ConnectPure, OperationsPure, ServicePure, ServicesPure, AboutPure } from '../views';
 import { AcceptPaymentsPure } from '../views/AcceptPayments';
+import { AnalyticsPure } from '../views/Analytics';
 import { ServiceViewMode } from '../views/Service/Service';
 import { HeaderPure } from './Header';
 import { NavBarPure } from './NavBar';
@@ -35,6 +36,9 @@ export const App = () => {
       : <Switch>
         <PrivateRouteContainer exact path={config.routers.overview} >
           <OverviewPure />
+        </PrivateRouteContainer>
+        <PrivateRouteContainer path={config.routers.analytics}>
+          <AnalyticsPure />
         </PrivateRouteContainer>
         <PrivateRouteContainer exact path={config.routers.operations}>
           <OperationsPure />

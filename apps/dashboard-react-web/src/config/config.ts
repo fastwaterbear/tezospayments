@@ -22,6 +22,7 @@ export const config: AppConfig = {
   },
   routers: {
     overview: '/',
+    analytics: '/analytics',
     operations: '/operations',
     services: '/services',
     service: getParameterizedRoute(address => `/services/${address}`, '/services/:address'),

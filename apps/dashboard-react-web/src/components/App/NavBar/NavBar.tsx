@@ -1,4 +1,7 @@
-import { SettingOutlined, DashboardOutlined, UnorderedListOutlined, ProfileOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import {
+  SettingOutlined, DashboardOutlined, UnorderedListOutlined, ProfileOutlined,
+  InfoCircleOutlined, BarChartOutlined
+} from '@ant-design/icons';
 import { Menu, Button } from 'antd';
 import React, { useCallback } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
@@ -25,6 +28,9 @@ export const NavBar = () => {
     <Menu className="navbar__menu" mode="inline" selectedKeys={[location.pathname]}>
       <Menu.Item key={config.routers.overview} icon={<DashboardOutlined />}>
         <Link to={config.routers.overview}>{viewsLangResources.overview.title}</Link>
+      </Menu.Item>
+      <Menu.Item key={config.routers.analytics} icon={<BarChartOutlined />}>
+        <Link to={config.routers.analytics}>{viewsLangResources.analytics.title}</Link>
       </Menu.Item>
       <Menu.Item key={config.routers.operations} icon={<UnorderedListOutlined />}>
         <Link to={config.routers.operations}>{viewsLangResources.operations.title}</Link>

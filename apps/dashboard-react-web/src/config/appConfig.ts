@@ -4,6 +4,7 @@ import type { AppConfig as AppConfigBase } from '@tezospayments/react-web-core';
 export type AppConfig = DeepReadonly<AppConfigBase & {
   routers: {
     overview: string;
+    analytics: string;
     operations: string;
     service: ParameterizedRoute<(address: string) => string>;
     createService: string,
