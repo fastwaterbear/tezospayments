@@ -9,4 +9,5 @@ public record PaymentCreateParameters(string Amount)
     public DateTime? Expired { get; init; }
     public string? SuccessUrl { get; init; }
     public string? CancelUrl { get; init; }
+    public PaymentUrlType? UrlType { get; init; }
 }

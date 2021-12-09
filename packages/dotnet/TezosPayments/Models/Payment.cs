@@ -1,7 +1,8 @@
 ﻿namespace TezosPayments.Models;
 
-public class Payment
+public partial class Payment
 {
+    private readonly DateTime created = DateTime.UtcNow;
     private readonly DateTime? expired;
 
     public string Id { get; }
@@ -9,11 +10,19 @@ public class Payment
     public string Amount { get; }
     public PaymentAsset? Asset { get; }
 
-    public DateTime Created { get; init; } = DateTime.UtcNow;
+    public DateTime? Created
+    {
+        get => created;
+        init
+        {
+            if (value != null)
+                created = DateTime.UtcNow;
+        }
+    }
     public DateTime? Expired
     {
         get => expired;
-        init => expired = value is null || value.Value > Created
+        init => expired = value == null || value.Value > Created
             ? value
             : throw new ArgumentOutOfRangeException(nameof(value), $"The {nameof(Expired)} should be more than the {nameof(Created)}");
     }

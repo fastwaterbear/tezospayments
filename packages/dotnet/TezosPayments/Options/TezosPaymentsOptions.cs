@@ -2,14 +2,13 @@
 
 namespace TezosPayments.Options;
 
-public record TezosPaymentsOptions(
-    string ServiceContractAddress,
-    ITezosPaymentsSigningOptions Signing,
-    DefaultPaymentParameters? DefaultPaymentParameters
-);
-
-public record DefaultPaymentParameters
+public record TezosPaymentsOptions
 {
+    public string ServiceContractAddress { get; }
     public Network? Network { get; set; }
-    public PaymentUrlType UrlType { get; set; }
+
+    public TezosPaymentsOptions(string serviceContractAddress)
+    {
+        ServiceContractAddress = GuardUtils.EnsureStringArgumentIsValid(serviceContractAddress, nameof(serviceContractAddress));
+    }
 }
