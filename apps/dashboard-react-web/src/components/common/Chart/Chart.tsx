@@ -55,9 +55,7 @@ export const Chart = ({
     }
   }, [loading, theme]);
 
-  return <div className={combineClassNames('chart-container', className)} >
-    <div ref={chartElRef} style={{ width: '100%', height: '100px', ...style }} />
-  </div>;
+  return <div className={combineClassNames('chart-container', className)} ref={chartElRef} style={{ width: '100%', height: '100%', ...style }} />;
 };
 
 export const ChartPure = React.memo(Chart);

@@ -6,50 +6,45 @@ export const Profit = () => {
   const option: React.ComponentProps<typeof ChartPure>['option'] = {
     dataset: {
       source: [
-        ['Commodity', 'Owned', 'Financed'],
-        ['Commodity 1', 4, 1],
-        ['Commodity 2', 2, 4],
-        ['Commodity 3', 3, 6],
-        ['Commodity 4', 5, 3],
+        ['Commodity', 'USD'],
+        ['Mon', 120],
+        ['Tue', 132],
+        ['Wed', 101],
+        ['Thu', 134],
+        ['Fri', 90],
+        ['Sat', 230],
+        ['Sun', 210],
       ],
     },
+    title: {
+      text: 'Profit',
+      padding: 0,
+    },
     tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'shadow',
-      },
+      trigger: 'axis'
     },
     legend: {
-      data: ['Owned', 'Financed'],
+      data: ['USD']
     },
     grid: {
-      left: '10%',
-      right: '0%',
-      top: '20%',
-      bottom: '20%',
+      top: 60,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      containLabel: true
     },
     xAxis: {
-      type: 'value',
+      type: 'category',
     },
     yAxis: {
-      type: 'category',
+      type: 'value'
     },
     series: [
       {
-        type: 'bar',
-        stack: 'total',
-        label: {
-          show: true,
-        },
-      },
-      {
-        type: 'bar',
-        stack: 'total',
-        label: {
-          show: true,
-        },
-      },
-    ],
+        name: 'USD',
+        type: 'line',
+      }
+    ]
   };
 
   return <ChartPure option={option} theme="light" />;
