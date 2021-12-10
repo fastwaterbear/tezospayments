@@ -103,8 +103,8 @@ jobs:
       - name: Lint
         run: npm run lint -w @tezospayments/dashboard-react-web # -- --max-warnings -1
 
-  deploy:
-    name: Deploy
+  deploy-production:
+    name: Deploy to Production
     runs-on: ubuntu-latest
     needs: [build, lint]
     if: github.ref == 'refs/heads/master'

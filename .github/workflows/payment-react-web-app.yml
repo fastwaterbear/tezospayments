@@ -19,6 +19,7 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/payment-react-web-app.yml'
+      - 'scripts/netlify-pr-notifications.js'
 env:
   node-version: 16
 
@@ -97,8 +98,8 @@ jobs:
       - name: Lint
         run: npm run lint -w @tezospayments/payment-react-web # -- --max-warnings -1
 
-  deploy:
-    name: Deploy
+  deploy-production:
+    name: Deploy to Production
     runs-on: ubuntu-latest
     needs: [build, lint]
     if: ${{ github.ref == 'refs/heads/master' }}
@@ -119,5 +120,63 @@ jobs:
           destination_dir: apps/payment-react-web
           exclude_assets: '**/*.LICENSE,**/*.LICENSE.txt'
           publish_branch: ${{ env.publish-branch }}
+
+  deploy-preview:
+    name: Deploy the preview
+    runs-on: ubuntu-latest
+    needs: [build, lint]
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@master
+
+      - name: Download the Payment app build from the artifacts storage
+        uses: actions/download-artifact@v2
+        with:
+          name: payment-react-web
+          path: apps/payment-react-web/build
+
+      - name: Print environment info
+        run: netlify version
+
+      - name: Create the "_redirects" file
+        run: echo "/*   /index.html   200" > apps/payment-react-web/build/_redirects
+
+      - name: Create the robots.txt file
+        run: |
+          rm apps/payment-react-web/build/robots.txt
+          echo "User-agent: *" > apps/payment-react-web/build/robots.txt
+          echo "Disallow: /" > apps/payment-react-web/build/robots.txt
+
+      - name: Deploy to Netlify
+        id: netlify_deployment
+        env:
+          NETLIFY_SITE_ID: ${{ secrets.PAYMENT_APP_NETLIFY_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.TEZOS_PAYMENTS_DEVELOPMENT_NETLIFY_ACCESS_TOKEN }}
+        run: |
+          netlify_deploy_result="$(netlify deploy \
+            --dir=apps/payment-react-web/build \
+            --alias='dev${{ github.event.pull_request.number }}' \
+            --message='${{ github.event.pull_request.title }}' \
+            --json \
+          )"
+          # Multiline to single line
+          netlify_deploy_result="${netlify_deploy_result//$'\n'/' '}"
+
+          echo "::set-output name=netlify_deploy_result::$netlify_deploy_result"
+
+      - name: Send a notification to the related pull request, PR#${{ github.event.pull_request.number }}
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const script = require('./scripts/netlify-pr-notifications.js')
+            await script({ 
+              github, 
+              context,
+              commitSha: '${{ github.event.pull_request.head.sha }}',
+              currentAppName: 'Payment', 
+              netlifyDeployResult: ${{ steps.netlify_deployment.outputs.netlify_deploy_result }}
+            })
 
   
