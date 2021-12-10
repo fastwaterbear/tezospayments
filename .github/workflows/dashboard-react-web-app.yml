@@ -161,7 +161,7 @@ jobs:
 
           echo "::set-output name=netlify_deploy_result::$netlify_deploy_result"
 
-      - name: Send a notification to the related pull request, PR#${{ github.issue.number }}
+      - name: Send a notification to the related pull request, PR#${{ github.event.pull_request.number }}
         uses: actions/github-script@v5
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
