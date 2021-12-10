@@ -147,6 +147,12 @@ jobs:
       - name: Create the "_redirects" file
         run: echo "/*   /index.html   200" > apps/dashboard-react-web/build/_redirects
 
+      - name: Create the robots.txt file
+        run: |
+          rm apps/dashboard-react-web/build/robots.txt
+          echo "User-agent: *" > apps/dashboard-react-web/build/robots.txt
+          echo "Disallow: /" > apps/dashboard-react-web/build/robots.txt
+
       - name: Deploy to Netlify
         id: netlify_deployment
         env:
