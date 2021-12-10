@@ -5,10 +5,10 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.6.2",
     "@tezospayments/react-web-core": "*",
-    "react-redux": "^7.2.5"
+    "react-redux": "^7.2.6"
   },
   "devDependencies": {
-    "@types/react-redux": "^7.1.19"
+    "@types/react-redux": "^7.1.20"
   },
   "scripts": {
     "start": "react-scripts start",

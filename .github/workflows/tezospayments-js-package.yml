@@ -1,23 +1,25 @@
-name: packages/common
+name: packages/js/tezospayments
 on:
   push:
     paths:
-      - 'src/common/**'
+      - 'packages/js/common/**'
+      - 'packages/js/tezospayments/**'
       - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/common.yml'
+      - '.github/workflows/tezospayments-js-package.yml'
     branches:
       - master
       - dev
     tags:
-      - 'npm/@tezospayments/common@*.*.*'
-      - 'npm/@tezospayments/common@*.*.*-*'
+      - 'js/tezospayments@*.*.*'
+      - 'js/tezospayments@*.*.*-*'
   pull_request:
     paths:
-      - 'src/common/**'
+      - 'packages/js/common/**'
+      - 'packages/js/tezospayments/**'
       - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/common.yml'
+      - '.github/workflows/tezospayments-js-package.yml'
 env:
   node-version: 16
 
@@ -48,18 +50,21 @@ jobs:
       - name: Install npm packages
         run: npm ci
 
-      - name: Build
+      - name: Build the @tezospayments/common package
         run: npm run build -w @tezospayments/common
+
+      - name: Build the tezospayments package
+        run: npm run build -w tezospayments
 
       - name: Upload the build as an artifact
         uses: actions/upload-artifact@v2
         with:
-          name: common
+          name: tezospayments
           path: |
-            src/common/dist
-            src/common/package.json
-            src/common/README.md
-            src/common/LICENSE
+            packages/js/tezospayments/dist
+            packages/js/tezospayments/package.json
+            packages/js/tezospayments/README.md
+            packages/js/tezospayments/LICENSE
           retention-days: 10
 
   test:
@@ -95,8 +100,11 @@ jobs:
       - name: Install npm packages
         run: npm ci
 
+      - name: Build the @tezospayments/common package
+        run: npm run build -w @tezospayments/common
+
       - name: Test
-        run: npm test -w @tezospayments/common
+        run: npm test -w tezospayments
 
   lint:
     name: Lint
@@ -125,18 +133,18 @@ jobs:
         run: npm ci
 
       - name: Lint
-        run: npm run lint -w @tezospayments/common # -- --max-warnings -1
+        run: npm run lint -w tezospayments # -- --max-warnings -1
 
   release:
     name: Publish to npm
     runs-on: ubuntu-latest
     needs: [build, test, lint]
-    if: ${{ contains(github.ref, 'refs/tags/npm/@tezospayments/common@') }}
+    if: ${{ contains(github.ref, 'refs/tags/js/tezospayments@') }}
     steps:
       - name: Download the build from the artifacts storage
         uses: actions/download-artifact@v2
         with:
-          name: common
+          name: tezospayments
 
       - name: Set up Node.js ${{ env.node-version }}
         uses: actions/setup-node@v2
@@ -161,5 +169,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: './'
-          destination_dir: packages/npm/@tezospayments/common
+          destination_dir: packages/js/tezospayments
           publish_branch: ${{ env.publish-branch }}
