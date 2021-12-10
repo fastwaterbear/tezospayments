@@ -149,9 +149,9 @@ jobs:
 
       - name: Create the robots.txt file
         run: |
-          rm apps/dashboard-react-web/build/robots.txt
-          echo "User-agent: *" > apps/dashboard-react-web/build/robots.txt
-          echo "Disallow: /" > apps/dashboard-react-web/build/robots.txt
+          > apps/dashboard-react-web/build/robots.txt
+          echo "User-agent: *" >> apps/dashboard-react-web/build/robots.txt
+          echo "Disallow: /" >> apps/dashboard-react-web/build/robots.txt
 
       - name: Deploy to Netlify
         id: netlify_deployment

@@ -144,9 +144,9 @@ jobs:
 
       - name: Create the robots.txt file
         run: |
-          rm apps/payment-react-web/build/robots.txt
-          echo "User-agent: *" > apps/payment-react-web/build/robots.txt
-          echo "Disallow: /" > apps/payment-react-web/build/robots.txt
+          > apps/payment-react-web/build/robots.txt
+          echo "User-agent: *" >> apps/payment-react-web/build/robots.txt
+          echo "Disallow: /" >> apps/payment-react-web/build/robots.txt
 
       - name: Deploy to Netlify
         id: netlify_deployment
