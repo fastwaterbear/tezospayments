@@ -10,13 +10,13 @@
     "export": "next build && next export"
   },
   "dependencies": {
-    "next": "^12.0.4",
+    "next": "^12.0.7",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "tezospayments": "^0.3.0"
   },
   "devDependencies": {
     "@types/react": "^17.0.37",
-    "eslint-config-next": "^12.0.4"
+    "eslint-config-next": "^12.0.7"
   }
 }
