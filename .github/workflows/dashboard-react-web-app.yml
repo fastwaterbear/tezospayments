@@ -161,7 +161,7 @@ jobs:
         run: |
           netlify_deploy_result="$(netlify deploy \
             --dir=apps/dashboard-react-web/build \
-            --alias='dev-${{ github.event.pull_request.number }}' \
+            --alias='dev${{ github.event.pull_request.number }}' \
             --message='${{ github.event.pull_request.title }}' \
             --json \
           )"
