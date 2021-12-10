@@ -33,13 +33,13 @@ ${apps.map(app => `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${app.name}: [${app.link}
 const parseApps = deployPreviewsCommentMessage => {
   const appsList = deployPreviewsCommentMessage.substring(
     deployPreviewsCommentMessage.indexOf(DEPLOY_PREVIEWS_COMMENT_BROWSE_TITLE) + DEPLOY_PREVIEWS_COMMENT_BROWSE_TITLE.length + 2, // 2 is ':\n'
-    deployPreviewsCommentMessage.length - 2 // 2 is 1 + '\n'
-  );
+    deployPreviewsCommentMessage.length
+  ).trim();
   const appRawInfos = appsList.split('\n');
 
   return appRawInfos.map(appRawInfo => ({
     name: appRawInfo.substring(appRawInfo.lastIndexOf('&nbsp;') + 6, appRawInfo.indexOf(':')),
-    link: appRawInfo.substring(appRawInfo.lastIndexOf('(') + 1, appRawInfo.length - 2) // 2 is 1 + ')'
+    link: appRawInfo.substring(appRawInfo.lastIndexOf('(') + 1, appRawInfo.length - 1)
   }));
 };
 
