@@ -142,7 +142,10 @@ jobs:
           path: apps/dashboard-react-web/build
 
       - name: Print environment info
-        run: netlify version 
+        run: netlify version
+
+      - name: Create the "_redirects" file
+        run: echo "/*   /index.html   200" > apps/dashboard-react-web/build/_redirects
 
       - name: Deploy to Netlify
         id: netlify_deployment
