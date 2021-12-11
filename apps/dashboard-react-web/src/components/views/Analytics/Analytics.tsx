@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 
-import { Period } from '../../../models/system';
+import { AnalyticsView, Period } from '../../../models/system';
 import { useCurrentLanguageResources } from '../../hooks';
 import { View } from '../View';
 import { Donations } from './Donations';
@@ -13,9 +13,9 @@ export const Analytics = () => {
   const langResources = useCurrentLanguageResources();
   const analyticsLangResources = langResources.views.analytics;
 
-  const [isServicesAnalytics, setIsServicesAnalytics] = useState(true);
-  const handleIsServicesAnalyticsChange = useCallback((value: boolean) => {
-    setIsServicesAnalytics(value);
+  const [view, setView] = useState(AnalyticsView.Services);
+  const handleViewChange = useCallback((value: AnalyticsView) => {
+    setView(value);
   }, []);
 
   const [period, setPeriod] = useState(Period.LastWeek);
@@ -25,9 +25,8 @@ export const Analytics = () => {
 
 
   return <View title={analyticsLangResources.title} className="overview">
-    <HeaderPure isServicesAnalytics={isServicesAnalytics} onIsServicesAnalyticsChange={handleIsServicesAnalyticsChange}
-      period={period} onPeriodChange={handlePeriodChange} />
-    {isServicesAnalytics ? <Services /> : <Donations />}
+    <HeaderPure view={view} onViewChange={handleViewChange} period={period} onPeriodChange={handlePeriodChange} />
+    {view === AnalyticsView.Services ? <Services period={period} /> : <Donations period={period} />}
   </View>;
 };
 

@@ -1,2 +1,3 @@
 export * from './language';
-export * from './period';
+export { Period } from './period';
+export { AnalyticsView } from './analyticsView';

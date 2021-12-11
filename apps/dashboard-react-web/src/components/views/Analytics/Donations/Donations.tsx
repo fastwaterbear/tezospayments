@@ -1,8 +1,15 @@
 import React from 'react';
 
-export const Donations = () => {
-  return <div>
-    <h2>Donations</h2>
+import { AnalyticsView, Period } from '../../../../models/system';
+import { ProfitPure } from '../Charts/Profit';
+
+interface DonationsProps {
+  period: Period;
+}
+
+export const Donations = (props: DonationsProps) => {
+  return <div className="analytics-container">
+    <ProfitPure period={props.period} view={AnalyticsView.Donations} />
   </div>;
 };
 

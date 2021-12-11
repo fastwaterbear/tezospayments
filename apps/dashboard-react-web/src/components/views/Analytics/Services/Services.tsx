@@ -1,15 +1,15 @@
 import React from 'react';
 
+import { AnalyticsView, Period } from '../../../../models/system';
 import { ProfitPure } from '../Charts/Profit';
 
-export const Services = () => {
-  return <div>
-    <div className="analytics-container">
-      <ProfitPure />
-      <ProfitPure />
-      <ProfitPure />
-      <ProfitPure />
-    </div>
+interface ServicesProps {
+  period: Period;
+}
+
+export const Services = (props: ServicesProps) => {
+  return <div className="analytics-container">
+    <ProfitPure period={props.period} view={AnalyticsView.Services} />
   </div>;
 };
 

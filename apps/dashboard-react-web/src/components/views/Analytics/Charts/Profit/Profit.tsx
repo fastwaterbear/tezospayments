@@ -1,20 +1,28 @@
 import React from 'react';
 
+import { AnalyticsView, Period } from '../../../../../models/system';
 import { ChartPure } from '../../../../common/Chart';
 
-export const Profit = () => {
+interface ProfitProps {
+  period: Period;
+  view: AnalyticsView;
+}
+
+export const Profit = (_props: ProfitProps) => {
+  const dataSource = [
+    ['Commodity', 'USD'],
+    ['Mon', 120],
+    ['Tue', 132],
+    ['Wed', 101],
+    ['Thu', 134],
+    ['Fri', 90],
+    ['Sat', 230],
+    ['Sun', 210],
+  ];
+
   const option: React.ComponentProps<typeof ChartPure>['option'] = {
     dataset: {
-      source: [
-        ['Commodity', 'USD'],
-        ['Mon', 120],
-        ['Tue', 132],
-        ['Wed', 101],
-        ['Thu', 134],
-        ['Fri', 90],
-        ['Sat', 230],
-        ['Sun', 210],
-      ],
+      source: dataSource
     },
     title: {
       text: 'Profit',
