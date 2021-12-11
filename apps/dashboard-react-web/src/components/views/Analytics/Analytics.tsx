@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 
+import { Period } from '../../../models/system';
 import { useCurrentLanguageResources } from '../../hooks';
 import { View } from '../View';
 import { Donations } from './Donations';
@@ -13,12 +14,19 @@ export const Analytics = () => {
   const analyticsLangResources = langResources.views.analytics;
 
   const [isServicesAnalytics, setIsServicesAnalytics] = useState(true);
-  const handleServicesAnalyticsChange = useCallback((value: boolean) => {
+  const handleIsServicesAnalyticsChange = useCallback((value: boolean) => {
     setIsServicesAnalytics(value);
   }, []);
 
+  const [period, setPeriod] = useState(Period.LastWeek);
+  const handlePeriodChange = useCallback((value: Period) => {
+    setPeriod(value);
+  }, []);
+
+
   return <View title={analyticsLangResources.title} className="overview">
-    <HeaderPure isServicesAnalytics={isServicesAnalytics} onServicesAnalyticsChange={handleServicesAnalyticsChange} />
+    <HeaderPure isServicesAnalytics={isServicesAnalytics} onIsServicesAnalyticsChange={handleIsServicesAnalyticsChange}
+      period={period} onPeriodChange={handlePeriodChange} />
     {isServicesAnalytics ? <Services /> : <Donations />}
   </View>;
 };
