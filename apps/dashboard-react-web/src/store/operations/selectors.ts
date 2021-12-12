@@ -88,9 +88,9 @@ export const selectProfitChartData = createCachedSelector(
   (_state: AppState, _type: OperationTypeOrAll, period: Period) => period,
   (_state: AppState, _type: OperationTypeOrAll, _period: Period, ignoreOutgoing: boolean) => ignoreOutgoing,
   (operations, _type, period, ignoreOutgoing) => {
-    const todayDate = getTodayDate();
-    const startDate = period === Period.All ? operations[operations.length - 1]?.date || todayDate : getStartDate(period);
-    const initialData = getEmptyData(startDate, todayDate);
+    const startDate = period === Period.All ? operations[operations.length - 1]?.date || getTodayDate() : getStartDate(period);
+    const endDate = getTodayDate();
+    const initialData = getEmptyData(startDate, endDate);
     const profitByDay = operations.reduce((p, o) => {
       if (o.status === OperationStatus.Success) {
         const key = getDateKey(o.date);
