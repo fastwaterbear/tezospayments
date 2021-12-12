@@ -7,7 +7,7 @@ import './AccountDropdown.scss';
 import { combineClassNames } from '@tezospayments/common';
 
 import { Account } from '../../../models/blockchain';
-import { getAccountsByNetwork, getCurrentAccount, getCurrentNetworkConfig } from '../../../store/accounts/selectors';
+import { selectAccountsByNetwork, selectCurrentAccount, selectCurrentNetworkConfig } from '../../../store/accounts/selectors';
 import { disconnectAccount } from '../../../store/accounts/slice';
 import { useAppContext, useAppDispatch, useAppSelector, useCurrentLanguageResources } from '../../hooks';
 import { AccountNetworkGroupPure } from './AccountNetworkGroup';
@@ -17,10 +17,10 @@ export const AccountDropDown = () => {
   const langResources = useCurrentLanguageResources();
   const actionsLangResources = langResources.views.header.accountActions;
 
-  const accountsByNetwork = useAppSelector(getAccountsByNetwork);
-  const currentAccount = useAppSelector(getCurrentAccount);
+  const accountsByNetwork = useAppSelector(selectAccountsByNetwork);
+  const currentAccount = useAppSelector(selectCurrentAccount);
   const currentAccountAddress = currentAccount?.address || '';
-  const currentNetworkConfig = useAppSelector(getCurrentNetworkConfig);
+  const currentNetworkConfig = useAppSelector(selectCurrentNetworkConfig);
   const currentExplorer = currentNetworkConfig && currentNetworkConfig.explorers[currentNetworkConfig.default.explorer];
 
   const handleCopyAddressClick = useCallback(() => {

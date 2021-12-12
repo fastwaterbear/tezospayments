@@ -15,7 +15,7 @@ export const selectTokensState = createSelector(
 );
 
 export const selectServicesState = (state: AppState) => state.servicesState;
-export const getAllAcceptedTokens = createSelector(
+export const selectAllAcceptedTokens = createSelector(
   selectServicesState,
   selectTokensState,
   (servicesState, tokensState) => {
@@ -35,21 +35,21 @@ export const getAllAcceptedTokens = createSelector(
   }
 );
 
-export const getAcceptTezos = createSelector(
+export const selectAcceptTezos = createSelector(
   selectServicesState,
   servicesState => {
     return servicesState.services.some(s => s.allowedTokens.tez);
   }
 );
 
-export const getSortedServices = createSelector(
+export const selectSortedServices = createSelector(
   selectServicesState,
   servicesState => {
     return [...servicesState.services].sort((a, b) => a.name.localeCompare(b.name));
   }
 );
 
-export const getOperationsByService = createSelector(
+export const selectOperationsByService = createSelector(
   selectServicesState,
   servicesState => {
     const operationsMap = new Map<string, PendingOperation[]>();

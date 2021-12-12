@@ -14,7 +14,7 @@ import type { Account } from '../models/blockchain';
 import { AccountsService } from '../services/accountsService';
 import { ServicesService } from '../services/servicesService';
 import { AppStore } from '../store';
-import { getCurrentAccount } from '../store/accounts/selectors';
+import { selectCurrentAccount } from '../store/accounts/selectors';
 import { clearBalances, loadBalances } from '../store/balances/slice';
 import { clearServices, loadServices } from '../store/services/slice';
 import type { ReactAppContext } from './reactAppContext';
@@ -79,7 +79,7 @@ export class WebApp {
 
   protected onStoreChanged() {
     const appState = this.store.getState();
-    const currentAccountFromState = getCurrentAccount(appState);
+    const currentAccountFromState = selectCurrentAccount(appState);
     const currentAccountAddressFromState = currentAccountFromState && currentAccountFromState.address;
 
     if (currentAccountAddressFromState !== this.currentAccountAddress) {

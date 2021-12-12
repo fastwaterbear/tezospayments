@@ -4,13 +4,13 @@ import React from 'react';
 import { optimization, tezosMeta } from '@tezospayments/common';
 
 import { selectBalancesState } from '../../../../store/balances/selectors';
-import { getAcceptTezos, getAllAcceptedTokens, selectServicesState } from '../../../../store/services/selectors';
+import { selectAcceptTezos, selectAllAcceptedTokens, selectServicesState } from '../../../../store/services/selectors';
 import { TokenList } from '../../../common';
 import { useAppSelector } from '../../../hooks';
 
 export const Balances = () => {
-  const acceptTezos = useAppSelector(getAcceptTezos);
-  const tokens = useAppSelector(getAllAcceptedTokens);
+  const acceptTezos = useAppSelector(selectAcceptTezos);
+  const tokens = useAppSelector(selectAllAcceptedTokens);
   const services = useAppSelector(selectServicesState);
   const balances = useAppSelector(selectBalancesState);
 

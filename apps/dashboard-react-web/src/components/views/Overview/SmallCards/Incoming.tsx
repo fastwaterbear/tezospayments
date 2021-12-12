@@ -4,14 +4,14 @@ import React from 'react';
 
 import { tezosMeta } from '@tezospayments/common';
 
-import { getAcceptTezos, getAllAcceptedTokens, selectServicesState } from '../../../../store/services/selectors';
+import { selectAcceptTezos, selectAllAcceptedTokens, selectServicesState } from '../../../../store/services/selectors';
 import { TokenList } from '../../../common';
 import { useAppSelector } from '../../../hooks';
 
 export const Incoming = () => {
-  const acceptTezos = useAppSelector(getAcceptTezos);
+  const acceptTezos = useAppSelector(selectAcceptTezos);
   const services = useAppSelector(selectServicesState);
-  const tokens = useAppSelector(getAllAcceptedTokens);
+  const tokens = useAppSelector(selectAllAcceptedTokens);
 
   if (!services.initialized) {
     return <Skeleton active />;

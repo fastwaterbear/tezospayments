@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 
 import { Service, ServiceSigningKey } from '@tezospayments/common';
 
-import { getCurrentAccount } from '../../../../../store/accounts/selectors';
+import { selectCurrentAccount } from '../../../../../store/accounts/selectors';
 import { deleteApiKey } from '../../../../../store/services/slice';
 import { useAppSelector, useCurrentLanguageResources } from '../../../../hooks';
 
@@ -19,7 +19,7 @@ interface ApiKeyListProps {
 export const ApiKeyList = (props: ApiKeyListProps) => {
   const langResources = useCurrentLanguageResources();
   const servicesLangResources = langResources.views.services;
-  const currentAccount = useAppSelector(getCurrentAccount);
+  const currentAccount = useAppSelector(selectCurrentAccount);
   const dispatch = useDispatch();
   const apiKeys = useMemo(
     () => {

@@ -1,7 +1,7 @@
 import { Skeleton } from 'antd';
 import React from 'react';
 
-import { getOperationsByService, getSortedServices, selectServicesState } from '../../../store/services/selectors';
+import { selectOperationsByService, selectSortedServices, selectServicesState } from '../../../store/services/selectors';
 import { NoServicesCreatedPure } from '../../common/NoServicesCreated';
 import { useAppSelector, useCurrentLanguageResources } from '../../hooks';
 import { View } from '../View';
@@ -13,9 +13,9 @@ export const Services = () => {
   const servicesLangResources = langResources.views.services;
 
   const servicesState = useAppSelector(selectServicesState);
-  const pendingOperations = useAppSelector(getOperationsByService);
+  const pendingOperations = useAppSelector(selectOperationsByService);
 
-  const services = useAppSelector(getSortedServices);
+  const services = useAppSelector(selectSortedServices);
   const servicesCards = services.map(s => <ServiceCardPure
     key={s.contractAddress}
     service={s}

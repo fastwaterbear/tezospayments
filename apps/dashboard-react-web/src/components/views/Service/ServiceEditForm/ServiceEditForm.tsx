@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { ServiceLinkHelper, Service, ServiceOperationType, ServiceSigningKey } from '@tezospayments/common';
 
 import { config } from '../../../../config';
-import { getCurrentAccount } from '../../../../store/accounts/selectors';
+import { selectCurrentAccount } from '../../../../store/accounts/selectors';
 import { createService, updateService } from '../../../../store/services/slice';
 import { ServiceLinksEditor } from '../../../common/ServiceLinks';
 import { useAppDispatch, useAppSelector, useCurrentLanguageResources } from '../../../hooks';
@@ -28,7 +28,7 @@ export const ServiceEditForm = (props: ServiceEditFormProps) => {
   const langResources = useCurrentLanguageResources();
   const commonLangResources = langResources.common;
   const servicesLangResources = langResources.views.services;
-  const currentAccount = useAppSelector(getCurrentAccount);
+  const currentAccount = useAppSelector(selectCurrentAccount);
 
   const dispatch = useAppDispatch();
 

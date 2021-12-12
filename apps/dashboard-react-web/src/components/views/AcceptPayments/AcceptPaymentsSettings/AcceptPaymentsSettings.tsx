@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 
 import { PaymentType } from '@tezospayments/common';
 
-import { getOperationsByService, getSortedServices } from '../../../../store/services/selectors';
+import { selectOperationsByService, selectSortedServices } from '../../../../store/services/selectors';
 import { useAppSelector, useCurrentLanguageResources } from '../../../hooks';
 import { PaymentAmountPure } from '../PaymentAmount';
 
@@ -35,9 +35,9 @@ export const AcceptPaymentsSettings = (props: AcceptPaymentsSettingsProps) => {
   const langResources = useCurrentLanguageResources();
   const acceptPaymentsLangResources = langResources.views.acceptPayments;
   const serviceLangResources = langResources.views.services;
-  const operationsByService = useSelector(getOperationsByService);
+  const operationsByService = useSelector(selectOperationsByService);
 
-  const services = useAppSelector(getSortedServices);
+  const services = useAppSelector(selectSortedServices);
   const serviceOptions = services.filter(s => !s.deleted).map(service => ({
     label: service.name,
     value: service.contractAddress,
