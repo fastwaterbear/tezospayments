@@ -4,9 +4,9 @@ import { OperationType } from '@tezospayments/common';
 
 import { AnalyticsView, Period } from '../../../../../models/system';
 import { AppState } from '../../../../../store';
-import { selectProfitChartData } from '../../../../../store/operations/selectors';
+import { selectOperationsState, selectProfitChartData } from '../../../../../store/operations/selectors';
 import { ChartPure } from '../../../../common/Chart';
-import { useAppSelector } from '../../../../hooks';
+import { useAppSelector, useCurrentLanguageResources } from '../../../../hooks';
 
 interface ProfitProps {
   period: Period;
@@ -15,21 +15,27 @@ interface ProfitProps {
 }
 
 export const Profit = (props: ProfitProps) => {
+  const isInitialized = useAppSelector(selectOperationsState).initialized;
+  const langResources = useCurrentLanguageResources();
+  const analyticsLangResources = langResources.views.analytics;
+
   const dataSource = useAppSelector((state: AppState) => selectProfitChartData(state, props.type, props.period));
+  const currencyName = dataSource[0] ? dataSource[0][1].toString() : 'unknown';
 
   const option: React.ComponentProps<typeof ChartPure>['option'] = {
     dataset: {
       source: dataSource
     },
     title: {
-      text: 'Profit',
+      text: analyticsLangResources.profit,
       padding: 0,
     },
     tooltip: {
       trigger: 'axis'
     },
     legend: {
-      data: ['USD']
+      data: [currencyName],
+      selectedMode: false
     },
     grid: {
       top: 60,
@@ -46,13 +52,13 @@ export const Profit = (props: ProfitProps) => {
     },
     series: [
       {
-        name: 'USD',
+        name: currencyName,
         type: 'line',
       }
     ]
   };
 
-  return <ChartPure option={option} theme="light" />;
+  return <ChartPure option={option} loading={!isInitialized} />;
 };
 
 export const ProfitPure = React.memo(Profit);

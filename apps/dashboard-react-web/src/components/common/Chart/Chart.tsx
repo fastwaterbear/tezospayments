@@ -7,9 +7,9 @@ import './Chart.scss';
 
 interface ChartProps {
   option: EChartsOption;
-  theme: 'light' | 'dark';
   className?: string;
   style?: CSSProperties;
+  theme?: 'light' | 'dark';
   settings?: SetOptionOpts;
   loading?: boolean;
 }
@@ -23,6 +23,7 @@ export const Chart = ({
   loading,
 }: ChartProps) => {
   const chartElRef = useRef<HTMLDivElement>(null);
+  theme = theme || 'light';
 
   useEffect(() => {
     let chart: ECharts | undefined;
