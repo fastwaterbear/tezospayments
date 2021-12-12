@@ -6,19 +6,19 @@ import { Period } from '../../../../../models/system';
 import { AppState } from '../../../../../store';
 import { selectOperationsState, selectProfitChartData } from '../../../../../store/operations/selectors';
 import { ChartPure } from '../../../../common/Chart';
-import { useAppSelector, useCurrentLanguageResources } from '../../../../hooks';
+import { useAppSelector } from '../../../../hooks';
 
 interface ProfitProps {
   period: Period;
   type: OperationType;
+  ignoreOutgoing?: boolean;
+  title: string;
 }
 
 export const Profit = (props: ProfitProps) => {
   const isInitialized = useAppSelector(selectOperationsState).initialized;
-  const langResources = useCurrentLanguageResources();
-  const analyticsLangResources = langResources.views.analytics;
 
-  const dataSource = useAppSelector((state: AppState) => selectProfitChartData(state, props.type, props.period));
+  const dataSource = useAppSelector((state: AppState) => selectProfitChartData(state, props.type, props.period, !!props.ignoreOutgoing));
   const currencyName = dataSource[0] ? dataSource[0][1].toString() : 'unknown';
 
   const option: React.ComponentProps<typeof ChartPure>['option'] = {
@@ -26,7 +26,7 @@ export const Profit = (props: ProfitProps) => {
       source: dataSource
     },
     title: {
-      text: analyticsLangResources.profit,
+      text: props.title,
       padding: 0,
     },
     tooltip: {

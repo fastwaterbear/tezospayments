@@ -86,14 +86,18 @@ export const selectProfitChartData = createCachedSelector(
   selectSortedOperations,
   (_state: AppState, type: OperationTypeOrAll) => type,
   (_state: AppState, _type: OperationTypeOrAll, period: Period) => period,
-  (operations, _type, period) => {
+  (_state: AppState, _type: OperationTypeOrAll, _period: Period, ignoreOutgoing: boolean) => ignoreOutgoing,
+  (operations, _type, period, ignoreOutgoing) => {
     const todayDate = getTodayDate();
     const startDate = period === Period.All ? operations[operations.length - 1]?.date || todayDate : getStartDate(period);
     const initialData = getEmptyData(startDate, todayDate);
     const profitByDay = operations.reduce((p, o) => {
       if (o.status === OperationStatus.Success) {
         const key = getDateKey(o.date);
-        p[key] = (p[key] || 0) + o.amount.toNumber() * (o.direction === OperationDirection.Incoming ? 1 : -1) * getUsdRate(o.asset);
+        const multiplier = o.direction === OperationDirection.Outgoing
+          ? ignoreOutgoing ? 0 : -1
+          : 1;
+        p[key] = (p[key] || 0) + o.amount.toNumber() * multiplier * getUsdRate(o.asset);
       }
       return p;
     }, initialData);
@@ -106,5 +110,5 @@ export const selectProfitChartData = createCachedSelector(
     return result;
   }
 )(
-  (_state, period, type) => `${type}:${period}`
+  (_state, period, type, ignoreOutgoing) => `${type}:${period}:${ignoreOutgoing}`
 );
