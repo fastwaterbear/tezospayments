@@ -26,6 +26,8 @@ const getViewText = (view: AnalyticsView, langResources: Language['resources']) 
 
 const getPeriodText = (period: Period, langResources: Language['resources']) => {
   switch (period) {
+    case Period.All:
+      return langResources.common.period.all;
     case Period.LastWeek:
       return langResources.common.period.lastWeek;
     case Period.LastMonth:

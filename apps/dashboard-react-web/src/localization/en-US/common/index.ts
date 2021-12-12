@@ -9,6 +9,7 @@ export const common = {
   yes: 'Yes',
   no: 'No',
   period: {
+    all: 'All',
     lastWeek: 'Last 7 days',
     lastMonth: 'Last month',
     lastYear: 'Last year'

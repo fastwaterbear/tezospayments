@@ -1,24 +1,21 @@
 import React from 'react';
 
+import { OperationType } from '@tezospayments/common';
+
 import { AnalyticsView, Period } from '../../../../../models/system';
+import { AppState } from '../../../../../store';
+import { selectProfitChartData } from '../../../../../store/operations/selectors';
 import { ChartPure } from '../../../../common/Chart';
+import { useAppSelector } from '../../../../hooks';
 
 interface ProfitProps {
   period: Period;
   view: AnalyticsView;
+  type: OperationType;
 }
 
-export const Profit = (_props: ProfitProps) => {
-  const dataSource = [
-    ['Commodity', 'USD'],
-    ['Mon', 120],
-    ['Tue', 132],
-    ['Wed', 101],
-    ['Thu', 134],
-    ['Fri', 90],
-    ['Sat', 230],
-    ['Sun', 210],
-  ];
+export const Profit = (props: ProfitProps) => {
+  const dataSource = useAppSelector((state: AppState) => selectProfitChartData(state, props.type, props.period));
 
   const option: React.ComponentProps<typeof ChartPure>['option'] = {
     dataset: {

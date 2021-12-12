@@ -8,6 +8,7 @@
     "@tezospayments/react-web-core": "*",
     "echarts": "^5.2.2",
     "react-redux": "^7.2.6",
+    "re-reselect": "^4.0.0",
     "tezospayments": "^0.3.0"
   },
   "devDependencies": {
