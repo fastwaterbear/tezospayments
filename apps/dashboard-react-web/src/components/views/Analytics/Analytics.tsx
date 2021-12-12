@@ -3,9 +3,9 @@ import React, { useState, useCallback } from 'react';
 import { AnalyticsView, Period } from '../../../models/system';
 import { useCurrentLanguageResources } from '../../hooks';
 import { View } from '../View';
-import { Donations } from './Donations';
+import { DonationsPure } from './Donations';
 import { HeaderPure } from './Header';
-import { Services } from './Services';
+import { ServicesPure } from './Services';
 
 import './Analytics.scss';
 
@@ -26,7 +26,7 @@ export const Analytics = () => {
 
   return <View title={analyticsLangResources.title} className="overview">
     <HeaderPure view={view} onViewChange={handleViewChange} period={period} onPeriodChange={handlePeriodChange} />
-    {view === AnalyticsView.Services ? <Services period={period} /> : <Donations period={period} />}
+    {view === AnalyticsView.Services ? <ServicesPure period={period} /> : <DonationsPure period={period} />}
   </View>;
 };
 

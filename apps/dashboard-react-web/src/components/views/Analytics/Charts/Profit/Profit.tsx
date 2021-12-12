@@ -2,7 +2,7 @@ import React from 'react';
 
 import { OperationType } from '@tezospayments/common';
 
-import { AnalyticsView, Period } from '../../../../../models/system';
+import { Period } from '../../../../../models/system';
 import { AppState } from '../../../../../store';
 import { selectOperationsState, selectProfitChartData } from '../../../../../store/operations/selectors';
 import { ChartPure } from '../../../../common/Chart';
@@ -10,7 +10,6 @@ import { useAppSelector, useCurrentLanguageResources } from '../../../../hooks';
 
 interface ProfitProps {
   period: Period;
-  view: AnalyticsView;
   type: OperationType;
 }
 
