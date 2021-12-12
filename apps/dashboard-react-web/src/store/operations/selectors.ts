@@ -1,18 +1,16 @@
 import { createCachedSelector } from 're-reselect';
 
-import { OperationDirection, OperationStatus, OperationType } from '@tezospayments/common';
+import { OperationDirection, OperationStatus } from '@tezospayments/common';
 
-import { Period } from '../../models/system';
+import { ChartOperationType, Period, ProfitChartType } from '../../models/system';
 import { AppState } from '../index';
-
-export type OperationTypeOrAll = OperationType | 'all';
 
 export const selectOperationsState = (state: AppState) => state.operationsState;
 
 export const selectSortedOperations = createCachedSelector(
   selectOperationsState,
-  (_state: AppState, type: OperationTypeOrAll) => type,
-  (_state: AppState, _type: OperationTypeOrAll, period: Period) => period,
+  (_state: AppState, type: ChartOperationType) => type,
+  (_state: AppState, _type: ChartOperationType, period: Period) => period,
   (operationsState, type, period) => {
     let filteredOperations = [...operationsState.operations];
     if (type !== 'all') {
@@ -48,7 +46,7 @@ const getStartDate = (period: Period) => {
       result.setFullYear(result.getFullYear() - 1);
       break;
     default:
-      throw new Error(`Unsupported period ${period}`);
+      throw new Error(`Unsupported Period ${period}`);
   }
   return result;
 };
@@ -70,6 +68,20 @@ const getUsdRate = (asset: string | undefined) => {
   }
 };
 
+const getMultiplier = (type: ProfitChartType) => {
+  switch (type) {
+    case ProfitChartType.Profit:
+      return -1;
+    case ProfitChartType.Revenue:
+      return 0;
+    case ProfitChartType.GrossVolume:
+      return 1;
+
+    default:
+      throw new Error(`Unsupported ProfitChartType ${type}`);
+  }
+};
+
 const getDateKey = (date: Date) => date.toLocaleDateString('en-US');
 
 const getEmptyData = (startDate: Date, endDate: Date) => {
@@ -84,19 +96,17 @@ const getEmptyData = (startDate: Date, endDate: Date) => {
 
 export const selectProfitChartData = createCachedSelector(
   selectSortedOperations,
-  (_state: AppState, type: OperationTypeOrAll) => type,
-  (_state: AppState, _type: OperationTypeOrAll, period: Period) => period,
-  (_state: AppState, _type: OperationTypeOrAll, _period: Period, ignoreOutgoing: boolean) => ignoreOutgoing,
-  (operations, _type, period, ignoreOutgoing) => {
+  (_state: AppState, operationType: ChartOperationType) => operationType,
+  (_state: AppState, _operationType: ChartOperationType, period: Period) => period,
+  (_state: AppState, _operationType: ChartOperationType, _period: Period, chartType: ProfitChartType) => chartType,
+  (operations, _operationType, period, chartType) => {
     const startDate = period === Period.All ? operations[operations.length - 1]?.date || getTodayDate() : getStartDate(period);
     const endDate = getTodayDate();
     const initialData = getEmptyData(startDate, endDate);
     const profitByDay = operations.reduce((p, o) => {
       if (o.status === OperationStatus.Success) {
         const key = getDateKey(o.date);
-        const multiplier = o.direction === OperationDirection.Outgoing
-          ? ignoreOutgoing ? 0 : -1
-          : 1;
+        const multiplier = o.direction === OperationDirection.Outgoing ? getMultiplier(chartType) : 1;
         p[key] = (p[key] || 0) + o.amount.toNumber() * multiplier * getUsdRate(o.asset);
       }
       return p;
@@ -110,5 +120,5 @@ export const selectProfitChartData = createCachedSelector(
     return result;
   }
 )(
-  (_state, period, type, ignoreOutgoing) => `${type}:${period}:${ignoreOutgoing}`
+  (_state, operationType, period, chartType) => `${operationType}:${period}:${chartType}`
 );

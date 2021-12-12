@@ -1,8 +1,6 @@
 import React from 'react';
 
-import { OperationType } from '@tezospayments/common';
-
-import { Period } from '../../../../../models/system';
+import { ChartOperationType, Period, ProfitChartType } from '../../../../../models/system';
 import { AppState } from '../../../../../store';
 import { selectOperationsState, selectProfitChartData } from '../../../../../store/operations/selectors';
 import { ChartPure } from '../../../../common/Chart';
@@ -10,15 +8,15 @@ import { useAppSelector } from '../../../../hooks';
 
 interface ProfitProps {
   period: Period;
-  type: OperationType;
-  ignoreOutgoing?: boolean;
+  operationType: ChartOperationType;
+  chartType: ProfitChartType;
   title: string;
 }
 
 export const Profit = (props: ProfitProps) => {
   const isInitialized = useAppSelector(selectOperationsState).initialized;
 
-  const dataSource = useAppSelector((state: AppState) => selectProfitChartData(state, props.type, props.period, !!props.ignoreOutgoing));
+  const dataSource = useAppSelector((state: AppState) => selectProfitChartData(state, props.operationType, props.period, props.chartType));
   const currencyName = dataSource[0] ? dataSource[0][1].toString() : 'unknown';
 
   const option: React.ComponentProps<typeof ChartPure>['option'] = {
