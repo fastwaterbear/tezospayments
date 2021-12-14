@@ -122,3 +122,30 @@ export const selectProfitChartData = createCachedSelector(
 )(
   (_state, operationType, period, chartType) => `${operationType}:${period}:${chartType}`
 );
+
+export const selectOperationsCountChartData = createCachedSelector(
+  selectSortedOperations,
+  (_state: AppState, operationType: ChartOperationType) => operationType,
+  (_state: AppState, _operationType: ChartOperationType, period: Period) => period,
+  (operations, _operationType, period) => {
+    const startDate = period === Period.All ? operations[operations.length - 1]?.date || getTodayDate() : getStartDate(period);
+    const endDate = getTodayDate();
+    const initialData = getEmptyData(startDate, endDate);
+    const profitByDay = operations.reduce((p, o) => {
+      if (o.status === OperationStatus.Success) {
+        const key = getDateKey(o.date);
+        p[key] = (p[key] || 0) + 1;
+      }
+      return p;
+    }, initialData);
+
+    const result = Object.entries(profitByDay)
+      .map(([dayStr, value]) => [new Date(dayStr).toLocaleDateString('en-US'), value]) as Array<[string, number | string]>;
+    result.push(['Day', 'USD']);
+    result.reverse();
+
+    return result;
+  }
+)(
+  (_state, operationType, period) => `${operationType}:${period}`
+);

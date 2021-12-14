@@ -4,6 +4,7 @@ import { OperationType } from '@tezospayments/common';
 
 import { Period, ProfitChartType } from '../../../../models/system';
 import { useCurrentLanguageResources } from '../../../hooks';
+import { OperationsCountPure } from '../Charts/OperationsCount';
 import { ProfitPure } from '../Charts/Profit';
 
 interface DonationsProps {
@@ -13,9 +14,11 @@ interface DonationsProps {
 export const Donations = (props: DonationsProps) => {
   const langResources = useCurrentLanguageResources();
   const analyticsLangResources = langResources.views.analytics;
+  const operationType = OperationType.Donation;
 
   return <div className="analytics-container">
-    <ProfitPure period={props.period} operationType={OperationType.Donation} chartType={ProfitChartType.Profit} title={analyticsLangResources.profit} />
+    <ProfitPure period={props.period} operationType={operationType} chartType={ProfitChartType.Profit} title={analyticsLangResources.profit} />
+    <OperationsCountPure period={props.period} operationType={operationType} title={analyticsLangResources.operationsCount} />
   </div>;
 };
 
