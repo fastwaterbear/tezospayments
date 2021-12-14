@@ -1,3 +1,5 @@
+'use strict';
+
 class InlineChunkHtmlPlugin {
   static inlinedTagInfos = new Map()
     .set('script', {
@@ -26,7 +28,7 @@ class InlineChunkHtmlPlugin {
           deletedAssets.add(inlinedTag.assetName);
 
         return inlinedTag;
-      };
+      }
       const hooks = this.htmlWebpackPlugin.getHooks(compilation);
 
       hooks.alterAssetTagGroups.tap('InlineChunkHtmlPlugin', assets => {
@@ -53,7 +55,7 @@ class InlineChunkHtmlPlugin {
     const asset = assets[assetName];
     return asset
       ? { tagName: tagInfo.targetTagName, innerHTML: asset.source(), closeTag: true, assetName }
-      : tag;
+      : tag
   }
 }
 
