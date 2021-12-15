@@ -1,9 +1,10 @@
 import { createCachedSelector } from 're-reselect';
 
-import { OperationDirection, OperationStatus } from '@tezospayments/common';
+import { OperationDirection, OperationStatus, Token } from '@tezospayments/common';
 
 import { ChartOperationType, Period } from '../../models/system';
 import { AppState } from '../index';
+import { selectAllAcceptedTokens } from '../services/selectors';
 
 export const selectOperationsState = (state: AppState) => state.operationsState;
 
@@ -70,15 +71,14 @@ const getUsdRate = (asset: string | undefined) => {
 
 const getDateKey = (date: Date) => date.toLocaleDateString('en-US');
 
-const initializeProfitData = (startDate: Date, endDate: Date) => {
-  const result = {} as { [key: string]: { profit: number, volume: number, incoming: number, outgoing: number } };
+function initializeChartData<T>(startDate: Date, endDate: Date, initItem: () => T) {
+  const result = {} as { [key: string]: T };
   while (startDate.getTime() <= endDate.getTime()) {
-    result[getDateKey(endDate)] = { profit: 0, volume: 0, incoming: 0, outgoing: 0 };
+    result[getDateKey(endDate)] = initItem();
     endDate.setDate(endDate.getDate() - 1);
   }
-
   return result;
-};
+}
 
 export const selectProfitChartData = createCachedSelector(
   selectSortedOperations,
@@ -87,11 +87,12 @@ export const selectProfitChartData = createCachedSelector(
   (operations, _operationType, period) => {
     const startDate = period === Period.All ? operations[operations.length - 1]?.date || getTodayDate() : getStartDate(period);
     const endDate = getTodayDate();
-    const initialData = initializeProfitData(startDate, endDate);
+    const initialDayItem = { profit: 0, volume: 0, incoming: 0, outgoing: 0 };
+    const initialData = initializeChartData(startDate, endDate, () => ({ ...initialDayItem }));
     const profitByDay = operations.reduce((map, operation) => {
       if (operation.status === OperationStatus.Success) {
         const key = getDateKey(operation.date);
-        const dayData = (map[key] || (map[key] = { profit: 0, volume: 0, incoming: 0, outgoing: 0 }));
+        const dayData = (map[key] || (map[key] = { ...initialDayItem }));
         const amount = operation.amount.toNumber();
         const isOutgoing = operation.direction === OperationDirection.Outgoing;
         const usdRate = getUsdRate(operation.asset);
@@ -113,28 +114,39 @@ export const selectProfitChartData = createCachedSelector(
   (_state, operationType, period, chartType) => `${operationType}:${period}:${chartType}`
 );
 
-// export const selectOperationsCountChartData = createCachedSelector(
-//   selectSortedOperations,
-//   (_state: AppState, operationType: ChartOperationType) => operationType,
-//   (_state: AppState, _operationType: ChartOperationType, period: Period) => period,
-//   (operations, _operationType, period) => {
-//     const startDate = period === Period.All ? operations[operations.length - 1]?.date || getTodayDate() : getStartDate(period);
-//     const endDate = getTodayDate();
-//     const initialData = getEmptyData(startDate, endDate);
-//     const profitByDay = operations.reduce((p, o) => {
-//       if (o.status === OperationStatus.Success) {
-//         const key = getDateKey(o.date);
-//         p[key] = (p[key] || 0) + 1;
-//       }
-//       return p;
-//     }, initialData);
+const getOperationCountInitialDayItem = (tokens: Token[]) => {
+  return tokens.reduce((obj, token) => {
+    obj[token.contractAddress] = 0;
+    return obj;
+  }, { xtz: 0 } as { [key: string]: number });
+};
 
-//     const result = Object.entries(profitByDay)
-//       .map(([dayStr, value]) => ({ Day: new Date(dayStr).toLocaleDateString('en-US'), USD: value, USD2: value }));
-//     result.reverse();
+export const selectOperationsCountChartData = createCachedSelector(
+  selectSortedOperations,
+  selectAllAcceptedTokens,
+  (_state: AppState, operationType: ChartOperationType) => operationType,
+  (_state: AppState, _operationType: ChartOperationType, period: Period) => period,
+  (operations, tokens, _operationType, period) => {
+    const startDate = period === Period.All ? operations[operations.length - 1]?.date || getTodayDate() : getStartDate(period);
+    const endDate = getTodayDate();
+    const initialDayItem = getOperationCountInitialDayItem(tokens);
+    const initialData = initializeChartData(startDate, endDate, () => ({ ...initialDayItem }));
+    const profitByDay = operations.reduce((map, operation) => {
+      if (operation.status === OperationStatus.Success) {
+        const key = getDateKey(operation.date);
+        const dayData = (map[key] || (map[key] = { ...initialDayItem }));
+        const assetKey = operation.asset || 'xtz';
+        dayData[assetKey] = (dayData[assetKey] || 0) + 1;
+      }
+      return map;
+    }, initialData);
 
-//     return result;
-//   }
-// )(
-//   (_state, operationType, period) => `${operationType}:${period}`
-// );
+    const result = Object.entries(profitByDay)
+      .map(([dayStr, value]) => ({ day: new Date(dayStr).toLocaleDateString('en-US'), ...value }));
+    result.reverse();
+
+    return result;
+  }
+)(
+  (_state, operationType, period) => `${operationType}:${period}`
+);

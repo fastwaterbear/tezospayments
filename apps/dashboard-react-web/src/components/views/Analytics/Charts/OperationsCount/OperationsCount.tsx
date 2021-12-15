@@ -1,7 +1,11 @@
 import React from 'react';
 
+import { tezosMeta, unknownAssetMeta } from '@tezospayments/common';
+
 import { ChartOperationType, Period } from '../../../../../models/system';
-import { selectOperationsState } from '../../../../../store/operations/selectors';
+import { AppState } from '../../../../../store';
+import { selectOperationsCountChartData, selectOperationsState } from '../../../../../store/operations/selectors';
+import { selectAllAcceptedTokens } from '../../../../../store/services/selectors';
 import { ChartPure } from '../../../../common/Chart';
 import { useAppSelector } from '../../../../hooks';
 
@@ -15,11 +19,24 @@ type ChartOptions = React.ComponentProps<typeof ChartPure>['option'];
 
 export const OperationsCount = (props: OperationsCountProps) => {
   const isInitialized = useAppSelector(selectOperationsState).initialized;
-  // const dataSource = useAppSelector((state: AppState) => selectOperationsCountChartData(state, props.operationType, props.period));
-  const dataSource = [{ a: 1 }];
+  const dataSource = useAppSelector((state: AppState) => selectOperationsCountChartData(state, props.operationType, props.period));
+  const tokens = useAppSelector(selectAllAcceptedTokens);
+  const tokensDimensions = tokens.map(t => ({ name: t.contractAddress, displayName: (t.metadata || unknownAssetMeta).symbol }));
+  const series: ChartOptions['series'] = [];
+  for (let i = 0; i <= tokensDimensions.length; i++) {
+    series.push({
+      type: 'bar',
+      stack: 'main-stack',
+    });
+  }
 
   const option: ChartOptions = {
     dataset: {
+      dimensions: [
+        'day',
+        { name: 'xtz', displayName: tezosMeta.symbol },
+        ...tokensDimensions
+      ],
       source: dataSource
     },
     title: {
@@ -43,10 +60,7 @@ export const OperationsCount = (props: OperationsCountProps) => {
     yAxis: {
       type: 'value'
     },
-    series: [{
-      type: 'bar',
-      stack: 'main-stack',
-    }]
+    series
   };
 
   return <ChartPure option={option} loading={!isInitialized} />;
