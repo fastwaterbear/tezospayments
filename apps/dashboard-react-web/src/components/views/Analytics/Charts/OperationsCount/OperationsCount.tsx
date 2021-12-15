@@ -7,18 +7,20 @@ import { AppState } from '../../../../../store';
 import { selectOperationsCountChartData, selectOperationsState } from '../../../../../store/operations/selectors';
 import { selectAllAcceptedTokens } from '../../../../../store/services/selectors';
 import { ChartPure } from '../../../../common/Chart';
-import { useAppSelector } from '../../../../hooks';
+import { useAppSelector, useCurrentLanguageResources } from '../../../../hooks';
 
 interface OperationsCountProps {
   period: Period;
   operationType: ChartOperationType;
-  title: string;
 }
 
 type ChartOptions = React.ComponentProps<typeof ChartPure>['option'];
 
 export const OperationsCount = (props: OperationsCountProps) => {
   const isInitialized = useAppSelector(selectOperationsState).initialized;
+  const langResources = useCurrentLanguageResources();
+  const analyticsLangResources = langResources.views.analytics;
+
   const dataSource = useAppSelector((state: AppState) => selectOperationsCountChartData(state, props.operationType, props.period));
   const tokens = useAppSelector(selectAllAcceptedTokens);
   const tokensDimensions = tokens.map(t => ({ name: t.contractAddress, displayName: (t.metadata || unknownAssetMeta).symbol }));
@@ -40,7 +42,7 @@ export const OperationsCount = (props: OperationsCountProps) => {
       source: dataSource
     },
     title: {
-      text: props.title,
+      text: analyticsLangResources.operationsCount,
       padding: 0,
     },
     tooltip: {

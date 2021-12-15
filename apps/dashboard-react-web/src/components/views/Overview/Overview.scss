@@ -8,15 +8,10 @@
   grid-column-start: span 2;
   height: 220px;
   overflow: auto;
-  
+
   .ant-card-head {
     border-bottom-width: 0;
   }
-}
-
-.cards-container__large-card {
-  grid-column-start: span 3;
-  min-width: 0;
 }
 
 @media (max-width: 1000px) {
@@ -24,8 +19,27 @@
     grid-template-columns: 1fr;
   }
 
-  .cards-container__small-card,
-  .cards-container__large-card {
+  .cards-container__small-card {
     grid-column-start: unset;
+  }
+}
+
+$-charts-gap-size: var(--grid-layout-gutter);
+
+.overview-analytics-container {
+  display: flex;
+  margin-top: $-charts-gap-size;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  row-gap: var(--grid-layout-gutter);
+}
+
+.overview-analytics-container > * {
+  flex-basis: calc(50% - $-charts-gap-size/2);
+  height: 500px !important;
+  overflow: hidden;
+
+  @media (max-width: 1100px) {
+    flex-basis: 100%;
   }
 }
