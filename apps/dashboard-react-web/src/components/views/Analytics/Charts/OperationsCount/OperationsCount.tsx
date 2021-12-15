@@ -17,12 +17,6 @@ type ChartOptions = React.ComponentProps<typeof ChartPure>['option'];
 export const OperationsCount = (props: OperationsCountProps) => {
   const isInitialized = useAppSelector(selectOperationsState).initialized;
   const dataSource = useAppSelector((state: AppState) => selectOperationsCountChartData(state, props.operationType, props.period));
-  const columns = dataSource[0]?.splice(0, 1) || [];
-  const series: ChartOptions['series'] = columns.map(c => ({
-    name: c.toString(),
-    type: 'bar',
-    stack: 'main-stack',
-  }));
 
   const option: ChartOptions = {
     dataset: {
@@ -49,7 +43,10 @@ export const OperationsCount = (props: OperationsCountProps) => {
     yAxis: {
       type: 'value'
     },
-    series
+    series: [{
+      type: 'bar',
+      stack: 'main-stack',
+    }]
   };
 
   return <ChartPure option={option} loading={!isInitialized} />;

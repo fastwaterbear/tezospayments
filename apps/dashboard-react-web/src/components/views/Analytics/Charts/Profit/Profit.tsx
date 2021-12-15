@@ -17,7 +17,6 @@ export const Profit = (props: ProfitProps) => {
   const isInitialized = useAppSelector(selectOperationsState).initialized;
 
   const dataSource = useAppSelector((state: AppState) => selectProfitChartData(state, props.operationType, props.period, props.chartType));
-  const currencyName = dataSource[0] ? dataSource[0][1].toString() : 'unknown';
 
   const option: React.ComponentProps<typeof ChartPure>['option'] = {
     dataset: {
@@ -31,7 +30,6 @@ export const Profit = (props: ProfitProps) => {
       trigger: 'axis'
     },
     legend: {
-      data: [currencyName],
       selectedMode: false
     },
     grid: {
@@ -49,7 +47,6 @@ export const Profit = (props: ProfitProps) => {
     },
     series: [
       {
-        name: currencyName,
         type: 'line',
       }
     ]

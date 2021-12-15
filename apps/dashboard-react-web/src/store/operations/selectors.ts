@@ -113,8 +113,7 @@ export const selectProfitChartData = createCachedSelector(
     }, initialData);
 
     const result = Object.entries(profitByDay)
-      .map(([dayStr, value]) => [new Date(dayStr).toLocaleDateString('en-US'), value]) as Array<[string, number | string]>;
-    result.push(['Day', 'USD']);
+      .map(([dayStr, value]) => ({ Day: new Date(dayStr).toLocaleDateString('en-US'), USD: value }));
     result.reverse();
 
     return result;
@@ -140,8 +139,7 @@ export const selectOperationsCountChartData = createCachedSelector(
     }, initialData);
 
     const result = Object.entries(profitByDay)
-      .map(([dayStr, value]) => [new Date(dayStr).toLocaleDateString('en-US'), value]) as Array<[string, number | string]>;
-    result.push(['Day', 'USD']);
+      .map(([dayStr, value]) => ({ Day: new Date(dayStr).toLocaleDateString('en-US'), USD: value, USD2: value }));
     result.reverse();
 
     return result;
