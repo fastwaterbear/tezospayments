@@ -11,7 +11,7 @@ interface ProfitProps {
   operationType: ChartOperationType;
 }
 
-export const Profit = (props: ProfitProps) => {
+export const Volume = (props: ProfitProps) => {
   const langResources = useCurrentLanguageResources();
   const analyticsLangResources = langResources.views.analytics;
   const isInitialized = useAppSelector(selectOperationsState).initialized;
@@ -19,18 +19,22 @@ export const Profit = (props: ProfitProps) => {
 
   const option: React.ComponentProps<typeof ChartPure>['option'] = {
     dataset: {
-      dimensions: ['day', { name: 'profit', displayName: analyticsLangResources.currency.usd }],
+      dimensions: [
+        'day',
+        { name: 'volume', displayName: analyticsLangResources.all },
+        { name: 'incoming', displayName: analyticsLangResources.incoming },
+        { name: 'outgoing', displayName: analyticsLangResources.outgoing }
+      ],
       source: dataSource
     },
     title: {
-      text: analyticsLangResources.profit,
+      text: analyticsLangResources.volume,
       padding: 0,
     },
     tooltip: {
       trigger: 'axis'
     },
     legend: {
-      selectedMode: false
     },
     grid: {
       top: 60,
@@ -45,10 +49,10 @@ export const Profit = (props: ProfitProps) => {
     yAxis: {
       type: 'value'
     },
-    series: [{ type: 'line', color: '#3571E9' }]
+    series: [{ type: 'line', color: '#3571E9' }, { type: 'line', color: '#879E15' }, { type: 'line', color: '#DD364F' }]
   };
 
   return <ChartPure option={option} loading={!isInitialized} />;
 };
 
-export const ProfitPure = React.memo(Profit);
+export const VolumePure = React.memo(Volume);

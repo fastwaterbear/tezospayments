@@ -2,7 +2,7 @@ import { createCachedSelector } from 're-reselect';
 
 import { OperationDirection, OperationStatus } from '@tezospayments/common';
 
-import { ChartOperationType, Period, ProfitChartType } from '../../models/system';
+import { ChartOperationType, Period } from '../../models/system';
 import { AppState } from '../index';
 
 export const selectOperationsState = (state: AppState) => state.operationsState;
@@ -68,26 +68,12 @@ const getUsdRate = (asset: string | undefined) => {
   }
 };
 
-const getMultiplier = (type: ProfitChartType) => {
-  switch (type) {
-    case ProfitChartType.Profit:
-      return -1;
-    case ProfitChartType.Revenue:
-      return 0;
-    case ProfitChartType.GrossVolume:
-      return 1;
-
-    default:
-      throw new Error(`Unsupported ProfitChartType ${type}`);
-  }
-};
-
 const getDateKey = (date: Date) => date.toLocaleDateString('en-US');
 
-const getEmptyData = (startDate: Date, endDate: Date) => {
-  const result = {} as { [key: string]: number };
+const initializeProfitData = (startDate: Date, endDate: Date) => {
+  const result = {} as { [key: string]: { profit: number, volume: number, incoming: number, outgoing: number } };
   while (startDate.getTime() <= endDate.getTime()) {
-    result[getDateKey(endDate)] = 0;
+    result[getDateKey(endDate)] = { profit: 0, volume: 0, incoming: 0, outgoing: 0 };
     endDate.setDate(endDate.getDate() - 1);
   }
 
@@ -98,22 +84,27 @@ export const selectProfitChartData = createCachedSelector(
   selectSortedOperations,
   (_state: AppState, operationType: ChartOperationType) => operationType,
   (_state: AppState, _operationType: ChartOperationType, period: Period) => period,
-  (_state: AppState, _operationType: ChartOperationType, _period: Period, chartType: ProfitChartType) => chartType,
-  (operations, _operationType, period, chartType) => {
+  (operations, _operationType, period) => {
     const startDate = period === Period.All ? operations[operations.length - 1]?.date || getTodayDate() : getStartDate(period);
     const endDate = getTodayDate();
-    const initialData = getEmptyData(startDate, endDate);
-    const profitByDay = operations.reduce((p, o) => {
-      if (o.status === OperationStatus.Success) {
-        const key = getDateKey(o.date);
-        const multiplier = o.direction === OperationDirection.Outgoing ? getMultiplier(chartType) : 1;
-        p[key] = (p[key] || 0) + o.amount.toNumber() * multiplier * getUsdRate(o.asset);
+    const initialData = initializeProfitData(startDate, endDate);
+    const profitByDay = operations.reduce((map, operation) => {
+      if (operation.status === OperationStatus.Success) {
+        const key = getDateKey(operation.date);
+        const dayData = (map[key] || (map[key] = { profit: 0, volume: 0, incoming: 0, outgoing: 0 }));
+        const amount = operation.amount.toNumber();
+        const isOutgoing = operation.direction === OperationDirection.Outgoing;
+        const usdRate = getUsdRate(operation.asset);
+        dayData.profit += amount * (isOutgoing ? -1 : 1) * usdRate;
+        dayData.volume += amount * (isOutgoing ? 1 : 1) * usdRate;
+        dayData.incoming += amount * (isOutgoing ? 0 : 1) * usdRate;
+        dayData.outgoing += amount * (isOutgoing ? 1 : 0) * usdRate;
       }
-      return p;
+      return map;
     }, initialData);
 
     const result = Object.entries(profitByDay)
-      .map(([dayStr, value]) => ({ Day: new Date(dayStr).toLocaleDateString('en-US'), USD: value }));
+      .map(([dayStr, value]) => ({ day: new Date(dayStr).toLocaleDateString('en-US'), ...value }));
     result.reverse();
 
     return result;
@@ -122,28 +113,28 @@ export const selectProfitChartData = createCachedSelector(
   (_state, operationType, period, chartType) => `${operationType}:${period}:${chartType}`
 );
 
-export const selectOperationsCountChartData = createCachedSelector(
-  selectSortedOperations,
-  (_state: AppState, operationType: ChartOperationType) => operationType,
-  (_state: AppState, _operationType: ChartOperationType, period: Period) => period,
-  (operations, _operationType, period) => {
-    const startDate = period === Period.All ? operations[operations.length - 1]?.date || getTodayDate() : getStartDate(period);
-    const endDate = getTodayDate();
-    const initialData = getEmptyData(startDate, endDate);
-    const profitByDay = operations.reduce((p, o) => {
-      if (o.status === OperationStatus.Success) {
-        const key = getDateKey(o.date);
-        p[key] = (p[key] || 0) + 1;
-      }
-      return p;
-    }, initialData);
+// export const selectOperationsCountChartData = createCachedSelector(
+//   selectSortedOperations,
+//   (_state: AppState, operationType: ChartOperationType) => operationType,
+//   (_state: AppState, _operationType: ChartOperationType, period: Period) => period,
+//   (operations, _operationType, period) => {
+//     const startDate = period === Period.All ? operations[operations.length - 1]?.date || getTodayDate() : getStartDate(period);
+//     const endDate = getTodayDate();
+//     const initialData = getEmptyData(startDate, endDate);
+//     const profitByDay = operations.reduce((p, o) => {
+//       if (o.status === OperationStatus.Success) {
+//         const key = getDateKey(o.date);
+//         p[key] = (p[key] || 0) + 1;
+//       }
+//       return p;
+//     }, initialData);
 
-    const result = Object.entries(profitByDay)
-      .map(([dayStr, value]) => ({ Day: new Date(dayStr).toLocaleDateString('en-US'), USD: value, USD2: value }));
-    result.reverse();
+//     const result = Object.entries(profitByDay)
+//       .map(([dayStr, value]) => ({ Day: new Date(dayStr).toLocaleDateString('en-US'), USD: value, USD2: value }));
+//     result.reverse();
 
-    return result;
-  }
-)(
-  (_state, operationType, period) => `${operationType}:${period}`
-);
+//     return result;
+//   }
+// )(
+//   (_state, operationType, period) => `${operationType}:${period}`
+// );

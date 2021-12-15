@@ -1,8 +1,7 @@
 import React from 'react';
 
 import { ChartOperationType, Period } from '../../../../../models/system';
-import { AppState } from '../../../../../store';
-import { selectOperationsCountChartData, selectOperationsState } from '../../../../../store/operations/selectors';
+import { selectOperationsState } from '../../../../../store/operations/selectors';
 import { ChartPure } from '../../../../common/Chart';
 import { useAppSelector } from '../../../../hooks';
 
@@ -16,7 +15,8 @@ type ChartOptions = React.ComponentProps<typeof ChartPure>['option'];
 
 export const OperationsCount = (props: OperationsCountProps) => {
   const isInitialized = useAppSelector(selectOperationsState).initialized;
-  const dataSource = useAppSelector((state: AppState) => selectOperationsCountChartData(state, props.operationType, props.period));
+  // const dataSource = useAppSelector((state: AppState) => selectOperationsCountChartData(state, props.operationType, props.period));
+  const dataSource = [{ a: 1 }];
 
   const option: ChartOptions = {
     dataset: {
