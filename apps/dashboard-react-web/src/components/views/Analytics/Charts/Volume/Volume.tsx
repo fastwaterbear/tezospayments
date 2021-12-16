@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { LineColor } from '../../../../../models/charts';
 import { ChartOperationType, Period } from '../../../../../models/system';
 import { AppState } from '../../../../../store';
 import { selectOperationsState, selectProfitChartData } from '../../../../../store/operations/selectors';
@@ -29,7 +30,7 @@ export const Volume = (props: ProfitProps) => {
       source: dataSource
     },
     title: {
-      text: analyticsLangResources.volume,
+      text: `${analyticsLangResources.volume} (${analyticsLangResources.currency.usd})`,
       padding: 0,
     },
     tooltip: {
@@ -50,7 +51,7 @@ export const Volume = (props: ProfitProps) => {
     yAxis: {
       type: 'value'
     },
-    series: [{ type: 'line', color: '#3571E9' }, { type: 'line', color: '#879E15' }, { type: 'line', color: '#DD364F' }]
+    series: [{ type: 'line', color: LineColor.Blue, }, { type: 'line', color: LineColor.Green }, { type: 'line', color: LineColor.Red }]
   };
 
   return <ChartPure className={props.className} option={option} loading={!isInitialized} />;

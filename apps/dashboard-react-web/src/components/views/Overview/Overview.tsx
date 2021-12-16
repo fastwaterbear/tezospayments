@@ -5,7 +5,7 @@ import { Period } from '../../../models/system';
 import { selectServicesState } from '../../../store/services/selectors';
 import { NoServicesCreatedPure } from '../../common/NoServicesCreated';
 import { useAppSelector, useCurrentLanguageResources } from '../../hooks';
-import { OperationsCountPure } from '../Analytics/Charts/OperationsCount';
+import { OperationsCountByTokensPure } from '../Analytics/Charts/OperationsCountByTokens';
 import { VolumePure } from '../Analytics/Charts/Volume';
 import { View } from '../View';
 import { BalancesPure, IncomingPure, OutgoingPure } from './SmallCards';
@@ -40,7 +40,7 @@ export const Overview = () => {
           </Card>
         </div>
         <div className="overview-analytics">
-          <OperationsCountPure className="overview-analytics__chart" period={Period.All} operationType={'all'} />
+          <OperationsCountByTokensPure className="overview-analytics__chart" period={Period.All} operationType={'all'} />
           <VolumePure className="overview-analytics__chart" period={Period.All} operationType={'all'} />
         </div>
       </div>}

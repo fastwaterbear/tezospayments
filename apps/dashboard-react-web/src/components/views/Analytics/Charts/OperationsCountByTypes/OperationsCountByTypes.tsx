@@ -1,15 +1,13 @@
 import React from 'react';
 
-import { tezosMeta, unknownAssetMeta } from '@tezospayments/common';
-
+import { LineColor } from '../../../../../models/charts';
 import { ChartOperationType, Period } from '../../../../../models/system';
 import { AppState } from '../../../../../store';
-import { selectOperationsCountChartData, selectOperationsState } from '../../../../../store/operations/selectors';
-import { selectAllAcceptedTokens } from '../../../../../store/services/selectors';
+import { selectOperationsCountByTypesChartData, selectOperationsState } from '../../../../../store/operations/selectors';
 import { ChartPure } from '../../../../common/Chart';
 import { useAppSelector, useCurrentLanguageResources } from '../../../../hooks';
 
-interface OperationsCountProps {
+interface OperationsCountByTypesProps {
   period: Period;
   operationType: ChartOperationType;
   className?: string;
@@ -17,33 +15,25 @@ interface OperationsCountProps {
 
 type ChartOptions = React.ComponentProps<typeof ChartPure>['option'];
 
-export const OperationsCount = (props: OperationsCountProps) => {
+export const OperationsCountByTypes = (props: OperationsCountByTypesProps) => {
   const isInitialized = useAppSelector(selectOperationsState).initialized;
   const langResources = useCurrentLanguageResources();
   const analyticsLangResources = langResources.views.analytics;
 
-  const dataSource = useAppSelector((state: AppState) => selectOperationsCountChartData(state, props.operationType, props.period));
-  const tokens = useAppSelector(selectAllAcceptedTokens);
-  const tokensDimensions = tokens.map(t => ({ name: t.contractAddress, displayName: (t.metadata || unknownAssetMeta).symbol }));
-  const series: ChartOptions['series'] = [];
-  for (let i = 0; i <= tokensDimensions.length; i++) {
-    series.push({
-      type: 'bar',
-      stack: 'main-stack',
-    });
-  }
+  const dataSource = useAppSelector((state: AppState) => selectOperationsCountByTypesChartData(state, props.operationType, props.period));
 
   const option: ChartOptions = {
     dataset: {
       dimensions: [
         'day',
-        { name: 'xtz', displayName: tezosMeta.symbol },
-        ...tokensDimensions
+        { name: 'incoming', displayName: analyticsLangResources.success },
+        { name: 'outgoing', displayName: analyticsLangResources.refund },
+        { name: 'failed', displayName: analyticsLangResources.failed },
       ],
       source: dataSource
     },
     title: {
-      text: analyticsLangResources.operationsCount,
+      text: analyticsLangResources.operationsCountByTypes,
       padding: 0,
     },
     tooltip: {
@@ -63,10 +53,26 @@ export const OperationsCount = (props: OperationsCountProps) => {
     yAxis: {
       type: 'value'
     },
-    series
+    series: [
+      {
+        type: 'bar',
+        color: LineColor.Green,
+        stack: 'main-stack',
+      },
+      {
+        type: 'bar',
+        color: LineColor.Yellow,
+        stack: 'main-stack',
+      },
+      {
+        type: 'bar',
+        color: LineColor.Red,
+        stack: 'main-stack',
+      }
+    ]
   };
 
   return <ChartPure className={props.className} option={option} loading={!isInitialized} />;
 };
 
-export const OperationsCountPure = React.memo(OperationsCount);
+export const OperationsCountByTypesPure = React.memo(OperationsCountByTypes);

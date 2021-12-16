@@ -121,7 +121,7 @@ const getOperationCountInitialDayItem = (tokens: Token[]) => {
   }, { xtz: 0 } as { [key: string]: number });
 };
 
-export const selectOperationsCountChartData = createCachedSelector(
+export const selectOperationsCountByTokensChartData = createCachedSelector(
   selectSortedOperations,
   selectAllAcceptedTokens,
   (_state: AppState, operationType: ChartOperationType) => operationType,
@@ -137,6 +137,40 @@ export const selectOperationsCountChartData = createCachedSelector(
         const dayData = (map[key] || (map[key] = { ...initialDayItem }));
         const assetKey = operation.asset || 'xtz';
         dayData[assetKey] = (dayData[assetKey] || 0) + 1;
+      }
+      return map;
+    }, initialData);
+
+    const result = Object.entries(profitByDay)
+      .map(([dayStr, value]) => ({ day: new Date(dayStr).toLocaleDateString('en-US'), ...value }));
+    result.reverse();
+
+    return result;
+  }
+)(
+  (_state, operationType, period) => `${operationType}:${period}`
+);
+
+export const selectOperationsCountByTypesChartData = createCachedSelector(
+  selectSortedOperations,
+  (_state: AppState, operationType: ChartOperationType) => operationType,
+  (_state: AppState, _operationType: ChartOperationType, period: Period) => period,
+  (operations, _operationType, period) => {
+    const startDate = period === Period.All ? operations[operations.length - 1]?.date || getTodayDate() : getStartDate(period);
+    const endDate = getTodayDate();
+    const initialDayItem = { incoming: 0, outgoing: 0, failed: 0 };
+    const initialData = initializeChartData(startDate, endDate, () => ({ ...initialDayItem }));
+    const profitByDay = operations.reduce((map, operation) => {
+      const key = getDateKey(operation.date);
+      const dayData = (map[key] || (map[key] = { ...initialDayItem }));
+      if (operation.status === OperationStatus.Cancelled) {
+        dayData.failed++;
+      } else if (operation.status === OperationStatus.Success) {
+        if (operation.direction === OperationDirection.Incoming) {
+          dayData.incoming++;
+        } else {
+          dayData.outgoing++;
+        }
       }
       return map;
     }, initialData);

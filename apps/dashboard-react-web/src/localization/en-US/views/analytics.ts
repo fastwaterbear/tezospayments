@@ -6,7 +6,11 @@ export const analytics = {
   all: 'All',
   incoming: 'Incoming',
   outgoing: 'Outgoing',
-  operationsCount: 'Operations Count',
+  refund: 'Refund',
+  success: 'Success',
+  failed: 'Failed',
+  operationsCountByTokens: 'Operations Count by Tokens',
+  operationsCountByTypes: 'Operations Count by Types',
   currency: {
     usd: 'USD'
   },
