@@ -12,6 +12,7 @@ import { useAppSelector, useCurrentLanguageResources } from '../../../../hooks';
 interface OperationsCountProps {
   period: Period;
   operationType: ChartOperationType;
+  className?: string;
 }
 
 type ChartOptions = React.ComponentProps<typeof ChartPure>['option'];
@@ -65,7 +66,7 @@ export const OperationsCount = (props: OperationsCountProps) => {
     series
   };
 
-  return <ChartPure option={option} loading={!isInitialized} />;
+  return <ChartPure className={props.className} option={option} loading={!isInitialized} />;
 };
 
 export const OperationsCountPure = React.memo(OperationsCount);

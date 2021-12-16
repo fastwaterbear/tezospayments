@@ -1,13 +1,13 @@
 $-gap-size: 8px;
 
-.analytics-container {
+.analytics {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   row-gap: $-gap-size;
 }
 
-.analytics-container > * {
+.analytics__chart {
   flex-basis: calc(50% - $-gap-size/2);
   height: 400px !important;
   overflow: hidden;

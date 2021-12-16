@@ -26,7 +26,7 @@
 
 $-charts-gap-size: var(--grid-layout-gutter);
 
-.overview-analytics-container {
+.overview-analytics {
   display: flex;
   margin-top: $-charts-gap-size;
   flex-wrap: wrap;
@@ -34,7 +34,9 @@ $-charts-gap-size: var(--grid-layout-gutter);
   row-gap: var(--grid-layout-gutter);
 }
 
-.overview-analytics-container > * {
+.overview-analytics__chart {
+  border-radius: 0;
+  border-color: #f0f0f0;
   flex-basis: calc(50% - $-charts-gap-size/2);
   height: 500px !important;
   overflow: hidden;

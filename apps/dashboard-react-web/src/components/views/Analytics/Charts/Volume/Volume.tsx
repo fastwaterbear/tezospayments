@@ -9,6 +9,7 @@ import { useAppSelector, useCurrentLanguageResources } from '../../../../hooks';
 interface ProfitProps {
   period: Period;
   operationType: ChartOperationType;
+  className?: string;
 }
 
 export const Volume = (props: ProfitProps) => {
@@ -52,7 +53,7 @@ export const Volume = (props: ProfitProps) => {
     series: [{ type: 'line', color: '#3571E9' }, { type: 'line', color: '#879E15' }, { type: 'line', color: '#DD364F' }]
   };
 
-  return <ChartPure option={option} loading={!isInitialized} />;
+  return <ChartPure className={props.className} option={option} loading={!isInitialized} />;
 };
 
 export const VolumePure = React.memo(Volume);

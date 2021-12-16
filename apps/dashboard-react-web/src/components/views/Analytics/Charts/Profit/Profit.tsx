@@ -9,6 +9,7 @@ import { useAppSelector, useCurrentLanguageResources } from '../../../../hooks';
 interface ProfitProps {
   period: Period;
   operationType: ChartOperationType;
+  className?: string;
 }
 
 export const Profit = (props: ProfitProps) => {
@@ -48,7 +49,7 @@ export const Profit = (props: ProfitProps) => {
     series: [{ type: 'line', color: '#3571E9' }]
   };
 
-  return <ChartPure option={option} loading={!isInitialized} />;
+  return <ChartPure className={props.className} option={option} loading={!isInitialized} />;
 };
 
 export const ProfitPure = React.memo(Profit);
