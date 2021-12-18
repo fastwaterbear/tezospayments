@@ -6,7 +6,7 @@ export type AppConfig = DeepReadonly<AppConfigBase & {
     overview: string;
     analytics: string;
     operations: string;
-    service: ParameterizedRoute<(address: string) => string>;
+    service: ParameterizedRoute<(address: string, isEdit?: boolean) => string>;
     createService: string,
     services: string;
     acceptPayments: string;

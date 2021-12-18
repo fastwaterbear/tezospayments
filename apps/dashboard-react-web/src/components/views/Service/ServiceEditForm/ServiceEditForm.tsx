@@ -1,7 +1,7 @@
 import { Button, Checkbox, Input } from 'antd';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { ServiceLinkHelper, Service, ServiceOperationType, ServiceSigningKey } from '@tezospayments/common';
 
@@ -24,7 +24,7 @@ interface ServiceEditFormProps {
 const serviceLinkHelper = new ServiceLinkHelper();
 
 export const ServiceEditForm = (props: ServiceEditFormProps) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const langResources = useCurrentLanguageResources();
   const commonLangResources = langResources.common;
   const servicesLangResources = langResources.views.services;
@@ -33,8 +33,8 @@ export const ServiceEditForm = (props: ServiceEditFormProps) => {
   const dispatch = useAppDispatch();
 
   const handleCancelClick = useCallback(() => {
-    history.push(`${config.routers.services}/${props.service.contractAddress}`);
-  }, [history, props.service.contractAddress]);
+    navigate(config.routers.service(props.service.contractAddress));
+  }, [navigate, props.service.contractAddress]);
 
   const [isFormValid, setIsFormValid] = useState(false);
   const [name, setName] = useState(props.service.name);

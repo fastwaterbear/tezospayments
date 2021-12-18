@@ -4,7 +4,7 @@ import {
 } from '@ant-design/icons';
 import { Menu, Button } from 'antd';
 import React, { useCallback } from 'react';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import { config } from '../../../config';
 import { useCurrentLanguageResources } from '../../hooks';
@@ -14,15 +14,15 @@ export const NavBar = () => {
   const location = useLocation();
   const langResources = useCurrentLanguageResources();
   const viewsLangResources = langResources.views;
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleCreateServiceClick = useCallback(() => {
-    history.push(config.routers.createService);
-  }, [history]);
+    navigate(config.routers.createService);
+  }, [navigate]);
 
   const handleAcceptPaymentsClick = useCallback(() => {
-    history.push(config.routers.acceptPayments);
-  }, [history]);
+    navigate(config.routers.acceptPayments);
+  }, [navigate]);
 
   return <nav className="navbar">
     <Menu className="navbar__menu" mode="inline" selectedKeys={[location.pathname]}>

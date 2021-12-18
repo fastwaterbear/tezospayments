@@ -1,6 +1,6 @@
 import { Button } from 'antd';
 import React, { useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { Service } from '@tezospayments/common';
 
@@ -17,11 +17,11 @@ interface ActionsZoneProps {
 export const ActionsZone = ({ service, readOnly }: ActionsZoneProps) => {
   const langResources = useCurrentLanguageResources();
   const servicesLangResources = langResources.views.services;
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleAcceptPaymentsClick = useCallback(() => {
-    history.push(config.routers.acceptServicePayments(service.contractAddress));
-  }, [history, service.contractAddress]);
+    navigate(config.routers.acceptServicePayments(service.contractAddress));
+  }, [navigate, service.contractAddress]);
 
   return <div className="service-actions-zone">
     <span className="service-actions-zone__header">Actions</span>
