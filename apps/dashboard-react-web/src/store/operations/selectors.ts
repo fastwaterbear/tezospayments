@@ -1,6 +1,6 @@
 import { createCachedSelector } from 're-reselect';
 
-import { OperationDirection, OperationStatus, Token } from '@tezospayments/common';
+import { OperationDirection, OperationStatus, tezosMeta, Token, unknownAssetMeta } from '@tezospayments/common';
 
 import { ChartOperationType, Period } from '../../models/system';
 import { AppState } from '../index';
@@ -183,4 +183,32 @@ export const selectOperationsCountByTypesChartData = createCachedSelector(
   }
 )(
   (_state, operationType, period) => `${operationType}:${period}`
+);
+
+export const selectProfitByTokensChartData = createCachedSelector(
+  selectSortedOperations,
+  selectAllAcceptedTokens,
+  (_state: AppState, operationType: ChartOperationType) => operationType,
+  (_state: AppState, _operationType: ChartOperationType, period: Period) => period,
+  (_state: AppState, _operationType: ChartOperationType, _period: Period, direction: OperationDirection) => direction,
+  (operations, tokens, _operationType, _period, direction) => {
+    const tokensMap = new Map(tokens.map(t => [t.contractAddress, t]));
+    const initialData = {} as { [key: string]: number };
+    const profitByDay = operations.reduce((map, operation) => {
+      if (operation.status === OperationStatus.Success && operation.direction === direction) {
+        const assetKey = operation.asset ?
+          (tokensMap.get(operation.asset)?.metadata || unknownAssetMeta).symbol
+          : tezosMeta.symbol;
+        map[assetKey] = (map[assetKey] || 0) + (operation.amount.toNumber() * getUsdRate(operation.asset));
+      }
+      return map;
+    }, initialData);
+
+    const result = Object.entries(profitByDay)
+      .map(([token, value]) => ({ value, name: token }));
+
+    return result;
+  }
+)(
+  (_state, operationType, period, direction) => `${operationType}:${period}:${direction}`
 );

@@ -9,13 +9,13 @@ import { selectAllAcceptedTokens } from '../../../../../store/services/selectors
 import { ChartPure } from '../../../../common/Chart';
 import { useAppSelector, useCurrentLanguageResources } from '../../../../hooks';
 
+type ChartOptions = React.ComponentProps<typeof ChartPure>['option'];
+
 interface OperationsCountByTokensProps {
   period: Period;
   operationType: ChartOperationType;
   className?: string;
 }
-
-type ChartOptions = React.ComponentProps<typeof ChartPure>['option'];
 
 export const OperationsCountByTokens = (props: OperationsCountByTokensProps) => {
   const isInitialized = useAppSelector(selectOperationsState).initialized;
