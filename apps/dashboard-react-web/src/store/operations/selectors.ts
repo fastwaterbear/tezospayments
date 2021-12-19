@@ -1,6 +1,6 @@
 import { createCachedSelector } from 're-reselect';
 
-import { OperationDirection, OperationStatus, tezosMeta, Token, unknownAssetMeta } from '@tezospayments/common';
+import { OperationDirection, OperationStatus, tezosMeta, unknownAssetMeta } from '@tezospayments/common';
 
 import { ChartOperationType, Period } from '../../models/system';
 import { AppState } from '../index';
@@ -114,28 +114,24 @@ export const selectProfitChartData = createCachedSelector(
   (_state, operationType, period, chartType) => `${operationType}:${period}:${chartType}`
 );
 
-const getOperationCountInitialDayItem = (tokens: Token[]) => {
-  return tokens.reduce((obj, token) => {
-    obj[token.contractAddress] = 0;
-    return obj;
-  }, { xtz: 0 } as { [key: string]: number });
-};
-
 export const selectOperationsCountByTokensChartData = createCachedSelector(
   selectSortedOperations,
   selectAllAcceptedTokens,
   (_state: AppState, operationType: ChartOperationType) => operationType,
   (_state: AppState, _operationType: ChartOperationType, period: Period) => period,
   (operations, tokens, _operationType, period) => {
+    const tokensMap = new Map(tokens.map(t => [t.contractAddress, t]));
     const startDate = period === Period.All ? operations[operations.length - 1]?.date || getTodayDate() : getStartDate(period);
     const endDate = getTodayDate();
-    const initialDayItem = getOperationCountInitialDayItem(tokens);
+    const initialDayItem = {} as { [key: string]: number };
     const initialData = initializeChartData(startDate, endDate, () => ({ ...initialDayItem }));
     const profitByDay = operations.reduce((map, operation) => {
       if (operation.status === OperationStatus.Success) {
         const key = getDateKey(operation.date);
         const dayData = (map[key] || (map[key] = { ...initialDayItem }));
-        const assetKey = operation.asset || 'xtz';
+        const assetKey = operation.asset ?
+          (tokensMap.get(operation.asset)?.metadata || unknownAssetMeta).symbol
+          : tezosMeta.symbol;
         dayData[assetKey] = (dayData[assetKey] || 0) + 1;
       }
       return map;

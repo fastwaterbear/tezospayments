@@ -24,7 +24,7 @@ export const OperationsCountByTokens = (props: OperationsCountByTokensProps) => 
 
   const dataSource = useAppSelector((state: AppState) => selectOperationsCountByTokensChartData(state, props.operationType, props.period));
   const tokens = useAppSelector(selectAllAcceptedTokens);
-  const tokensDimensions = tokens.map(t => ({ name: t.contractAddress, displayName: (t.metadata || unknownAssetMeta).symbol }));
+  const tokensDimensions = tokens.map(t => ({ name: (t.metadata || unknownAssetMeta).symbol }));
   const series: ChartOptions['series'] = [];
   for (let i = 0; i <= tokensDimensions.length; i++) {
     series.push({
@@ -37,7 +37,7 @@ export const OperationsCountByTokens = (props: OperationsCountByTokensProps) => 
     dataset: {
       dimensions: [
         'day',
-        { name: 'xtz', displayName: tezosMeta.symbol },
+        { name: tezosMeta.symbol },
         ...tokensDimensions
       ],
       source: dataSource
