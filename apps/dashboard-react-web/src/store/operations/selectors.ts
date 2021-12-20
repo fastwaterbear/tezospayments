@@ -26,7 +26,7 @@ export const selectSortedOperations = createCachedSelector(
     return filteredOperations;
   }
 )(
-  (_state, period, type) => `${type}:${period}`
+  (_state, type, period) => `${type}:${period}`
 );
 
 const getTodayDate = () => {
@@ -111,7 +111,7 @@ export const selectProfitChartData = createCachedSelector(
     return result;
   }
 )(
-  (_state, operationType, period, chartType) => `${operationType}:${period}:${chartType}`
+  (_state, operationType, period) => `${operationType}:${period}`
 );
 
 export const selectOperationsCountByTokensChartData = createCachedSelector(
@@ -207,4 +207,34 @@ export const selectProfitByTokensChartData = createCachedSelector(
   }
 )(
   (_state, operationType, period, direction) => `${operationType}:${period}:${direction}`
+);
+
+export const selectMaxTransactionChartData = createCachedSelector(
+  selectSortedOperations,
+  (_state: AppState, operationType: ChartOperationType) => operationType,
+  (_state: AppState, _operationType: ChartOperationType, period: Period) => period,
+  (operations, _operationType, period) => {
+    const startDate = period === Period.All ? operations[operations.length - 1]?.date || getTodayDate() : getStartDate(period);
+    const endDate = getTodayDate();
+    const initialDayItem = { max: 0 };
+    const initialData = initializeChartData(startDate, endDate, () => ({ ...initialDayItem }));
+    const profitByDay = operations.reduce((map, operation) => {
+      if (operation.status === OperationStatus.Success && operation.direction === OperationDirection.Incoming) {
+        const key = getDateKey(operation.date);
+        const dayData = (map[key] || (map[key] = { ...initialDayItem }));
+        const amount = operation.amount.toNumber();
+        const usdRate = getUsdRate(operation.asset);
+        dayData.max = Math.max(dayData.max, amount * usdRate);
+      }
+      return map;
+    }, initialData);
+
+    const result = Object.entries(profitByDay)
+      .map(([dayStr, value]) => ({ day: new Date(dayStr).toLocaleDateString('en-US'), ...value }));
+    result.reverse();
+
+    return result;
+  }
+)(
+  (_state, operationType, period) => `${operationType}:${period}:`
 );
