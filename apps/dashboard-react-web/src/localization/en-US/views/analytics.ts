@@ -8,6 +8,8 @@ export const analytics = {
   outgoing: 'Outgoing',
   maximumPayment: 'Maximum Payment',
   maximumDonation: 'Maximum Donation',
+  newCustomers: 'New Customers',
+  newDonators: 'New Donators',
   refund: 'Refund',
   success: 'Success',
   failed: 'Failed',

@@ -11,6 +11,22 @@ export const selectOperationsState = (state: AppState) => state.operationsState;
 export const selectSortedOperations = createCachedSelector(
   selectOperationsState,
   (_state: AppState, type: ChartOperationType) => type,
+  (operationsState, type) => {
+    let filteredOperations = [...operationsState.operations];
+    if (type !== 'all') {
+      filteredOperations = filteredOperations.filter(o => o.type === type);
+    }
+    filteredOperations.sort((a, b) => +b.date - +a.date);
+
+    return filteredOperations;
+  }
+)(
+  (_state, type) => type
+);
+
+export const selectSortedOperationsForPeriod = createCachedSelector(
+  selectOperationsState,
+  (_state: AppState, type: ChartOperationType) => type,
   (_state: AppState, _type: ChartOperationType, period: Period) => period,
   (operationsState, type, period) => {
     let filteredOperations = [...operationsState.operations];
@@ -32,6 +48,10 @@ export const selectSortedOperations = createCachedSelector(
 const getTodayDate = () => {
   const now = new Date();
   return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+};
+
+const getDate = (date: Date) => {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 };
 
 const getStartDate = (period: Period) => {
@@ -69,7 +89,7 @@ const getUsdRate = (asset: string | undefined) => {
   }
 };
 
-const getDateKey = (date: Date) => date.toLocaleDateString('en-US');
+const getDateKey = (date: Date) => getDate(date).toLocaleDateString('en-US');
 
 function initializeChartData<T>(startDate: Date, endDate: Date, initItem: () => T) {
   const result = {} as { [key: string]: T };
@@ -81,7 +101,7 @@ function initializeChartData<T>(startDate: Date, endDate: Date, initItem: () => 
 }
 
 export const selectProfitChartData = createCachedSelector(
-  selectSortedOperations,
+  selectSortedOperationsForPeriod,
   (_state: AppState, operationType: ChartOperationType) => operationType,
   (_state: AppState, _operationType: ChartOperationType, period: Period) => period,
   (operations, _operationType, period) => {
@@ -115,7 +135,7 @@ export const selectProfitChartData = createCachedSelector(
 );
 
 export const selectOperationsCountByTokensChartData = createCachedSelector(
-  selectSortedOperations,
+  selectSortedOperationsForPeriod,
   selectAllAcceptedTokens,
   (_state: AppState, operationType: ChartOperationType) => operationType,
   (_state: AppState, _operationType: ChartOperationType, period: Period) => period,
@@ -148,7 +168,7 @@ export const selectOperationsCountByTokensChartData = createCachedSelector(
 );
 
 export const selectOperationsCountByTypesChartData = createCachedSelector(
-  selectSortedOperations,
+  selectSortedOperationsForPeriod,
   (_state: AppState, operationType: ChartOperationType) => operationType,
   (_state: AppState, _operationType: ChartOperationType, period: Period) => period,
   (operations, _operationType, period) => {
@@ -182,7 +202,7 @@ export const selectOperationsCountByTypesChartData = createCachedSelector(
 );
 
 export const selectProfitByTokensChartData = createCachedSelector(
-  selectSortedOperations,
+  selectSortedOperationsForPeriod,
   selectAllAcceptedTokens,
   (_state: AppState, operationType: ChartOperationType) => operationType,
   (_state: AppState, _operationType: ChartOperationType, period: Period) => period,
@@ -210,7 +230,7 @@ export const selectProfitByTokensChartData = createCachedSelector(
 );
 
 export const selectMaxTransactionChartData = createCachedSelector(
-  selectSortedOperations,
+  selectSortedOperationsForPeriod,
   (_state: AppState, operationType: ChartOperationType) => operationType,
   (_state: AppState, _operationType: ChartOperationType, period: Period) => period,
   (operations, _operationType, period) => {
@@ -238,3 +258,40 @@ export const selectMaxTransactionChartData = createCachedSelector(
 )(
   (_state, operationType, period) => `${operationType}:${period}:`
 );
+
+export const selectNewSendersCountChartData = createCachedSelector(
+  selectSortedOperations,
+  (_state: AppState, operationType: ChartOperationType) => operationType,
+  (_state: AppState, _operationType: ChartOperationType, period: Period) => period,
+  (operations, _operationType, period) => {
+    operations = [...operations].reverse();
+    const firstOperation = operations[0];
+    const startDate = period === Period.All
+      ? firstOperation ? getDate(firstOperation.date) : getTodayDate()
+      : getStartDate(period);
+    const endDate = getTodayDate();
+    const initialDayItem = { newSendersCount: 0 };
+    const initialData = initializeChartData(startDate, endDate, () => ({ ...initialDayItem }));
+
+    const sendersSet = new Set<string>();
+    const profitByDay = operations.reduce((map, operation) => {
+      if (operation.status === OperationStatus.Success && operation.direction === OperationDirection.Incoming && !sendersSet.has(operation.sender)) {
+        sendersSet.add(operation.sender);
+        const key = getDateKey(operation.date);
+        const datData = map[key];
+        if (datData !== undefined)
+          datData.newSendersCount++;
+      }
+      return map;
+    }, initialData);
+
+    const result = Object.entries(profitByDay)
+      .map(([dayStr, value]) => ({ day: new Date(dayStr).toLocaleDateString('en-US'), ...value }));
+    result.reverse();
+
+    return result;
+  }
+)(
+  (_state, operationType, period) => `${operationType}:${period}:`
+);
+

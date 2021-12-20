@@ -3,6 +3,7 @@ import React from 'react';
 import { OperationDirection, OperationType } from '@tezospayments/common';
 
 import { Period } from '../../../../models/system';
+import { NewSendersPure } from '../Charts/NewSenders';
 import { OperationsCountByTokensPure } from '../Charts/OperationsCountByTokens';
 import { OperationsCountByTypesPure } from '../Charts/OperationsCountByTypes';
 import { ProfitPure } from '../Charts/Profit';
@@ -23,6 +24,7 @@ export const Services = (props: ServicesProps) => {
     <VolumeByTokensPure className="analytics__chart" period={props.period} operationType={operationType} operationDirection={OperationDirection.Outgoing} />
     <OperationsCountByTokensPure className="analytics__chart" period={props.period} operationType={operationType} />
     <OperationsCountByTypesPure className="analytics__chart" period={props.period} operationType={operationType} />
+    <NewSendersPure className="analytics__chart" period={props.period} operationType={operationType} />
   </div>;
 };
 
