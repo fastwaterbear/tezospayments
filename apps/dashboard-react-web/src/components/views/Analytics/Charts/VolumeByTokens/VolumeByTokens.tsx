@@ -26,7 +26,14 @@ export const VolumeByTokens = (props: VolumeByTokensProps) => {
     tooltip: {
       trigger: 'item'
     },
-    legend: {},
+    legend: {
+      orient: 'vertical',
+      type: 'scroll',
+      left: 0,
+      top: 30,
+      bottom: 30
+    },
+    toolbox: undefined,
     series: [
       {
         name: title,

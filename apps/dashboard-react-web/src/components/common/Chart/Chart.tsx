@@ -39,6 +39,16 @@ export const Chart = ({
       text: title,
       padding: 0,
     },
+    dataZoom: {
+      type: 'slider',
+    },
+    toolbox: {
+      feature: {
+        dataZoom: {
+          yAxisIndex: 'none'
+        },
+      }
+    },
     ...option
   };
 
