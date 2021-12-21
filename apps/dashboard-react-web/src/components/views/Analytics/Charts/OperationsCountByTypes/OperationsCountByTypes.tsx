@@ -32,21 +32,10 @@ export const OperationsCountByTypes = (props: OperationsCountByTypesProps) => {
       ],
       source: dataSource
     },
-    title: {
-      text: analyticsLangResources.operationsCountByTypes,
-      padding: 0,
-    },
     tooltip: {
       trigger: 'axis'
     },
     legend: {},
-    grid: {
-      top: 60,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      containLabel: true
-    },
     xAxis: {
       type: 'category',
     },
@@ -72,7 +61,7 @@ export const OperationsCountByTypes = (props: OperationsCountByTypesProps) => {
     ]
   };
 
-  return <ChartPure className={props.className} option={option} loading={!isInitialized} />;
+  return <ChartPure className={props.className} title={analyticsLangResources.operationsCountByTypes} option={option} loading={!isInitialized} />;
 };
 
 export const OperationsCountByTypesPure = React.memo(OperationsCountByTypes);

@@ -18,6 +18,7 @@ export const Volume = (props: ProfitProps) => {
   const analyticsLangResources = langResources.views.analytics;
   const isInitialized = useAppSelector(selectOperationsState).initialized;
   const dataSource = useAppSelector((state: AppState) => selectProfitChartData(state, props.operationType, props.period));
+  const title = `${analyticsLangResources.volume} (${analyticsLangResources.currency.usd})`;
 
   const option: React.ComponentProps<typeof ChartPure>['option'] = {
     dataset: {
@@ -29,22 +30,10 @@ export const Volume = (props: ProfitProps) => {
       ],
       source: dataSource
     },
-    title: {
-      text: `${analyticsLangResources.volume} (${analyticsLangResources.currency.usd})`,
-      padding: 0,
-    },
     tooltip: {
       trigger: 'axis'
     },
-    legend: {
-    },
-    grid: {
-      top: 60,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      containLabel: true
-    },
+    legend: {},
     xAxis: {
       type: 'category',
     },
@@ -54,7 +43,7 @@ export const Volume = (props: ProfitProps) => {
     series: [{ type: 'line', color: LineColor.Blue, }, { type: 'line', color: LineColor.Green }, { type: 'line', color: LineColor.Red }]
   };
 
-  return <ChartPure className={props.className} option={option} loading={!isInitialized} />;
+  return <ChartPure className={props.className} option={option} title={title} loading={!isInitialized} />;
 };
 
 export const VolumePure = React.memo(Volume);

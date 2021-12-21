@@ -12,6 +12,7 @@ interface ChartProps {
   theme?: 'light' | 'dark';
   settings?: SetOptionOpts;
   loading?: boolean;
+  title?: string;
 }
 
 export const Chart = ({
@@ -21,9 +22,25 @@ export const Chart = ({
   style,
   settings,
   loading,
+  title
 }: ChartProps) => {
   const chartElRef = useRef<HTMLDivElement>(null);
   theme = theme || 'light';
+
+  option = {
+    grid: {
+      top: 60,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      containLabel: true
+    },
+    title: {
+      text: title,
+      padding: 0,
+    },
+    ...option
+  };
 
   useEffect(() => {
     let chart: ECharts | undefined;

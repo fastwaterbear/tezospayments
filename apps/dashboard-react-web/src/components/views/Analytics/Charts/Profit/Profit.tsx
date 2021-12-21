@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { LineColor } from '../../../../../models/charts';
 import { ChartOperationType, Period } from '../../../../../models/system';
 import { AppState } from '../../../../../store';
 import { selectOperationsState, selectProfitChartData } from '../../../../../store/operations/selectors';
@@ -23,22 +24,11 @@ export const Profit = (props: ProfitProps) => {
       dimensions: ['day', { name: 'profit', displayName: analyticsLangResources.currency.usd }],
       source: dataSource
     },
-    title: {
-      text: analyticsLangResources.profit,
-      padding: 0,
-    },
     tooltip: {
       trigger: 'axis'
     },
     legend: {
       selectedMode: false
-    },
-    grid: {
-      top: 60,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      containLabel: true
     },
     xAxis: {
       type: 'category',
@@ -46,10 +36,10 @@ export const Profit = (props: ProfitProps) => {
     yAxis: {
       type: 'value'
     },
-    series: [{ type: 'line', color: '#3571E9' }]
+    series: [{ type: 'line', color: LineColor.Blue }]
   };
 
-  return <ChartPure className={props.className} option={option} loading={!isInitialized} />;
+  return <ChartPure className={props.className} title={analyticsLangResources.profit} option={option} loading={!isInitialized} />;
 };
 
 export const ProfitPure = React.memo(Profit);

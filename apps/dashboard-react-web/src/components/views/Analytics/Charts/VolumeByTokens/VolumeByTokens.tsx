@@ -23,10 +23,6 @@ export const VolumeByTokens = (props: VolumeByTokensProps) => {
   const title = props.operationDirection === OperationDirection.Incoming ? analyticsLangResources.incoming : analyticsLangResources.outgoing;
 
   const option: React.ComponentProps<typeof ChartPure>['option'] = {
-    title: {
-      text: `${title} (${analyticsLangResources.currency.usd})`,
-      padding: 0,
-    },
     tooltip: {
       trigger: 'item'
     },
@@ -52,7 +48,7 @@ export const VolumeByTokens = (props: VolumeByTokensProps) => {
     ]
   };
 
-  return <ChartPure className={props.className} option={option} loading={!isInitialized} />;
+  return <ChartPure className={props.className} title={`${title} (${analyticsLangResources.currency.usd})`} option={option} loading={!isInitialized} />;
 };
 
 export const VolumeByTokensPure = React.memo(VolumeByTokens);

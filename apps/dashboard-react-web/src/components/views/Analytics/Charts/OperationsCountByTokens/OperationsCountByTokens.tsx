@@ -42,21 +42,10 @@ export const OperationsCountByTokens = (props: OperationsCountByTokensProps) => 
       ],
       source: dataSource
     },
-    title: {
-      text: analyticsLangResources.operationsCountByTokens,
-      padding: 0,
-    },
     tooltip: {
       trigger: 'axis'
     },
     legend: {},
-    grid: {
-      top: 60,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      containLabel: true
-    },
     xAxis: {
       type: 'category',
     },
@@ -66,7 +55,7 @@ export const OperationsCountByTokens = (props: OperationsCountByTokensProps) => 
     series
   };
 
-  return <ChartPure className={props.className} option={option} loading={!isInitialized} />;
+  return <ChartPure className={props.className} title={analyticsLangResources.operationsCountByTokens} option={option} loading={!isInitialized} />;
 };
 
 export const OperationsCountByTokensPure = React.memo(OperationsCountByTokens);
