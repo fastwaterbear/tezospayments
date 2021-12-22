@@ -2,21 +2,28 @@ import { Skeleton } from 'antd';
 import BigNumber from 'bignumber.js';
 import React from 'react';
 
-import { tezosMeta } from '@tezospayments/common';
+import { OperationDirection, tezosMeta } from '@tezospayments/common';
 
+import { selectTotalVolumeByTokens } from '../../../../store/operations/selectors';
 import { selectAcceptTezos, selectAllAcceptedTokens, selectServicesState } from '../../../../store/services/selectors';
 import { TokenList } from '../../../common';
 import { useAppSelector } from '../../../hooks';
 
-export const Outgoing = () => {
+interface TotalVolumeProps {
+  direction: OperationDirection;
+}
+
+export const TotalVolume = (props: TotalVolumeProps) => {
   const acceptTezos = useAppSelector(selectAcceptTezos);
   const services = useAppSelector(selectServicesState);
   const tokens = useAppSelector(selectAllAcceptedTokens);
+  const volume = useAppSelector(state => selectTotalVolumeByTokens(state, 'all', props.direction));
 
   if (!services.initialized) {
     return <Skeleton active />;
   }
 
+  const multiplier = props.direction === OperationDirection.Incoming ? 1 : -1;
   const items = [];
 
   if (acceptTezos) {
@@ -26,7 +33,7 @@ export const Outgoing = () => {
       ticker={tezosMeta.symbol}
       name={tezosMeta.name}
       decimals={tezosMeta.decimals}
-      value={new BigNumber(-52.4)}
+      value={(volume.get(tezosMeta.symbol) || new BigNumber(0)).multipliedBy(multiplier)}
       iconSrc={tezosMeta.thumbnailUri}
       highlightSign />);
   }
@@ -39,7 +46,7 @@ export const Outgoing = () => {
         ticker={t.metadata.symbol}
         name={t.metadata.name}
         decimals={t.metadata.decimals}
-        value={new BigNumber(-462518.0000006)}
+        value={(volume.get(t.metadata.symbol) || new BigNumber(0)).multipliedBy(multiplier)}
         iconSrc={t.metadata.thumbnailUri}
         highlightSign />);
     }
@@ -50,4 +57,4 @@ export const Outgoing = () => {
   </TokenList>;
 };
 
-export const OutgoingPure = React.memo(Outgoing);
+export const TotalVolumePure = React.memo(TotalVolume);

@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js';
 import { createCachedSelector } from 're-reselect';
 
 import { OperationDirection, OperationStatus, tezosMeta, unknownAssetMeta } from '@tezospayments/common';
@@ -293,5 +294,29 @@ export const selectNewSendersCountChartData = createCachedSelector(
   }
 )(
   (_state, operationType, period) => `${operationType}:${period}:`
+);
+
+export const selectTotalVolumeByTokens = createCachedSelector(
+  selectSortedOperations,
+  selectAllAcceptedTokens,
+  (_state: AppState, operationType: ChartOperationType) => operationType,
+  (_state: AppState, _operationType: ChartOperationType, direction: OperationDirection) => direction,
+  (operations, tokens, _operationType, direction) => {
+    const tokensMap = new Map(tokens.map(t => [t.contractAddress, t]));
+    const result = operations.reduce((map, operation) => {
+      if (operation.status === OperationStatus.Success && operation.direction === direction) {
+        const assetKey = operation.asset ?
+          (tokensMap.get(operation.asset)?.metadata || unknownAssetMeta).symbol
+          : tezosMeta.symbol;
+
+        map.set(assetKey, (map.get(assetKey) || new BigNumber(0)).plus(operation.amount));
+      }
+      return map;
+    }, new Map<string, BigNumber>());
+
+    return result;
+  }
+)(
+  (_state, operationType, direction) => `${operationType}:${direction}:`
 );
 

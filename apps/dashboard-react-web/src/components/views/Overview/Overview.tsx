@@ -1,6 +1,8 @@
 import { Card } from 'antd';
 import React from 'react';
 
+import { OperationDirection } from '@tezospayments/common';
+
 import { Period } from '../../../models/system';
 import { selectServicesState } from '../../../store/services/selectors';
 import { NoServicesCreatedPure } from '../../common/NoServicesCreated';
@@ -8,12 +10,11 @@ import { useAppSelector, useCurrentLanguageResources } from '../../hooks';
 import { OperationsCountByTokensPure } from '../Analytics/Charts/OperationsCountByTokens';
 import { VolumePure } from '../Analytics/Charts/Volume';
 import { View } from '../View';
-import { BalancesPure, IncomingPure, OutgoingPure } from './SmallCards';
+import { BalancesPure, TotalVolumePure } from './SmallCards';
 import './Overview.scss';
 
 export const Overview = () => {
   const langResources = useCurrentLanguageResources();
-  const commonLangResources = langResources.common;
   const overviewLangResources = langResources.views.overview;
 
   const servicesState = useAppSelector(selectServicesState);
@@ -29,14 +30,12 @@ export const Overview = () => {
             <BalancesPure />
           </Card>
 
-          {/*eslint-disable-next-line max-len*/}
-          <Card className="cards-container__small-card" size="small" title={`${overviewLangResources.incoming.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">All Month</a>}>
-            <IncomingPure />
+          <Card className="cards-container__small-card" size="small" title={overviewLangResources.incoming.title}>
+            <TotalVolumePure direction={OperationDirection.Incoming} />
           </Card>
 
-          {/*eslint-disable-next-line max-len*/}
-          <Card className="cards-container__small-card" size="small" title={`${overviewLangResources.outgoing.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">All Month</a>}>
-            <OutgoingPure />
+          <Card className="cards-container__small-card" size="small" title={overviewLangResources.outgoing.title}>
+            <TotalVolumePure direction={OperationDirection.Outgoing} />
           </Card>
         </div>
         <div className="overview-analytics">

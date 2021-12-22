@@ -32,9 +32,9 @@ export const TokenListItem = (props: TokenListItemProps) => {
     { 'token-list-item__value_negative': props.highlightSign && props.value && !props.value.isZero() && props.value.isNegative() }
   );
 
-  const sign = props.value?.isNegative()
+  const sign = props.value?.isNegative() && !props.value.isZero()
     ? '-'
-    : props.highlightSign && props.value?.isPositive()
+    : props.highlightSign && props.value?.isPositive() && !props.value.isZero()
       ? '+'
       : '';
 
