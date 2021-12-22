@@ -257,7 +257,7 @@ export const selectMaxTransactionChartData = createCachedSelector(
     return result;
   }
 )(
-  (_state, operationType, period) => `${operationType}:${period}:`
+  (_state, operationType, period) => `${operationType}:${period}`
 );
 
 export const selectNewSendersCountChartData = createCachedSelector(
@@ -293,7 +293,7 @@ export const selectNewSendersCountChartData = createCachedSelector(
     return result;
   }
 )(
-  (_state, operationType, period) => `${operationType}:${period}:`
+  (_state, operationType, period) => `${operationType}:${period}`
 );
 
 export const selectTotalVolumeByTokens = createCachedSelector(
@@ -317,6 +317,6 @@ export const selectTotalVolumeByTokens = createCachedSelector(
     return result;
   }
 )(
-  (_state, operationType, direction) => `${operationType}:${direction}:`
+  (_state, operationType, direction) => `${operationType}:${direction}`
 );
 
