@@ -39,8 +39,8 @@ export const Overview = () => {
           </Card>
         </div>
         <div className="overview-analytics">
-          <OperationsCountByTokensPure className="overview-analytics__chart" period={Period.All} operationType={'all'} />
-          <VolumePure className="overview-analytics__chart" period={Period.All} operationType={'all'} />
+          <OperationsCountByTokensPure className="overview-analytics__chart" period={Period.All} operationType="all" showZoom={false} />
+          <VolumePure className="overview-analytics__chart" period={Period.All} operationType="all" showZoom={false} />
         </div>
       </div>}
   </View >;

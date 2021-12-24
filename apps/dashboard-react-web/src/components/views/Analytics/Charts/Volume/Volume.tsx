@@ -11,6 +11,7 @@ interface ProfitProps {
   period: Period;
   operationType: ChartOperationType;
   className?: string;
+  showZoom?: boolean;
 }
 
 export const Volume = (props: ProfitProps) => {
@@ -43,7 +44,7 @@ export const Volume = (props: ProfitProps) => {
     series: [{ type: 'line', color: LineColor.Blue, }, { type: 'line', color: LineColor.Green }, { type: 'line', color: LineColor.Red }]
   };
 
-  return <ChartPure className={props.className} option={option} title={title} loading={!isInitialized} />;
+  return <ChartPure className={props.className} option={option} title={title} loading={!isInitialized} showZoom={props.showZoom} />;
 };
 
 export const VolumePure = React.memo(Volume);

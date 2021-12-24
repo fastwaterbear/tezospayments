@@ -15,6 +15,7 @@ interface OperationsCountByTokensProps {
   period: Period;
   operationType: ChartOperationType;
   className?: string;
+  showZoom?: boolean;
 }
 
 export const OperationsCountByTokens = (props: OperationsCountByTokensProps) => {
@@ -55,7 +56,8 @@ export const OperationsCountByTokens = (props: OperationsCountByTokensProps) => 
     series
   };
 
-  return <ChartPure className={props.className} title={analyticsLangResources.operationsCountByTokens} option={option} loading={!isInitialized} />;
+  return <ChartPure className={props.className} title={analyticsLangResources.operationsCountByTokens}
+    option={option} loading={!isInitialized} showZoom={props.showZoom} />;
 };
 
 export const OperationsCountByTokensPure = React.memo(OperationsCountByTokens);
