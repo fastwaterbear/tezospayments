@@ -297,11 +297,12 @@ export const selectNewSendersCountChartData = createCachedSelector(
 );
 
 export const selectTotalVolumeByTokens = createCachedSelector(
-  selectSortedOperations,
+  selectSortedOperationsForPeriod,
   selectAllAcceptedTokens,
   (_state: AppState, operationType: ChartOperationType) => operationType,
-  (_state: AppState, _operationType: ChartOperationType, direction: OperationDirection) => direction,
-  (operations, tokens, _operationType, direction) => {
+  (_state: AppState, _operationType: ChartOperationType, period: Period) => period,
+  (_state: AppState, _operationType: ChartOperationType, _period: Period, direction: OperationDirection) => direction,
+  (operations, tokens, _operationType, _period: Period, direction) => {
     const tokensMap = new Map(tokens.map(t => [t.contractAddress, t]));
     const result = operations.reduce((map, operation) => {
       if (operation.status === OperationStatus.Success && operation.direction === direction) {

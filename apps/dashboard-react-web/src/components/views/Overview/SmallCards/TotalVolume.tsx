@@ -4,6 +4,7 @@ import React from 'react';
 
 import { OperationDirection, tezosMeta } from '@tezospayments/common';
 
+import { Period } from '../../../../models/system';
 import { selectTotalVolumeByTokens } from '../../../../store/operations/selectors';
 import { selectAcceptTezos, selectAllAcceptedTokens, selectServicesState } from '../../../../store/services/selectors';
 import { TokenList } from '../../../common';
@@ -17,7 +18,7 @@ export const TotalVolume = (props: TotalVolumeProps) => {
   const acceptTezos = useAppSelector(selectAcceptTezos);
   const services = useAppSelector(selectServicesState);
   const tokens = useAppSelector(selectAllAcceptedTokens);
-  const volume = useAppSelector(state => selectTotalVolumeByTokens(state, 'all', props.direction));
+  const volume = useAppSelector(state => selectTotalVolumeByTokens(state, 'all', Period.LastWeek, props.direction));
 
   if (!services.initialized) {
     return <Skeleton active />;

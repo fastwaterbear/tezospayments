@@ -15,6 +15,7 @@ import './Overview.scss';
 
 export const Overview = () => {
   const langResources = useCurrentLanguageResources();
+  const commonLangResources = langResources.common;
   const overviewLangResources = langResources.views.overview;
 
   const servicesState = useAppSelector(selectServicesState);
@@ -30,19 +31,20 @@ export const Overview = () => {
             <BalancesPure />
           </Card>
 
-          <Card className="cards-container__small-card" size="small" title={overviewLangResources.incoming.title}>
+          <Card className="cards-container__small-card" size="small" title={overviewLangResources.incoming.title} extra={commonLangResources.period.lastWeek}>
             <TotalVolumePure direction={OperationDirection.Incoming} />
           </Card>
 
-          <Card className="cards-container__small-card" size="small" title={overviewLangResources.outgoing.title}>
+          <Card className="cards-container__small-card" size="small" title={overviewLangResources.outgoing.title} extra={commonLangResources.period.lastWeek}>
             <TotalVolumePure direction={OperationDirection.Outgoing} />
           </Card>
         </div>
         <div className="overview-analytics">
-          <OperationsCountByTokensPure className="overview-analytics__chart" period={Period.All} operationType="all" showZoom={false} />
-          <VolumePure className="overview-analytics__chart" period={Period.All} operationType="all" showZoom={false} />
+          <OperationsCountByTokensPure className="overview-analytics__chart" period={Period.LastWeek} operationType="all" showZoom={false} />
+          <VolumePure className="overview-analytics__chart" period={Period.LastWeek} operationType="all" showZoom={false} />
         </div>
-      </div>}
+      </div>
+    }
   </View >;
 };
 
