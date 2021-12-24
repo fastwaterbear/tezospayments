@@ -26,18 +26,23 @@ export const Chart = (props: ChartProps) => {
     const showZoom = props.showZoom === undefined || props.showZoom;
 
     const grid: ChartOptions['grid'] = {
-      top: 60,
+      top: 80,
       left: 0,
       right: 0,
       containLabel: true
     };
-
-    if (!showZoom) {
+    if (!showZoom)
       grid.bottom = 0;
-    }
+
+    const legend: ChartOptions['legend'] = {
+      top: 35,
+      left: 0,
+      padding: 0,
+      align: 'left',
+      type: 'scroll'
+    };
 
     return {
-      grid,
       title: {
         text: props.title,
         padding: 0,
@@ -47,7 +52,9 @@ export const Chart = (props: ChartProps) => {
       }, {
         type: 'slider'
       }] : undefined,
-      ...props.option
+      ...props.option,
+      grid: { ...grid, ...props.option.grid },
+      legend: { ...legend, ...props.option.legend },
     };
   }, [props.option, props.showZoom, props.title]);
 

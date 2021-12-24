@@ -34,7 +34,6 @@ export const Volume = (props: ProfitProps) => {
     tooltip: {
       trigger: 'axis'
     },
-    legend: {},
     xAxis: {
       type: 'category',
     },

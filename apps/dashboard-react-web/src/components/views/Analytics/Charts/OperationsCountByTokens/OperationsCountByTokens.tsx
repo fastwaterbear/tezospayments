@@ -46,7 +46,6 @@ export const OperationsCountByTokens = (props: OperationsCountByTokensProps) => 
     tooltip: {
       trigger: 'axis'
     },
-    legend: {},
     xAxis: {
       type: 'category',
     },

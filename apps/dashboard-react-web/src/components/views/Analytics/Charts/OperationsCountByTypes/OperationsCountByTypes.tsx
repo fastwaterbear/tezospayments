@@ -35,7 +35,6 @@ export const OperationsCountByTypes = (props: OperationsCountByTypesProps) => {
     tooltip: {
       trigger: 'axis'
     },
-    legend: {},
     xAxis: {
       type: 'category',
     },
