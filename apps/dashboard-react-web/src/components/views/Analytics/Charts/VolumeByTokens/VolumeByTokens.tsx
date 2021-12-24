@@ -28,7 +28,6 @@ export const VolumeByTokens = (props: VolumeByTokensProps) => {
     },
     legend: {
       orient: 'vertical',
-      align: 'left'
     },
     toolbox: undefined,
     series: [

@@ -5,8 +5,6 @@ import { combineClassNames } from '@tezospayments/common';
 
 import './Chart.scss';
 
-type ChartOptions = React.ComponentProps<typeof ChartPure>['option'];
-
 interface ChartProps {
   option: EChartsOption;
   className?: string;
@@ -25,23 +23,6 @@ export const Chart = (props: ChartProps) => {
   const option = useMemo(() => {
     const showZoom = props.showZoom === undefined || props.showZoom;
 
-    const grid: ChartOptions['grid'] = {
-      top: 80,
-      left: 0,
-      right: 0,
-      containLabel: true
-    };
-    if (!showZoom)
-      grid.bottom = 0;
-
-    const legend: ChartOptions['legend'] = {
-      top: 35,
-      left: 0,
-      padding: 0,
-      align: 'left',
-      type: 'scroll'
-    };
-
     return {
       title: {
         text: props.title,
@@ -53,8 +34,21 @@ export const Chart = (props: ChartProps) => {
         type: 'slider'
       }] : undefined,
       ...props.option,
-      grid: { ...grid, ...props.option.grid },
-      legend: { ...legend, ...props.option.legend },
+      grid: {
+        top: 80,
+        left: 'left',
+        right: 0,
+        containLabel: true,
+        ...(!showZoom && { bottom: 0 }),
+        ...props.option.grid
+      },
+      legend: {
+        top: 35,
+        left: 'left',
+        padding: 0,
+        type: 'scroll',
+        ...props.option.legend
+      },
     };
   }, [props.option, props.showZoom, props.title]);
 
