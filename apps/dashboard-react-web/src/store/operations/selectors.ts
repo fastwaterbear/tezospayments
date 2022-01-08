@@ -90,6 +90,8 @@ const getUsdRate = (asset: string | undefined) => {
   }
 };
 
+const toFixedNumber = (value: number, fractionDigits: number) => Number(Number(value).toFixed(fractionDigits));
+
 const getDateKey = (date: Date) => getDate(date).toLocaleDateString('en-US');
 
 function initializeChartData<T>(startDate: Date, endDate: Date, initItem: () => T) {
@@ -108,7 +110,7 @@ export const selectProfitChartData = createCachedSelector(
   (operations, _operationType, period) => {
     const startDate = period === Period.All ? operations[operations.length - 1]?.date || getTodayDate() : getStartDate(period);
     const endDate = getTodayDate();
-    const initialDayItem = { profit: 0, volume: 0, incoming: 0, outgoing: 0 };
+    const initialDayItem = { profit: 0, volume: 0, incoming: 0, outgoing: 0 } as { [key: string]: number };
     const initialData = initializeChartData(startDate, endDate, () => ({ ...initialDayItem }));
     const profitByDay = operations.reduce((map, operation) => {
       if (operation.status === OperationStatus.Success) {
@@ -124,6 +126,12 @@ export const selectProfitChartData = createCachedSelector(
       }
       return map;
     }, initialData);
+
+    Object.values(profitByDay).forEach(dayData => {
+      Object.entries(dayData).forEach(([ticker, tickerDayData]) => {
+        dayData[ticker] = toFixedNumber(tickerDayData, 2);
+      });
+    });
 
     const result = Object.entries(profitByDay)
       .map(([dayStr, value]) => ({ day: new Date(dayStr).toLocaleDateString('en-US'), ...value }));
@@ -224,7 +232,7 @@ export const selectProfitByTokensChartData = createCachedSelector(
     }, initialData);
 
     const result = Object.entries(profitByDay)
-      .map(([token, value]) => ({ value, name: token }));
+      .map(([token, value]) => ({ value: toFixedNumber(value, 2), name: token }));
 
     return result;
   }
