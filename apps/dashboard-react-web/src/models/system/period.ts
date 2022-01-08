@@ -1,6 +1,6 @@
 export enum Period {
   All,
-  LastWeek,
+  LastYear,
   LastMonth,
-  LastYear
+  LastWeek
 }
