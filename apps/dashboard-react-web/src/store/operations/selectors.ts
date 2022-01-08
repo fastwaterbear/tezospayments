@@ -223,10 +223,11 @@ export const selectProfitByTokensChartData = createCachedSelector(
     const initialData = {} as { [key: string]: number };
     const profitByDay = operations.reduce((map, operation) => {
       if (operation.status === OperationStatus.Success && operation.direction === direction) {
-        const assetKey = operation.asset ?
-          (tokensMap.get(operation.asset)?.metadata || unknownAssetMeta).symbol
+        const assetKey = operation.asset
+          ? tokensMap.get(operation.asset)?.metadata?.symbol
           : tezosMeta.symbol;
-        map[assetKey] = (map[assetKey] || 0) + (operation.amount.toNumber() * getUsdRate(operation.asset));
+        if (assetKey)
+          map[assetKey] = (map[assetKey] || 0) + (operation.amount.toNumber() * getUsdRate(operation.asset));
       }
       return map;
     }, initialData);
