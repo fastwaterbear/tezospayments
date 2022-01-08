@@ -145,6 +145,8 @@ export const selectOperationsCountByTokensChartData = createCachedSelector(
     const startDate = period === Period.All ? operations[operations.length - 1]?.date || getTodayDate() : getStartDate(period);
     const endDate = getTodayDate();
     const initialDayItem = {} as { [key: string]: number };
+    initialDayItem[tezosMeta.symbol] = 0;
+    tokens.forEach(t => initialDayItem[(t.metadata || unknownAssetMeta).symbol] = 0);
     const initialData = initializeChartData(startDate, endDate, () => ({ ...initialDayItem }));
     const profitByDay = operations.reduce((map, operation) => {
       if (operation.status === OperationStatus.Success) {
