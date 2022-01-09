@@ -14,7 +14,7 @@
 
 .analytics-header__selector-container {
   display: flex;
-  gap: 16px;
+  gap: layout-variables.$element-spacing-small;
 }
 
 .analytics-header__period {
