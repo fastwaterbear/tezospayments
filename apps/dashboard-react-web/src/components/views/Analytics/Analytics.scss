@@ -1,4 +1,7 @@
-$-gap-size: 8px;
+@use "sass:math";
+@use "../../../styles/layout-variables.scss";
+
+$-gap-size: math.div(layout-variables.$element-spacing-small, 2);
 
 .analytics {
   display: flex;
