@@ -1,5 +1,7 @@
+@use "../../../styles/layout-variables.scss";
+
 .chart-container {
-  padding: 32px 32px 32px 32px;
+  padding: layout-variables.$element-spacing-small * 2;
   border: 1px #e5e5e5 solid;
-  border-radius: 8px;
+  border-radius: layout-variables.$border-radius-large;
 }
