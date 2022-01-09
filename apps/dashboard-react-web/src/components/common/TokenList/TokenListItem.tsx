@@ -27,14 +27,17 @@ const getStringAmounts = (value: BigNumber): [string, string] => {
 };
 
 export const TokenListItem = (props: TokenListItemProps) => {
+  const isPositive = props.value && !props.value.isZero() && props.value.isPositive();
+  const isNegative = props.value && !props.value.isZero() && props.value.isNegative();
+
   const valueClassNames = combineClassNames('token-list-item__value',
-    { 'token-list-item__value_positive': props.highlightSign && props.value && !props.value.isZero() && props.value.isPositive() },
-    { 'token-list-item__value_negative': props.highlightSign && props.value && !props.value.isZero() && props.value.isNegative() }
+    { 'token-list-item__value_positive': props.highlightSign && isPositive },
+    { 'token-list-item__value_negative': props.highlightSign && isNegative }
   );
 
-  const sign = props.value?.isNegative() && !props.value.isZero()
+  const sign = isNegative
     ? '-'
-    : props.highlightSign && props.value?.isPositive() && !props.value.isZero()
+    : props.highlightSign && isPositive
       ? '+'
       : '';
 
