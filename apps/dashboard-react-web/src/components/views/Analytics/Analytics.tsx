@@ -26,7 +26,6 @@ export const Analytics = () => {
     setPeriod(value);
   }, []);
 
-
   return <View title={analyticsLangResources.title} className="overview">
     <HeaderPure view={view} onViewChange={handleViewChange} period={period} onPeriodChange={handlePeriodChange} />
     {servicesState.initialized && !servicesState.services.length
