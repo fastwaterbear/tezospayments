@@ -39,6 +39,9 @@ const getPeriodText = (period: Period, langResources: Language['resources']) => 
   }
 };
 
+const periodOptionsValues = Object.keys(Period).map(k => Number(k)).filter(k => !isNaN(k));
+const viewOptionsValues = Object.keys(AnalyticsView).map(k => Number(k)).filter(k => !isNaN(k));
+
 export const Header = (props: HeaderProps) => {
   const langResources = useCurrentLanguageResources();
   const analyticsLangResources = langResources.views.analytics;
@@ -51,10 +54,10 @@ export const Header = (props: HeaderProps) => {
     props.onPeriodChange(value);
   }, [props]);
 
-  const periodOptions = Object.keys(Period).map(k => Number(k)).filter(k => !isNaN(k))
+  const periodOptions = periodOptionsValues
     .map(k => <Select.Option key={k} value={k}>{getPeriodText(k, langResources)}</Select.Option>);
 
-  const viewOptions = Object.keys(AnalyticsView).map(k => Number(k)).filter(k => !isNaN(k))
+  const viewOptions = viewOptionsValues
     .map(k => <Radio.Button key={k} value={k}>{getViewText(k, langResources)}</Radio.Button>);
 
   return <div className="analytics-header">
