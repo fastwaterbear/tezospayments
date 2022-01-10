@@ -49,7 +49,7 @@ export const selectSortedServices = createSelector(
   }
 );
 
-export const selectOperationsByService = createSelector(
+export const selectPendingOperationsByService = createSelector(
   selectServicesState,
   servicesState => {
     const operationsMap = new Map<string, PendingOperation[]>();
