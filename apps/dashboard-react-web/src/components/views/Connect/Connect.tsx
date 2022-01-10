@@ -1,12 +1,12 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 import { config } from '../../../config';
 import { selectCurrentAccount } from '../../../store/accounts/selectors';
 import { useAppSelector, useCurrentLanguageResources } from '../../hooks';
 import { View } from '../View';
-import './Connect.scss';
 import { ConnectDropdownPure } from './ConnectDropdown';
+import './Connect.scss';
 
 export const Connect = () => {
   const langResources = useCurrentLanguageResources();
@@ -14,7 +14,7 @@ export const Connect = () => {
 
   const currentAccount = useAppSelector(selectCurrentAccount);
   if (currentAccount) {
-    return <Redirect push to={config.routers.overview} />;
+    return <Navigate to={config.routers.overview} />;
   }
 
   return <View title="Connect" className="connect">

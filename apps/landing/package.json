@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "private": "true",
   "scripts": {
-    "build": "webpack",
+    "build": "cross-env WEBPACK_PACKAGE='../../../apps/landing/node_modules/webpack' webpack",
     "watch": "webpack watch"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "css-loader": "^6.5.1",
     "css-minimizer-webpack-plugin": "^3.2.0",
     "html-webpack-plugin": "^5.5.0",

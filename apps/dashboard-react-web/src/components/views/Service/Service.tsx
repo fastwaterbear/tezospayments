@@ -27,7 +27,7 @@ interface ServiceProps {
 export const Service = (props: ServiceProps) => {
   const query = useQuery();
   const isEdit = !!query.get('edit');
-  const { address } = useParams<{ address: string }>();
+  const { address } = useParams<{ address: string }>() as { address: string };
   const { services, initialized: isInitialized } = useAppSelector(selectServicesState);
   const pendingOperationsByService = useAppSelector(selectPendingOperationsByService);
   const isUpdating = pendingOperationsByService.has(address);
