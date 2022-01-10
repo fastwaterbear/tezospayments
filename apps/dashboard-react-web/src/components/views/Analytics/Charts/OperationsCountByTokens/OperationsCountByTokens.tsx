@@ -26,13 +26,10 @@ export const OperationsCountByTokens = (props: OperationsCountByTokensProps) => 
   const dataSource = useAppSelector((state: AppState) => selectOperationsCountByTokensChartData(state, props.operationType, props.period));
   const tokens = useAppSelector(selectAllAcceptedTokens);
   const tokensDimensions = tokens.map(t => ({ name: (t.metadata || unknownAssetMeta).symbol }));
-  const series: ChartOptions['series'] = [];
-  for (let i = 0; i <= tokensDimensions.length; i++) {
-    series.push({
-      type: 'bar',
-      stack: 'main-stack',
-    });
-  }
+  const series: NonNullable<ChartOptions['series']> = tokensDimensions.map(() => ({
+    type: 'bar',
+    stack: 'main-stack',
+  }));
 
   const option: ChartOptions = {
     dataset: {
