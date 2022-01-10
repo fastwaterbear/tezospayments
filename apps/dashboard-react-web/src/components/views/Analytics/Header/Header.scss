@@ -1,0 +1,22 @@
+@use "../../../../styles/layout-variables.scss";
+
+.analytics-header {
+  display: flex;
+  margin: 0 0 var(--grid-layout-gutter) 0;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.analytics-header__title {
+  margin: 0;
+  height: layout-variables.$view-title-height;
+}
+
+.analytics-header__selector-container {
+  display: flex;
+  gap: layout-variables.$element-spacing-small;
+}
+
+.analytics-header__period {
+  width: 120px;
+}

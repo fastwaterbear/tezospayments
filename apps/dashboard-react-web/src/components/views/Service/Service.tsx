@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 
 import { emptyService, Service as ServiceInterface, combineClassNames } from '@tezospayments/common';
 
-import { getOperationsByService, selectServicesState } from '../../../store/services/selectors';
+import { selectPendingOperationsByService, selectServicesState } from '../../../store/services/selectors';
 import { useAppSelector, useQuery } from '../../hooks';
 import { View } from '../View';
 import { ActionsZonePure } from './ActionsZone';
@@ -29,9 +29,9 @@ export const Service = (props: ServiceProps) => {
   const isEdit = !!query.get('edit');
   const { address } = useParams<{ address: string }>();
   const { services, initialized: isInitialized } = useAppSelector(selectServicesState);
-  const pendingOperations = useAppSelector(getOperationsByService);
-  const isUpdating = pendingOperations.has(address);
-  const readOnly = !!pendingOperations.size;
+  const pendingOperationsByService = useAppSelector(selectPendingOperationsByService);
+  const isUpdating = pendingOperationsByService.has(address);
+  const readOnly = !!pendingOperationsByService.size;
   const isCreateMode = props.mode === ServiceViewMode.Create;
 
   //TODO: Use Map

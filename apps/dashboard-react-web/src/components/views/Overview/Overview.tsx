@@ -1,12 +1,16 @@
 import { Card } from 'antd';
 import React from 'react';
 
+import { OperationDirection } from '@tezospayments/common';
+
+import { Period } from '../../../models/system';
 import { selectServicesState } from '../../../store/services/selectors';
 import { NoServicesCreatedPure } from '../../common/NoServicesCreated';
 import { useAppSelector, useCurrentLanguageResources } from '../../hooks';
+import { OperationsCountByTokensPure } from '../Analytics/Charts/OperationsCountByTokens';
+import { VolumePure } from '../Analytics/Charts/Volume';
 import { View } from '../View';
-import { OperationCountChartPure, VolumeChartPure } from './LargeCards';
-import { BalancesPure, IncomingPure, OutgoingPure } from './SmallCards';
+import { BalancesPure, TotalVolumePure } from './SmallCards';
 import './Overview.scss';
 
 export const Overview = () => {
@@ -21,29 +25,26 @@ export const Overview = () => {
 
     {servicesState.initialized && !servicesState.services.length
       ? <NoServicesCreatedPure />
-      : <div className="cards-container">
-        <Card className="cards-container__small-card" size="small" title={overviewLangResources.balances.title}>
-          <BalancesPure />
-        </Card>
+      : <div>
+        <div className="cards-container">
+          <Card className="cards-container__small-card" size="small" title={overviewLangResources.balances.title}>
+            <BalancesPure />
+          </Card>
 
-        {/*eslint-disable-next-line max-len*/}
-        <Card className="cards-container__small-card" size="small" title={`${overviewLangResources.incoming.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">All Month</a>}>
-          <IncomingPure />
-        </Card>
+          <Card className="cards-container__small-card" size="small" title={overviewLangResources.incoming.title} extra={commonLangResources.period.lastWeek}>
+            <TotalVolumePure direction={OperationDirection.Incoming} />
+          </Card>
 
-        {/*eslint-disable-next-line max-len*/}
-        <Card className="cards-container__small-card" size="small" title={`${overviewLangResources.outgoing.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">All Month</a>}>
-          <OutgoingPure />
-        </Card>
-
-        <Card className="cards-container__large-card" title={`${overviewLangResources.operationCount.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">6 Months</a>}>
-          <OperationCountChartPure />
-        </Card>
-
-        <Card className="cards-container__large-card" title={`${overviewLangResources.volume.title} (${commonLangResources.comingSoon})`} extra={<a href="#void">Last 2 Years</a>}>
-          <VolumeChartPure />
-        </Card>
-      </div>}
+          <Card className="cards-container__small-card" size="small" title={overviewLangResources.outgoing.title} extra={commonLangResources.period.lastWeek}>
+            <TotalVolumePure direction={OperationDirection.Outgoing} />
+          </Card>
+        </div>
+        <div className="overview-analytics">
+          <OperationsCountByTokensPure className="overview-analytics__chart" period={Period.LastWeek} operationType="all" showZoom={false} />
+          <VolumePure className="overview-analytics__chart" period={Period.LastWeek} operationType="all" showZoom={false} />
+        </div>
+      </div>
+    }
   </View >;
 };
 

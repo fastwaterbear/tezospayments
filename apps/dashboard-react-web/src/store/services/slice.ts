@@ -4,7 +4,7 @@ import { WalletOperation } from '@taquito/taquito';
 import { Service, optimization, ServiceSigningKey, wait } from '@tezospayments/common';
 
 import { Account } from '../../models/blockchain';
-import { getCurrentAccount } from '../accounts/selectors';
+import { selectCurrentAccount } from '../accounts/selectors';
 import { AppDispatch, AppState } from '../index';
 import { clearOperations, loadOperations } from '../operations/slice';
 import { AppThunkAPI } from '../thunk';
@@ -118,7 +118,7 @@ const createPendingOperation = (hash: string, serviceAddress: string, action: st
 });
 
 const reloadServices = (dispatch: AppDispatch, getState: () => AppState) => {
-  const account = getCurrentAccount(getState());
+  const account = selectCurrentAccount(getState());
   if (account) {
     dispatch(loadServices(account));
   }

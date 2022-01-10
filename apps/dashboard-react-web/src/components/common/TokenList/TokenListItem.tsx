@@ -13,7 +13,7 @@ interface TokenListItemProps {
   iconSrc?: string;
   value?: BigNumber;
   decimals?: number;
-  highlightSign?: boolean;
+  highlightPlus?: boolean;
   className?: string;
   handleDelete?: (contractAddress: string) => void;
 }
@@ -27,14 +27,18 @@ const getStringAmounts = (value: BigNumber): [string, string] => {
 };
 
 export const TokenListItem = (props: TokenListItemProps) => {
+  const isPositive = props.value && !props.value.isZero() && props.value.isPositive();
+  const isHighlightedPositive = props.highlightPlus && isPositive;
+  const isNegative = props.value && !props.value.isZero() && props.value.isNegative();
+
   const valueClassNames = combineClassNames('token-list-item__value',
-    { 'token-list-item__value_positive': props.highlightSign && props.value && !props.value.isZero() && props.value.isPositive() },
-    { 'token-list-item__value_negative': props.highlightSign && props.value && !props.value.isZero() && props.value.isNegative() }
+    { 'token-list-item__value_positive': isHighlightedPositive },
+    { 'token-list-item__value_negative': isNegative }
   );
 
-  const sign = props.value?.isNegative()
+  const sign = isNegative
     ? '-'
-    : props.highlightSign && props.value?.isPositive()
+    : isHighlightedPositive
       ? '+'
       : '';
 

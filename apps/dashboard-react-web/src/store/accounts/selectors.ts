@@ -7,18 +7,18 @@ import { Account } from '../../models/blockchain';
 import type { AppState } from '../index';
 
 export const selectAccountsState = (state: AppState) => state.accountsState;
-export const getCurrentAccount = createSelector(
+export const selectCurrentAccount = createSelector(
   selectAccountsState,
   accountsState => accountsState.currentAccount
     ? (accountsState.connectedAccounts.find(account =>
       account.address === accountsState.currentAccount?.address && account.network.id === accountsState.currentAccount.network.id) || null)
     : null
 );
-export const getAccountsByNetwork = createSelector(
+export const selectAccountsByNetwork = createSelector(
   selectAccountsState,
   accountsState => accountsState.connectedAccounts.reduce((p, c) => p.set(c.network, [...(p.get(c.network) || []), c]), new Map<Network, Account[]>())
 );
-export const getCurrentNetworkConfig = createSelector(
-  getCurrentAccount,
+export const selectCurrentNetworkConfig = createSelector(
+  selectCurrentAccount,
   account => account && config.tezos.networks[account.network.name]
 );

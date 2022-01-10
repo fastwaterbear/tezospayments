@@ -4,7 +4,7 @@ import { TezosPayments } from 'tezospayments';
 
 import { Network } from '@tezospayments/common';
 
-import { getCurrentAccount } from '../../store/accounts/selectors';
+import { selectCurrentAccount } from '../../store/accounts/selectors';
 import { useAppSelector } from './reduxHooks';
 import { useAppContext } from './useAppContext';
 
@@ -24,7 +24,7 @@ const tezosPaymentsInstancesMap = new Map<string, TezosPayments>();
 
 export const useTezosPayments = (serviceContractAddress: string | undefined | null) => {
   const appContext = useAppContext();
-  const currentNetwork = useAppSelector(getCurrentAccount)?.network;
+  const currentNetwork = useAppSelector(selectCurrentAccount)?.network;
 
   if (!serviceContractAddress || !currentNetwork)
     return null;

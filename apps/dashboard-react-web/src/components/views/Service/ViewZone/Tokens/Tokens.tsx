@@ -32,7 +32,7 @@ export const Tokens = ({ service }: TokensProps) => {
       name={tezosMeta.name}
       decimals={tezosMeta.decimals}
       iconSrc={tezosMeta.thumbnailUri}
-      highlightSign />);
+      highlightPlus />);
   }
 
   allowedTokens.forEach(t => {
@@ -45,7 +45,7 @@ export const Tokens = ({ service }: TokensProps) => {
         name={t.metadata.name}
         decimals={t.metadata.decimals}
         iconSrc={t.metadata.thumbnailUri}
-        highlightSign />);
+        highlightPlus />);
     }
   });
 

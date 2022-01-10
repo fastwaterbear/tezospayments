@@ -6,7 +6,7 @@ import { internal as tezosPaymentsInternal } from 'tezospayments';
 import { Donation, Payment, PaymentType, networks } from '@tezospayments/common';
 
 import { config } from '../../../../../config';
-import { getCurrentAccount } from '../../../../../store/accounts/selectors';
+import { selectCurrentAccount } from '../../../../../store/accounts/selectors';
 import { ExternalLink } from '../../../../common';
 import { useAppSelector, useCurrentLanguageResources, useTezosPayments } from '../../../../hooks';
 
@@ -25,7 +25,7 @@ export const DirectLinkGenerator = ({ paymentOrDonation, serviceAddress }: Direc
   const langResources = useCurrentLanguageResources();
   const commonLangResources = langResources.common;
   const acceptPaymentsLangResources = langResources.views.acceptPayments;
-  const currentAccount = useAppSelector(getCurrentAccount);
+  const currentAccount = useAppSelector(selectCurrentAccount);
   const tezosPayments = useTezosPayments(serviceAddress);
 
   const [url, setUrl] = useState('');
