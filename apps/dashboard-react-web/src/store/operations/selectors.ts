@@ -90,7 +90,9 @@ const getUsdRate = (asset: string | undefined) => {
   }
 };
 
-const toFixedNumber = (value: number, fractionDigits: number) => Math.floor(value * 10 ** fractionDigits) / 10 ** fractionDigits;
+const toFixedNumber = (value: number, fractionDigits: number) => {
+  return Math.floor(value * 10 ** fractionDigits) / 10 ** fractionDigits;
+};
 
 const getDateKey = (date: Date) => getDate(date).toLocaleDateString('en-US');
 
@@ -171,8 +173,8 @@ export const selectOperationsCountByTokensChartData = createCachedSelector(
     }, initialData);
 
     const result = Object.entries(operationsCountByDay)
-      .map(([dayStr, value]) => ({ day: new Date(dayStr).toLocaleDateString('en-US'), ...value }));
-    result.reverse();
+      .map(([dayStr, value]) => ({ day: new Date(dayStr).toLocaleDateString('en-US'), ...value }))
+      .reverse();
 
     return result;
   }
@@ -205,8 +207,8 @@ export const selectOperationsCountByTypesChartData = createCachedSelector(
     }, initialData);
 
     const result = Object.entries(operationsCountByDay)
-      .map(([dayStr, value]) => ({ day: new Date(dayStr).toLocaleDateString('en-US'), ...value }));
-    result.reverse();
+      .map(([dayStr, value]) => ({ day: new Date(dayStr).toLocaleDateString('en-US'), ...value }))
+      .reverse();
 
     return result;
   }
@@ -264,8 +266,8 @@ export const selectMaxTransactionChartData = createCachedSelector(
     }, initialData);
 
     const result = Object.entries(maxByDay)
-      .map(([dayStr, value]) => ({ day: new Date(dayStr).toLocaleDateString('en-US'), ...value }));
-    result.reverse();
+      .map(([dayStr, value]) => ({ day: new Date(dayStr).toLocaleDateString('en-US'), ...value }))
+      .reverse();
 
     return result;
   }
@@ -300,8 +302,8 @@ export const selectNewSendersCountChartData = createCachedSelector(
     }, initialData);
 
     const result = Object.entries(newSendersByDay)
-      .map(([dayStr, value]) => ({ day: new Date(dayStr).toLocaleDateString('en-US'), ...value }));
-    result.reverse();
+      .map(([dayStr, value]) => ({ day: new Date(dayStr).toLocaleDateString('en-US'), ...value }))
+      .reverse();
 
     return result;
   }
