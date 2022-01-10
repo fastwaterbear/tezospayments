@@ -13,10 +13,10 @@ export const selectSortedOperations = createCachedSelector(
   selectOperationsState,
   (_state: AppState, type: ChartOperationType) => type,
   (operationsState, type) => {
-    let filteredOperations = [...operationsState.operations];
-    if (type !== 'all') {
-      filteredOperations = filteredOperations.filter(o => o.type === type);
-    }
+    const filteredOperations = type !== 'all'
+      ? operationsState.operations.filter(o => o.type === type)
+      : [...operationsState.operations];
+
     filteredOperations.sort((a, b) => +b.date - +a.date);
 
     return filteredOperations;
@@ -30,10 +30,10 @@ export const selectSortedOperationsForPeriod = createCachedSelector(
   (_state: AppState, type: ChartOperationType) => type,
   (_state: AppState, _type: ChartOperationType, period: Period) => period,
   (operationsState, type, period) => {
-    let filteredOperations = [...operationsState.operations];
-    if (type !== 'all') {
-      filteredOperations = filteredOperations.filter(o => o.type === type);
-    }
+    let filteredOperations = type !== 'all'
+      ? operationsState.operations.filter(o => o.type === type)
+      : [...operationsState.operations];
+
     if (period !== Period.All) {
       const startDate = getStartDate(period);
       filteredOperations = filteredOperations.filter(o => o.date.getTime() >= startDate.getTime());
@@ -110,7 +110,8 @@ export const selectProfitChartData = createCachedSelector(
   (operations, _operationType, period) => {
     const startDate = period === Period.All ? operations[operations.length - 1]?.date || getTodayDate() : getStartDate(period);
     const endDate = getTodayDate();
-    const initialDayItem = { profit: 0, volume: 0, incoming: 0, outgoing: 0 } as { [key: string]: number };
+    const initialDayItem = { profit: 0, volume: 0, incoming: 0, outgoing: 0 };
+
     const initialData = initializeChartData(startDate, endDate, () => ({ ...initialDayItem }));
     const profitByDay = operations.reduce((map, operation) => {
       if (operation.status === OperationStatus.Success) {
@@ -128,14 +129,14 @@ export const selectProfitChartData = createCachedSelector(
     }, initialData);
 
     Object.values(profitByDay).forEach(dayData => {
-      Object.entries(dayData).forEach(([ticker, tickerDayData]) => {
-        dayData[ticker] = toFixedNumber(tickerDayData, 2);
+      (Object.entries(dayData) as Array<[keyof typeof dayData, number]>).forEach(([metricName, tickerDayData]) => {
+        dayData[metricName] = toFixedNumber(tickerDayData, 2);
       });
     });
 
     const result = Object.entries(profitByDay)
-      .map(([dayStr, value]) => ({ day: new Date(dayStr).toLocaleDateString('en-US'), ...value }));
-    result.reverse();
+      .map(([dayStr, value]) => ({ day: new Date(dayStr).toLocaleDateString('en-US'), ...value }))
+      .reverse();
 
     return result;
   }
