@@ -36,7 +36,7 @@ export const TotalVolume = (props: TotalVolumeProps) => {
       decimals={tezosMeta.decimals}
       value={(volume.get(tezosMeta.symbol) || new BigNumber(0)).multipliedBy(multiplier)}
       iconSrc={tezosMeta.thumbnailUri}
-      highlightSign />);
+      highlightPlus />);
   }
 
   tokens.forEach(t => {
@@ -49,7 +49,7 @@ export const TotalVolume = (props: TotalVolumeProps) => {
         decimals={t.metadata.decimals}
         value={(volume.get(t.metadata.symbol) || new BigNumber(0)).multipliedBy(multiplier)}
         iconSrc={t.metadata.thumbnailUri}
-        highlightSign />);
+        highlightPlus />);
     }
   });
 
