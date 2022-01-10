@@ -90,7 +90,7 @@ const getUsdRate = (asset: string | undefined) => {
   }
 };
 
-const toFixedNumber = (value: number, fractionDigits: number) => Number(Number(value).toFixed(fractionDigits));
+const toFixedNumber = (value: number, fractionDigits: number) => Math.floor(value * 10 ** fractionDigits) / 10 ** fractionDigits;
 
 const getDateKey = (date: Date) => getDate(date).toLocaleDateString('en-US');
 
