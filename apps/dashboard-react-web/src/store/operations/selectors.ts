@@ -129,8 +129,8 @@ export const selectProfitChartData = createCachedSelector(
     }, initialData);
 
     Object.values(profitByDay).forEach(dayData => {
-      (Object.entries(dayData) as Array<[keyof typeof dayData, number]>).forEach(([metricName, tickerDayData]) => {
-        dayData[metricName] = toFixedNumber(tickerDayData, 2);
+      (Object.entries(dayData) as Array<[keyof typeof dayData, number]>).forEach(([metricName, metricDayData]) => {
+        dayData[metricName] = toFixedNumber(metricDayData, 2);
       });
     });
 
