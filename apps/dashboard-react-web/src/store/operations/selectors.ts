@@ -153,11 +153,12 @@ export const selectOperationsCountByTokensChartData = createCachedSelector(
     const tokensMap = new Map(tokens.map(t => [t.contractAddress, t]));
     const startDate = period === Period.All ? operations[operations.length - 1]?.date || getTodayDate() : getStartDate(period);
     const endDate = getTodayDate();
-    const initialDayItem = {} as { [key: string]: number };
+    const initialDayItem: { [key: string]: number } = {};
     initialDayItem[tezosMeta.symbol] = 0;
     tokens.forEach(t => initialDayItem[(t.metadata || unknownAssetMeta).symbol] = 0);
+
     const initialData = initializeChartData(startDate, endDate, () => ({ ...initialDayItem }));
-    const profitByDay = operations.reduce((map, operation) => {
+    const operationsCountByDay = operations.reduce((map, operation) => {
       if (operation.status === OperationStatus.Success) {
         const key = getDateKey(operation.date);
         const dayData = (map[key] || (map[key] = { ...initialDayItem }));
@@ -169,7 +170,7 @@ export const selectOperationsCountByTokensChartData = createCachedSelector(
       return map;
     }, initialData);
 
-    const result = Object.entries(profitByDay)
+    const result = Object.entries(operationsCountByDay)
       .map(([dayStr, value]) => ({ day: new Date(dayStr).toLocaleDateString('en-US'), ...value }));
     result.reverse();
 
@@ -188,7 +189,7 @@ export const selectOperationsCountByTypesChartData = createCachedSelector(
     const endDate = getTodayDate();
     const initialDayItem = { incoming: 0, outgoing: 0, failed: 0 };
     const initialData = initializeChartData(startDate, endDate, () => ({ ...initialDayItem }));
-    const profitByDay = operations.reduce((map, operation) => {
+    const operationsCountByDay = operations.reduce((map, operation) => {
       const key = getDateKey(operation.date);
       const dayData = (map[key] || (map[key] = { ...initialDayItem }));
       if (operation.status === OperationStatus.Cancelled) {
@@ -203,7 +204,7 @@ export const selectOperationsCountByTypesChartData = createCachedSelector(
       return map;
     }, initialData);
 
-    const result = Object.entries(profitByDay)
+    const result = Object.entries(operationsCountByDay)
       .map(([dayStr, value]) => ({ day: new Date(dayStr).toLocaleDateString('en-US'), ...value }));
     result.reverse();
 
@@ -251,7 +252,7 @@ export const selectMaxTransactionChartData = createCachedSelector(
     const endDate = getTodayDate();
     const initialDayItem = { max: 0 };
     const initialData = initializeChartData(startDate, endDate, () => ({ ...initialDayItem }));
-    const profitByDay = operations.reduce((map, operation) => {
+    const maxByDay = operations.reduce((map, operation) => {
       if (operation.status === OperationStatus.Success && operation.direction === OperationDirection.Incoming) {
         const key = getDateKey(operation.date);
         const dayData = (map[key] || (map[key] = { ...initialDayItem }));
@@ -262,7 +263,7 @@ export const selectMaxTransactionChartData = createCachedSelector(
       return map;
     }, initialData);
 
-    const result = Object.entries(profitByDay)
+    const result = Object.entries(maxByDay)
       .map(([dayStr, value]) => ({ day: new Date(dayStr).toLocaleDateString('en-US'), ...value }));
     result.reverse();
 
@@ -287,7 +288,7 @@ export const selectNewSendersCountChartData = createCachedSelector(
     const initialData = initializeChartData(startDate, endDate, () => ({ ...initialDayItem }));
 
     const sendersSet = new Set<string>();
-    const profitByDay = operations.reduce((map, operation) => {
+    const newSendersByDay = operations.reduce((map, operation) => {
       if (operation.status === OperationStatus.Success && operation.direction === OperationDirection.Incoming && !sendersSet.has(operation.sender)) {
         sendersSet.add(operation.sender);
         const key = getDateKey(operation.date);
@@ -298,7 +299,7 @@ export const selectNewSendersCountChartData = createCachedSelector(
       return map;
     }, initialData);
 
-    const result = Object.entries(profitByDay)
+    const result = Object.entries(newSendersByDay)
       .map(([dayStr, value]) => ({ day: new Date(dayStr).toLocaleDateString('en-US'), ...value }));
     result.reverse();
 
