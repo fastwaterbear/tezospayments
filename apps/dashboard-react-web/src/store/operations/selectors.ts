@@ -118,7 +118,8 @@ export const selectProfitChartData = createCachedSelector(
     const profitByDay = operations.reduce((map, operation) => {
       if (operation.status === OperationStatus.Success) {
         const key = getDateKey(operation.date);
-        const dayData = (map[key] || (map[key] = { ...initialDayItem }));
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const dayData = map[key]!;
         const amount = operation.amount.toNumber();
         const isOutgoing = operation.direction === OperationDirection.Outgoing;
         const usdRate = getUsdRate(operation.asset);
@@ -163,7 +164,8 @@ export const selectOperationsCountByTokensChartData = createCachedSelector(
     const operationsCountByDay = operations.reduce((map, operation) => {
       if (operation.status === OperationStatus.Success) {
         const key = getDateKey(operation.date);
-        const dayData = (map[key] || (map[key] = { ...initialDayItem }));
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const dayData = map[key]!;
         const assetKey = operation.asset ?
           (tokensMap.get(operation.asset)?.metadata || unknownAssetMeta).symbol
           : tezosMeta.symbol;
@@ -193,7 +195,8 @@ export const selectOperationsCountByTypesChartData = createCachedSelector(
     const initialData = initializeChartData(startDate, endDate, () => ({ ...initialDayItem }));
     const operationsCountByDay = operations.reduce((map, operation) => {
       const key = getDateKey(operation.date);
-      const dayData = (map[key] || (map[key] = { ...initialDayItem }));
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const dayData = map[key]!;
       if (operation.status === OperationStatus.Cancelled) {
         dayData.failed++;
       } else if (operation.status === OperationStatus.Success) {
@@ -257,7 +260,8 @@ export const selectMaxTransactionChartData = createCachedSelector(
     const maxByDay = operations.reduce((map, operation) => {
       if (operation.status === OperationStatus.Success && operation.direction === OperationDirection.Incoming) {
         const key = getDateKey(operation.date);
-        const dayData = (map[key] || (map[key] = { ...initialDayItem }));
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const dayData = map[key]!;
         const amount = operation.amount.toNumber();
         const usdRate = getUsdRate(operation.asset);
         dayData.max = Math.max(dayData.max, amount * usdRate);
