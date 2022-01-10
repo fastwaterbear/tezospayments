@@ -32,7 +32,7 @@ export const TokenListItem = (props: TokenListItemProps) => {
 
   const valueClassNames = combineClassNames('token-list-item__value',
     { 'token-list-item__value_positive': props.highlightSign && isPositive },
-    { 'token-list-item__value_negative': props.highlightSign && isNegative }
+    { 'token-list-item__value_negative': isNegative }
   );
 
   const sign = isNegative
