@@ -3,12 +3,12 @@ using TezosPayments.Serialization;
 
 namespace TezosPayments.PaymentUrlFactories;
 
-public class Base64PaymentUrlFactory : IPaymentUrlFactory
+public class Base64PaymentUrlFactory : IBase64PaymentUrlFactory, IPaymentUrlFactory
 {
     public PaymentUrlType UrlType => PaymentUrlType.Base64;
     public Uri BaseUrl { get; }
     protected IPaymentSerializer<string> PaymentSerializer { get; }
-    protected Lazy<string> EncodedUrlType => new Lazy<string>(((byte)UrlType).ToString().PadLeft(2, '0'));
+    protected Lazy<string> EncodedUrlType => new(((byte)UrlType).ToString().PadLeft(2, '0'));
 
     public Base64PaymentUrlFactory(string baseUrl, IPaymentSerializer<string> paymentSerializer)
     {

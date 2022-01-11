@@ -2,6 +2,7 @@
 
 public readonly record struct Network
 {
+    public static readonly Network Mainnet = new("NetXdQprcVkpaWU", "mainnet");
     public static readonly Network Granadanet = new("NetXz969SFaFn8k", "granadanet");
     public static readonly Network Hangzhounet = new("NetXZSsxBpMQeAT", "hangzhounet");
 

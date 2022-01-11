@@ -1,9 +1,11 @@
 ﻿global using TezosPayments.Utils;
-using Microsoft.Extensions.Options;
+
 using TezosPayments.Models;
 using TezosPayments.Options;
 using TezosPayments.PaymentUrlFactories;
+using TezosPayments.Serialization;
 using TezosPayments.Signing.Signers;
+using TezosPayments.Signing.SignPayloadEncoding;
 
 namespace TezosPayments;
 
@@ -11,24 +13,68 @@ public class TezosPayments : ITezosPayments
 {
     protected string ServiceContractAddress { get; }
     protected Network Network { get; }
+    protected IDefaultPaymentParameters? DefaultPaymentParameters { get; }
+
     protected IPaymentSigner Signer { get; }
-    protected IPaymentUrlFactory PaymentUrlFactory { get; }
+    protected IPaymentUrlFactoryProvider PaymentUrlFactoryProvider { get; }
 
     public TezosPayments(
-        IOptions<TezosPaymentsOptions> options,
+        string serviceContractAddress,
+        string apiSecretKey,
+        TezosPaymentDefaultOptions? defaultOptions = default,
+        DefaultPaymentParameters? defaultPaymentParameters = default
+     ) : this(
+            serviceContractAddress,
+            defaultOptions,
+            defaultPaymentParameters,
+            new ApiSecretKeyPaymentSigner(apiSecretKey, new PaymentSignPayloadEncoder()),
+            new ProxyPaymentUrlFactoryProvider(new Base64PaymentUrlFactory(new Base64PaymentSerializer()))
+        )
+    {
+    }
+
+    public TezosPayments(
+        string serviceContractAddress,
         IPaymentSigner signer,
-        IPaymentUrlFactory paymentUrlFactory
+        IPaymentUrlFactoryProvider paymentUrlFactoryProvider
+    ) : this(serviceContractAddress, null, null, signer, paymentUrlFactoryProvider)
+    {
+    }
+
+    public TezosPayments(
+        string serviceContractAddress,
+        TezosPaymentDefaultOptions defaultOptions,
+        IPaymentSigner signer,
+        IPaymentUrlFactoryProvider paymentUrlFactoryProvider
+    ) : this(serviceContractAddress, defaultOptions, null, signer, paymentUrlFactoryProvider)
+    {
+    }
+
+    public TezosPayments(
+        string serviceContractAddress,
+        DefaultPaymentParameters defaultPaymentParameters,
+        IPaymentSigner signer,
+        IPaymentUrlFactoryProvider paymentUrlFactoryProvider
+    ) : this(serviceContractAddress, null, defaultPaymentParameters, signer, paymentUrlFactoryProvider)
+    {
+    }
+
+    public TezosPayments(
+        string serviceContractAddress,
+        TezosPaymentDefaultOptions? defaultOptions,
+        DefaultPaymentParameters? defaultPaymentParameters,
+        IPaymentSigner signer,
+        IPaymentUrlFactoryProvider paymentUrlFactoryProvider
     )
     {
-        // TODO: validate options
-        if (options?.Value == null)
-            throw new ArgumentNullException(nameof(options));
+        ServiceContractAddress = GuardUtils.EnsureStringArgumentIsValid(serviceContractAddress, nameof(serviceContractAddress));
 
-        ServiceContractAddress = options.Value.ServiceContractAddress;
-        Network = options.Value.Network ?? Constants.DefaultNetwork;
+        // TODO: validate options
+        Network = defaultOptions?.Network ?? Constants.DefaultNetwork;
+        DefaultPaymentParameters = defaultPaymentParameters != null ? defaultPaymentParameters with { } : null;
 
         Signer = signer ?? throw new ArgumentNullException(nameof(signer));
-        PaymentUrlFactory = paymentUrlFactory ?? throw new ArgumentNullException(nameof(paymentUrlFactory));
+        PaymentUrlFactoryProvider = paymentUrlFactoryProvider ?? throw new ArgumentNullException(nameof(paymentUrlFactoryProvider));
     }
 
     public async Task<Payment> CreatePaymentAsync(PaymentCreateParameters createParameters)
@@ -45,7 +91,7 @@ public class TezosPayments : ITezosPayments
         // TODO: validate payment
 
         await payment.SignAsync(Signer);
-        await payment.CreateUrlAsync(PaymentUrlFactory, Network);
+        await payment.CreateUrlAsync(GetPaymentUrlFactory(createParameters), Network);
 
         return payment;
     }
@@ -67,5 +113,12 @@ public class TezosPayments : ITezosPayments
         };
 
         return payment;
+    }
+
+    protected IPaymentUrlFactory GetPaymentUrlFactory(PaymentCreateParameters createParameters)
+    {
+        return PaymentUrlFactoryProvider.GetPaymentUrlFactory(
+            createParameters?.UrlType ?? DefaultPaymentParameters?.UrlType ?? Constants.PaymentUrlType
+        );
     }
 }
