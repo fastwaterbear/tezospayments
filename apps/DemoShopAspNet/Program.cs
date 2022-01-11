@@ -1,8 +1,10 @@
 using DemoShopAspNet.Configuration;
+using DemoShopAspNet.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<AppConfiguration>(builder.Configuration);
+builder.Services.AddTransient<IProductsService, ProductsService>();
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
