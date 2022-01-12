@@ -1,0 +1,103 @@
+name: packages/dotnet/tezospayments
+on:
+  push:
+    paths:
+      - 'packages/dotnet/TezosPayments/**'
+      - 'packages/dotnet/TezosPayments.*/**'
+      - '.github/workflows/tezospayments-dotnet-package.yml'
+    branches:
+      - master
+      - dev
+    tags:
+      - 'dotnet/TezosPayments.*.*.*'
+      - 'dotnet/TezosPayments.*.*.*-*'
+  pull_request:
+    paths:
+      - 'packages/dotnet/TezosPayments/**'
+      - 'packages/dotnet/TezosPayments.*/**'
+      - '.github/workflows/tezospayments-dotnet-package.yml'
+env:
+  dotnet-version: '6.0.x'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@master
+
+      - name: Set up .NET ${{ env.dotnet-version }}
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.dotnet-version }}
+
+      - name: Print environment info
+        run: |
+          dotnet --info
+
+      - name: Install dependencies
+        working-directory: packages/dotnet/TezosPayments
+        run: dotnet restore
+
+      - name: Build the TezosPayments package
+        working-directory: packages/dotnet/TezosPayments
+        run: dotnet build -c Release
+
+      - name: Pack the TezosPayments package into a NuGet package
+        working-directory: packages/dotnet/TezosPayments
+        run: dotnet pack --no-build -c Release -o nuget-package
+
+      - name: Upload the build and nuget package as an artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: tezospayments-dotnet-package
+          path: |
+            packages/dotnet/TezosPayments/bin
+            packages/dotnet/TezosPayments/nuget-package
+          retention-days: 10
+
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@master
+
+      - name: Set up .NET ${{ env.dotnet-version }}
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.dotnet-version }}
+
+      - name: Print environment info
+        run: |
+          dotnet --info
+
+      - name: Install dependencies
+        working-directory: packages/dotnet/TezosPayments.Tests
+        run: dotnet restore
+
+      - name: Test
+        working-directory: packages/dotnet/TezosPayments.Tests
+        run: dotnet test
+
+  release:
+    name: Publish to NuGet
+    runs-on: ubuntu-latest
+    needs: [build, test]
+    if: ${{ contains(github.ref, 'refs/tags/dotnet/TezosPayments.') }}
+    steps:
+      - name: Download the nuget package from the artifacts storage
+        uses: actions/download-artifact@v2
+        with:
+          name: tezospayments-dotnet-package
+
+      - name: Set up .NET ${{ env.dotnet-version }}
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.dotnet-version }}
+
+      - name: Print environment info
+        run: |
+          dotnet --info
