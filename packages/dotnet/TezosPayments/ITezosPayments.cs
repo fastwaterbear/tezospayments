@@ -7,5 +7,5 @@ public interface ITezosPayments
     string ServiceContractAddress { get; }
     Network Network { get; }
 
-    Task<Payment> CreatePaymentAsync(PaymentCreateParameters createParameters);
+    Task<IPayment> CreatePaymentAsync(PaymentCreateParameters createParameters);
 }

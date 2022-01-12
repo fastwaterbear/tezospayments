@@ -77,7 +77,7 @@ public class TezosPayments : ITezosPayments
         PaymentUrlFactoryProvider = paymentUrlFactoryProvider ?? throw new ArgumentNullException(nameof(paymentUrlFactoryProvider));
     }
 
-    public async Task<Payment> CreatePaymentAsync(PaymentCreateParameters createParameters)
+    public async Task<IPayment> CreatePaymentAsync(PaymentCreateParameters createParameters)
     {
         if (createParameters == null)
             throw new ArgumentNullException(nameof(createParameters));
@@ -102,11 +102,11 @@ public class TezosPayments : ITezosPayments
             id: createParameters.Id ?? Guid.NewGuid().ToString(),
             targetAddress: ServiceContractAddress,
             amount: createParameters.Amount,
-            asset: createParameters.Asset
+            asset: createParameters.Asset,
+            created: createParameters.Created
         )
         {
             Data = createParameters.Data,
-            Created = createParameters.Created,
             Expired = createParameters.Expired,
             SuccessUrl = createParameters.SuccessUrl != null ? new Uri(createParameters.SuccessUrl) : null,
             CancelUrl = createParameters.CancelUrl != null ? new Uri(createParameters.CancelUrl) : null,
