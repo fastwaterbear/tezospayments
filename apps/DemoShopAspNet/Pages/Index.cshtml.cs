@@ -1,4 +1,4 @@
-using DemoShopAspNet.Configuration;
+﻿using DemoShopAspNet.Configuration;
 using DemoShopAspNet.Models;
 using DemoShopAspNet.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -47,7 +47,8 @@ public class IndexModel : PageModel
 
         var payment = await TezosPayments.CreatePaymentAsync(new(product.Price.Value.ToString())
         {
-            Data = new {
+            Data = new
+            {
                 Product = product.Name
             }
         });

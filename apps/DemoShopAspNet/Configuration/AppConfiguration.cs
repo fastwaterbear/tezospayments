@@ -1,4 +1,4 @@
-﻿namespace DemoShopAspNet.Configuration;
+namespace DemoShopAspNet.Configuration;
 
 public record AppConfiguration
 {

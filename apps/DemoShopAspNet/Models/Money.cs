@@ -1,8 +1,9 @@
-﻿namespace DemoShopAspNet.Models;
+namespace DemoShopAspNet.Models;
 
 public readonly record struct Money
 {
-    private readonly static Dictionary<string, string> currencySymbols = new() {
+    private static readonly Dictionary<string, string> currencySymbols = new()
+    {
         ["XTZ"] = "ꜩ"
     };
 
