@@ -57,7 +57,7 @@ public class DefaultTezosPaymentsTests
         {
             ApiSecretKey = ApiSecretKey,
             ServiceContractAddress = ServiceContractAddress,
-            Network = Models.Network.Hangzhounet,
+            Network = new() { Name = "hangzhounet" },
             DefaultPaymentUrlType = Models.PaymentUrlType.Base64
         };
         // Act

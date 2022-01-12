@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using TezosPayments.DependencyInjection.Converters;
 using TezosPayments.Options;
 using TezosPayments.PaymentUrlFactories;
 using TezosPayments.Serialization;
@@ -20,7 +21,30 @@ public static partial class TezosPaymentsServiceCollectionExtensions
 
         var builder = new TezosPaymentsBuilder(services, serviceLifetime);
 
-        services.TryAdd(new ServiceDescriptor(
+        AddSystemDependencies(builder, options);
+        AddTezosPaymentsAndDependencies(builder, options);
+
+        return builder;
+    }
+
+    private static void AddSystemDependencies(
+        TezosPaymentsBuilder builder,
+        TezosPaymentsOptions _
+    )
+    {
+        builder.Services.TryAdd(new ServiceDescriptor(
+            typeof(ITezosNetworkOptionsConverter),
+            typeof(TezosNetworkOptionsConverter),
+            builder.ServiceLifetime
+        ));
+    }
+
+    private static void AddTezosPaymentsAndDependencies(
+        TezosPaymentsBuilder builder,
+        TezosPaymentsOptions options
+    )
+    {
+        builder.Services.TryAdd(new ServiceDescriptor(
             typeof(ITezosPayments),
             provider =>
             {
@@ -42,22 +66,25 @@ public static partial class TezosPaymentsServiceCollectionExtensions
             builder.ServiceLifetime
         ));
 
-        services.TryAdd(new ServiceDescriptor(
+        builder.Services.TryAdd(new ServiceDescriptor(
             typeof(TezosPaymentDefaultOptions),
-            _ =>
+            provider =>
             {
+                var tezosNetworkOptionsConverter = provider.GetRequiredService<ITezosNetworkOptionsConverter>();
+                var network = tezosNetworkOptionsConverter.Convert(options.Network);
+
                 var defaultOptions = new TezosPaymentDefaultOptions()
                 {
                     ServiceContractDomain = options.ServiceContractDomain
                 };
-                if (options.Network != null)
-                    defaultOptions.Network = options.Network.Value;
+                if (network != null)
+                    defaultOptions.Network = network.Value;
 
                 return defaultOptions;
             },
             builder.ServiceLifetime
         ));
-        services.TryAdd(new ServiceDescriptor(
+        builder.Services.TryAdd(new ServiceDescriptor(
            typeof(DefaultPaymentParameters),
            _ =>
            {
@@ -68,21 +95,45 @@ public static partial class TezosPaymentsServiceCollectionExtensions
                return defaultPaymentParameters;
            },
            builder.ServiceLifetime
-       ));
-        services.TryAdd(new ServiceDescriptor(
-            typeof(IPaymentSigner),
-            provider => new ApiSecretKeyPaymentSigner(
-                options.ApiSecretKey,
-                provider.GetRequiredService<IPaymentSignPayloadEncoder>()
-            ),
+        ));
+
+        builder.Services.TryAdd(new ServiceDescriptor(
+             typeof(IPaymentSigner),
+             provider => new ApiSecretKeyPaymentSigner(
+                 options.ApiSecretKey,
+                 provider.GetRequiredService<IPaymentSignPayloadEncoder>()
+             ),
+             builder.ServiceLifetime
+        ));
+        builder.Services.TryAdd(new ServiceDescriptor(
+            typeof(IPaymentUrlFactoryProvider),
+            typeof(ProxyPaymentUrlFactoryProvider),
             builder.ServiceLifetime
         ));
-        services.TryAdd(new ServiceDescriptor(typeof(IPaymentUrlFactoryProvider), typeof(ProxyPaymentUrlFactoryProvider), builder.ServiceLifetime));
-        
-        services.TryAdd(new ServiceDescriptor(typeof(IPaymentSignPayloadEncoder), typeof(PaymentSignPayloadEncoder), builder.ServiceLifetime));
-        services.TryAdd(new ServiceDescriptor(typeof(IBase64PaymentUrlFactory), typeof(Base64PaymentUrlFactory), builder.ServiceLifetime));
-        services.TryAdd(new ServiceDescriptor(typeof(IBase64PaymentSerializer), typeof(Base64PaymentSerializer), builder.ServiceLifetime));
 
-        return builder;
+        AddNestedTezosPaymentsDepedencies(builder, options);
+    }
+
+    private static void AddNestedTezosPaymentsDepedencies(
+        TezosPaymentsBuilder builder,
+        TezosPaymentsOptions _
+    )
+    {
+        builder.Services.TryAdd(new ServiceDescriptor(
+            typeof(IPaymentSignPayloadEncoder),
+            typeof(PaymentSignPayloadEncoder),
+            builder.ServiceLifetime
+        ));
+        builder.Services.TryAdd(new ServiceDescriptor(
+            typeof(IBase64PaymentUrlFactory),
+            typeof(Base64PaymentUrlFactory),
+            builder.ServiceLifetime
+        ));
+        builder.Services.TryAdd(new ServiceDescriptor(
+            typeof(IBase64PaymentSerializer),
+            typeof(Base64PaymentSerializer),
+            builder.ServiceLifetime
+        ));
+
     }
 }

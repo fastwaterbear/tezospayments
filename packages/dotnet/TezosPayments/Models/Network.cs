@@ -17,4 +17,23 @@ public readonly record struct Network
 
         this.name = GuardUtils.EnsureStringArgumentIsValid(name, nameof(name));
     }
+
+    public static Network CreateOrGetNetwork(string name) => CreateOrGetNetwork(null, name);
+
+    public static Network CreateOrGetNetwork(string? id, string name)
+    {
+        static bool IsPreDefinedNetwork(string? id, string name, Network candidate)
+        {
+            return name == candidate.Name && (id == null || id == candidate.Id);
+        } 
+
+        if (IsPreDefinedNetwork(id, name, Mainnet))
+            return Mainnet;
+        if (IsPreDefinedNetwork(id, name, Hangzhounet))
+            return Hangzhounet;
+        if (IsPreDefinedNetwork(id, name, Granadanet))
+            return Granadanet;
+
+        return new Network(id, name);
+    }
 }
