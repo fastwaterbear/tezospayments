@@ -2,7 +2,7 @@
 
 namespace TezosPayments.Serialization;
 
-public class Base64PaymentSerializer : IPaymentSerializer<string>
+public class Base64PaymentSerializer : IBase64PaymentSerializer
 {
     public string Serialize(Payment payment)
     {
