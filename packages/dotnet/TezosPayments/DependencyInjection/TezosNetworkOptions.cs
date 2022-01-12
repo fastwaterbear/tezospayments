@@ -1,4 +1,4 @@
-﻿namespace TezosPayments.DependencyInjection;
+namespace TezosPayments.DependencyInjection;
 
 public record TezosNetworkOptions
 {

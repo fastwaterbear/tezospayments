@@ -1,4 +1,4 @@
-﻿namespace TezosPayments.Models;
+namespace TezosPayments.Models;
 
 public partial class Payment : IPayment
 {

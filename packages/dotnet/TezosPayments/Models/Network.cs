@@ -1,4 +1,4 @@
-﻿namespace TezosPayments.Models;
+namespace TezosPayments.Models;
 
 public readonly record struct Network
 {
@@ -25,7 +25,7 @@ public readonly record struct Network
         static bool IsPreDefinedNetwork(string? id, string name, Network candidate)
         {
             return name == candidate.Name && (id == null || id == candidate.Id);
-        } 
+        }
 
         if (IsPreDefinedNetwork(id, name, Mainnet))
             return Mainnet;

@@ -1,4 +1,4 @@
-﻿namespace TezosPayments.Models;
+namespace TezosPayments.Models;
 
 public interface IPayment
 {
@@ -8,7 +8,7 @@ public interface IPayment
     PaymentAsset? Asset { get; }
 
     DateTime Created { get; }
-    DateTime? Expired {get; }
+    DateTime? Expired { get; }
 
     object? Data { get; }
     Uri? SuccessUrl { get; }

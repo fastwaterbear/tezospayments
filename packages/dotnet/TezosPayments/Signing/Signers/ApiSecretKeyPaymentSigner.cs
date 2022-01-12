@@ -1,4 +1,4 @@
-﻿using TezosPayments.Models;
+using TezosPayments.Models;
 using TezosPayments.Signing.SignPayloadEncoding;
 
 namespace TezosPayments.Signing.Signers;
