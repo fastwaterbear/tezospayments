@@ -1,8 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
+using NUnit.Framework;
 using TezosPayments.DependencyInjection.Extensions;
+using TezosPayments.Models;
 
 namespace TezosPayments.DependencyInjection.Tests;
 
@@ -72,7 +73,7 @@ public class DefaultTezosPaymentsTests
         Assert.That(tezosPayments1, Is.Not.Null.And.SameAs(tezosPayments2));
         Assert.That(tezosPayments, Is.EquivalentTo(new List<ITezosPayments>() { tezosPayments1 }));
         Assert.That(tezosPayments1.ServiceContractAddress, Is.EqualTo(tezosPaymentsOptions.ServiceContractAddress));
-        Assert.That(tezosPayments1.Network, Is.EqualTo(tezosPaymentsOptions.Network));
+        Assert.That(tezosPayments1.Network, Is.EqualTo(Network.Hangzhounet));
     }
 
     [Test]
