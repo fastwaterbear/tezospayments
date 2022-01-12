@@ -1,0 +1,40 @@
+name: apps/demo-shop-asp-net
+on:
+  push:
+    paths:
+      - 'apps/DemoShopAspNet/**'
+      - '.github/workflows/demo-shop-asp-net-app.yml'
+    branches:
+      - master
+      - dev
+  pull_request:
+    paths:
+      - 'apps/DemoShopAspNet/**'
+      - '.github/workflows/demo-shop-asp-net-app.yml'
+env:
+  dotnet-version: '6.0.x'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@master
+
+      - name: Set up .NET ${{ env.dotnet-version }}
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.dotnet-version }}
+
+      - name: Print environment info
+        run: |
+          dotnet --info
+
+      - name: Install dependencies
+        working-directory: apps/DemoShopAspNet
+        run: dotnet restore
+
+      - name: Build the demo app
+        working-directory: apps/DemoShopAspNet
+        run: dotnet build -c Release
