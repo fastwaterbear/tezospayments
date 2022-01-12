@@ -11,8 +11,8 @@ namespace TezosPayments;
 
 public class TezosPayments : ITezosPayments
 {
-    protected string ServiceContractAddress { get; }
-    protected Network Network { get; }
+    public string ServiceContractAddress { get; }
+    public Network Network { get; }
     protected IDefaultPaymentParameters? DefaultPaymentParameters { get; }
 
     protected IPaymentSigner Signer { get; }
