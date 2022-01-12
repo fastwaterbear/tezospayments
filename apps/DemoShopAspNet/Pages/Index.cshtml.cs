@@ -4,6 +4,7 @@ using DemoShopAspNet.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
+using TezosPayments;
 
 namespace DemoShopAspNet.Pages;
 
@@ -17,14 +18,17 @@ public class IndexModel : PageModel
     public int? RequestedToBuyProductId { get; set; } = null;
 
     private IProductsService ProductsService { get; }
+    private ITezosPayments TezosPayments { get; }
 
     public IndexModel(
         IOptions<AppConfiguration> appConfiguration,
-        IProductsService productsService
+        IProductsService productsService,
+        ITezosPayments tezosPayments
     )
     {
         AppConfiguration = appConfiguration?.Value ?? throw new ArgumentNullException(nameof(appConfiguration));
         ProductsService = productsService ?? throw new ArgumentNullException(nameof(productsService));
+        TezosPayments = tezosPayments ?? throw new ArgumentNullException(nameof(tezosPayments));
     }
 
     public async Task OnGetAsync()
@@ -32,9 +36,22 @@ public class IndexModel : PageModel
         Products = await ProductsService.GetProductsAsync();
     }
 
-    public IActionResult OnPostAsync()
+    public async Task<IActionResult> OnPostAsync()
     {
-        // TODO: use a payment url
-        return RedirectToPage("Index");
+        if (RequestedToBuyProductId == null)
+            return NotFound("Requested product id is null");
+
+        var product = await ProductsService.GetProductByIdAsync(RequestedToBuyProductId.Value);
+        if (product == null)
+            return NotFound($"Product not found by ${RequestedToBuyProductId}");
+
+        var payment = await TezosPayments.CreatePaymentAsync(new(product.Price.Value.ToString())
+        {
+            Data = new {
+                Product = product.Name
+            }
+        });
+
+        return Redirect(payment.Url.AbsoluteUri);
     }
 }

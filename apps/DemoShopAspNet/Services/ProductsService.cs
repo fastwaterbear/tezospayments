@@ -11,5 +11,7 @@ public class ProductsService : IProductsService
         new(2, "Smart Speaker", new Money(59.77m, "XTZ"), "~/images/products/2-smart-speaker.jpg"),
     }.AsReadOnly();
 
+    public Task<Product?> GetProductByIdAsync(int id) => Task.FromResult(products.FirstOrDefault(p => p.Id == id));
+
     public Task<IEnumerable<Product>> GetProductsAsync() => Task.FromResult<IEnumerable<Product>>(products);
 }
