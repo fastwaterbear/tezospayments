@@ -18,6 +18,12 @@
   "[scss]": {
     "editor.tabSize": 2
   },
+  "[csharp]": {
+    "editor.tabSize": 4
+  },
+  "[aspnetcorerazor]": {
+    "editor.tabSize": 2
+  },
   "files.insertFinalNewline": true,
   "files.eol": "\n",
   "javascript.preferences.quoteStyle": "single",

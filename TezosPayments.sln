@@ -13,7 +13,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{8DB5DD03
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TezosPayments.Tests", "packages\dotnet\TezosPayments.Tests\TezosPayments.Tests.csproj", "{3FC3593E-DD26-48C4-87D1-183879DAEC73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoShopAspNet", "apps\DemoShopAspNet\DemoShopAspNet.csproj", "{CE41169A-62A1-4440-8F0F-FB5131E6C060}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoShopAspNet", "apps\DemoShopAspNet\DemoShopAspNet.csproj", "{CE41169A-62A1-4440-8F0F-FB5131E6C060}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{22A187AD-5220-4418-A6A4-86D1CAE1503D}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
