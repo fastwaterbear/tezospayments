@@ -1,4 +1,4 @@
-﻿.main {
+.main {
   min-height: 100%;
   width: 100%;
   padding: 16px;
@@ -52,10 +52,10 @@
   margin-bottom: 16px;
 }
 
-  .product__image-container img {
-    width: 300px;
-    height: 300px;
-  }
+.product__image-container img {
+  width: 300px;
+  height: 300px;
+}
 
 .product__buy-button {
   width: 160px;
