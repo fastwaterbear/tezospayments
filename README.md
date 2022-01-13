@@ -5,7 +5,7 @@
 [Demo - Payments](https://demo.tezospayments.com) &nbsp;&nbsp;•&nbsp;&nbsp;
 [Demo - Donations](https://payment.tezospayments.com/KT1S394GiUh6dkA4tcM6ceb49Yhot4ToYtDb/donation?network=hangzhounet) &nbsp;&nbsp;•&nbsp;&nbsp; 
 [Contracts](https://github.com/fastwaterbear/tezospayments-contracts) &nbsp;&nbsp;•&nbsp;&nbsp; 
-[Statuses](#statuses)  
+[Statuses ⬇️](#statuses-%EF%B8%8F)  
 
 > ⚠️ Tezos Payments is in active development so any component (application, contract, package, API) is subject to change ⚠️
 
@@ -98,7 +98,7 @@ npm run build -w @tezospayments/common
 npm run start -w @tezospayments/payment-react-web
 ```
 
-## Statuses
+## Statuses [⬆️](#tezos-payments)
 Prod  
 [![apps/dashboard-react-web](https://github.com/fastwaterbear/tezospayments/actions/workflows/dashboard-react-web-app.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/dashboard-react-web-app.yml)
 [![apps/payment-react-web](https://github.com/fastwaterbear/tezospayments/actions/workflows/payment-react-web-app.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/payment-react-web-app.yml)
