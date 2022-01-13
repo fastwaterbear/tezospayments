@@ -3,8 +3,8 @@
 [Homepage](https://tezospayments.com) &nbsp;&nbsp;•&nbsp;&nbsp;
 [Dashboard](https://dashboard.tezospayments.com) &nbsp;&nbsp;•&nbsp;&nbsp;
 [Demo - Payments](https://demo.tezospayments.com) &nbsp;&nbsp;•&nbsp;&nbsp;
-[Demo - Donations](https://payment.tezospayments.com/KT1EHWVV2tU4ecZKKmPTVVr99G66i4gD516M/donation?network=granadanet) &nbsp;&nbsp;•&nbsp;&nbsp; 
-[Service Factory Contract [Granadanet]](https://better-call.dev/granadanet/KT1NxBzCJtvHFLKfiSAX3PGxdiJMAC8CtSZV)  
+[Demo - Donations](https://payment.tezospayments.com/KT1S394GiUh6dkA4tcM6ceb49Yhot4ToYtDb/donation?network=hangzhounet) &nbsp;&nbsp;•&nbsp;&nbsp; 
+[Contracts](https://github.com/fastwaterbear/tezospayments-contracts)  
 
 > ⚠️ Tezos Payments is in active development so any component (application, contract, package, API) is subject to change ⚠️
 
@@ -120,4 +120,4 @@ npm run start -w @tezospayments/payment-react-web
 
 * Services Factory 
   * Mainnet: Coming Soon
-  * Granadanet: [KT1NxBzCJtvHFLKfiSAX3PGxdiJMAC8CtSZV](https://better-call.dev/granadanet/KT1NxBzCJtvHFLKfiSAX3PGxdiJMAC8CtSZV)
+  * Hangzhounet: [KT1BLQ4tfy5iizuCSaR5D8sSDiQSemhvnAif](https://better-call.dev/hangzhou2net/KT1BLQ4tfy5iizuCSaR5D8sSDiQSemhvnAif)
