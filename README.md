@@ -3,21 +3,11 @@
 [Homepage](https://tezospayments.com) &nbsp;&nbsp;•&nbsp;&nbsp;
 [Dashboard](https://dashboard.tezospayments.com) &nbsp;&nbsp;•&nbsp;&nbsp;
 [Demo - Payments](https://demo.tezospayments.com) &nbsp;&nbsp;•&nbsp;&nbsp;
-[Demo - Donations](https://payment.tezospayments.com/KT1EHWVV2tU4ecZKKmPTVVr99G66i4gD516M/donation?network=granadanet) &nbsp;&nbsp;•&nbsp;&nbsp; 
-[Service Factory Contract [Granadanet]](https://better-call.dev/granadanet/KT1NxBzCJtvHFLKfiSAX3PGxdiJMAC8CtSZV)  
+[Demo - Donations](https://payment.tezospayments.com/KT1S394GiUh6dkA4tcM6ceb49Yhot4ToYtDb/donation?network=hangzhounet) &nbsp;&nbsp;•&nbsp;&nbsp; 
+[Contracts](https://github.com/fastwaterbear/tezospayments-contracts) &nbsp;&nbsp;•&nbsp;&nbsp; 
+[Statuses ⬇️](#statuses-%EF%B8%8F)  
 
 > ⚠️ Tezos Payments is in active development so any component (application, contract, package, API) is subject to change ⚠️
-
-Prod  
-**Coming Soon**  
-
-Dev  
-[![apps/dashboard-react-web](https://github.com/fastwaterbear/tezospayments/actions/workflows/dashboard-react-web-app.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/dashboard-react-web-app.yml)
-[![apps/payment-react-web](https://github.com/fastwaterbear/tezospayments/actions/workflows/payment-react-web-app.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/payment-react-web-app.yml)
-[![apps/landing](https://github.com/fastwaterbear/tezospayments/actions/workflows/landing-app.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/landing-app.yml)
-[![apps/demo-shop-next-js](https://github.com/fastwaterbear/tezospayments/actions/workflows/demo-shop-next-js-app.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/demo-shop-next-js-app.yml)  
-[![packages/js/tezospayments](https://github.com/fastwaterbear/tezospayments/actions/workflows/tezospayments-js-package.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/tezospayments-js-package.yml)
-[![packages/js/common](https://github.com/fastwaterbear/tezospayments/actions/workflows/common-js-package.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/common-js-package.yml)
 
 Tezos Payments is a decentralized service that allows anyone to accept payments, donations, or send invoices using all advantages of the Tezos system. To use the service you don't need to register as with traditional services, just use the existing Tezos accounts.
 
@@ -108,6 +98,25 @@ npm run build -w @tezospayments/common
 npm run start -w @tezospayments/payment-react-web
 ```
 
+## Statuses [⬆️](#tezos-payments)
+Prod  
+[![apps/dashboard-react-web](https://github.com/fastwaterbear/tezospayments/actions/workflows/dashboard-react-web-app.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/dashboard-react-web-app.yml?query=branch%3Amaster)
+[![apps/payment-react-web](https://github.com/fastwaterbear/tezospayments/actions/workflows/payment-react-web-app.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/payment-react-web-app.yml?query=branch%3Amaster)
+[![apps/landing](https://github.com/fastwaterbear/tezospayments/actions/workflows/landing-app.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/landing-app.yml?query=branch%3Amaster)   
+[![packages/js/tezospayments](https://github.com/fastwaterbear/tezospayments/actions/workflows/tezospayments-js-package.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/tezospayments-js-package.yml?query=branch%3Amaster)
+[![packages/js/common](https://github.com/fastwaterbear/tezospayments/actions/workflows/common-js-package.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/common-js-package.yml?query=branch%3Amaster)  
+[![apps/demo-shop-next-js](https://github.com/fastwaterbear/tezospayments/actions/workflows/demo-shop-next-js-app.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/demo-shop-next-js-app.yml?query=branch%3Amaster)
+[![apps/demo-shop-asp-net](https://github.com/fastwaterbear/tezospayments/actions/workflows/demo-shop-asp-net-app.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/demo-shop-asp-net-app.yml?query=branch%3Amaster)  
+
+Dev  
+[![apps/dashboard-react-web](https://github.com/fastwaterbear/tezospayments/actions/workflows/dashboard-react-web-app.yml/badge.svg?branch=dev)](https://github.com/fastwaterbear/tezospayments/actions/workflows/dashboard-react-web-app.yml?query=branch%3Adev)
+[![apps/payment-react-web](https://github.com/fastwaterbear/tezospayments/actions/workflows/payment-react-web-app.yml/badge.svg?branch=dev)](https://github.com/fastwaterbear/tezospayments/actions/workflows/payment-react-web-app.yml?query=branch%3Adev)
+[![apps/landing](https://github.com/fastwaterbear/tezospayments/actions/workflows/landing-app.yml/badge.svg?branch=dev)](https://github.com/fastwaterbear/tezospayments/actions/workflows/landing-app.yml?query=branch%3Adev)   
+[![packages/js/tezospayments](https://github.com/fastwaterbear/tezospayments/actions/workflows/tezospayments-js-package.yml/badge.svg?branch=dev)](https://github.com/fastwaterbear/tezospayments/actions/workflows/tezospayments-js-package.yml?query=branch%3Adev)
+[![packages/js/common](https://github.com/fastwaterbear/tezospayments/actions/workflows/common-js-package.yml/badge.svg?branch=dev)](https://github.com/fastwaterbear/tezospayments/actions/workflows/common-js-package.yml?query=branch%3Adev)  
+[![apps/demo-shop-next-js](https://github.com/fastwaterbear/tezospayments/actions/workflows/demo-shop-next-js-app.yml/badge.svg?branch=dev)](https://github.com/fastwaterbear/tezospayments/actions/workflows/demo-shop-next-js-app.yml?query=branch%3Adev)
+[![apps/demo-shop-asp-net](https://github.com/fastwaterbear/tezospayments/actions/workflows/demo-shop-asp-net-app.yml/badge.svg?branch=dev)](https://github.com/fastwaterbear/tezospayments/actions/workflows/demo-shop-asp-net-app.yml?query=branch%3Adev)  
+
 ## Urls
 
 ### Apps
@@ -120,4 +129,4 @@ npm run start -w @tezospayments/payment-react-web
 
 * Services Factory 
   * Mainnet: Coming Soon
-  * Granadanet: [KT1NxBzCJtvHFLKfiSAX3PGxdiJMAC8CtSZV](https://better-call.dev/granadanet/KT1NxBzCJtvHFLKfiSAX3PGxdiJMAC8CtSZV)
+  * Hangzhounet: [KT1BLQ4tfy5iizuCSaR5D8sSDiQSemhvnAif](https://better-call.dev/hangzhou2net/KT1BLQ4tfy5iizuCSaR5D8sSDiQSemhvnAif)
