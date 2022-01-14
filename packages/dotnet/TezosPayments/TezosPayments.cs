@@ -1,4 +1,4 @@
-﻿global using TezosPayments.Utils;
+global using TezosPayments.Utils;
 
 using TezosPayments.Models;
 using TezosPayments.Options;
@@ -79,9 +79,6 @@ public class TezosPayments : ITezosPayments
 
     public async Task<IPayment> CreatePaymentAsync(PaymentCreateParameters createParameters)
     {
-        if (createParameters == null)
-            throw new ArgumentNullException(nameof(createParameters));
-
         if (createParameters.UrlType != null)
         {
             // TODO: validate default payment parameters
@@ -118,7 +115,7 @@ public class TezosPayments : ITezosPayments
     protected IPaymentUrlFactory GetPaymentUrlFactory(PaymentCreateParameters createParameters)
     {
         return PaymentUrlFactoryProvider.GetPaymentUrlFactory(
-            createParameters?.UrlType ?? DefaultPaymentParameters?.UrlType ?? Constants.PaymentUrlType
+            createParameters.UrlType ?? DefaultPaymentParameters?.UrlType ?? Constants.PaymentUrlType
         );
     }
 }

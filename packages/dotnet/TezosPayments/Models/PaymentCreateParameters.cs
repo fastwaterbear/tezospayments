@@ -1,13 +1,13 @@
 namespace TezosPayments.Models;
 
-public record PaymentCreateParameters(string Amount)
+public readonly record struct PaymentCreateParameters(string Amount)
 {
-    public string? Id { get; init; }
-    public PaymentAsset? Asset { get; init; }
-    public object? Data { get; init; }
-    public DateTime? Created { get; init; }
-    public DateTime? Expired { get; init; }
-    public string? SuccessUrl { get; init; }
-    public string? CancelUrl { get; init; }
-    public PaymentUrlType? UrlType { get; init; }
+    public string? Id { get; init; } = default;
+    public PaymentAsset? Asset { get; init; } = default;
+    public object? Data { get; init; } = default;
+    public DateTime? Created { get; init; } = default;
+    public DateTime? Expired { get; init; } = default;
+    public string? SuccessUrl { get; init; } = default;
+    public string? CancelUrl { get; init; } = default;
+    public PaymentUrlType? UrlType { get; init; } = default;
 }
