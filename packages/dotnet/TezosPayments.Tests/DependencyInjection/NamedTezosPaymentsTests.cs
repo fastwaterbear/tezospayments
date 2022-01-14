@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 using TezosPayments.DependencyInjection.Extensions;
 using TezosPayments.Models;
 
@@ -285,7 +287,7 @@ public class NamedTezosPaymentsTests
     }
 
     [Test]
-    public void TryGetTezosPaymentsByNonExistentName_ThrowsException()
+    public void GetTezosPaymentsByNonExistentName_ThrowsException()
     {
         // Arrange
         const string name = "tezosPayments";
@@ -301,6 +303,21 @@ public class NamedTezosPaymentsTests
         Assert.That(
             () => tezosPaymentsProvider.GetTezosPayments(requestedName),
             Throws.Exception.With.Message.Contains(requestedName)
+        );
+    }
+
+    [TestCaseSource(typeof(TezosPaymentsOptionsCases), nameof(TezosPaymentsOptionsCases.InvalidCases))]
+    public void AddDefaultTezosPayments_WithInvalidOptions_ThrowsException(
+        string caseMessage,
+        Func<TezosPaymentsOptions> tezosPaymentsOptionsFactory,
+        Constraint constraint
+    )
+    {
+        // Act & Assert
+        Assert.That(
+            () => Services.AddTezosPayments("tezosPayments", tezosPaymentsOptionsFactory()),
+            constraint,
+            caseMessage
         );
     }
 }

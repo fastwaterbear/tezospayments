@@ -13,6 +13,17 @@ public record TezosPaymentsOptions
 
     internal void Validate()
     {
-        // TODO: implement
+        if (ServiceContractAddress == null)
+            throw new Exception("The service contract address is not specified");
+        if (string.IsNullOrWhiteSpace(ServiceContractAddress))
+            throw new Exception($"Invalid service contract address: \"{ServiceContractAddress}\"");
+
+        if (ApiSecretKey == null)
+            throw new Exception("The API secret key is not specified");
+        if (string.IsNullOrWhiteSpace(ApiSecretKey))
+            throw new Exception($"Invalid API secret key: \"{ApiSecretKey}\"");
+
+        if (ServiceContractDomain != null && string.IsNullOrWhiteSpace(ServiceContractDomain))
+            throw new Exception($"Invalid service contract domain: \"{ServiceContractDomain}\"");
     }
 }

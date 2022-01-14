@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 using TezosPayments.DependencyInjection.Extensions;
 using TezosPayments.Models;
 
@@ -141,5 +143,16 @@ public class DefaultTezosPaymentsTests
         Assert.That(tezosPayments, Is.EquivalentTo(expectedTezosPayments).And.Count.EqualTo(1));
         Assert.That(tezosPayments.Select(tp => tp.ServiceContractAddress), Is.All.EqualTo(tezosPaymentsOptions.ServiceContractAddress));
         Assert.That(tezosPayments.Select(tp => tp.Network), Is.All.EqualTo(Network.Hangzhounet));
+    }
+
+    [TestCaseSource(typeof(TezosPaymentsOptionsCases), nameof(TezosPaymentsOptionsCases.InvalidCases))]
+    public void AddDefaultTezosPayments_WithInvalidOptions_ThrowsException(
+        string caseMessage,
+        Func<TezosPaymentsOptions> tezosPaymentsOptionsFactory,
+        Constraint constraint
+    )
+    {
+        // Act & Assert
+        Assert.That(() => Services.AddTezosPayments(tezosPaymentsOptionsFactory()), constraint, caseMessage);
     }
 };

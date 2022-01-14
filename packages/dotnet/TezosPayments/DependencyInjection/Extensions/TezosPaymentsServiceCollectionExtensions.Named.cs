@@ -18,6 +18,11 @@ public static partial class TezosPaymentsServiceCollectionExtensions
         ServiceLifetime serviceLifetime = ServiceLifetime.Scoped
     )
     {
+        if (services == null)
+            throw new ArgumentNullException(nameof(services));
+        if (options == null)
+            throw new ArgumentNullException(nameof(options));
+
         options.Validate();
 
         var builder = new NamedTezosPaymentsBuilder(services, serviceLifetime, name);
