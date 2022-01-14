@@ -28,7 +28,7 @@ public class TezosPayments : ITezosPayments
             defaultOptions,
             defaultPaymentParameters,
             new ApiSecretKeyPaymentSigner(apiSecretKey, new PaymentSignPayloadEncoder()),
-            new ProxyPaymentUrlFactoryProvider(new Base64PaymentUrlFactory(new Base64PaymentSerializer()))
+            new ProxyPaymentUrlFactoryProvider(new Base64PaymentUrlFactory(new Base64JsonPaymentSerializer()))
         )
     {
     }

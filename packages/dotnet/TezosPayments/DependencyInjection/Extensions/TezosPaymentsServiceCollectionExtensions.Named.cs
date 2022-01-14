@@ -103,8 +103,8 @@ public static partial class TezosPaymentsServiceCollectionExtensions
             builder.ServiceLifetime
         ));
         builder.Services.Add(new ServiceDescriptor(
-            typeof(NamedTezosPaymentsServiceContainer<IBase64PaymentSerializer>),
-            provider => WrapInContainer<IBase64PaymentSerializer>(CreateBase64PaymentSerializer(provider, builder, options), builder),
+            typeof(NamedTezosPaymentsServiceContainer<IBase64JsonPaymentSerializer>),
+            provider => WrapInContainer<IBase64JsonPaymentSerializer>(CreateBase64PaymentSerializer(provider, builder, options), builder),
             builder.ServiceLifetime
         ));
     }

@@ -101,17 +101,17 @@ public static partial class TezosPaymentsServiceCollectionExtensions
         TezosPaymentsOptions options
     )
     {
-        var paymentSerializer = provider.GetRequiredTezosPaymentsService<IBase64PaymentSerializer>(builder);
+        var paymentSerializer = provider.GetRequiredTezosPaymentsService<IBase64JsonPaymentSerializer>(builder);
 
         return new Base64PaymentUrlFactory(paymentSerializer);
     }
 
-    private static Base64PaymentSerializer CreateBase64PaymentSerializer(
+    private static Base64JsonPaymentSerializer CreateBase64PaymentSerializer(
         IServiceProvider provider,
         ITezosPaymentsBuilder builder,
         TezosPaymentsOptions options
     )
     {
-        return new Base64PaymentSerializer();
+        return new Base64JsonPaymentSerializer();
     }
 }
