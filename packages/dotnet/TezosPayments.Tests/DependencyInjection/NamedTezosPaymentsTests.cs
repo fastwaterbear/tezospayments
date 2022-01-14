@@ -310,13 +310,13 @@ public class NamedTezosPaymentsTests
     public void AddDefaultTezosPayments_WithInvalidOptions_ThrowsException(
         string caseMessage,
         Func<TezosPaymentsOptions> tezosPaymentsOptionsFactory,
-        Constraint constraint
+        Func<Constraint> constraintFactory
     )
     {
         // Act & Assert
         Assert.That(
             () => Services.AddTezosPayments("tezosPayments", tezosPaymentsOptionsFactory()),
-            constraint,
+            constraintFactory(),
             caseMessage
         );
     }

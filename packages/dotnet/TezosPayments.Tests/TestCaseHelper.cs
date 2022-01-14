@@ -14,16 +14,14 @@ public static class TestCaseHelper
 
     public static TestCaseData CreateTestCaseData<T>(
         string caseMessage,
-        Func<T> caseDataFactory,
-        Constraint constraint
-    ) => new(FormatCaseMessage(caseMessage), caseDataFactory, constraint);
+        Func<T> caseDataFactory
+    ) => new(FormatCaseMessage(caseMessage), caseDataFactory);
 
     public static TestCaseData CreateTestCaseData<T1, T2>(
         string caseMessage,
         Func<T1> caseData1Factory,
-        Func<T2> caseData2Factory,
-        Constraint constraint
-    ) => new(FormatCaseMessage(caseMessage), caseData1Factory, caseData2Factory, constraint);
+        Func<T2> caseData2Factory
+    ) => new(FormatCaseMessage(caseMessage), caseData1Factory, caseData2Factory);
 
     private static string FormatCaseMessage(string caseMessage) => $"Test Case: {caseMessage}";
 }
