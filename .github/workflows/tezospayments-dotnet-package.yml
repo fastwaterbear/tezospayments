@@ -80,7 +80,7 @@ jobs:
 
       - name: Test
         working-directory: packages/dotnet/TezosPayments.Tests
-        run: dotnet test
+        run: dotnet test -l "console;verbosity=normal"
 
   release:
     name: Publish to NuGet
