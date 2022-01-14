@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using TezosPayments.Tests;
+using TezosPayments.Tests.TestHelpers;
 
 namespace TezosPayments.DependencyInjection.Tests;
 
