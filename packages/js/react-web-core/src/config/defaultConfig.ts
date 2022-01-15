@@ -33,6 +33,30 @@ export const defaultConfig: DefaultAppConfig = {
   tezos: {
     defaultNetwork: 'hangzhounet',
     networks: {
+      mainnet: {
+        title: 'Mainnet',
+        color: '83b300',
+        minimumSupportedServiceVersion: 3,
+        default: {
+          rpc: 'ecadLabs',
+          indexer: 'tzKT',
+          explorer: 'tzKT'
+        },
+        rpcUrls: {
+          ecadLabs: 'https://mainnet.api.tez.ie',
+          smartPy: 'https://mainnet.smartpy.io'
+        },
+        indexerUrls: {
+          tzKT: 'https://api.tzkt.io',
+          betterCallDev: 'https://api.better-call.dev'
+        },
+        explorers: {
+          tzKT: { baseUrl: 'https://tzkt.io', title: 'TzKT' },
+          betterCallDev: { baseUrl: 'https://better-call.dev', title: 'Better Call Dev' },
+          tzStats: { baseUrl: 'https://tzstats.com', title: 'TzStats' }
+        },
+        servicesFactoryContractAddress: 'Not implemented'
+      },
       granadanet: {
         title: 'Granada Testnet',
         color: '#667eea',

@@ -1,8 +1,8 @@
 const networksInternal = {
-  // mainnet: {
-  //   id: 'NetXdQprcVkpaWU',
-  //   name: 'mainnet',
-  // },
+  mainnet: {
+    id: 'NetXdQprcVkpaWU',
+    name: 'mainnet',
+  },
   granadanet: {
     id: 'NetXz969SFaFn8k',
     name: 'granadanet',
