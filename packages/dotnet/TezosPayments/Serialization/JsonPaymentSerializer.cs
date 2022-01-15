@@ -18,7 +18,7 @@ public class JsonPaymentSerializer : IPaymentSerializer<string>
     protected virtual SerializedPayment MapPaymentToSerializedPayment(Payment payment) => new()
     {
         Id = payment.Id,
-        Amount = payment.Amount,
+        Amount = payment.Amount.TrimEnd('0'),
         Created = new DateTimeOffset(payment.Created).ToUnixTimeMilliseconds(),
         Data = payment.Data,
         Asset = payment.Asset != null ? MapPaymentAssetToSerializedPaymentAsset(payment.Asset) : null,

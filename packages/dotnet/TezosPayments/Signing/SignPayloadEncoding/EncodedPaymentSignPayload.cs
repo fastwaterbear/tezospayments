@@ -1,13 +1,13 @@
-﻿namespace TezosPayments.Signing.SignPayloadEncoding;
+namespace TezosPayments.Signing.SignPayloadEncoding;
 
 public record EncodedPaymentSignPayload
 {
-    public string ContractSignPayload { get; }
-    public string? ClientSignPayload { get; }
+    public byte[] ContractSignPayload { get; }
+    public byte[]? ClientSignPayload { get; }
 
-    public EncodedPaymentSignPayload(string contractSignPayload, string? clientSignPayload)
+    public EncodedPaymentSignPayload(byte[] contractSignPayload, byte[]? clientSignPayload)
     {
-        ContractSignPayload = GuardUtils.EnsureStringArgumentIsValid(contractSignPayload, nameof(contractSignPayload));
-        ClientSignPayload = clientSignPayload == null ? null : GuardUtils.EnsureStringArgumentIsValid(clientSignPayload, nameof(clientSignPayload));
+        ContractSignPayload = contractSignPayload ?? throw new ArgumentNullException(nameof(contractSignPayload));
+        ClientSignPayload = clientSignPayload;
     }
 }
