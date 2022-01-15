@@ -2,9 +2,9 @@ namespace TezosPayments.Models;
 
 public interface IPayment
 {
-    public string Id { get; }
-    public string TargetAddress { get; }
-    public string Amount { get; }
+    string Id { get; }
+    string TargetAddress { get; }
+    string Amount { get; }
     PaymentAsset? Asset { get; }
 
     DateTime Created { get; }
