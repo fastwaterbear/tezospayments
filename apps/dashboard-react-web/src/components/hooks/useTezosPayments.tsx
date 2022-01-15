@@ -8,15 +8,18 @@ import { selectCurrentAccount } from '../../store/accounts/selectors';
 import { useAppSelector } from './reduxHooks';
 import { useAppContext } from './useAppContext';
 
-const createTezosPayments = (serviceContractAddress: string, network: Network, tezosWallet: BeaconWallet) => {
+const createTezosPayments = (serviceContractAddress: string, signingPublicKey: string, network: Network, tezosWallet: BeaconWallet) => {
   return new TezosPayments({
     serviceContractAddress,
     signing: {
-      walletSigning: payload => tezosWallet.client
-        .requestSignPayload({ signingType: SigningType.MICHELINE, payload })
-        .then(r => r.signature)
+      wallet: {
+        signingPublicKey,
+        sign: payload => tezosWallet.client
+          .requestSignPayload({ signingType: SigningType.MICHELINE, payload })
+          .then(r => r.signature)
+      }
     },
-    defaultPaymentParameters: { network }
+    network
   });
 };
 
@@ -25,13 +28,14 @@ const tezosPaymentsInstancesMap = new Map<string, TezosPayments>();
 export const useTezosPayments = (serviceContractAddress: string | undefined | null) => {
   const appContext = useAppContext();
   const currentNetwork = useAppSelector(selectCurrentAccount)?.network;
+  const signingPublicKey = useAppSelector(selectCurrentAccount)?.publicKey;
 
-  if (!serviceContractAddress || !currentNetwork)
+  if (!serviceContractAddress || !signingPublicKey || !currentNetwork)
     return null;
 
   let tezosPaymentsInstance = tezosPaymentsInstancesMap.get(serviceContractAddress);
   if (!tezosPaymentsInstance) {
-    tezosPaymentsInstance = createTezosPayments(serviceContractAddress, currentNetwork, appContext.tezosWallet);
+    tezosPaymentsInstance = createTezosPayments(serviceContractAddress, signingPublicKey, currentNetwork, appContext.tezosWallet);
     tezosPaymentsInstancesMap.set(serviceContractAddress, tezosPaymentsInstance);
   }
 

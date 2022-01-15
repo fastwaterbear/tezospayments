@@ -26,5 +26,10 @@
   ],
   "exclude": [
     "node_modules"
+  ],
+  "references": [
+    {
+      "path": "../../packages/js/tezospayments"
+    }
   ]
 }

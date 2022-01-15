@@ -1,5 +1,6 @@
 import { TezosPaymentsOptions } from '../../../src';
-import { tezosPaymentsOptionsValidationErrors } from '../../../src/validationErrors';
+import { TezosPaymentsOptionsValidator } from '../../../src/validation';
+import { testWalletSigner } from '../../testHelpers';
 import { NegativeTestCases } from './testCase';
 import validTezosPaymentsOptionsTestCases from './validTezosPaymentsOptionsTestCases';
 
@@ -17,7 +18,7 @@ export const invalidSigningTestCases: NegativeTestCases<InvalidTezosPaymentsOpti
     {
       ...tezosPaymentsOptionsBase,
     },
-    [tezosPaymentsOptionsValidationErrors.invalidSigningOption]
+    [TezosPaymentsOptionsValidator.errors.invalidSigningOption]
   ],
   [
     'Empty signing option',
@@ -25,7 +26,7 @@ export const invalidSigningTestCases: NegativeTestCases<InvalidTezosPaymentsOpti
       ...tezosPaymentsOptionsBase,
       signing: {}
     },
-    [tezosPaymentsOptionsValidationErrors.invalidSigningOption]
+    [TezosPaymentsOptionsValidator.errors.invalidSigningOption]
   ],
   [
     'Invalid signing option',
@@ -33,7 +34,7 @@ export const invalidSigningTestCases: NegativeTestCases<InvalidTezosPaymentsOpti
       ...tezosPaymentsOptionsBase,
       signing: 'secret key'
     },
-    [tezosPaymentsOptionsValidationErrors.invalidSigningOption]
+    [TezosPaymentsOptionsValidator.errors.invalidSigningOption]
   ],
   [
     'API secret key has an invalid type, undefined',
@@ -43,7 +44,7 @@ export const invalidSigningTestCases: NegativeTestCases<InvalidTezosPaymentsOpti
         apiSecretKey: undefined
       }
     },
-    [tezosPaymentsOptionsValidationErrors.invalidApiSecretKeyType]
+    [TezosPaymentsOptionsValidator.errors.invalidApiSecretKeyType]
   ],
   [
     'API secret key has an invalid type, null',
@@ -53,7 +54,7 @@ export const invalidSigningTestCases: NegativeTestCases<InvalidTezosPaymentsOpti
         apiSecretKey: null
       }
     },
-    [tezosPaymentsOptionsValidationErrors.invalidApiSecretKeyType]
+    [TezosPaymentsOptionsValidator.errors.invalidApiSecretKeyType]
   ],
   [
     'API secret key has an invalid type, number',
@@ -63,7 +64,7 @@ export const invalidSigningTestCases: NegativeTestCases<InvalidTezosPaymentsOpti
         apiSecretKey: 10
       }
     },
-    [tezosPaymentsOptionsValidationErrors.invalidApiSecretKeyType]
+    [TezosPaymentsOptionsValidator.errors.invalidApiSecretKeyType]
   ],
   [
     'API secret key has an invalid type, function',
@@ -73,7 +74,7 @@ export const invalidSigningTestCases: NegativeTestCases<InvalidTezosPaymentsOpti
         apiSecretKey: () => 'secret key'
       }
     },
-    [tezosPaymentsOptionsValidationErrors.invalidApiSecretKeyType]
+    [TezosPaymentsOptionsValidator.errors.invalidApiSecretKeyType]
   ],
   [
     'API secret key is empty',
@@ -83,29 +84,141 @@ export const invalidSigningTestCases: NegativeTestCases<InvalidTezosPaymentsOpti
         apiSecretKey: ''
       }
     },
-    [tezosPaymentsOptionsValidationErrors.emptyApiSecretKey]
+    [TezosPaymentsOptionsValidator.errors.emptyApiSecretKey]
   ],
   [
-    'WalletSigning function has an invalid type, string',
+    'Wallet options has an invalid type, string',
     {
       ...tezosPaymentsOptionsBase,
       signing: {
-        walletSigning: 'secret key'
+        wallet: 'secret key'
       }
     },
-    [tezosPaymentsOptionsValidationErrors.invalidWalletSigningOptionType]
+    [TezosPaymentsOptionsValidator.errors.invalidWalletSigningOption]
   ],
   [
-    'WalletSigning function has an invalid type, object',
+    'Wallet options has an invalid type, function',
     {
       ...tezosPaymentsOptionsBase,
       signing: {
-        walletSigning: {
-          sign: (dataBytes: string) => Promise.resolve(dataBytes)
+        wallet: () => 'fake signature'
+      }
+    },
+    [TezosPaymentsOptionsValidator.errors.invalidWalletSigningOption]
+  ],
+  [
+    'Wallet sign function is missed',
+    {
+      ...tezosPaymentsOptionsBase,
+      signing: {
+        wallet: {
+          signingPublicKey: testWalletSigner.publicKey
         }
       }
     },
-    [tezosPaymentsOptionsValidationErrors.invalidWalletSigningOptionType]
+    [TezosPaymentsOptionsValidator.errors.invalidWalletSignFunctionType]
+  ],
+  [
+    'Wallet signing public key is missed',
+    {
+      ...tezosPaymentsOptionsBase,
+      signing: {
+        wallet: {
+          sign: () => testWalletSigner.sign
+        }
+      }
+    },
+    [TezosPaymentsOptionsValidator.errors.invalidWalletSigningPublicKey]
+  ],
+  [
+    'Wallet sign function has an invalid type, null',
+    {
+      ...tezosPaymentsOptionsBase,
+      signing: {
+        wallet: {
+          signingPublicKey: testWalletSigner.publicKey,
+          sign: null,
+        }
+      }
+    },
+    [TezosPaymentsOptionsValidator.errors.invalidWalletSignFunctionType]
+  ],
+  [
+    'Wallet sign function has an invalid type, object',
+    {
+      ...tezosPaymentsOptionsBase,
+      signing: {
+        wallet: {
+          signingPublicKey: testWalletSigner.publicKey,
+          sign: {
+            sign: (dataBytes: string) => Promise.resolve(dataBytes),
+          },
+        }
+      }
+    },
+    [TezosPaymentsOptionsValidator.errors.invalidWalletSignFunctionType]
+  ],
+  [
+    'Wallet signing public key is empty',
+    {
+      ...tezosPaymentsOptionsBase,
+      signing: {
+        wallet: {
+          signingPublicKey: '',
+          sign: testWalletSigner.sign
+        }
+      }
+    },
+    [TezosPaymentsOptionsValidator.errors.emptyWalletSigningPublicKey]
+  ],
+  [
+    'Wallet signing public key has an invalid type, object',
+    {
+      ...tezosPaymentsOptionsBase,
+      signing: {
+        wallet: {
+          signingPublicKey: { secret: testWalletSigner.secretKey, public: testWalletSigner.publicKey },
+          sign: testWalletSigner.sign
+        }
+      }
+    },
+    [TezosPaymentsOptionsValidator.errors.invalidWalletSigningPublicKey]
+  ],
+  [
+    'Wallet signing public key has an invalid type, array',
+    {
+      ...tezosPaymentsOptionsBase,
+      signing: {
+        wallet: {
+          signingPublicKey: [0, 1, 2, 3, 4, 5],
+          sign: testWalletSigner.sign
+        }
+      }
+    },
+    [TezosPaymentsOptionsValidator.errors.invalidWalletSigningPublicKey]
+  ],
+  [
+    'Custom sign function has an invalid type, string',
+    {
+      ...tezosPaymentsOptionsBase,
+      signing: {
+        custom: 'secret key'
+      }
+    },
+    [TezosPaymentsOptionsValidator.errors.invalidCustomSigningOption]
+  ],
+  [
+    'Custom sign function has an invalid type, object',
+    {
+      ...tezosPaymentsOptionsBase,
+      signing: {
+        custom: {
+          signingPublicKey: [0, 1, 2, 3, 4, 5],
+          sign: testWalletSigner.sign
+        }
+      }
+    },
+    [TezosPaymentsOptionsValidator.errors.invalidCustomSigningOption]
   ]
 ];
 

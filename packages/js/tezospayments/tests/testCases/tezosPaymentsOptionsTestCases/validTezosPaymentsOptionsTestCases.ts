@@ -19,7 +19,22 @@ const validTezosPaymentsOptionsTestCases: PositiveTestCases = [
     {
       serviceContractAddress: 'KT1CgrsR3mctUE6ww3B5mq4cjpDfmUnJSdNh',
       signing: {
-        walletSigning: testWalletSigner.sign
+        wallet: {
+          signingPublicKey: testWalletSigner.publicKey,
+          sign: testWalletSigner.sign
+        }
+      }
+    }
+  ],
+  [
+    'With default network definition',
+    {
+      serviceContractAddress: 'KT1Ni4pYV3UGWcDp7MgR5prgcD4NCK1MpXiR',
+      signing: {
+        apiSecretKey
+      },
+      network: {
+        name: 'local'
       }
     }
   ],
@@ -31,20 +46,6 @@ const validTezosPaymentsOptionsTestCases: PositiveTestCases = [
         apiSecretKey
       },
       defaultPaymentParameters: {}
-    }
-  ],
-  [
-    'With default network definition',
-    {
-      serviceContractAddress: 'KT1Ni4pYV3UGWcDp7MgR5prgcD4NCK1MpXiR',
-      signing: {
-        apiSecretKey
-      },
-      defaultPaymentParameters: {
-        network: {
-          name: 'local'
-        }
-      }
     }
   ],
   [
