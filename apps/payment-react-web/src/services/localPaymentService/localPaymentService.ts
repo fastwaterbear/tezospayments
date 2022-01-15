@@ -2,7 +2,7 @@ import { RequestPermissionInput, AbortedBeaconError } from '@airgap/beacon-sdk';
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit, WalletOperation } from '@taquito/taquito';
 
-import { Donation, Payment, Service, Network, memoize } from '@tezospayments/common';
+import { Donation, Payment, Network, memoize } from '@tezospayments/common';
 import { converters, ServicesProvider } from '@tezospayments/react-web-core';
 
 import { NetworkDonation, NetworkPayment } from '../../models/payment';
@@ -48,7 +48,7 @@ export class LocalPaymentService {
 
   async getCurrentPaymentInfo(): Promise<PaymentInfo> {
     const payment = await this.getCurrentPayment();
-    const service = await this.getCurrentService();
+    const service = await this.servicesProvider.getService(payment.targetAddress);
 
     return {
       payment,
@@ -63,12 +63,6 @@ export class LocalPaymentService {
     return currentRawPaymentInfo.operationType === 'payment'
       ? paymentProvider.getPayment(currentRawPaymentInfo)
       : paymentProvider.getDonation(currentRawPaymentInfo);
-  }
-
-  async getCurrentService(): Promise<Service> {
-    const currentRawPaymentInfo = this.parseRawPaymentInfo(window.location);
-
-    return this.servicesProvider.getService(currentRawPaymentInfo.targetAddress);
   }
 
   async pay(payment: NetworkPayment): Promise<boolean> {
