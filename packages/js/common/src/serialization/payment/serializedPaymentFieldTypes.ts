@@ -28,6 +28,8 @@ export const serializedPaymentFieldTypes: ReadonlyMap<
   .set('i', 'string')
   // amount
   .set('a', 'string')
+  // target
+  .set('t', 'string')
   // asset
   .set('as', ['object', 'undefined', 'null'])
   // .set('as', serializedPaymentAssetFieldTypes)
