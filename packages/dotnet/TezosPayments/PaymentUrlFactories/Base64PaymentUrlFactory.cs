@@ -1,4 +1,4 @@
-﻿using TezosPayments.Models;
+using TezosPayments.Models;
 using TezosPayments.Serialization;
 
 namespace TezosPayments.PaymentUrlFactories;
@@ -7,16 +7,16 @@ public class Base64PaymentUrlFactory : IBase64PaymentUrlFactory, IPaymentUrlFact
 {
     public PaymentUrlType UrlType => PaymentUrlType.Base64;
     public Uri BaseUrl { get; }
-    protected IPaymentSerializer<string> PaymentSerializer { get; }
+    protected IBase64PaymentSerializer PaymentSerializer { get; }
     protected Lazy<string> EncodedUrlType => new(((byte)UrlType).ToString().PadLeft(2, '0'));
 
-    public Base64PaymentUrlFactory(string baseUrl, IPaymentSerializer<string> paymentSerializer)
+    public Base64PaymentUrlFactory(string baseUrl, IBase64PaymentSerializer paymentSerializer)
     {
         BaseUrl = new Uri(GuardUtils.EnsureStringArgumentIsValid(baseUrl, nameof(baseUrl)));
         PaymentSerializer = paymentSerializer ?? throw new ArgumentNullException(nameof(paymentSerializer));
     }
 
-    public Base64PaymentUrlFactory(IPaymentSerializer<string> paymentSerializer)
+    public Base64PaymentUrlFactory(IBase64PaymentSerializer paymentSerializer)
         : this(Constants.PAYMENT_APP_BASE_URL, paymentSerializer)
     {
     }

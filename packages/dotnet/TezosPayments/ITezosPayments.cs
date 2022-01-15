@@ -4,5 +4,8 @@ namespace TezosPayments;
 
 public interface ITezosPayments
 {
-    Task<Payment> CreatePaymentAsync(PaymentCreateParameters createParameters);
+    string ServiceContractAddress { get; }
+    Network Network { get; }
+
+    Task<IPayment> CreatePaymentAsync(PaymentCreateParameters createParameters);
 }

@@ -1,4 +1,4 @@
-﻿using TezosPayments.PaymentUrlFactories;
+using TezosPayments.PaymentUrlFactories;
 using TezosPayments.Signing.Signers;
 
 namespace TezosPayments.Models;

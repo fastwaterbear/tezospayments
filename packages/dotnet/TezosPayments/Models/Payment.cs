@@ -1,24 +1,15 @@
-﻿namespace TezosPayments.Models;
+namespace TezosPayments.Models;
 
 public partial class Payment
 {
-    private readonly DateTime created = DateTime.UtcNow;
     private readonly DateTime? expired;
 
     public string Id { get; }
     public string TargetAddress { get; }
     public string Amount { get; }
     public PaymentAsset? Asset { get; }
+    public DateTime Created { get; }
 
-    public DateTime? Created
-    {
-        get => created;
-        init
-        {
-            if (value != null)
-                created = DateTime.UtcNow;
-        }
-    }
     public DateTime? Expired
     {
         get => expired;
@@ -38,7 +29,8 @@ public partial class Payment
         string id,
         string targetAddress,
         string amount,
-        PaymentAsset? asset
+        PaymentAsset? asset,
+        DateTime? created = null
     )
     {
         Id = GuardUtils.EnsureStringArgumentIsValid(id, nameof(id));
@@ -46,5 +38,6 @@ public partial class Payment
         Amount = GuardUtils.EnsureStringArgumentIsValid(amount, nameof(amount));
 
         Asset = asset;
+        Created = created ?? DateTime.UtcNow;
     }
 }
