@@ -38,9 +38,9 @@ public record class TestPayment : IPayment, IEquatable<Payment>
             && payment.Created == Created
             && payment.Expired == Expired
             && JsonSerializer.Serialize(payment.Data) == JsonSerializer.Serialize(Data)
-            && payment.SuccessUrl == SuccessUrl
-            && payment.CancelUrl == CancelUrl
+            && payment.SuccessUrl?.AbsoluteUri == SuccessUrl?.AbsoluteUri
+            && payment.CancelUrl?.AbsoluteUri == CancelUrl?.AbsoluteUri
             && payment.Signature == Signature
-            && payment.Url == Url;
+            && payment.Url?.AbsoluteUri == Url.AbsoluteUri;
     }
 }

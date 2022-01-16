@@ -11,6 +11,16 @@ public class PaymentSignPayloadEncoder : IPaymentSignPayloadEncoder
 {
     private const byte CONTRACT_SIGN_PAYLOAD_PREFIX_BYTE = 5;
 
+    protected static readonly byte[] clientSignPayloadMessagePrefixBytes = new byte[] { CONTRACT_SIGN_PAYLOAD_PREFIX_BYTE, 1 };
+    // "Tezos Signed Message: "
+    protected static readonly byte[] tezosSignedMessagePrefixBytes = new byte[] {
+        84, 101, 122, 111, 115, 32, 83, 105, 103, 110, 101, 100, 32, 77, 101, 115, 115, 97, 103, 101, 58, 32
+    };
+    // "Tezos Signed Message: "
+    protected static readonly byte[] tezosPaymentsClientSignedMessagePrefixBytes = new byte[] {
+        80, 97, 121, 109, 101, 110, 116, 32, 67, 108, 105, 101, 110, 116, 32, 68, 97, 116, 97, 58, 32
+    };
+
     protected JsonSerializerOptions JsonSerializerOptions = new()
     {
         DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
@@ -19,7 +29,7 @@ public class PaymentSignPayloadEncoder : IPaymentSignPayloadEncoder
 
     public EncodedPaymentSignPayload Encode(Payment payment)
     {
-        return new(GetContractSignPayload(payment), null);
+        return new(GetContractSignPayload(payment), GetClientSignPayload(payment));
     }
 
     protected virtual byte[] GetContractSignPayload(Payment payment)
@@ -41,15 +51,29 @@ public class PaymentSignPayloadEncoder : IPaymentSignPayloadEncoder
     {
         var clientSignPayload = new ClientSignPayload()
         {
+            Data = payment.Data,
             SuccessUrl = payment.SuccessUrl?.AbsoluteUri,
             CancelUrl = payment.CancelUrl?.AbsoluteUri,
-            Data = payment.Data,
         };
         if (clientSignPayload.IsEmpty)
             return null;
 
         var clientSignPayloadString = JsonSerializer.Serialize(clientSignPayload, JsonSerializerOptions);
-        return Encoding.UTF8.GetBytes(clientSignPayloadString);
+        var clientSignPayloadBytes = Encoding.UTF8.GetBytes(clientSignPayloadString);
+        var messageLengthBytes = LocalForge.ForgeInt32(
+            tezosSignedMessagePrefixBytes.Length
+            + tezosPaymentsClientSignedMessagePrefixBytes.Length
+            + clientSignPayloadBytes.Length
+        );
+        var result = BytesUtils.Combine(
+            clientSignPayloadMessagePrefixBytes,
+            messageLengthBytes,
+            tezosSignedMessagePrefixBytes,
+            tezosPaymentsClientSignedMessagePrefixBytes,
+            clientSignPayloadBytes
+        );
+
+        return result;
     }
 
     protected virtual IMicheline GetPayloadWithoutAssetMicheline(Payment payment)
