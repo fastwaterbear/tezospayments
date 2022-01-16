@@ -1,6 +1,6 @@
 namespace TezosPayments.Models;
 
-public partial class Payment
+public partial class Payment : IPayment
 {
     private readonly DateTime? expired;
 

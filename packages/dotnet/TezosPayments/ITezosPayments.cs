@@ -1,4 +1,4 @@
-﻿using TezosPayments.Models;
+using TezosPayments.Models;
 
 namespace TezosPayments;
 
