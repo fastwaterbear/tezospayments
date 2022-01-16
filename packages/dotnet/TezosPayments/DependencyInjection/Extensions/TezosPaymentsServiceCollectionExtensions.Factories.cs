@@ -4,6 +4,7 @@ using TezosPayments.PaymentUrlFactories;
 using TezosPayments.Serialization;
 using TezosPayments.Signing.Signers;
 using TezosPayments.Signing.SignPayloadEncoding;
+using TezosPayments.Validation;
 
 namespace TezosPayments.DependencyInjection.Extensions;
 
@@ -19,13 +20,15 @@ public static partial class TezosPaymentsServiceCollectionExtensions
         var defaultPaymentParameters = provider.GetRequiredTezosPaymentsService<DefaultPaymentParameters>(builder);
         var signer = provider.GetRequiredTezosPaymentsService<IPaymentSigner>(builder);
         var urlFactoryProvider = provider.GetRequiredTezosPaymentsService<IPaymentUrlFactoryProvider>(builder);
+        var paymentValidator = provider.GetRequiredTezosPaymentsService<IPaymentValidator>(builder);
 
         return new TezosPayments(
             options.ServiceContractAddress,
             defaultOptions,
             defaultPaymentParameters,
             signer,
-            urlFactoryProvider
+            urlFactoryProvider,
+            paymentValidator
         );
     }
 
@@ -84,6 +87,15 @@ public static partial class TezosPaymentsServiceCollectionExtensions
         var base64PaymentUrlFactory = provider.GetRequiredTezosPaymentsService<IBase64PaymentUrlFactory>(builder);
 
         return new ProxyPaymentUrlFactoryProvider(base64PaymentUrlFactory);
+    }
+
+    private static PaymentValidator CreatePaymentValidator(
+        IServiceProvider provider,
+        ITezosPaymentsBuilder builder,
+        TezosPaymentsOptions options
+    )
+    {
+        return new PaymentValidator();
     }
 
     private static PaymentSignPayloadEncoder CreatePaymentSignPayloadEncoder(
