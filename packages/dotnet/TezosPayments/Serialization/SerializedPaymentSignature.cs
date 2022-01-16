@@ -4,6 +4,9 @@ namespace TezosPayments.Serialization;
 
 public readonly struct SerializedPaymentSignature
 {
+    [JsonPropertyName("k")]
+    public string SigningPublicKey { get; }
+
     [JsonPropertyName("c")]
     public string Contract { get; }
 
@@ -11,6 +14,6 @@ public readonly struct SerializedPaymentSignature
     public string? Client { get; }
 
     [JsonConstructor]
-    public SerializedPaymentSignature(string contract, string? client)
-        => (Contract, Client) = (contract, client);
+    public SerializedPaymentSignature(string signingPublicKey, string contract, string? client)
+        => (SigningPublicKey, Contract, Client) = (signingPublicKey, contract, client);
 }

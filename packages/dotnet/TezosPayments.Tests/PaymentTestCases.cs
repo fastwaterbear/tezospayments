@@ -47,6 +47,7 @@ public class PaymentTestCases
             },
             Created = DateTime.Parse("2021-08-31T11:20:23.017Z"),
             Signature = new PaymentSignature(
+                signingPublicKey: "edpkuS4n5MZqhRbhqdQNmJ5TTnGFfYWBReF8pSagomFyDkpDRc1T6s",
                 contract: "edsigu3kdsDpZY3TCptADrzLmjk7yjevXyrf73Y2iJiRyhYwQzJFTESghMoozwzuxgWsyT68SoeWL3QHPSVZvQ5uZ56Sixb86fs",
                 client: null
             ),

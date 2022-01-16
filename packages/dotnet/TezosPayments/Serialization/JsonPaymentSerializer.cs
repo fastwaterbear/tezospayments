@@ -32,5 +32,5 @@ public class JsonPaymentSerializer : IPaymentSerializer<string>
         => new(paymentAsset.Address, paymentAsset.Decimals, paymentAsset.Id);
 
     protected virtual SerializedPaymentSignature MapPaymentSignatureToSerializedPaymentSignature(PaymentSignature paymentSignature)
-        => new(paymentSignature.Contract, paymentSignature.Client);
+        => new(paymentSignature.SigningPublicKey, paymentSignature.Contract, paymentSignature.Client);
 }

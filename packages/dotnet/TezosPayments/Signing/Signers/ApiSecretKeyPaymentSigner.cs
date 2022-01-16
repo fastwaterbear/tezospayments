@@ -10,8 +10,10 @@ public class ApiSecretKeyPaymentSigner : IPaymentSigner
 {
     protected const int KEY_BYTES_LENGTH = 32;
 
-    public Key ApiKey { get; }
     public IPaymentSignPayloadEncoder PaymentSignPayloadEncoder { get; }
+
+    protected Key ApiKey { get; }
+    protected string SigningPublicKey { get; }
 
     public ApiSecretKeyPaymentSigner(string apiSecretKey, IPaymentSignPayloadEncoder paymentSignPayloadEncoder)
     {
@@ -19,6 +21,7 @@ public class ApiSecretKeyPaymentSigner : IPaymentSigner
         PaymentSignPayloadEncoder = paymentSignPayloadEncoder ?? throw new ArgumentNullException(nameof(paymentSignPayloadEncoder));
 
         ApiKey = ParseApiSecretKey(apiSecretKey);
+        SigningPublicKey = ApiKey.PubKey.GetBase58();
     }
 
     public Task<PaymentSignature> SignAsync(Payment payment)
@@ -30,7 +33,7 @@ public class ApiSecretKeyPaymentSigner : IPaymentSigner
             ? ApiKey.Sign(signPayload.ClientSignPayload).ToString()
             : null;
 
-        var paymentSignature = new PaymentSignature(contractSignature, clientSignature);
+        var paymentSignature = new PaymentSignature(SigningPublicKey, contractSignature, clientSignature);
 
         return Task.FromResult(paymentSignature);
     }
