@@ -1,3 +1,5 @@
+using TezosPayments.Validation;
+
 namespace TezosPayments.Models;
 
 public partial class Payment : IPayment
@@ -24,6 +26,7 @@ public partial class Payment : IPayment
 
     public PaymentSignature? Signature { get; private set; }
     public Uri? Url { get; private set; }
+    public ValidationResult? IsValid { get; private set; }
 
     public Payment(
         string id,
