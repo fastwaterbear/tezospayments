@@ -77,23 +77,23 @@ public class TezosPayments : ITezosPayments
         PaymentUrlFactoryProvider = paymentUrlFactoryProvider ?? throw new ArgumentNullException(nameof(paymentUrlFactoryProvider));
     }
 
-    public async Task<IPayment> CreatePaymentAsync(PaymentCreateParameters createParameters)
+    public virtual async Task<IPayment> CreatePaymentAsync(PaymentCreateParameters createParameters)
     {
         if (createParameters.UrlType != null)
         {
             // TODO: validate default payment parameters
         }
 
-        var payment = CreatePaymentByCreateParameters(createParameters);
+        var payment = CreatePaymentByCreateParameters(in createParameters);
         // TODO: validate payment
 
         await payment.SignAsync(Signer);
-        await payment.CreateUrlAsync(GetPaymentUrlFactory(createParameters), Network);
+        await payment.CreateUrlAsync(GetPaymentUrlFactory(in createParameters), Network);
 
         return payment;
     }
 
-    protected virtual Payment CreatePaymentByCreateParameters(PaymentCreateParameters createParameters)
+    protected virtual Payment CreatePaymentByCreateParameters(in PaymentCreateParameters createParameters)
     {
         var payment = new Payment(
             id: createParameters.Id ?? Guid.NewGuid().ToString(),
@@ -112,7 +112,7 @@ public class TezosPayments : ITezosPayments
         return payment;
     }
 
-    protected IPaymentUrlFactory GetPaymentUrlFactory(PaymentCreateParameters createParameters)
+    protected IPaymentUrlFactory GetPaymentUrlFactory(in PaymentCreateParameters createParameters)
     {
         return PaymentUrlFactoryProvider.GetPaymentUrlFactory(
             createParameters.UrlType ?? DefaultPaymentParameters?.UrlType ?? Constants.PaymentUrlType
