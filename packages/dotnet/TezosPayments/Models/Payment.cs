@@ -4,6 +4,7 @@ namespace TezosPayments.Models;
 
 public partial class Payment : IPayment
 {
+    public const char AMOUNT_DECIMAL_SEPARATOR = '.';
     private readonly DateTime? expired;
 
     public string Id { get; }
@@ -38,9 +39,24 @@ public partial class Payment : IPayment
     {
         Id = GuardUtils.EnsureStringArgumentIsValid(id, nameof(id));
         TargetAddress = GuardUtils.EnsureStringArgumentIsValid(targetAddress, nameof(targetAddress));
-        Amount = GuardUtils.EnsureStringArgumentIsValid(amount, nameof(amount));
-
         Asset = asset;
+        Amount = PrepareAmount(GuardUtils.EnsureStringArgumentIsValid(amount, nameof(amount)), Asset);
         Created = created ?? DateTime.UtcNow;
+    }
+
+    private string PrepareAmount(string amount, PaymentAsset? asset)
+    {
+        var expectedDecimalsCount = asset?.Decimals ?? Tezos.Constants.Tokens.Decimals;
+        var decimalSeparatorIndex = amount.LastIndexOf(AMOUNT_DECIMAL_SEPARATOR);
+        if (decimalSeparatorIndex == -1)
+            return $"{amount}.{new string('0', expectedDecimalsCount)}";
+
+        var actualDecimalsCount = amount.Length - 1 - decimalSeparatorIndex;
+        if (actualDecimalsCount < expectedDecimalsCount)
+            return amount.PadRight(decimalSeparatorIndex + 1 + expectedDecimalsCount, '0');
+        if (actualDecimalsCount > expectedDecimalsCount)
+            return amount[0..actualDecimalsCount];
+
+        return amount;
     }
 }
