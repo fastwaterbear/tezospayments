@@ -6,7 +6,6 @@ import { PaymentDeserializer } from '../../serialization';
 import { StateModel } from '../core';
 import type { PaymentSignature } from '../signing';
 import { PaymentBase, PaymentType } from './paymentBase';
-import { NonSerializedPaymentSlice } from './serializedPayment';
 
 export interface Payment extends PaymentBase {
   readonly type: PaymentType.Payment;
@@ -41,7 +40,7 @@ export class Payment extends StateModel {
     return Payment.defaultValidator.validate(payment);
   }
 
-  static deserialize(serializedPayment: string, nonSerializedPaymentSlice: NonSerializedPaymentSlice): Payment | null {
-    return Payment.defaultDeserializer.deserialize(serializedPayment, nonSerializedPaymentSlice);
+  static deserialize(serializedPayment: string): Payment | null {
+    return Payment.defaultDeserializer.deserialize(serializedPayment);
   }
 }

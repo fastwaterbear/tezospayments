@@ -19,16 +19,14 @@ export class ApiSecretKeySigner extends TezosPaymentsSigner {
     const signPayload = this.paymentSignPayloadEncoder.encode(payment);
     const contractSigningPromise = this.inMemorySigner.sign(signPayload.contractSignPayload);
     const signingPromises = signPayload.clientSignPayload
-      ? [contractSigningPromise, this.inMemorySigner.sign(signPayload.clientSignPayload)]
-      : [contractSigningPromise];
+      ? [contractSigningPromise, this.inMemorySigner.sign(signPayload.clientSignPayload)] as const
+      : [contractSigningPromise] as const;
 
-    // TODO: add "[Awaited<ReturnType<typeof this.inMemorySigner.sign>>, Awaited<ReturnType<typeof this.inMemorySigner.sign>>?]" type
     const signatures = await Promise.all(signingPromises);
 
     return {
       signingPublicKey: await this.inMemorySigner.publicKey(),
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      contract: signatures[0]!.prefixSig,
+      contract: signatures[0].prefixSig,
       client: signatures[1]?.prefixSig,
     };
   }

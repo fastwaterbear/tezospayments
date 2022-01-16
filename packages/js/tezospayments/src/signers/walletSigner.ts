@@ -6,7 +6,7 @@ import { TezosPaymentsSigner } from './tezosPaymentsSigner';
 export class WalletSigner extends TezosPaymentsSigner {
   protected readonly paymentSignPayloadEncoder: PaymentSignPayloadEncoder = new PaymentSignPayloadEncoder();
 
-  constructor(readonly walletSigning: (dataBytes: string) => Promise<string>) {
+  constructor(readonly signingPublicKey: string, readonly walletSignCallback: (dataBytes: string) => Promise<string>) {
     super(SigningType.Wallet);
   }
 
@@ -14,18 +14,16 @@ export class WalletSigner extends TezosPaymentsSigner {
     const signPayload = this.paymentSignPayloadEncoder.encode(payment);
     const walletContractSignPayload = signPayload.contractSignPayload.substring(2);
 
-    const contractSigningPromise = this.walletSigning(walletContractSignPayload);
+    const contractSigningPromise = this.walletSignCallback(walletContractSignPayload);
     const signingPromises = signPayload.clientSignPayload
-      ? [contractSigningPromise, this.walletSigning(signPayload.clientSignPayload)]
-      : [contractSigningPromise];
+      ? [contractSigningPromise, this.walletSignCallback(signPayload.clientSignPayload)] as const
+      : [contractSigningPromise] as const;
 
-    // TODO: add "[Awaited<ReturnType<typeof this.inMemorySigner.sign>>, Awaited<ReturnType<typeof this.inMemorySigner.sign>>?]" type
     const signatures = await Promise.all(signingPromises);
 
     return {
-      signingPublicKey: '',
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      contract: signatures[0]!,
+      signingPublicKey: this.signingPublicKey,
+      contract: signatures[0],
       client: signatures[1],
     };
   }

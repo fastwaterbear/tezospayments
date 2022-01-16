@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 
 import type {
-  NonSerializedPaymentSlice, Payment, PaymentAsset, PaymentSignature,
+  Payment, PaymentAsset, PaymentSignature,
   SerializedPayment, SerializedPaymentAsset, SerializedPaymentSignature
 } from '../../models';
 import { PaymentType } from '../../models/payment/paymentBase';
@@ -14,29 +14,30 @@ export class PaymentDeserializer {
     serializedPaymentFieldTypes
   );
 
-  deserialize(serializedPaymentBase64: string, nonSerializedPaymentSlice: NonSerializedPaymentSlice): Payment | null {
+  deserialize(serializedPaymentBase64: string): Payment | null {
     try {
       const serializedPayment = PaymentDeserializer.serializedPaymentBase64Deserializer.deserialize(serializedPaymentBase64);
 
-      return serializedPayment ? this.mapSerializedPaymentToPayment(serializedPayment, nonSerializedPaymentSlice) : null;
+      return serializedPayment ? this.mapSerializedPaymentToPayment(serializedPayment) : null;
     }
     catch {
       return null;
     }
   }
 
-  protected mapSerializedPaymentToPayment(serializedPayment: SerializedPayment, nonSerializedPaymentSlice: NonSerializedPaymentSlice): Payment {
+  protected mapSerializedPaymentToPayment(serializedPayment: SerializedPayment): Payment {
     return {
       type: PaymentType.Payment,
       id: serializedPayment.i,
       amount: new BigNumber(serializedPayment.a),
+      targetAddress: serializedPayment.t,
       asset: serializedPayment.as ? this.mapSerializedPaymentAssetToPaymentAsset(serializedPayment.as) : undefined,
       data: serializedPayment.d,
       successUrl: serializedPayment.su ? new URL(serializedPayment.su) : undefined,
       cancelUrl: serializedPayment.cu ? new URL(serializedPayment.cu) : undefined,
       created: new Date(serializedPayment.c),
       expired: serializedPayment.e ? new Date(serializedPayment.e) : undefined,
-      targetAddress: nonSerializedPaymentSlice.targetAddress,
+
       signature: this.mapSerializedPaymentSignatureToPaymentSignature(serializedPayment.s)
     };
   }

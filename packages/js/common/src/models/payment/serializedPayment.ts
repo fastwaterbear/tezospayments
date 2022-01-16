@@ -10,6 +10,10 @@ export type SerializedPayment = {
    */
   a: string;
   /**
+   * targetAddress or targetDomain
+   */
+  t: string;
+  /**
    * created
    */
   c: number;
