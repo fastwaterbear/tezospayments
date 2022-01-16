@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { createCachedSelector } from 're-reselect';
 
-import { OperationDirection, OperationStatus, tezosMeta, unknownAssetMeta } from '@tezospayments/common';
+import { OperationDirection, OperationStatus, ServiceOperation, tezosMeta, unknownAssetMeta } from '@tezospayments/common';
 
 import { ChartOperationType, Period } from '../../models/system';
 import { AppState } from '../index';
@@ -35,7 +35,7 @@ export const selectSortedOperationsForPeriod = createCachedSelector(
       : [...operationsState.operations];
 
     if (period !== Period.All) {
-      const startDate = getStartDate(period);
+      const startDate = getStartDateByDatePeriod(period);
       filteredOperations = filteredOperations.filter(o => o.date.getTime() >= startDate.getTime());
     }
     filteredOperations.sort((a, b) => +b.date - +a.date);
@@ -46,17 +46,12 @@ export const selectSortedOperationsForPeriod = createCachedSelector(
   (_state, type, period) => `${type}:${period}`
 );
 
-const getTodayDate = () => {
-  const now = new Date();
-  return new Date(now.getFullYear(), now.getMonth(), now.getDate());
-};
+const getDate = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
+const getTodayDate = () => getDate(new Date());
 
-const getDate = (date: Date) => {
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-};
-
-const getStartDate = (period: Period) => {
+const getStartDateByDatePeriod = (period: Exclude<Period, Period.All>) => {
   const result = getTodayDate();
+
   switch (period) {
     case Period.LastWeek:
       result.setDate(result.getDate() - 7);
@@ -70,6 +65,7 @@ const getStartDate = (period: Period) => {
     default:
       throw new Error(`Unsupported Period ${period}`);
   }
+
   return result;
 };
 
@@ -96,25 +92,39 @@ const toFixedNumber = (value: number, fractionDigits: number) => {
 
 const getDateKey = (date: Date) => getDate(date).toLocaleDateString('en-US');
 
-function initializeChartData<T>(startDate: Date, endDate: Date, initItem: () => T) {
-  const result = {} as { [key: string]: T };
-  while (startDate.getTime() <= endDate.getTime()) {
+const initializeChartData = <T>(startDate: Date, endDate: Date, initItem: () => T) => {
+  const result: { [key: string]: T } = {};
+  const startDateTime = startDate.getTime();
+  let endDateTime = endDate.getTime();
+
+  while (startDateTime <= endDateTime) {
     result[getDateKey(endDate)] = initItem();
-    endDate.setDate(endDate.getDate() - 1);
+
+    endDateTime = endDate.getTime() - 86400000;
+    endDate.setTime(endDateTime);
   }
+
   return result;
-}
+};
+
+const getStartDate = (period: Period, operations: readonly ServiceOperation[]) => {
+  return period === Period.All
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    ? (operations[operations.length - 1] ? getDate(operations[operations.length - 1]!.date) : getTodayDate())
+    : getStartDateByDatePeriod(period);
+};
+
+const getEndDate = (_period: Period, _operations: readonly ServiceOperation[]) => getTodayDate();
 
 export const selectProfitChartData = createCachedSelector(
   selectSortedOperationsForPeriod,
   (_state: AppState, operationType: ChartOperationType) => operationType,
   (_state: AppState, _operationType: ChartOperationType, period: Period) => period,
   (operations, _operationType, period) => {
-    const startDate = period === Period.All ? operations[operations.length - 1]?.date || getTodayDate() : getStartDate(period);
-    const endDate = getTodayDate();
-    const initialDayItem = { profit: 0, volume: 0, incoming: 0, outgoing: 0 };
+    const startDate = getStartDate(period, operations);
+    const endDate = getEndDate(period, operations);
+    const initialData = initializeChartData(startDate, endDate, () => ({ profit: 0, volume: 0, incoming: 0, outgoing: 0 }));
 
-    const initialData = initializeChartData(startDate, endDate, () => ({ ...initialDayItem }));
     const profitByDay = operations.reduce((map, operation) => {
       if (operation.status === OperationStatus.Success) {
         const key = getDateKey(operation.date);
@@ -153,14 +163,14 @@ export const selectOperationsCountByTokensChartData = createCachedSelector(
   (_state: AppState, operationType: ChartOperationType) => operationType,
   (_state: AppState, _operationType: ChartOperationType, period: Period) => period,
   (operations, tokens, _operationType, period) => {
+    const startDate = getStartDate(period, operations);
+    const endDate = getEndDate(period, operations);
     const tokensMap = new Map(tokens.map(t => [t.contractAddress, t]));
-    const startDate = period === Period.All ? operations[operations.length - 1]?.date || getTodayDate() : getStartDate(period);
-    const endDate = getTodayDate();
     const initialDayItem: { [key: string]: number } = {};
     initialDayItem[tezosMeta.symbol] = 0;
     tokens.forEach(t => initialDayItem[(t.metadata || unknownAssetMeta).symbol] = 0);
-
     const initialData = initializeChartData(startDate, endDate, () => ({ ...initialDayItem }));
+
     const operationsCountByDay = operations.reduce((map, operation) => {
       if (operation.status === OperationStatus.Success) {
         const key = getDateKey(operation.date);
@@ -189,10 +199,10 @@ export const selectOperationsCountByTypesChartData = createCachedSelector(
   (_state: AppState, operationType: ChartOperationType) => operationType,
   (_state: AppState, _operationType: ChartOperationType, period: Period) => period,
   (operations, _operationType, period) => {
-    const startDate = period === Period.All ? operations[operations.length - 1]?.date || getTodayDate() : getStartDate(period);
-    const endDate = getTodayDate();
-    const initialDayItem = { incoming: 0, outgoing: 0, failed: 0 };
-    const initialData = initializeChartData(startDate, endDate, () => ({ ...initialDayItem }));
+    const startDate = getStartDate(period, operations);
+    const endDate = getEndDate(period, operations);
+    const initialData = initializeChartData(startDate, endDate, () => ({ incoming: 0, outgoing: 0, failed: 0 }));
+
     const operationsCountByDay = operations.reduce((map, operation) => {
       const key = getDateKey(operation.date);
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -228,6 +238,7 @@ export const selectProfitByTokensChartData = createCachedSelector(
   (operations, tokens, _operationType, _period, direction) => {
     const tokensMap = new Map(tokens.map(t => [t.contractAddress, t]));
     const initialData = {} as { [key: string]: number };
+
     const profitByDay = operations.reduce((map, operation) => {
       if (operation.status === OperationStatus.Success && operation.direction === direction) {
         const assetKey = operation.asset
@@ -253,10 +264,10 @@ export const selectMaxTransactionChartData = createCachedSelector(
   (_state: AppState, operationType: ChartOperationType) => operationType,
   (_state: AppState, _operationType: ChartOperationType, period: Period) => period,
   (operations, _operationType, period) => {
-    const startDate = period === Period.All ? operations[operations.length - 1]?.date || getTodayDate() : getStartDate(period);
-    const endDate = getTodayDate();
-    const initialDayItem = { max: 0 };
-    const initialData = initializeChartData(startDate, endDate, () => ({ ...initialDayItem }));
+    const startDate = getStartDate(period, operations);
+    const endDate = getEndDate(period, operations);
+    const initialData = initializeChartData(startDate, endDate, () => ({ max: 0 }));
+
     const maxByDay = operations.reduce((map, operation) => {
       if (operation.status === OperationStatus.Success && operation.direction === OperationDirection.Incoming) {
         const key = getDateKey(operation.date);
@@ -284,22 +295,18 @@ export const selectNewSendersCountChartData = createCachedSelector(
   (_state: AppState, operationType: ChartOperationType) => operationType,
   (_state: AppState, _operationType: ChartOperationType, period: Period) => period,
   (operations, _operationType, period) => {
-    operations = [...operations].reverse();
-    const firstOperation = operations[0];
-    const startDate = period === Period.All
-      ? firstOperation ? getDate(firstOperation.date) : getTodayDate()
-      : getStartDate(period);
-    const endDate = getTodayDate();
+    const startDate = getStartDate(period, operations);
+    const endDate = getEndDate(period, operations);
     const initialDayItem = { newSendersCount: 0 };
     const initialData = initializeChartData(startDate, endDate, () => ({ ...initialDayItem }));
 
     const sendersSet = new Set<string>();
-    const newSendersByDay = operations.reduce((map, operation) => {
+    const newSendersByDay = operations.reduceRight((map, operation) => {
       if (operation.status === OperationStatus.Success && operation.direction === OperationDirection.Incoming && !sendersSet.has(operation.sender)) {
         sendersSet.add(operation.sender);
         const key = getDateKey(operation.date);
         const datData = map[key];
-        if (datData !== undefined)
+        if (datData)
           datData.newSendersCount++;
       }
       return map;
@@ -339,4 +346,3 @@ export const selectTotalVolumeByTokens = createCachedSelector(
 )(
   (_state, operationType, direction) => `${operationType}:${direction}`
 );
-
