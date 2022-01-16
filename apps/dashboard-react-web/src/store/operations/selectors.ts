@@ -92,17 +92,20 @@ const toFixedNumber = (value: number, fractionDigits: number) => {
 
 const getDateKey = (date: Date) => getDate(date).toLocaleDateString('en-US');
 
-function initializeChartData<T>(startDate: Date, endDate: Date, initItem: () => T) {
+const initializeChartData = <T>(startDate: Date, endDate: Date, initItem: () => T) => {
   const result: { [key: string]: T } = {};
   const startDateTime = startDate.getTime();
+  let endDateTime = endDate.getTime();
 
-  while (startDateTime <= endDate.getTime()) {
+  while (startDateTime <= endDateTime) {
     result[getDateKey(endDate)] = initItem();
-    endDate.setDate(endDate.getDate() - 1);
+
+    endDateTime = endDate.getTime() - 86400000;
+    endDate.setTime(endDateTime);
   }
 
   return result;
-}
+};
 
 const getStartDate = (period: Period, operations: readonly ServiceOperation[]) => {
   return period === Period.All
