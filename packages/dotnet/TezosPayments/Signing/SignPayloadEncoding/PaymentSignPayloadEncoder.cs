@@ -13,7 +13,8 @@ public class PaymentSignPayloadEncoder : IPaymentSignPayloadEncoder
 
     protected JsonSerializerOptions JsonSerializerOptions = new()
     {
-        DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+        DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
     };
 
     public EncodedPaymentSignPayload Encode(Payment payment)

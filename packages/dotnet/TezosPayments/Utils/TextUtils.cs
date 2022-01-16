@@ -11,9 +11,9 @@ public static class TextUtils
         if (value == null)
             throw new ArgumentNullException(nameof(value));
 
-        var preparedValue = Base64UrlPreprocessor.PrepareEncodedValue(value);
+        var encodedValue = Convert.ToBase64String(Encoding.UTF8.GetBytes(value));
 
-        return Convert.ToBase64String(Encoding.UTF8.GetBytes(preparedValue));
+        return Base64UrlPreprocessor.PrepareEncodedValue(encodedValue);
     }
 
     public static string DecodeFromBase64Url(string value)
