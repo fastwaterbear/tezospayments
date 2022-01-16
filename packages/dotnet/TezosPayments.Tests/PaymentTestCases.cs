@@ -24,7 +24,7 @@ public class PaymentTestCases
         caseMessage: "Simple payment signed with Ed25519 key",
         () => new TezosPaymentsOptions()
         {
-            ServiceContractAddress = ValidTargetAddress,
+            ServiceContractAddress = "KT1Ni4pYV3UGWcDp7MgR5prgcD4NCK1MpXiR",
             ApiSecretKey = ApiEd25519SecretKey
         },
         () => new PaymentCreateParameters("17.170000")
@@ -50,7 +50,7 @@ public class PaymentTestCases
                 contract: "edsigu3kdsDpZY3TCptADrzLmjk7yjevXyrf73Y2iJiRyhYwQzJFTESghMoozwzuxgWsyT68SoeWL3QHPSVZvQ5uZ56Sixb86fs",
                 client: null
             ),
-            Url = new Uri("https://payment.tezospayments.com/KT1Ni4pYV3UGWcDp7MgR5prgcD4NCK1MpXiR/payment?#00eyJpIjoiTnFPenFzZHFCUV9hakIwSGgycDdMIiwiYSI6IjE3LjE3IiwiZCI6eyJvcmRlcklkIjoiMTAzNDM4NDM2In0sImMiOjE2MzA0MDg4MjMwMTcsInMiOnsiayI6ImVkcGt1UzRuNU1acWhSYmhxZFFObUo1VFRuR0ZmWVdCUmVGOHBTYWdvbUZ5RGtwRFJjMVQ2cyIsImMiOiJlZHNpZ3Uza2RzRHBaWTNUQ3B0QURyekxtams3eWpldlh5cmY3M1kyaUppUnloWXdRekpGVEVTZ2hNb296d3p1eGdXc3lUNjhTb2VXTDNRSFBTVlp2UTV1WjU2U2l4Yjg2ZnMifX0")
+            Url = new Uri("https://payment.tezospayments.com/KT1Ni4pYV3UGWcDp7MgR5prgcD4NCK1MpXiR/payment#00eyJpIjoiTnFPenFzZHFCUV9hakIwSGgycDdMIiwiYSI6IjE3LjE3IiwidCI6IktUMU5pNHBZVjNVR1djRHA3TWdSNXByZ2NENE5DSzFNcFhpUiIsImQiOnsib3JkZXJJZCI6IjEwMzQzODQzNiJ9LCJjIjoxNjMwNDA4ODIzMDE3LCJzIjp7ImsiOiJlZHBrdVM0bjVNWnFoUmJocWRRTm1KNVRUbkdGZllXQlJlRjhwU2Fnb21GeURrcERSYzFUNnMiLCJjIjoiZWRzaWd1M2tkc0RwWlkzVENwdEFEcnpMbWprN3lqZXZYeXJmNzNZMmlKaVJ5aFl3UXpKRlRFU2doTW9vend6dXhnV3N5VDY4U29lV0wzUUhQU1ZadlE1dVo1NlNpeGI4NmZzIn19")
         }
     );
 }
