@@ -123,9 +123,8 @@ export const selectProfitChartData = createCachedSelector(
   (operations, _operationType, period) => {
     const startDate = getStartDate(period, operations);
     const endDate = getEndDate(period, operations);
-    const initialDayItem = { profit: 0, volume: 0, incoming: 0, outgoing: 0 };
+    const initialData = initializeChartData(startDate, endDate, () => ({ profit: 0, volume: 0, incoming: 0, outgoing: 0 }));
 
-    const initialData = initializeChartData(startDate, endDate, () => ({ ...initialDayItem }));
     const profitByDay = operations.reduce((map, operation) => {
       if (operation.status === OperationStatus.Success) {
         const key = getDateKey(operation.date);
@@ -170,8 +169,8 @@ export const selectOperationsCountByTokensChartData = createCachedSelector(
     const initialDayItem: { [key: string]: number } = {};
     initialDayItem[tezosMeta.symbol] = 0;
     tokens.forEach(t => initialDayItem[(t.metadata || unknownAssetMeta).symbol] = 0);
-
     const initialData = initializeChartData(startDate, endDate, () => ({ ...initialDayItem }));
+
     const operationsCountByDay = operations.reduce((map, operation) => {
       if (operation.status === OperationStatus.Success) {
         const key = getDateKey(operation.date);
@@ -202,8 +201,8 @@ export const selectOperationsCountByTypesChartData = createCachedSelector(
   (operations, _operationType, period) => {
     const startDate = getStartDate(period, operations);
     const endDate = getEndDate(period, operations);
-    const initialDayItem = { incoming: 0, outgoing: 0, failed: 0 };
-    const initialData = initializeChartData(startDate, endDate, () => ({ ...initialDayItem }));
+    const initialData = initializeChartData(startDate, endDate, () => ({ incoming: 0, outgoing: 0, failed: 0 }));
+
     const operationsCountByDay = operations.reduce((map, operation) => {
       const key = getDateKey(operation.date);
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -239,6 +238,7 @@ export const selectProfitByTokensChartData = createCachedSelector(
   (operations, tokens, _operationType, _period, direction) => {
     const tokensMap = new Map(tokens.map(t => [t.contractAddress, t]));
     const initialData = {} as { [key: string]: number };
+
     const profitByDay = operations.reduce((map, operation) => {
       if (operation.status === OperationStatus.Success && operation.direction === direction) {
         const assetKey = operation.asset
@@ -266,8 +266,8 @@ export const selectMaxTransactionChartData = createCachedSelector(
   (operations, _operationType, period) => {
     const startDate = getStartDate(period, operations);
     const endDate = getEndDate(period, operations);
-    const initialDayItem = { max: 0 };
-    const initialData = initializeChartData(startDate, endDate, () => ({ ...initialDayItem }));
+    const initialData = initializeChartData(startDate, endDate, () => ({ max: 0 }));
+
     const maxByDay = operations.reduce((map, operation) => {
       if (operation.status === OperationStatus.Success && operation.direction === OperationDirection.Incoming) {
         const key = getDateKey(operation.date);
