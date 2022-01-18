@@ -2,7 +2,7 @@ import { ColorMode } from '@airgap/beacon-sdk';
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit } from '@taquito/taquito';
 
-import { Network, networks } from '@tezospayments/common';
+import { Network, networks, ReadOnlySigner } from '@tezospayments/common';
 import {
   BetterCallDevBlockchainUrlExplorer, BetterCallDevDataProvider, BlockchainUrlExplorer,
   ServicesProvider, TzKTBlockchainUrlExplorer, TzKTDataProvider, TzStatsBlockchainUrlExplorer
@@ -31,6 +31,7 @@ export class WebApp {
 
     const networkConfig = config.tezos.networks[this.network.name];
     this.tezosToolkit = new TezosToolkit(networkConfig.rpcUrls[networkConfig.default.rpc]);
+    this.tezosToolkit.setSignerProvider(new ReadOnlySigner());
     this.tezosToolkit.setWalletProvider(this.tezosWallet);
 
     this.services = this.createServices();

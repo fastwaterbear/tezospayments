@@ -4,7 +4,7 @@ import React, { useCallback } from 'react';
 import { PaymentType } from '@tezospayments/common';
 
 import { NetworkDonation, NetworkPayment, PaymentStatus } from '../models/payment';
-import { donate, pay } from '../store/currentPayment';
+import { connectWallet, donate, pay } from '../store/currentPayment';
 import { useAppDispatch, useAppSelector } from './hooks';
 import './PayButton.scss';
 
@@ -16,17 +16,27 @@ interface PayButtonProps {
 
 export const PayButton = ({ networkPayment, text, disabled }: PayButtonProps) => {
   const currentPaymentStatus = useAppSelector(state => state.currentPaymentState && state.currentPaymentState.status);
+  const balances = useAppSelector(state => state.balancesState);
   const dispatch = useAppDispatch();
 
   const handleButtonClick = useCallback(
     () => {
-      if (networkPayment.type === PaymentType.Payment)
-        dispatch(pay(networkPayment));
-      else if (networkPayment.type === PaymentType.Donation)
-        dispatch(donate(networkPayment));
+      if (currentPaymentStatus === PaymentStatus.Initial)
+        dispatch(connectWallet());
+      else {
+        if (networkPayment.type === PaymentType.Payment)
+          dispatch(pay(networkPayment));
+        else if (networkPayment.type === PaymentType.Donation)
+          dispatch(donate(networkPayment));
+      }
     },
-    [dispatch, networkPayment]
+    [currentPaymentStatus, dispatch, networkPayment]
   );
+
+  const disconnected = !balances;
+
+  const loading = currentPaymentStatus === PaymentStatus.UserConnecting || (currentPaymentStatus === PaymentStatus.UserConnected && !balances)
+    || currentPaymentStatus === PaymentStatus.UserProcessing || currentPaymentStatus === PaymentStatus.NetworkProcessing;
 
   return <Button
     className="pay-button"
@@ -34,8 +44,8 @@ export const PayButton = ({ networkPayment, text, disabled }: PayButtonProps) =>
     size="large"
     onClick={handleButtonClick}
     disabled={disabled}
-    loading={currentPaymentStatus === PaymentStatus.UserProcessing || currentPaymentStatus === PaymentStatus.NetworkProcessing}>
-    {text}
+    loading={loading}>
+    {disconnected ? 'Connect Wallet' : text}
   </Button>;
 };
 

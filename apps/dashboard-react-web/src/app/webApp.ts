@@ -2,7 +2,7 @@ import { ColorMode } from '@airgap/beacon-sdk';
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit } from '@taquito/taquito';
 
-import { EventEmitter, Network, networks, PublicEventEmitter } from '@tezospayments/common';
+import { EventEmitter, Network, networks, PublicEventEmitter, ReadOnlySigner } from '@tezospayments/common';
 import {
   ServicesProvider, TzKTDataProvider, BetterCallDevDataProvider,
   BlockchainUrlExplorer, TzStatsBlockchainUrlExplorer, BetterCallDevBlockchainUrlExplorer, TzKTBlockchainUrlExplorer
@@ -17,7 +17,6 @@ import { selectCurrentAccount } from '../store/accounts/selectors';
 import { clearBalances, loadBalances } from '../store/balances/slice';
 import { clearServices, loadServices } from '../store/services/slice';
 import type { ReactAppContext } from './reactAppContext';
-import { ReadOnlySigner } from './readOnlySigner';
 
 interface AppServices {
   readonly accountsService: AccountsService;

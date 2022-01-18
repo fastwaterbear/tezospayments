@@ -33,9 +33,8 @@ export const loadBalances = createAsyncThunk<Pick<BalancesState, 'tezos' | 'toke
 
     balances.forEach((b, i) => {
       const address = acceptedTokens[i]?.contractAddress;
-      if (address) {
+      if (address)
         tokens[address] = b;
-      }
     });
 
     return { tezos, tokens };

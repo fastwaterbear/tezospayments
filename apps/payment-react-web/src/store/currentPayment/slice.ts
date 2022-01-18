@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Service, Donation, Payment, PaymentType } from '@tezospayments/common';
 
 import { NetworkDonation, NetworkPayment, PaymentInfo, PaymentStatus } from '../../models/payment';
+import { loadBalances } from '../balances';
 import { AppThunkAPI } from '../thunk';
 
 interface CurrentPaymentState {
@@ -23,14 +24,26 @@ const namespace = 'currentPayment';
 const initialState: CurrentPaymentState | null = null;
 const checkSendPaymentCondition = (
   currentPaymentState: CurrentPaymentState | null
-): currentPaymentState is CurrentPaymentState & { readonly status: PaymentStatus.Initial } => {
-  return currentPaymentState?.status === PaymentStatus.Initial;
+): currentPaymentState is CurrentPaymentState & { readonly status: PaymentStatus.UserConnected } => {
+  return currentPaymentState?.status === PaymentStatus.UserConnected;
 };
 
 export const loadCurrentPayment = createAsyncThunk<PaymentInfo, void, AppThunkAPI>(
   `${namespace}/loadCurrentPay`,
   async (_, { extra: app }) => {
     return app.services.localPaymentService.getCurrentPaymentInfo();
+  },
+);
+
+export const connectWallet = createAsyncThunk<boolean, void, AppThunkAPI>(
+  `${namespace}/connectWallet`,
+  async (_, { dispatch, extra: app }) => {
+    const connected = await app.services.localPaymentService.connectWallet();
+
+    if (connected)
+      dispatch(loadBalances());
+
+    return connected;
   },
 );
 
@@ -89,6 +102,18 @@ export const currentPaymentSlice = createSlice({
           networkPayment: null,
           service: action.payload.service
         };
+      })
+      .addCase(connectWallet.pending, state => {
+        if (state)
+          state.status = PaymentStatus.UserConnecting;
+      })
+      .addCase(connectWallet.fulfilled, (state, action) => {
+        if (state && action.payload)
+          state.status = PaymentStatus.UserConnected;
+      })
+      .addCase(connectWallet.rejected, state => {
+        if (state)
+          state.status = PaymentStatus.Initial;
       });
 
     for (const action of [pay, donate]) {
@@ -106,7 +131,7 @@ export const currentPaymentSlice = createSlice({
         .addCase(action.fulfilled, (state, action) => {
           return state
             ? {
-              status: action.payload ? PaymentStatus.Succeeded : PaymentStatus.Initial,
+              status: action.payload ? PaymentStatus.Succeeded : PaymentStatus.UserConnected,
               payment: state.payment,
               networkPayment: state.networkPayment,
               service: state.service,
@@ -117,7 +142,7 @@ export const currentPaymentSlice = createSlice({
         .addCase(action.rejected, (state, _action) => {
           return state
             ? {
-              status: PaymentStatus.Initial,
+              status: PaymentStatus.UserConnected,
               payment: state.payment,
               networkPayment: state.networkPayment,
               service: state.service,

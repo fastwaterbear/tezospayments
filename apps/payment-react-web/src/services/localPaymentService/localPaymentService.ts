@@ -1,8 +1,9 @@
 import { RequestPermissionInput, AbortedBeaconError } from '@airgap/beacon-sdk';
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit, WalletOperation } from '@taquito/taquito';
+import BigNumber from 'bignumber.js';
 
-import { Donation, Payment, Network, memoize } from '@tezospayments/common';
+import { Donation, Payment, Network, memoize, balance, Token } from '@tezospayments/common';
 import { converters, ServicesProvider } from '@tezospayments/react-web-core';
 
 import { NetworkDonation, NetworkPayment } from '../../models/payment';
@@ -34,6 +35,7 @@ export class LocalPaymentService {
   ];
   protected readonly paymentSender;
   protected readonly donationSender;
+  protected accountPKH: string | null = null;
 
   constructor(options: LocalPaymentServiceOptions) {
     this.network = options.network;
@@ -65,6 +67,28 @@ export class LocalPaymentService {
       : paymentProvider.getDonation(currentRawPaymentInfo);
   }
 
+  async connectWallet() {
+    await this.tezosWallet.client.clearActiveAccount();
+    const canceled = await this.requestPermissions({ network: { type: converters.networkToBeaconNetwork(this.network) } });
+    this.accountPKH = canceled ? null : await this.tezosWallet.getPKH();
+
+    return !canceled;
+  }
+
+  async getTezosBalance(): Promise<BigNumber> {
+    if (!this.accountPKH)
+      return new BigNumber(0);
+
+    return await balance.getTezosBalance(this.accountPKH, this.tezosToolkit);
+  }
+
+  async getTokenBalance(token: Token): Promise<BigNumber> {
+    if (!this.accountPKH)
+      return new BigNumber(0);
+
+    return balance.getTokenBalance(this.accountPKH, token, this.tezosToolkit);
+  }
+
   async pay(payment: NetworkPayment): Promise<boolean> {
     return this.send(() => this.paymentSender.send(payment));
   }
@@ -86,11 +110,6 @@ export class LocalPaymentService {
 
   protected async send(getSendOperation: () => Promise<WalletOperation>): Promise<boolean> {
     try {
-      await this.tezosWallet.client.clearActiveAccount();
-      const canceled = await this.requestPermissions({ network: { type: converters.networkToBeaconNetwork(this.network) } });
-      if (canceled)
-        return false;
-
       const operation = await getSendOperation();
 
       await this.waitConfirmation(operation);
