@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Service, Donation, Payment, PaymentType } from '@tezospayments/common';
 
 import { NetworkDonation, NetworkPayment, PaymentInfo, PaymentStatus } from '../../models/payment';
-import { loadBalances } from '../balances';
+import { clearBalances, loadBalances } from '../balances';
 import { AppThunkAPI } from '../thunk';
 
 interface CurrentPaymentState {
@@ -38,6 +38,7 @@ export const loadCurrentPayment = createAsyncThunk<PaymentInfo, void, AppThunkAP
 export const connectWallet = createAsyncThunk<boolean, void, AppThunkAPI>(
   `${namespace}/connectWallet`,
   async (_, { dispatch, extra: app }) => {
+    dispatch(clearBalances());
     const connected = await app.services.localPaymentService.connectWallet();
 
     if (connected)
@@ -108,8 +109,8 @@ export const currentPaymentSlice = createSlice({
           state.status = PaymentStatus.UserConnecting;
       })
       .addCase(connectWallet.fulfilled, (state, action) => {
-        if (state && action.payload)
-          state.status = PaymentStatus.UserConnected;
+        if (state)
+          state.status = action.payload ? PaymentStatus.UserConnected : PaymentStatus.Initial;
       })
       .addCase(connectWallet.rejected, state => {
         if (state)

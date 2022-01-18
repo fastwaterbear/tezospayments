@@ -37,8 +37,12 @@ export const loadBalances = createAsyncThunk<Pick<BalancesState, 'tezos' | 'toke
 export const balancesSlice = createSlice({
   name: namespace,
   initialState: initialState as BalancesState | null,
-  reducers: {},
+  reducers: {
+    clearBalances: () => null
+  },
   extraReducers: builder => {
     builder.addCase(loadBalances.fulfilled, (_state, action) => ({ ...action.payload }));
   }
 });
+
+export const { clearBalances } = balancesSlice.actions;

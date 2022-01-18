@@ -19,7 +19,13 @@ export const PayButton = ({ networkPayment, text, disabled }: PayButtonProps) =>
   const balances = useAppSelector(state => state.balancesState);
   const dispatch = useAppDispatch();
 
-  const handleButtonClick = useCallback(
+  const handleCancelButtonClick = useCallback(
+    () => {
+      dispatch(connectWallet());
+    }, [dispatch]
+  );
+
+  const handlePayButtonClick = useCallback(
     () => {
       if (currentPaymentStatus === PaymentStatus.Initial)
         dispatch(connectWallet());
@@ -38,15 +44,23 @@ export const PayButton = ({ networkPayment, text, disabled }: PayButtonProps) =>
   const loading = currentPaymentStatus === PaymentStatus.UserConnecting || (currentPaymentStatus === PaymentStatus.UserConnected && !balances)
     || currentPaymentStatus === PaymentStatus.UserProcessing || currentPaymentStatus === PaymentStatus.NetworkProcessing;
 
-  return <Button
-    className="pay-button"
-    type="primary"
-    size="large"
-    onClick={handleButtonClick}
-    disabled={disabled}
-    loading={loading}>
-    {disconnected ? 'Connect Wallet' : text}
-  </Button>;
+  return <div className="pay-button-container">
+    <Button
+      className="pay-button"
+      type="primary"
+      size="large"
+      onClick={handlePayButtonClick}
+      disabled={disabled}
+      loading={loading}>
+      {disconnected ? 'Connect Wallet' : text}
+    </Button>
+    <Button
+      size="large"
+      onClick={handleCancelButtonClick}
+      hidden={disconnected}>
+      Reconnect
+    </Button>
+  </div>;
 };
 
 export const PayButtonPure = React.memo(PayButton);
