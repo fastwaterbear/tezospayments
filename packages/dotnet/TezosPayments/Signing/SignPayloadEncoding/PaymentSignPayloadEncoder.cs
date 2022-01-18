@@ -16,7 +16,7 @@ public class PaymentSignPayloadEncoder : IPaymentSignPayloadEncoder
     protected static readonly byte[] tezosSignedMessagePrefixBytes = new byte[] {
         84, 101, 122, 111, 115, 32, 83, 105, 103, 110, 101, 100, 32, 77, 101, 115, 115, 97, 103, 101, 58, 32
     };
-    // "Tezos Signed Message: "
+    // "Payment Client Data: "
     protected static readonly byte[] tezosPaymentsClientSignedMessagePrefixBytes = new byte[] {
         80, 97, 121, 109, 101, 110, 116, 32, 67, 108, 105, 101, 110, 116, 32, 68, 97, 116, 97, 58, 32
     };
