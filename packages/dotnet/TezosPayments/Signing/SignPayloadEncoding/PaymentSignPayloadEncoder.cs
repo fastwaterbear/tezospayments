@@ -147,6 +147,5 @@ public class PaymentSignPayloadEncoder : IPaymentSignPayloadEncoder
         };
     }
 
-    protected static BigInteger ConvertAmountToNatBigInteger(string amount)
-        => BigInteger.Parse(amount.ToString().Replace(".", ""));
+    protected static BigInteger ConvertAmountToNatBigInteger(string amount) => BigInteger.Parse(amount.Replace(".", ""));
 }

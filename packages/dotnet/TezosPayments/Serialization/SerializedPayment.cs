@@ -5,13 +5,13 @@ namespace TezosPayments.Serialization;
 public class SerializedPayment
 {
     [JsonPropertyName("i")]
-    public string Id { get; set; } = default!;
+    public string? Id { get; set; }
 
     [JsonPropertyName("a")]
-    public string Amount { get; set; } = default!;
+    public string? Amount { get; set; }
 
     [JsonPropertyName("t")]
-    public string Target { get; set; } = default!;
+    public string? Target { get; set; }
 
     [JsonPropertyName("as")]
     public SerializedPaymentAsset? Asset { get; set; }
