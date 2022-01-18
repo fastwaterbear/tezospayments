@@ -26,7 +26,7 @@ export class DonationSerializer {
   protected mapDonationToSerializedDonation(donation: Donation): SerializedDonation {
     return {
       d: donation.data,
-      da: donation.desiredAmount?.toString(),
+      da: donation.desiredAmount?.toString(10),
       das: donation.desiredAsset ? this.mapDonationAssetToSerializedDonationAsset(donation.desiredAsset) : undefined,
       su: donation.successUrl?.toString(),
       cu: donation.cancelUrl?.toString(),
