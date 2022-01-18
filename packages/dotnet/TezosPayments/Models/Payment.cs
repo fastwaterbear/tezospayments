@@ -49,13 +49,18 @@ public partial class Payment : IPayment
         var expectedDecimalsCount = asset?.Decimals ?? Tezos.Constants.Tokens.Decimals;
         var decimalSeparatorIndex = amount.LastIndexOf(AMOUNT_DECIMAL_SEPARATOR);
         if (decimalSeparatorIndex == -1)
-            return $"{amount}.{new string('0', expectedDecimalsCount)}";
+        {
+            return expectedDecimalsCount > 0
+                ? $"{amount}.{new string('0', expectedDecimalsCount)}"
+                : amount;
+        }
 
         var actualDecimalsCount = amount.Length - 1 - decimalSeparatorIndex;
+        var amountStringTotalWidth = decimalSeparatorIndex + (expectedDecimalsCount > 0 ? expectedDecimalsCount + 1 : 0);
         if (actualDecimalsCount < expectedDecimalsCount)
-            return amount.PadRight(decimalSeparatorIndex + 1 + expectedDecimalsCount, '0');
-        if (actualDecimalsCount > expectedDecimalsCount)
-            return amount[0..actualDecimalsCount];
+            return amount.PadRight(amountStringTotalWidth, '0');
+        if (actualDecimalsCount > expectedDecimalsCount || actualDecimalsCount == 0)
+            return amount[0..amountStringTotalWidth];
 
         return amount;
     }

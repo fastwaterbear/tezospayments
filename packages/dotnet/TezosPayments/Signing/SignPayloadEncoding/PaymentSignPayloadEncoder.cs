@@ -134,7 +134,7 @@ public class PaymentSignPayloadEncoder : IPaymentSignPayloadEncoder
                 },
                 payment.Asset!.Id != null
                     ? new MichelinePrim() {
-                        Prim = PrimType.Pair,
+                        Prim = PrimType.Some,
                         Args = new List<IMicheline>()
                         {
                             new MichelineInt(new BigInteger(payment.Asset.Id.Value)),
