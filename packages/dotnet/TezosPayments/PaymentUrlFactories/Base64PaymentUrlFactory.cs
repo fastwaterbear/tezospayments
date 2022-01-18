@@ -39,7 +39,6 @@ public class Base64PaymentUrlFactory : IBase64PaymentUrlFactory, IPaymentUrlFact
     {
         var urlBuilder = new UriBuilder(BaseUrl)
         {
-            Path = $"{targetAddress}/payment",
             Fragment = EncodedUrlType.Value + base64SerializedPayment
         };
 
