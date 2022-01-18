@@ -7,17 +7,20 @@ $-input-font-size: 24px;
 $-icon-size: 26px;
 
 .donation-amount {
-  display: grid;
   min-width: 256px;
-  grid-template-rows: 48px;
-  grid-template-columns: [input-start currency-icon-start] auto [currency-icon-end] 1fr [input-end currency-start] auto [input-end currency-end];
-  align-items: center;
-  justify-items: center;
   margin-bottom: 100px;
 
   @include mixins.compact-view() {
     margin-bottom: layout-variables.$element-spacing-medium;
   }
+}
+
+.donation-amount__input-container {
+  display: grid;
+  grid-template-rows: 48px;
+  grid-template-columns: [input-start currency-icon-start] auto [currency-icon-end] 1fr [input-end currency-start] auto [input-end currency-end];
+  align-items: center;
+  justify-items: center;
 }
 
 .donation-amount__input {
@@ -90,4 +93,12 @@ $-icon-size: 26px;
 .donation-amount-menu-item__ticker {
   font-weight: 500;
   margin-right: 4px;
+}
+
+.donation-amount__balance {
+  margin-top: 4px;
+}
+
+.donation-amount__balance_hidden {
+  visibility: hidden;
 }
