@@ -1,7 +1,10 @@
+using TezosPayments.Validation;
+
 namespace TezosPayments.Models;
 
-public partial class Payment
+public partial class Payment : IPayment
 {
+    public const char AMOUNT_DECIMAL_SEPARATOR = '.';
     private readonly DateTime? expired;
 
     public string Id { get; }
@@ -24,6 +27,7 @@ public partial class Payment
 
     public PaymentSignature? Signature { get; private set; }
     public Uri? Url { get; private set; }
+    public ValidationResult? IsValid { get; private set; }
 
     public Payment(
         string id,
@@ -35,9 +39,29 @@ public partial class Payment
     {
         Id = GuardUtils.EnsureStringArgumentIsValid(id, nameof(id));
         TargetAddress = GuardUtils.EnsureStringArgumentIsValid(targetAddress, nameof(targetAddress));
-        Amount = GuardUtils.EnsureStringArgumentIsValid(amount, nameof(amount));
-
         Asset = asset;
+        Amount = PrepareAmount(GuardUtils.EnsureStringArgumentIsValid(amount, nameof(amount)), Asset);
         Created = created ?? DateTime.UtcNow;
+    }
+
+    private string PrepareAmount(string amount, PaymentAsset? asset)
+    {
+        var expectedDecimalsCount = asset?.Decimals ?? Tezos.Constants.Tokens.Decimals;
+        var decimalSeparatorIndex = amount.LastIndexOf(AMOUNT_DECIMAL_SEPARATOR);
+        if (decimalSeparatorIndex == -1)
+        {
+            return expectedDecimalsCount > 0
+                ? $"{amount}.{new string('0', expectedDecimalsCount)}"
+                : amount;
+        }
+
+        var actualDecimalsCount = amount.Length - 1 - decimalSeparatorIndex;
+        var amountStringTotalWidth = decimalSeparatorIndex + (expectedDecimalsCount > 0 ? expectedDecimalsCount + 1 : 0);
+        if (actualDecimalsCount < expectedDecimalsCount)
+            return amount.PadRight(amountStringTotalWidth, '0');
+        if (actualDecimalsCount > expectedDecimalsCount || actualDecimalsCount == 0)
+            return amount[0..amountStringTotalWidth];
+
+        return amount;
     }
 }

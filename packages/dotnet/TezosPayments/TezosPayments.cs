@@ -1,11 +1,12 @@
-﻿global using TezosPayments.Utils;
-
+global using TezosPayments.Utils;
+using System.Text;
 using TezosPayments.Models;
 using TezosPayments.Options;
 using TezosPayments.PaymentUrlFactories;
 using TezosPayments.Serialization;
 using TezosPayments.Signing.Signers;
 using TezosPayments.Signing.SignPayloadEncoding;
+using TezosPayments.Validation;
 
 namespace TezosPayments;
 
@@ -17,6 +18,7 @@ public class TezosPayments : ITezosPayments
 
     protected IPaymentSigner Signer { get; }
     protected IPaymentUrlFactoryProvider PaymentUrlFactoryProvider { get; }
+    protected IPaymentValidator PaymentValidator { get; }
 
     public TezosPayments(
         string serviceContractAddress,
@@ -28,7 +30,8 @@ public class TezosPayments : ITezosPayments
             defaultOptions,
             defaultPaymentParameters,
             new ApiSecretKeyPaymentSigner(apiSecretKey, new PaymentSignPayloadEncoder()),
-            new ProxyPaymentUrlFactoryProvider(new Base64PaymentUrlFactory(new Base64PaymentSerializer()))
+            new ProxyPaymentUrlFactoryProvider(new Base64PaymentUrlFactory(new Base64JsonPaymentSerializer())),
+            new PaymentValidator()
         )
     {
     }
@@ -36,8 +39,9 @@ public class TezosPayments : ITezosPayments
     public TezosPayments(
         string serviceContractAddress,
         IPaymentSigner signer,
-        IPaymentUrlFactoryProvider paymentUrlFactoryProvider
-    ) : this(serviceContractAddress, null, null, signer, paymentUrlFactoryProvider)
+        IPaymentUrlFactoryProvider paymentUrlFactoryProvider,
+        IPaymentValidator paymentValidator
+    ) : this(serviceContractAddress, null, null, signer, paymentUrlFactoryProvider, paymentValidator)
     {
     }
 
@@ -45,8 +49,9 @@ public class TezosPayments : ITezosPayments
         string serviceContractAddress,
         TezosPaymentDefaultOptions defaultOptions,
         IPaymentSigner signer,
-        IPaymentUrlFactoryProvider paymentUrlFactoryProvider
-    ) : this(serviceContractAddress, defaultOptions, null, signer, paymentUrlFactoryProvider)
+        IPaymentUrlFactoryProvider paymentUrlFactoryProvider,
+        IPaymentValidator paymentValidator
+    ) : this(serviceContractAddress, defaultOptions, null, signer, paymentUrlFactoryProvider, paymentValidator)
     {
     }
 
@@ -54,8 +59,9 @@ public class TezosPayments : ITezosPayments
         string serviceContractAddress,
         DefaultPaymentParameters defaultPaymentParameters,
         IPaymentSigner signer,
-        IPaymentUrlFactoryProvider paymentUrlFactoryProvider
-    ) : this(serviceContractAddress, null, defaultPaymentParameters, signer, paymentUrlFactoryProvider)
+        IPaymentUrlFactoryProvider paymentUrlFactoryProvider,
+        IPaymentValidator paymentValidator
+    ) : this(serviceContractAddress, null, defaultPaymentParameters, signer, paymentUrlFactoryProvider, paymentValidator)
     {
     }
 
@@ -64,7 +70,8 @@ public class TezosPayments : ITezosPayments
         TezosPaymentDefaultOptions? defaultOptions,
         DefaultPaymentParameters? defaultPaymentParameters,
         IPaymentSigner signer,
-        IPaymentUrlFactoryProvider paymentUrlFactoryProvider
+        IPaymentUrlFactoryProvider paymentUrlFactoryProvider,
+        IPaymentValidator paymentValidator
     )
     {
         ServiceContractAddress = GuardUtils.EnsureStringArgumentIsValid(serviceContractAddress, nameof(serviceContractAddress));
@@ -75,28 +82,27 @@ public class TezosPayments : ITezosPayments
 
         Signer = signer ?? throw new ArgumentNullException(nameof(signer));
         PaymentUrlFactoryProvider = paymentUrlFactoryProvider ?? throw new ArgumentNullException(nameof(paymentUrlFactoryProvider));
+        PaymentValidator = paymentValidator ?? throw new ArgumentNullException(nameof(paymentValidator));
     }
 
-    public async Task<IPayment> CreatePaymentAsync(PaymentCreateParameters createParameters)
+    public virtual async Task<IPayment> CreatePaymentAsync(PaymentCreateParameters createParameters)
     {
-        if (createParameters == null)
-            throw new ArgumentNullException(nameof(createParameters));
-
         if (createParameters.UrlType != null)
         {
             // TODO: validate default payment parameters
         }
 
-        var payment = CreatePaymentByCreateParameters(createParameters);
-        // TODO: validate payment
+        var payment = CreatePaymentByCreateParameters(in createParameters);
+
+        ValidatePayment(payment);
 
         await payment.SignAsync(Signer);
-        await payment.CreateUrlAsync(GetPaymentUrlFactory(createParameters), Network);
+        await payment.CreateUrlAsync(GetPaymentUrlFactory(in createParameters), Network);
 
         return payment;
     }
 
-    protected virtual Payment CreatePaymentByCreateParameters(PaymentCreateParameters createParameters)
+    protected virtual Payment CreatePaymentByCreateParameters(in PaymentCreateParameters createParameters)
     {
         var payment = new Payment(
             id: createParameters.Id ?? Guid.NewGuid().ToString(),
@@ -115,10 +121,28 @@ public class TezosPayments : ITezosPayments
         return payment;
     }
 
-    protected IPaymentUrlFactory GetPaymentUrlFactory(PaymentCreateParameters createParameters)
+    protected IPaymentUrlFactory GetPaymentUrlFactory(in PaymentCreateParameters createParameters)
     {
         return PaymentUrlFactoryProvider.GetPaymentUrlFactory(
-            createParameters?.UrlType ?? DefaultPaymentParameters?.UrlType ?? Constants.PaymentUrlType
+            createParameters.UrlType ?? DefaultPaymentParameters?.UrlType ?? Constants.PaymentUrlType
         );
+    }
+
+    private void ValidatePayment(Payment payment)
+    {
+        var (paymentIsValid, validationErrors) = payment.Validate(PaymentValidator);
+        if (paymentIsValid)
+            return;
+
+        // TODO: move to the InvalidPaymentException
+        var messageBuilder = new StringBuilder();
+        var lineNumber = 1;
+        foreach (var error in validationErrors)
+        {
+            messageBuilder.AppendLine($"{lineNumber,4}. {error}");
+            lineNumber++;
+        }
+
+        throw new Exception(messageBuilder.ToString());
     }
 }

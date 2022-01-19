@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using TezosPayments.Tests;
+using TezosPayments.Tests.TestHelpers;
 
 namespace TezosPayments.DependencyInjection.Tests;
 
@@ -33,10 +33,10 @@ public static class TezosPaymentsOptionsCases
         }
     }
 
-    public static TestCaseData MissingTezosPaymentsOptions => TestCaseHelper.CreateTestCaseData<TezosPaymentsOptions?>(
+    public static TestCaseData MissingTezosPaymentsOptions => TestCaseHelper.CreateTestCaseData(
         caseMessage: $"The instance of {nameof(TezosPaymentsOptions)} is null",
-        () => null,
-        Throws.InstanceOf<ArgumentNullException>().With.Message.Contains("options").IgnoreCase
+        () => (TezosPaymentsOptions?)null,
+        () => Throws.InstanceOf<ArgumentNullException>().With.Message.Contains("options").IgnoreCase
     );
 
     public static TestCaseData MissingServiceContractAddress => TestCaseHelper.CreateTestCaseData(
@@ -45,7 +45,7 @@ public static class TezosPaymentsOptionsCases
         {
             ApiSecretKey = ApiSecretKey
         },
-        Throws.Exception.With.Message.Contains("service contract address is not specified").IgnoreCase
+        () => Throws.Exception.With.Message.Contains("service contract address is not specified").IgnoreCase
     );
 
     public static TestCaseData ServiceContractAddressIsEmpty => TestCaseHelper.CreateTestCaseData(
@@ -55,7 +55,7 @@ public static class TezosPaymentsOptionsCases
             ServiceContractAddress = string.Empty,
             ApiSecretKey = ApiSecretKey
         },
-        Throws.Exception.With.Message.Contains("invalid service contract address").IgnoreCase
+        () => Throws.Exception.With.Message.Contains("invalid service contract address").IgnoreCase
             .And.With.Message.Contains("\"\"").IgnoreCase
     );
 
@@ -67,7 +67,7 @@ public static class TezosPaymentsOptionsCases
                 ServiceContractAddress = invalidServiceContractAddress,
                 ApiSecretKey = ApiSecretKey
             },
-            Throws.Exception.With.Message.Contains("invalid service contract address").IgnoreCase
+            () => Throws.Exception.With.Message.Contains("invalid service contract address").IgnoreCase
                 .And.With.Message.Contains($"\"{invalidServiceContractAddress}\"").IgnoreCase
         )
     );
@@ -78,7 +78,7 @@ public static class TezosPaymentsOptionsCases
         {
             ServiceContractAddress = ServiceContractAddress
         },
-        Throws.Exception.With.Message.Contains("API secret key is not specified").IgnoreCase
+        () => Throws.Exception.With.Message.Contains("API secret key is not specified").IgnoreCase
     );
 
     public static TestCaseData ApiSecretKeyIsEmpty => TestCaseHelper.CreateTestCaseData(
@@ -88,7 +88,7 @@ public static class TezosPaymentsOptionsCases
             ServiceContractAddress = ServiceContractAddress,
             ApiSecretKey = string.Empty
         },
-        Throws.Exception.With.Message.Contains("invalid API secret key").IgnoreCase
+        () => Throws.Exception.With.Message.Contains("invalid API secret key").IgnoreCase
             .And.With.Message.Contains("\"\"").IgnoreCase
     );
 
@@ -100,7 +100,7 @@ public static class TezosPaymentsOptionsCases
                 ServiceContractAddress = ServiceContractAddress,
                 ApiSecretKey = invalidApiSecretKey
             },
-            Throws.Exception.With.Message.Contains("invalid API secret key").IgnoreCase
+            () => Throws.Exception.With.Message.Contains("invalid API secret key").IgnoreCase
                 .And.With.Message.Contains($"\"{invalidApiSecretKey}\"").IgnoreCase
         )
     );
@@ -113,7 +113,7 @@ public static class TezosPaymentsOptionsCases
             ApiSecretKey = ApiSecretKey,
             ServiceContractDomain = string.Empty
         },
-        Throws.Exception.With.Message.Contains("invalid service contract domain").IgnoreCase
+        () => Throws.Exception.With.Message.Contains("invalid service contract domain").IgnoreCase
             .And.With.Message.Contains("\"\"").IgnoreCase
     );
 
@@ -126,7 +126,7 @@ public static class TezosPaymentsOptionsCases
                 ApiSecretKey = ApiSecretKey,
                 ServiceContractDomain = invalidServiceContractDomain
             },
-            Throws.Exception.With.Message.Contains("invalid service contract domain").IgnoreCase
+            () => Throws.Exception.With.Message.Contains("invalid service contract domain").IgnoreCase
                 .And.With.Message.Contains($"\"{invalidServiceContractDomain}\"").IgnoreCase
         )
     );

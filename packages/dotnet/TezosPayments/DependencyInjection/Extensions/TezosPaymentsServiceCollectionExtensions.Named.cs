@@ -6,6 +6,7 @@ using TezosPayments.PaymentUrlFactories;
 using TezosPayments.Serialization;
 using TezosPayments.Signing.Signers;
 using TezosPayments.Signing.SignPayloadEncoding;
+using TezosPayments.Validation;
 
 namespace TezosPayments.DependencyInjection.Extensions;
 
@@ -83,6 +84,11 @@ public static partial class TezosPaymentsServiceCollectionExtensions
             provider => WrapInContainer<IPaymentUrlFactoryProvider>(CreateProxyPaymentUrlFactoryProvider(provider, builder, options), builder),
             builder.ServiceLifetime
         ));
+        builder.Services.Add(new ServiceDescriptor(
+            typeof(NamedTezosPaymentsServiceContainer<IPaymentValidator>),
+            provider => WrapInContainer<IPaymentValidator>(CreatePaymentValidator(provider, builder, options), builder),
+            builder.ServiceLifetime
+        ));
 
         AddNestedTezosPaymentsDependencies(builder, options);
     }
@@ -103,8 +109,8 @@ public static partial class TezosPaymentsServiceCollectionExtensions
             builder.ServiceLifetime
         ));
         builder.Services.Add(new ServiceDescriptor(
-            typeof(NamedTezosPaymentsServiceContainer<IBase64PaymentSerializer>),
-            provider => WrapInContainer<IBase64PaymentSerializer>(CreateBase64PaymentSerializer(provider, builder, options), builder),
+            typeof(NamedTezosPaymentsServiceContainer<IBase64JsonPaymentSerializer>),
+            provider => WrapInContainer<IBase64JsonPaymentSerializer>(CreateBase64PaymentSerializer(provider, builder, options), builder),
             builder.ServiceLifetime
         ));
     }

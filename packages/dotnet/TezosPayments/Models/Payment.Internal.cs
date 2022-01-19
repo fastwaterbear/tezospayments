@@ -1,10 +1,21 @@
 using TezosPayments.PaymentUrlFactories;
 using TezosPayments.Signing.Signers;
+using TezosPayments.Validation;
 
 namespace TezosPayments.Models;
 
 public partial class Payment
 {
+    internal ValidationResult Validate(IPaymentValidator paymentValidator)
+    {
+        if (paymentValidator == null)
+            throw new ArgumentNullException(nameof(paymentValidator));
+
+        IsValid = paymentValidator.Validate(this);
+
+        return IsValid.Value;
+    }
+
     internal async Task<PaymentSignature> SignAsync(IPaymentSigner paymentSigner)
     {
         if (paymentSigner == null)

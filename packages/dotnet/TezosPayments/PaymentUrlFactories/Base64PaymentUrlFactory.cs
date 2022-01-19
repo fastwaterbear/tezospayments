@@ -7,16 +7,16 @@ public class Base64PaymentUrlFactory : IBase64PaymentUrlFactory, IPaymentUrlFact
 {
     public PaymentUrlType UrlType => PaymentUrlType.Base64;
     public Uri BaseUrl { get; }
-    protected IBase64PaymentSerializer PaymentSerializer { get; }
+    protected IBase64JsonPaymentSerializer PaymentSerializer { get; }
     protected Lazy<string> EncodedUrlType => new(((byte)UrlType).ToString().PadLeft(2, '0'));
 
-    public Base64PaymentUrlFactory(string baseUrl, IBase64PaymentSerializer paymentSerializer)
+    public Base64PaymentUrlFactory(string baseUrl, IBase64JsonPaymentSerializer paymentSerializer)
     {
         BaseUrl = new Uri(GuardUtils.EnsureStringArgumentIsValid(baseUrl, nameof(baseUrl)));
         PaymentSerializer = paymentSerializer ?? throw new ArgumentNullException(nameof(paymentSerializer));
     }
 
-    public Base64PaymentUrlFactory(IBase64PaymentSerializer paymentSerializer)
+    public Base64PaymentUrlFactory(IBase64JsonPaymentSerializer paymentSerializer)
         : this(Constants.PAYMENT_APP_BASE_URL, paymentSerializer)
     {
     }
@@ -39,7 +39,6 @@ public class Base64PaymentUrlFactory : IBase64PaymentUrlFactory, IPaymentUrlFact
     {
         var urlBuilder = new UriBuilder(BaseUrl)
         {
-            Path = $"{targetAddress}/payment",
             Fragment = EncodedUrlType.Value + base64SerializedPayment
         };
 
