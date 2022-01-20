@@ -9,8 +9,8 @@ on:
       - master
       - dev
     tags:
-      - 'dotnet/TezosPayments.*.*.*'
-      - 'dotnet/TezosPayments.*.*.*-*'
+      - 'dotnet/TezosPayments_*.*.*'
+      - 'dotnet/TezosPayments_*.*.*-*'
   pull_request:
     paths:
       - 'packages/dotnet/TezosPayments/**'
