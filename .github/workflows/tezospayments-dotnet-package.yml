@@ -108,8 +108,7 @@ jobs:
           dotnet --info
 
       - name: Publish
-        working-directory: nuget-package
-        run: dotnet nuget push *.nupkg
+        run: dotnet nuget push ./nuget-package/*.nupkg
 
       - name: Push to the ${{ env.publish-branch }} branch
         env:
