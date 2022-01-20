@@ -4,7 +4,7 @@
   display: flex;
   margin-bottom: layout-variables.$element-spacing-medium;
   flex-wrap: wrap;
-  row-gap: layout-variables.$element-spacing-small;
+  gap: layout-variables.$element-spacing-small;
   justify-content: center;
 }
 
