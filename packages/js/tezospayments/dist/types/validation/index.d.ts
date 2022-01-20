@@ -1,0 +1,1 @@
+export { TezosPaymentsOptionsValidator } from './tezosPaymentsOptionsValidator';
