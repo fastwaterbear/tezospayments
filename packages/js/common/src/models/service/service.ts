@@ -40,6 +40,6 @@ export const emptyService: Service = {
   owner: '',
   paused: false,
   deleted: false,
-  network: networks.granadanet,
+  network: networks.mainnet,
   signingKeys: optimization.emptyMap
 };

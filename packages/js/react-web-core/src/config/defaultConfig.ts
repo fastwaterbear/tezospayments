@@ -57,30 +57,6 @@ export const defaultConfig: DefaultAppConfig = {
         },
         servicesFactoryContractAddress: 'Not implemented'
       },
-      granadanet: {
-        title: 'Granada Testnet',
-        color: '#667eea',
-        minimumSupportedServiceVersion: 3,
-        default: {
-          rpc: 'ecadLabs',
-          indexer: 'tzKT',
-          explorer: 'tzKT'
-        },
-        rpcUrls: {
-          ecadLabs: 'https://granadanet.api.tez.ie',
-          smartPy: 'https://granadanet.smartpy.io'
-        },
-        indexerUrls: {
-          tzKT: 'https://api.granadanet.tzkt.io',
-          betterCallDev: 'https://api.better-call.dev'
-        },
-        explorers: {
-          tzKT: { baseUrl: 'https://granadanet.tzkt.io', title: 'TzKT' },
-          betterCallDev: { baseUrl: 'https://better-call.dev', title: 'Better Call Dev' },
-          tzStats: { baseUrl: 'https://granada.tzstats.com', title: 'TzStats' }
-        },
-        servicesFactoryContractAddress: 'KT1NxBzCJtvHFLKfiSAX3PGxdiJMAC8CtSZV'
-      },
       hangzhounet: {
         title: 'Hangzhou Testnet',
         color: '#b83280',
