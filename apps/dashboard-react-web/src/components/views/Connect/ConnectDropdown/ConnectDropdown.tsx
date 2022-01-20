@@ -12,7 +12,7 @@ import './ConnectDropdown.scss';
 export const ConnectDropdown = () => {
   const dispatch = useAppDispatch();
   const handleConnectButtonClick = useCallback(() => {
-    dispatch(connectAccount(networks.granadanet));
+    dispatch(connectAccount(networks.hangzhounet));
   }, [dispatch]);
 
   const handleMenuItemButtonClick = useCallback((e: { key: string }) => {
@@ -45,7 +45,7 @@ export const ConnectDropdown = () => {
     </Menu>
   );
 
-  const connectButtonTitle = `${connectLangResources.connectTo} ${config.tezos.networks.granadanet.title}`;
+  const connectButtonTitle = `${connectLangResources.connectTo} ${config.tezos.networks.hangzhounet.title}`;
 
   return connectMenuItems.length
     ? <Dropdown.Button className="connect-dropdown" type="primary" onClick={handleConnectButtonClick} overlay={connectMenu}>

@@ -3,10 +3,6 @@ const networksInternal = {
     id: 'NetXdQprcVkpaWU',
     name: 'mainnet',
   },
-  granadanet: {
-    id: 'NetXz969SFaFn8k',
-    name: 'granadanet',
-  },
   hangzhounet: {
     id: 'NetXZSsxBpMQeAT',
     name: 'hangzhounet'
