@@ -1,0 +1,87 @@
+{
+  "name": "@tezospayments/common",
+  "version": "0.5.0",
+  "description": "Shared code for the Tezos Payments service.",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.mjs",
+  "browser": "dist/index.esm.js",
+  "umd": "dist/index.umd.js",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs.js",
+      "browser": "./dist/index.esm.js",
+      "umd": "./dist/index.umd.js"
+    },
+    "./esnext": {
+      "import": "./dist/esnext/index.esnext.mjs",
+      "require": "./dist/esnext/index.esnext.cjs.js",
+      "browser": "./dist/esnext/index.esnext.esm.js"
+    },
+    "./es5": {
+      "import": "./dist/es5/index.es5.mjs",
+      "require": "./dist/es5/index.es5.cjs.js",
+      "browser": "./dist/es5/index.es5.esm.js",
+      "umd": "./dist/es5/index.es5.umd.js"
+    }
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.16.3",
+    "@taquito/michel-codec": "^11.0.2",
+    "@taquito/signer": "^11.0.2",
+    "@taquito/taquito": "^11.0.2",
+    "bignumber.js": "^9.0.1",
+    "clsx": "^1.1.1",
+    "elliptic": "^6.5.4",
+    "libsodium-wrappers": "0.7.8",
+    "lodash.isplainobject": "^4.0.6"
+  },
+  "devDependencies": {
+    "@types/elliptic": "^6.4.14",
+    "@types/jest": "^27.0.3",
+    "@types/libsodium-wrappers": "0.7.8",
+    "@types/lodash.isplainobject": "^4.0.6",
+    "babel-jest": "^27.4.2",
+    "jest": "^27.4.3"
+  },
+  "scripts": {
+    "build": "rollup --config",
+    "test": "jest --coverage",
+    "watch": "rollup --config --watch",
+    "test-watch": "jest --watchAll",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
+  },
+  "typesVersions": {
+    "*": {
+      "es5": [
+        "dist/types/index.d.ts"
+      ],
+      "esnext": [
+        "dist/types/index.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "homepage": "https://tezospayments.com",
+  "author": "Fast Water Bear",
+  "keywords": [
+    "tezos",
+    "payments",
+    "tezospayments"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fastwaterbear/tezospayments.git",
+    "directory": "packages/js/common"
+  },
+  "bugs": {
+    "url": "https://github.com/fastwaterbear/tezospayments/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
