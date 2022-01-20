@@ -1,16 +1,15 @@
 import { DAppClient } from '@airgap/beacon-sdk';
-import { TezosToolkit } from '@taquito/taquito';
 import BigNumber from 'bignumber.js';
 
-import { Token, Network, balance } from '@tezospayments/common';
-import { converters } from '@tezospayments/react-web-core';
+import { Token, Network } from '@tezospayments/common';
+import { BalancesProvider, converters } from '@tezospayments/react-web-core';
 
 import { Account } from '../models/blockchain';
 
 export class AccountsService {
   constructor(
-    private readonly tezosToolkit: TezosToolkit,
-    private readonly dAppClient: DAppClient
+    private readonly dAppClient: DAppClient,
+    private readonly balancesProvider: BalancesProvider
   ) {
   }
 
@@ -47,10 +46,10 @@ export class AccountsService {
   }
 
   async getTezosBalance(account: Account): Promise<BigNumber> {
-    return balance.getTezosBalance(account.address, this.tezosToolkit);
+    return this.balancesProvider.getTezosBalance(account.address);
   }
 
   async getTokenBalance(account: Account, token: Token): Promise<BigNumber> {
-    return balance.getTokenBalance(account.address, token, this.tezosToolkit);
+    return this.balancesProvider.getTokenBalance(account.address, token);
   }
 }

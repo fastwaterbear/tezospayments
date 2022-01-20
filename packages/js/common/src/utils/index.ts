@@ -1,6 +1,5 @@
 import combineClassNames from 'clsx';
 
-import * as balance from './balance';
 import * as base64 from './base64';
 import * as converters from './converters';
 import * as guards from './guards';
@@ -21,5 +20,4 @@ export {
   guards,
   text,
   converters,
-  balance
 };

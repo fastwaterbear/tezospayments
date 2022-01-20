@@ -5,7 +5,7 @@ import { TezosToolkit } from '@taquito/taquito';
 import { Network, networks, ReadOnlySigner } from '@tezospayments/common';
 import {
   BetterCallDevBlockchainUrlExplorer, BetterCallDevDataProvider, BlockchainUrlExplorer,
-  ServicesProvider, TzKTBlockchainUrlExplorer, TzKTDataProvider, TzStatsBlockchainUrlExplorer
+  ServicesProvider, TezosNodeDataProvider, TzKTBlockchainUrlExplorer, TzKTDataProvider, TzStatsBlockchainUrlExplorer
 } from '@tezospayments/react-web-core';
 
 import { config } from '../config';
@@ -52,6 +52,7 @@ export class WebApp {
 
   private createServices(): AppServices {
     const servicesProvider = this.createServicesProvider(this.network);
+    const balancesProvider = new TezosNodeDataProvider(this.tezosToolkit);
 
     return {
       localPaymentService: new LocalPaymentService({
@@ -59,7 +60,8 @@ export class WebApp {
         store: this.store,
         tezosToolkit: this.tezosToolkit,
         tezosWallet: this.tezosWallet,
-        servicesProvider
+        servicesProvider,
+        balancesProvider
       })
     };
   }
