@@ -4,7 +4,7 @@ import { enableMapSet } from 'immer';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 
 import { WebApp } from './app';
 import { App } from './components/App';
@@ -43,11 +43,11 @@ const webApp = new WebApp(app => configureStore({
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={webApp.store}>
-      <Router history={webApp.history}>
+      <BrowserRouter>
         <AppContextProvider getReactAppContext={() => webApp.reactAppContext} networkChangedEvent={webApp.networkChanged} >
           <App />
         </AppContextProvider>
-      </Router>
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')

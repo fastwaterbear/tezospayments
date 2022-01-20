@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 import { optimization } from '@tezospayments/common';
 
 import { Account } from '../../models/blockchain';
-import { getAllAcceptedTokens } from '../services/selectors';
+import { selectAllAcceptedTokens } from '../services/selectors';
 import { AppThunkAPI } from '../thunk';
 
 export interface BalancesState {
@@ -26,7 +26,7 @@ export const loadBalances = createAsyncThunk<Pick<BalancesState, 'tezos' | 'toke
   async (account, { extra: app, getState }) => {
     const tezos = await app.services.accountsService.getTezosBalance(account);
 
-    const acceptedTokens = getAllAcceptedTokens(getState());
+    const acceptedTokens = selectAllAcceptedTokens(getState());
     const tokens: { [key: string]: BigNumber } = {};
     const balancesPromises = acceptedTokens.map(t => app.services.accountsService.getTokenBalance(account, t));
     const balances = await Promise.all(balancesPromises);

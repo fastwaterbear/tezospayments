@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TezosPayments", "packages\dotnet\TezosPayments\TezosPayments.csproj", "{B480B580-3306-47C3-A32A-9E5A7752181F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "demo", "demo", "{BE4EE557-C3DB-486B-97E3-AFCCB6AD7CDD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8DA0A266-E073-43ED-A96D-BD64ECB2F380}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{8DB5DD03-F23C-4644-81D1-06B382002DE9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TezosPayments.Tests", "packages\dotnet\TezosPayments.Tests\TezosPayments.Tests.csproj", "{3FC3593E-DD26-48C4-87D1-183879DAEC73}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoShopAspNet", "apps\DemoShopAspNet\DemoShopAspNet.csproj", "{CE41169A-62A1-4440-8F0F-FB5131E6C060}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{22A187AD-5220-4418-A6A4-86D1CAE1503D}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B480B580-3306-47C3-A32A-9E5A7752181F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B480B580-3306-47C3-A32A-9E5A7752181F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B480B580-3306-47C3-A32A-9E5A7752181F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B480B580-3306-47C3-A32A-9E5A7752181F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FC3593E-DD26-48C4-87D1-183879DAEC73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FC3593E-DD26-48C4-87D1-183879DAEC73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FC3593E-DD26-48C4-87D1-183879DAEC73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FC3593E-DD26-48C4-87D1-183879DAEC73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE41169A-62A1-4440-8F0F-FB5131E6C060}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE41169A-62A1-4440-8F0F-FB5131E6C060}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE41169A-62A1-4440-8F0F-FB5131E6C060}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE41169A-62A1-4440-8F0F-FB5131E6C060}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B480B580-3306-47C3-A32A-9E5A7752181F} = {8DA0A266-E073-43ED-A96D-BD64ECB2F380}
+		{3FC3593E-DD26-48C4-87D1-183879DAEC73} = {8DB5DD03-F23C-4644-81D1-06B382002DE9}
+		{CE41169A-62A1-4440-8F0F-FB5131E6C060} = {BE4EE557-C3DB-486B-97E3-AFCCB6AD7CDD}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F8ACB80D-CCAD-4BB7-AC26-4742B57BE438}
+	EndGlobalSection
+EndGlobal

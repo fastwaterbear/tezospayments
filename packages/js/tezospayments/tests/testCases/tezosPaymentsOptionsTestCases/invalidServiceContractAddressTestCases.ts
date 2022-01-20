@@ -1,5 +1,5 @@
 import { TezosPaymentsOptions } from '../../../src';
-import { tezosPaymentsOptionsValidationErrors } from '../../../src/validationErrors';
+import { TezosPaymentsOptionsValidator } from '../../../src/validation';
 import { NegativeTestCases } from './testCase';
 import validTezosPaymentsOptionsTestCases from './validTezosPaymentsOptionsTestCases';
 
@@ -18,7 +18,7 @@ export const invalidServiceContractAddressTestCases: NegativeTestCases<InvalidTe
       ...tezosPaymentsOptionsBase,
       serviceContractAddress: null
     },
-    [tezosPaymentsOptionsValidationErrors.invalidServiceContractAddressType]
+    [TezosPaymentsOptionsValidator.errors.invalidServiceContractAddressType]
   ],
   [
     'The service contract address is another type: function',
@@ -26,7 +26,7 @@ export const invalidServiceContractAddressTestCases: NegativeTestCases<InvalidTe
       ...tezosPaymentsOptionsBase,
       serviceContractAddress: () => console.log('serviceContractAddress')
     },
-    [tezosPaymentsOptionsValidationErrors.invalidServiceContractAddressType]
+    [TezosPaymentsOptionsValidator.errors.invalidServiceContractAddressType]
   ],
   [
     'The service contract address is another type: object',
@@ -34,7 +34,7 @@ export const invalidServiceContractAddressTestCases: NegativeTestCases<InvalidTe
       ...tezosPaymentsOptionsBase,
       serviceContractAddress: {}
     },
-    [tezosPaymentsOptionsValidationErrors.invalidServiceContractAddressType]
+    [TezosPaymentsOptionsValidator.errors.invalidServiceContractAddressType]
   ],
   [
     'The service contract address is another type: array',
@@ -42,7 +42,7 @@ export const invalidServiceContractAddressTestCases: NegativeTestCases<InvalidTe
       ...tezosPaymentsOptionsBase,
       serviceContractAddress: ['KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2']
     },
-    [tezosPaymentsOptionsValidationErrors.invalidServiceContractAddressType]
+    [TezosPaymentsOptionsValidator.errors.invalidServiceContractAddressType]
   ],
   [
     'The service contract address is an empty string',
@@ -50,7 +50,7 @@ export const invalidServiceContractAddressTestCases: NegativeTestCases<InvalidTe
       ...tezosPaymentsOptionsBase,
       serviceContractAddress: ''
     },
-    [tezosPaymentsOptionsValidationErrors.invalidServiceContractAddressType]
+    [TezosPaymentsOptionsValidator.errors.invalidServiceContractAddressType]
   ],
   [
     'The service contract address has only a prefix',
@@ -58,7 +58,7 @@ export const invalidServiceContractAddressTestCases: NegativeTestCases<InvalidTe
       ...tezosPaymentsOptionsBase,
       serviceContractAddress: 'KT'
     },
-    [tezosPaymentsOptionsValidationErrors.serviceContractAddressHasInvalidLength]
+    [TezosPaymentsOptionsValidator.errors.serviceContractAddressHasInvalidLength]
   ],
   [
     'The length of the service contract address is less than normal',
@@ -66,7 +66,7 @@ export const invalidServiceContractAddressTestCases: NegativeTestCases<InvalidTe
       ...tezosPaymentsOptionsBase,
       serviceContractAddress: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2Z'
     },
-    [tezosPaymentsOptionsValidationErrors.serviceContractAddressHasInvalidLength]
+    [TezosPaymentsOptionsValidator.errors.serviceContractAddressHasInvalidLength]
   ],
   [
     'The length of the service contract address is more than normal',
@@ -74,7 +74,7 @@ export const invalidServiceContractAddressTestCases: NegativeTestCases<InvalidTe
       ...tezosPaymentsOptionsBase,
       serviceContractAddress: 'KT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL'
     },
-    [tezosPaymentsOptionsValidationErrors.serviceContractAddressHasInvalidLength]
+    [TezosPaymentsOptionsValidator.errors.serviceContractAddressHasInvalidLength]
   ],
   [
     'The service contract address is an implicit account',
@@ -82,7 +82,7 @@ export const invalidServiceContractAddressTestCases: NegativeTestCases<InvalidTe
       ...tezosPaymentsOptionsBase,
       serviceContractAddress: 'tz1UtQYueaXRV3MfLj4XHaHZziijHRwF31a5'
     },
-    [tezosPaymentsOptionsValidationErrors.serviceContractAddressIsNotContractAddress]
+    [TezosPaymentsOptionsValidator.errors.serviceContractAddressIsNotContractAddress]
   ],
   [
     'The service contract address has an invalid prefix',
@@ -90,7 +90,7 @@ export const invalidServiceContractAddressTestCases: NegativeTestCases<InvalidTe
       ...tezosPaymentsOptionsBase,
       serviceContractAddress: 'CT1Mn2HUUKUPg8wiQhUJ8Z9jUtZLaZn8EWL2'
     },
-    [tezosPaymentsOptionsValidationErrors.serviceContractAddressIsNotContractAddress]
+    [TezosPaymentsOptionsValidator.errors.serviceContractAddressIsNotContractAddress]
   ]
 ];
 

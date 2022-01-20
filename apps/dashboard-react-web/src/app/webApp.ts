@@ -1,7 +1,6 @@
 import { ColorMode } from '@airgap/beacon-sdk';
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit } from '@taquito/taquito';
-import { History, createBrowserHistory } from 'history';
 
 import { EventEmitter, Network, networks, PublicEventEmitter } from '@tezospayments/common';
 import {
@@ -14,7 +13,7 @@ import type { Account } from '../models/blockchain';
 import { AccountsService } from '../services/accountsService';
 import { ServicesService } from '../services/servicesService';
 import { AppStore } from '../store';
-import { getCurrentAccount } from '../store/accounts/selectors';
+import { selectCurrentAccount } from '../store/accounts/selectors';
 import { clearBalances, loadBalances } from '../store/balances/slice';
 import { clearServices, loadServices } from '../store/services/slice';
 import type { ReactAppContext } from './reactAppContext';
@@ -28,7 +27,6 @@ interface AppServices {
 export class WebApp {
   readonly store: AppStore;
   readonly tezosWallet = new BeaconWallet({ name: config.app.name, colorMode: ColorMode.LIGHT });
-  readonly history: History;
   readonly networkChanged: PublicEventEmitter<readonly [newNetwork: Network, previousNetwork: Network]> = new EventEmitter();
 
   private readonly onStoreChangedListener = this.onStoreChanged.bind(this);
@@ -42,7 +40,6 @@ export class WebApp {
 
   constructor(storeFactory: (app: WebApp) => AppStore) {
     this.store = storeFactory(this);
-    this.history = this.createHistory();
     this.applyNetwork(networks[config.tezos.defaultNetwork]);
 
     this.currentAccountAddress = null;
@@ -73,13 +70,9 @@ export class WebApp {
     return this._reactAppContext;
   }
 
-  protected createHistory() {
-    return createBrowserHistory();
-  }
-
   protected onStoreChanged() {
     const appState = this.store.getState();
-    const currentAccountFromState = getCurrentAccount(appState);
+    const currentAccountFromState = selectCurrentAccount(appState);
     const currentAccountAddressFromState = currentAccountFromState && currentAccountFromState.address;
 
     if (currentAccountAddressFromState !== this.currentAccountAddress) {

@@ -3,7 +3,7 @@ import React from 'react';
 
 import { DonationOperation, Operation, OperationDirection, OperationType, PaymentOperation } from '@tezospayments/common';
 
-import { getSortedOperations } from '../../../store/operations/selectors';
+import { selectSortedOperations, } from '../../../store/operations/selectors';
 import { selectServicesState, selectTokensState } from '../../../store/services/selectors';
 import { NoServicesCreated } from '../../common/NoServicesCreated';
 import { OperationList } from '../../common/OperationList';
@@ -25,7 +25,7 @@ const getFormattedOperationData = (operation: Operation): string | undefined => 
 export const Operations = () => {
   const langResources = useCurrentLanguageResources();
   const operationsLangResources = langResources.views.operations;
-  const operations = useAppSelector(getSortedOperations);
+  const operations = useAppSelector(state => selectSortedOperations(state, 'all'));
   const servicesState = useAppSelector(selectServicesState);
   const tokens = useAppSelector(selectTokensState);
 

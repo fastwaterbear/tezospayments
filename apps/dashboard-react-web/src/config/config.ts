@@ -22,9 +22,10 @@ export const config: AppConfig = {
   },
   routers: {
     overview: '/',
+    analytics: '/analytics',
     operations: '/operations',
     services: '/services',
-    service: getParameterizedRoute(address => `/services/${address}`, '/services/:address'),
+    service: getParameterizedRoute((address, isEdit) => isEdit ? `/services/${address}?edit=true` : `/services/${address}`, '/services/:address'),
     createService: '/services/create',
     acceptPayments: '/accept',
     acceptServicePayments: getParameterizedRoute(address => `/accept/${address}`, '/accept/:address'),

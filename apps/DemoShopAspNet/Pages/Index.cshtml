@@ -1,0 +1,28 @@
+﻿@page
+@model DemoShopAspNet.Pages.IndexModel
+
+<main class="main">
+  <h1 class="title">
+    This is a demo shop of <a href="@Model.AppConfiguration.MainSiteUrl" target="_blank" rel="noopener noreferrer">Tezos Payments</a>
+  </h1>
+
+  <div class=products>
+    @foreach (var product in Model.Products)
+    {
+      <form method="post">
+        <div class="product">
+          <div class="product__image-container">
+            <img src="@Url.Content(product.Image)" alt="@product.Name" />
+          </div>
+          <div class="product__product-info">
+            <span class="product__name">@product.Name</span>
+          </div>
+          <button type="submit" class="button button_primary product__buy-button">
+            Buy <span class="product__price">@product.Price</span>
+          </button>
+          <input type="hidden" asp-for="RequestedToBuyProductId" value="@product.Id">
+        </div>
+      </form>
+    }
+  </div>
+</main>

@@ -1,0 +1,21 @@
+@use "sass:math";
+@use "../../../styles/layout-variables.scss";
+
+$-gap-size: math.div(layout-variables.$element-spacing-small, 2);
+
+.analytics {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  row-gap: $-gap-size;
+}
+
+.analytics__chart {
+  flex-basis: calc(50% - $-gap-size/2);
+  height: 400px !important;
+  overflow: hidden;
+
+  @media (max-width: 1100px) {
+    flex-basis: 100%;
+  }
+}

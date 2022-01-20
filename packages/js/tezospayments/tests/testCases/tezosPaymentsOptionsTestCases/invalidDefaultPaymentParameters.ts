@@ -1,5 +1,5 @@
 import { PaymentUrlType, TezosPaymentsOptions } from '../../../src';
-import { tezosPaymentsOptionsValidationErrors } from '../../../src/validationErrors';
+import { TezosPaymentsOptionsValidator } from '../../../src/validation';
 import { NegativeTestCases } from './testCase';
 import validTezosPaymentsOptionsTestCases from './validTezosPaymentsOptionsTestCases';
 
@@ -18,7 +18,7 @@ export const invalidDefaultPaymentParametersTestCases: NegativeTestCases<Invalid
       ...tezosPaymentsOptionsBase,
       defaultPaymentParameters: 'parameters',
     },
-    [tezosPaymentsOptionsValidationErrors.invalidDefaultPaymentParameters]
+    [TezosPaymentsOptionsValidator.errors.invalidDefaultPaymentParameters]
   ],
   [
     'Default payment parameters has an invalid type, function',
@@ -26,162 +26,7 @@ export const invalidDefaultPaymentParametersTestCases: NegativeTestCases<Invalid
       ...tezosPaymentsOptionsBase,
       defaultPaymentParameters: () => ({}),
     },
-    [tezosPaymentsOptionsValidationErrors.invalidDefaultPaymentParameters]
-  ],
-  [
-    'Network is invalid. The network without a name',
-    {
-      ...tezosPaymentsOptionsBase,
-      defaultPaymentParameters: {
-        network: {
-          id: 'NetLocal',
-        }
-      }
-    },
-    [tezosPaymentsOptionsValidationErrors.emptyNetworkName],
-  ],
-  [
-    'Network is invalid. The network name is empty',
-    {
-      ...tezosPaymentsOptionsBase,
-      defaultPaymentParameters: {
-        network: {
-          id: 'NetLocal',
-          name: ''
-        }
-      }
-    },
-    [tezosPaymentsOptionsValidationErrors.emptyNetworkName],
-  ],
-  [
-    'Network is invalid. The network name has an invalid type, number',
-    {
-      ...tezosPaymentsOptionsBase,
-      defaultPaymentParameters: {
-        network: {
-          id: 'NetLocal',
-          name: 11
-        }
-      }
-    },
-    [tezosPaymentsOptionsValidationErrors.invalidNetworkName],
-  ],
-  [
-    'Network is invalid. The network name has an invalid type, function',
-    {
-      ...tezosPaymentsOptionsBase,
-      defaultPaymentParameters: {
-        network: {
-          id: 'NetLocal',
-          name: () => 'network name'
-        }
-      }
-    },
-    [tezosPaymentsOptionsValidationErrors.invalidNetworkName],
-  ],
-  [
-    'Network is invalid. The network name has invalid characters: -',
-    {
-      ...tezosPaymentsOptionsBase,
-      defaultPaymentParameters: {
-        network: {
-          id: 'NetLocal',
-          name: 'local-network'
-        }
-      }
-    },
-    [tezosPaymentsOptionsValidationErrors.invalidNetworkName],
-  ],
-  [
-    'Network is invalid. The network name has invalid characters: <, >',
-    {
-      ...tezosPaymentsOptionsBase,
-      defaultPaymentParameters: {
-        network: {
-          id: 'NetLocal',
-          name: '<local-network>'
-        }
-      }
-    },
-    [tezosPaymentsOptionsValidationErrors.invalidNetworkName],
-  ],
-  [
-    'Network is invalid. The network name has invalid characters: (, )',
-    {
-      ...tezosPaymentsOptionsBase,
-      defaultPaymentParameters: {
-        network: {
-          id: 'NetLocal',
-          name: 'alert(1)'
-        }
-      }
-    },
-    [tezosPaymentsOptionsValidationErrors.invalidNetworkName],
-  ],
-  [
-    'Network is invalid. The network id has an invalid type, number',
-    {
-      ...tezosPaymentsOptionsBase,
-      defaultPaymentParameters: {
-        network: {
-          id: 11,
-          name: 'localnetwork'
-        }
-      }
-    },
-    [tezosPaymentsOptionsValidationErrors.invalidNetworkId],
-  ],
-  [
-    'Network is invalid. The network id has an invalid type, function',
-    {
-      ...tezosPaymentsOptionsBase,
-      defaultPaymentParameters: {
-        network: {
-          id: () => 'NetLocal',
-          name: 'localnetwork'
-        }
-      }
-    },
-    [tezosPaymentsOptionsValidationErrors.invalidNetworkId],
-  ],
-  [
-    'Network is invalid. The network id has invalid characters: -',
-    {
-      ...tezosPaymentsOptionsBase,
-      defaultPaymentParameters: {
-        network: {
-          id: 'local-network',
-          name: 'localnetwork'
-        }
-      }
-    },
-    [tezosPaymentsOptionsValidationErrors.invalidNetworkId],
-  ],
-  [
-    'Network is invalid. The network id has invalid characters: <, >',
-    {
-      ...tezosPaymentsOptionsBase,
-      defaultPaymentParameters: {
-        network: {
-          id: '<local-network>',
-          name: 'localnetwork'
-        }
-      }
-    },
-    [tezosPaymentsOptionsValidationErrors.invalidNetworkId],
-  ],
-  [
-    'Network is invalid. The network id has invalid characters: (, )',
-    {
-      ...tezosPaymentsOptionsBase,
-      defaultPaymentParameters: {
-        network: {
-          id: 'alert(1)',
-          name: 'localnetwork',
-        }
-      }
-    },
-    [tezosPaymentsOptionsValidationErrors.invalidNetworkId],
+    [TezosPaymentsOptionsValidator.errors.invalidDefaultPaymentParameters]
   ],
   [
     'Url type is invalid',
@@ -191,7 +36,7 @@ export const invalidDefaultPaymentParametersTestCases: NegativeTestCases<Invalid
         urlType: undefined
       }
     },
-    [tezosPaymentsOptionsValidationErrors.invalidUrlType],
+    [TezosPaymentsOptionsValidator.errors.invalidUrlType],
   ],
   [
     'Url type has an invalid type, number',
@@ -201,7 +46,7 @@ export const invalidDefaultPaymentParametersTestCases: NegativeTestCases<Invalid
         urlType: 10,
       }
     },
-    [tezosPaymentsOptionsValidationErrors.invalidUrlType],
+    [TezosPaymentsOptionsValidator.errors.invalidUrlType],
   ],
   [
     'Url type has an invalid type, function',
@@ -211,7 +56,7 @@ export const invalidDefaultPaymentParametersTestCases: NegativeTestCases<Invalid
         urlType: () => PaymentUrlType.Base64
       }
     },
-    [tezosPaymentsOptionsValidationErrors.invalidUrlType],
+    [TezosPaymentsOptionsValidator.errors.invalidUrlType],
   ]
 ];
 

@@ -23,7 +23,8 @@ export class PaymentSerializer {
   protected mapPaymentToSerializedPayment(payment: Payment): SerializedPayment {
     return {
       i: payment.id,
-      a: payment.amount.toString(),
+      a: payment.amount.toString(10),
+      t: payment.targetAddress,
       as: payment.asset ? this.mapPaymentAssetToSerializedPaymentAsset(payment.asset) : undefined,
       d: payment.data,
       su: payment.successUrl?.toString(),

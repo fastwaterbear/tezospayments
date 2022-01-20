@@ -1,11 +1,7 @@
 const networksInternal = {
-  // mainnet: {
-  //   id: 'NetXdQprcVkpaWU',
-  //   name: 'mainnet',
-  // },
-  granadanet: {
-    id: 'NetXz969SFaFn8k',
-    name: 'granadanet',
+  mainnet: {
+    id: 'NetXdQprcVkpaWU',
+    name: 'mainnet',
   },
   hangzhounet: {
     id: 'NetXZSsxBpMQeAT',

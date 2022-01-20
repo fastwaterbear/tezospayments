@@ -7,5 +7,11 @@ export const common = {
   cancel: 'Cancel',
   save: 'Save',
   yes: 'Yes',
-  no: 'No'
+  no: 'No',
+  period: {
+    allTime: 'All time',
+    lastWeek: 'Last week',
+    lastMonth: 'Last month',
+    lastYear: 'Last year'
+  }
 };

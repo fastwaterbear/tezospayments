@@ -1,3 +1,6 @@
 **/node_modules/
 *.log
 .eslintcache
+
+# Visual Studio local files
+.vs/

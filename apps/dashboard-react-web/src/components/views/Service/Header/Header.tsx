@@ -1,7 +1,7 @@
 import { EditFilled } from '@ant-design/icons';
 import { Button } from 'antd';
 import React, { useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { Service, ServiceOperationType, combineClassNames, text } from '@tezospayments/common';
 
@@ -19,7 +19,7 @@ interface HeaderProps {
 }
 
 export const Header = ({ service, isUpdating, readOnly }: HeaderProps) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const langResources = useCurrentLanguageResources();
   const servicesLangResources = langResources.views.services;
 
@@ -32,8 +32,8 @@ export const Header = ({ service, isUpdating, readOnly }: HeaderProps) => {
   const areDonationsAllowed = service?.allowedOperationType === ServiceOperationType.Donation || service?.allowedOperationType === ServiceOperationType.All;
 
   const handleEditClick = useCallback(() => {
-    history.push(`${config.routers.services}/${service.contractAddress}?edit=true`);
-  }, [history, service.contractAddress]);
+    navigate(config.routers.service(service.contractAddress, true));
+  }, [navigate, service.contractAddress]);
 
   return <div className="service-header">
     <div className="service-header__logo-container">

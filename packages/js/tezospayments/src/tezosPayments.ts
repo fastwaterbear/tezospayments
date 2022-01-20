@@ -2,9 +2,9 @@ import BigNumber from 'bignumber.js';
 import { nanoid } from 'nanoid';
 
 import {
-  native, networks, tezosInfo, networkNameRegExp, networkIdRegExp, PaymentUrlType,
-  DeepReadonly, FailedValidationResults, UnsignedPayment as CommonUnsignedPaymentModel, Payment as CommonPaymentModel,
-  PaymentType, PaymentValidator, Mutable
+  native, networks, PaymentUrlType, DeepReadonly, FailedValidationResults,
+  UnsignedPayment as CommonUnsignedPaymentModel, Payment as CommonPaymentModel,
+  PaymentType, PaymentValidator, Mutable, Network, CustomNetwork
 } from '@tezospayments/common';
 
 import { InvalidPaymentCreateParametersError, InvalidPaymentError, InvalidTezosPaymentsOptionsError, UnsupportedPaymentUrlTypeError } from './errors';
@@ -12,31 +12,31 @@ import { Payment } from './models';
 import type { DefaultPaymentParameters, PaymentCreateParameters, TezosPaymentsOptions } from './options';
 import { Base64PaymentUrlFactory, PaymentUrlFactory } from './paymentUrlFactories';
 import { ApiSecretKeySigner, CustomSigner, TezosPaymentsSigner, WalletSigner } from './signers';
-import { tezosPaymentsOptionsValidationErrors } from './validationErrors';
+import { TezosPaymentsOptionsValidator } from './validation';
 
 export class TezosPayments {
   static readonly defaultPaymentParameters: DeepReadonly<DefaultPaymentParameters> = {
-    network: networks.granadanet,
     urlType: PaymentUrlType.Base64
   };
-  protected static readonly optionsValidationErrors = tezosPaymentsOptionsValidationErrors;
 
-  protected readonly paymentValidator: PaymentValidator = new PaymentValidator();
+  protected readonly optionsValidator = new TezosPaymentsOptionsValidator();
+  protected readonly paymentValidator = new PaymentValidator();
   protected readonly serviceContractAddress: string;
   protected readonly signer: TezosPaymentsSigner;
+  protected readonly network: Network | CustomNetwork;
   protected readonly defaultPaymentParameters: DeepReadonly<DefaultPaymentParameters>;
 
   private paymentUrlFactories: Map<PaymentUrlType, PaymentUrlFactory> = new Map();
 
   constructor(options: DeepReadonly<TezosPaymentsOptions>) {
-    const errors = this.validateOptions(options);
+    const errors = this.optionsValidator.validateOptions(options);
     if (errors)
       throw new InvalidTezosPaymentsOptionsError(errors);
 
     this.serviceContractAddress = options.serviceContractAddress;
+    this.network = options.network || networks.mainnet;
     this.defaultPaymentParameters = options.defaultPaymentParameters
       ? {
-        network: options.defaultPaymentParameters.network || TezosPayments.defaultPaymentParameters.network,
         urlType: options.defaultPaymentParameters.urlType || TezosPayments.defaultPaymentParameters.urlType
       }
       : TezosPayments.defaultPaymentParameters;
@@ -51,7 +51,7 @@ export class TezosPayments {
 
     let errors: FailedValidationResults;
     if (createParameters.urlType) {
-      errors = this.validateDefaultPaymentParameters(createParameters);
+      errors = this.optionsValidator.validateDefaultPaymentParameters(createParameters);
       if (errors)
         throw new InvalidPaymentError(errors);
     }
@@ -73,7 +73,7 @@ export class TezosPayments {
   }
 
   protected getPaymentUrl(payment: CommonPaymentModel, urlType = this.defaultPaymentParameters.urlType): string | Promise<string> {
-    return this.getPaymentUrlFactory(urlType).createPaymentUrl(payment, this.defaultPaymentParameters.network);
+    return this.getPaymentUrlFactory(urlType).createPaymentUrl(payment, this.network);
   }
 
   protected applyPaymentUrl(payment: CommonPaymentModel, url: string): Payment {
@@ -101,10 +101,10 @@ export class TezosPayments {
   protected createSigner(signingOptions: TezosPaymentsOptions['signing']): TezosPaymentsSigner {
     if ('apiSecretKey' in signingOptions)
       return new ApiSecretKeySigner(signingOptions.apiSecretKey);
-    if ('walletSigning' in signingOptions)
-      return new WalletSigner(signingOptions.walletSigning);
+    if ('wallet' in signingOptions)
+      return new WalletSigner(signingOptions.wallet.signingPublicKey, signingOptions.wallet.sign);
 
-    return new CustomSigner(signingOptions);
+    return new CustomSigner(signingOptions.custom);
   }
 
   protected createPaymentUrlFactory(paymentUrlType: PaymentUrlType): PaymentUrlFactory {
@@ -138,72 +138,5 @@ export class TezosPayments {
       payment.cancelUrl = new native.URL(createParameters.cancelUrl);
 
     return payment;
-  }
-
-  protected validateOptions(options: DeepReadonly<TezosPaymentsOptions>): FailedValidationResults {
-    return [
-      this.validateServiceContractAddress(options.serviceContractAddress),
-      this.validateSigningOptions(options.signing),
-      this.validateDefaultPaymentParameters(options.defaultPaymentParameters)
-    ].reduce(
-      (result, currentErrors) => currentErrors ? (result || []).concat(currentErrors) : result,
-      undefined
-    );
-  }
-
-  private validateServiceContractAddress(serviceContractAddress: string): FailedValidationResults {
-    if (!serviceContractAddress || typeof serviceContractAddress !== 'string')
-      return [TezosPayments.optionsValidationErrors.invalidServiceContractAddressType];
-
-    if (serviceContractAddress.length !== tezosInfo.addressLength)
-      return [TezosPayments.optionsValidationErrors.serviceContractAddressHasInvalidLength];
-
-    if (!tezosInfo.contractAddressPrefixes.some(prefix => serviceContractAddress.startsWith(prefix)))
-      return [TezosPayments.optionsValidationErrors.serviceContractAddressIsNotContractAddress];
-  }
-
-  private validateSigningOptions(signingOptions: TezosPaymentsOptions['signing']): FailedValidationResults {
-    if (typeof signingOptions !== 'object')
-      return [TezosPayments.optionsValidationErrors.invalidSigningOption];
-
-    if (typeof signingOptions === 'function')
-      return;
-    else if (!('apiSecretKey' in signingOptions) && !('walletSigning' in signingOptions))
-      return [TezosPayments.optionsValidationErrors.invalidSigningOption];
-
-    if ('apiSecretKey' in signingOptions) {
-      if (typeof signingOptions.apiSecretKey !== 'string')
-        return [TezosPayments.optionsValidationErrors.invalidApiSecretKeyType];
-      if (!signingOptions.apiSecretKey)
-        return [TezosPayments.optionsValidationErrors.emptyApiSecretKey];
-    }
-
-    if ('walletSigning' in signingOptions && typeof signingOptions.walletSigning !== 'function')
-      return [TezosPayments.optionsValidationErrors.invalidWalletSigningOptionType];
-  }
-
-  private validateDefaultPaymentParameters(defaultPaymentParameters: TezosPaymentsOptions['defaultPaymentParameters']): FailedValidationResults {
-    if (defaultPaymentParameters === undefined)
-      return;
-
-    if (typeof defaultPaymentParameters !== 'object')
-      return [TezosPayments.optionsValidationErrors.invalidDefaultPaymentParameters];
-
-    if ('network' in defaultPaymentParameters) {
-      if (typeof defaultPaymentParameters.network !== 'object')
-        return [TezosPayments.optionsValidationErrors.invalidNetwork];
-
-      if (defaultPaymentParameters.network.name === undefined || defaultPaymentParameters.network.name === '')
-        return [TezosPayments.optionsValidationErrors.emptyNetworkName];
-
-      if (typeof defaultPaymentParameters.network.name !== 'string' || !networkNameRegExp.test(defaultPaymentParameters.network.name))
-        return [TezosPayments.optionsValidationErrors.invalidNetworkName];
-
-      if (defaultPaymentParameters.network.id && (typeof defaultPaymentParameters.network.id !== 'string' || !networkIdRegExp.test(defaultPaymentParameters.network.id)))
-        return [TezosPayments.optionsValidationErrors.invalidNetworkId];
-    }
-
-    if ('urlType' in defaultPaymentParameters && defaultPaymentParameters.urlType !== PaymentUrlType.Base64)
-      return [TezosPayments.optionsValidationErrors.invalidUrlType];
   }
 }

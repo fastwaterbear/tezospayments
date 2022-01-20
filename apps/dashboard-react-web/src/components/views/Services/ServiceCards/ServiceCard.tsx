@@ -1,6 +1,6 @@
 import { Button, Card } from 'antd';
 import React, { useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { Service, combineClassNames, text } from '@tezospayments/common';
 
@@ -17,16 +17,16 @@ interface ServiceCardProps {
 }
 
 export const ServiceCard = (props: ServiceCardProps) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const langResources = useCurrentLanguageResources();
   const commonLangResources = langResources.common;
 
   const handleCardClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     const tagName = (e.target as HTMLElement).tagName.toLowerCase();
     if (tagName !== 'svg' && tagName !== 'a' && tagName !== 'path') {
-      history.push(`${config.routers.services}/${props.service.contractAddress}`);
+      navigate(config.routers.service(props.service.contractAddress));
     }
-  }, [history, props.service.contractAddress]);
+  }, [navigate, props.service.contractAddress]);
 
   const logoClassName = combineClassNames(
     'service-card__logo',

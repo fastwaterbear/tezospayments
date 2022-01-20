@@ -11,12 +11,7 @@ export class SerializedPaymentBase64Provider implements PaymentProvider {
 
   getPayment(rawPaymentInfo: RawPaymentInfo & { readonly operationType: 'payment'; }): Payment | Promise<Payment> {
     const serializedPayment = rawPaymentInfo.serializedPayment.substr(2);
-    const payment = Payment.deserialize(
-      serializedPayment,
-      {
-        targetAddress: rawPaymentInfo.targetAddress,
-      }
-    );
+    const payment = Payment.deserialize(serializedPayment);
 
     if (!payment || Payment.validate(payment))
       throw new Error(errors.invalidPayment);
@@ -25,7 +20,7 @@ export class SerializedPaymentBase64Provider implements PaymentProvider {
   }
 
   getDonation(rawPaymentInfo: RawPaymentInfo & { readonly operationType: 'donation'; }): Donation | Promise<Donation> {
-    const serializedDonation = rawPaymentInfo.serializedPayment?.substr(2) || '';
+    const serializedDonation = rawPaymentInfo.serializedDonation?.substr(2) || '';
     const donation = Donation.deserialize(
       serializedDonation,
       {

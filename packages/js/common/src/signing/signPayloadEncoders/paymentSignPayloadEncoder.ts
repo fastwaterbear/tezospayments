@@ -2,7 +2,9 @@
 import { MichelsonType, packDataBytes } from '@taquito/michel-codec';
 
 import type { UnsignedPayment, EncodedPaymentSignPayload } from '../../models';
+import { converters, text } from '../../utils';
 import { tezToMutez, tokensAmountToNat } from '../../utils/converters';
+import { ClientSignPayload, tezosPaymentsClientSignedMessagePrefixBytes, tezosSignedMessagePrefixBytes } from './clientSignPayload';
 import { contractPaymentInTezSignPayloadMichelsonType, contractPaymentInAssetSignPayloadMichelsonType } from './michelsonTypes';
 
 export class PaymentSignPayloadEncoder {
@@ -69,9 +71,23 @@ export class PaymentSignPayloadEncoder {
   }
 
   protected getClientSignPayload(payment: UnsignedPayment): EncodedPaymentSignPayload['clientSignPayload'] {
-    return (
-      (payment.successUrl ? payment.successUrl.href : '')
-      + (payment.cancelUrl ? payment.cancelUrl.href : '')
-    ) || null;
+    const clientSignPayload: ClientSignPayload = {
+      data: payment.data,
+      successUrl: payment.successUrl?.href,
+      cancelUrl: payment.cancelUrl?.href
+    };
+    const serializedClientSignPayload = JSON.stringify(
+      clientSignPayload,
+      (_key, value) => value !== undefined && value !== null && value !== '' ? value : undefined
+    );
+    if (serializedClientSignPayload === '{}')
+      return null;
+
+    const serializedClientSignPayloadBytes = converters.stringToBytes(serializedClientSignPayload);
+    const signedMessageBytes = tezosSignedMessagePrefixBytes + tezosPaymentsClientSignedMessagePrefixBytes + serializedClientSignPayloadBytes;
+    const messageLength = text.padStart((signedMessageBytes.length / 2).toString(16), 8, '0');
+    const result = '0x0501' + messageLength + signedMessageBytes;
+
+    return result;
   }
 }

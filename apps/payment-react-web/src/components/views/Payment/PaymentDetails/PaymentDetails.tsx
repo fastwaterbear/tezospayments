@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { Payment } from '@tezospayments/common';
 
@@ -31,7 +31,12 @@ export const PaymentDetails = (props: PaymentDetailsProps) => {
         <tbody>
           <PaymentField fieldName="Payment ID" fieldValue={props.paymentId} copyButtonEnabled={true} />
           {paymentDataFields && paymentDataFields.map(paymentDataField =>
-            <PaymentField fieldName={paymentDataField.name} fieldValue={paymentDataField.value.toString()} copyButtonEnabled={false} />
+            <PaymentField
+              key={paymentDataField.name}
+              fieldName={paymentDataField.name}
+              fieldValue={paymentDataField.value.toString()}
+              copyButtonEnabled={false}
+            />
           )}
         </tbody>
       </table>

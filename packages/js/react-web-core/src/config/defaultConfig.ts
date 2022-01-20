@@ -33,9 +33,9 @@ export const defaultConfig: DefaultAppConfig = {
   tezos: {
     defaultNetwork: 'hangzhounet',
     networks: {
-      granadanet: {
-        title: 'Granada Testnet',
-        color: '#667eea',
+      mainnet: {
+        title: 'Mainnet',
+        color: '83b300',
         minimumSupportedServiceVersion: 3,
         default: {
           rpc: 'ecadLabs',
@@ -43,19 +43,19 @@ export const defaultConfig: DefaultAppConfig = {
           explorer: 'tzKT'
         },
         rpcUrls: {
-          ecadLabs: 'https://granadanet.api.tez.ie',
-          smartPy: 'https://granadanet.smartpy.io'
+          ecadLabs: 'https://mainnet.api.tez.ie',
+          smartPy: 'https://mainnet.smartpy.io'
         },
         indexerUrls: {
-          tzKT: 'https://api.granadanet.tzkt.io',
+          tzKT: 'https://api.tzkt.io',
           betterCallDev: 'https://api.better-call.dev'
         },
         explorers: {
-          tzKT: { baseUrl: 'https://granadanet.tzkt.io', title: 'TzKT' },
+          tzKT: { baseUrl: 'https://tzkt.io', title: 'TzKT' },
           betterCallDev: { baseUrl: 'https://better-call.dev', title: 'Better Call Dev' },
-          tzStats: { baseUrl: 'https://granada.tzstats.com', title: 'TzStats' }
+          tzStats: { baseUrl: 'https://tzstats.com', title: 'TzStats' }
         },
-        servicesFactoryContractAddress: 'KT1NxBzCJtvHFLKfiSAX3PGxdiJMAC8CtSZV'
+        servicesFactoryContractAddress: 'Not implemented'
       },
       hangzhounet: {
         title: 'Hangzhou Testnet',
