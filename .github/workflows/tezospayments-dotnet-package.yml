@@ -47,6 +47,8 @@ jobs:
       - name: Pack the TezosPayments package into a NuGet package
         working-directory: packages/dotnet/TezosPayments
         run: dotnet pack --no-build -c Release -o nuget-package
+        env:
+          TEZOS_PAYMENTS_COMMIT_SHA: ${{ github.sha }}
 
       - name: Upload the build and nuget package as an artifact
         uses: actions/upload-artifact@v2
