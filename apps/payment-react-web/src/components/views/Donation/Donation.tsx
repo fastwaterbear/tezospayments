@@ -3,8 +3,9 @@ import React, { useCallback, useState, useMemo } from 'react';
 
 import { Donation as DonationModel, Service, tezosMeta } from '@tezospayments/common';
 
-import { NetworkDonation, PaymentStatus } from '../../../models/payment';
-import { selectTokensState } from '../../../store/currentPayment/selectors';
+import { NetworkDonation } from '../../../models/payment';
+import { getSelectTokenBalanceIsEnough } from '../../../store/balances/selectors';
+import { selectTokensState, selectUserConnected } from '../../../store/currentPayment/selectors';
 import { FooterPure } from '../../Footer';
 import { PayButtonPure } from '../../PayButton';
 import { ServiceInfoPure } from '../../ServiceInfo';
@@ -20,8 +21,7 @@ interface DonationProps {
 const zeroAmount = new BigNumber(0);
 export const Donation = (props: DonationProps) => {
   const tokens = useAppSelector(selectTokensState);
-  const balances = useAppSelector(state => state.balancesState);
-  const status = useAppSelector(state => state.currentPaymentState?.status);
+  const connected = useAppSelector(selectUserConnected);
 
   const defaultAmount = useMemo(
     () => props.donation.desiredAmount ? new BigNumber(props.donation.desiredAmount) : zeroAmount,
@@ -53,14 +53,8 @@ export const Donation = (props: DonationProps) => {
     } as NetworkDonation));
   }, [defaultAmount]);
 
-  const balanceAmount = !balances
-    ? new BigNumber(0)
-    : networkDonation.assetAddress
-      ? balances.tokens[networkDonation.assetAddress] || new BigNumber(0)
-      : balances.tezos;
-
-  const enoughAmount = !balances || balanceAmount.isGreaterThanOrEqualTo(networkDonation.amount);
-  const payButtonDisabled = !enoughAmount || (status === PaymentStatus.UserConnected && networkDonation.amount.isLessThanOrEqualTo(0));
+  const enoughBalance = useAppSelector(getSelectTokenBalanceIsEnough(networkDonation.assetAddress, networkDonation.amount));
+  const payButtonDisabled = connected && (networkDonation.amount.isLessThanOrEqualTo(0) || !enoughBalance);
 
   return <View className="donation-view">
     <View.Side isRight={false}>

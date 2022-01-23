@@ -2,8 +2,10 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { Service, Donation, Payment, PaymentType } from '@tezospayments/common';
 
+import { AppState } from '..';
 import { NetworkDonation, NetworkPayment, PaymentInfo, PaymentStatus } from '../../models/payment';
 import { clearBalances, loadBalances } from '../balances';
+import { getSelectTokenBalanceIsEnough } from '../balances/selectors';
 import { AppThunkAPI } from '../thunk';
 
 interface CurrentPaymentState {
@@ -22,10 +24,19 @@ interface OperationState {
 
 const namespace = 'currentPayment';
 const initialState: CurrentPaymentState | null = null;
-const checkSendPaymentCondition = (
-  currentPaymentState: CurrentPaymentState | null
-): currentPaymentState is CurrentPaymentState & { readonly status: PaymentStatus.UserConnected } => {
-  return currentPaymentState?.status === PaymentStatus.UserConnected;
+
+const canPaymentBeProcessed = (state: AppState, networkPayment: NetworkPayment) => {
+  return state.currentPaymentState?.status === PaymentStatus.UserConnected
+    && state.currentPaymentState.payment.type === PaymentType.Payment
+    && networkPayment.amount.isGreaterThan(0)
+    && getSelectTokenBalanceIsEnough(networkPayment.asset?.address, networkPayment.amount)(state);
+};
+
+const canDonationBeProcessed = (state: AppState, networkDonation: NetworkDonation) => {
+  return state.currentPaymentState?.status === PaymentStatus.UserConnected
+    && state.currentPaymentState.payment.type === PaymentType.Donation
+    && networkDonation.amount.isGreaterThan(0)
+    && getSelectTokenBalanceIsEnough(networkDonation.assetAddress, networkDonation.amount)(state);
 };
 
 export const loadCurrentPayment = createAsyncThunk<PaymentInfo, void, AppThunkAPI>(
@@ -35,14 +46,26 @@ export const loadCurrentPayment = createAsyncThunk<PaymentInfo, void, AppThunkAP
   },
 );
 
+export const connectWalletAndTryToPay = createAsyncThunk<void, NetworkPayment | NetworkDonation, AppThunkAPI>(
+  `${namespace}/connectWalletAndTryToPay`,
+  async (networkPayment, { dispatch, getState }) => {
+    await dispatch(connectWallet());
+
+    if (networkPayment.type === PaymentType.Payment && canPaymentBeProcessed(getState(), networkPayment))
+      dispatch(pay(networkPayment));
+    else if (networkPayment.type === PaymentType.Donation && canDonationBeProcessed(getState(), networkPayment))
+      dispatch(donate(networkPayment));
+  }
+);
+
 export const connectWallet = createAsyncThunk<boolean, void, AppThunkAPI>(
   `${namespace}/connectWallet`,
   async (_, { dispatch, extra: app }) => {
     dispatch(clearBalances());
     const connected = await app.services.localPaymentService.connectWallet();
-
-    if (connected)
-      dispatch(loadBalances());
+    if (connected) {
+      await dispatch(loadBalances());
+    }
 
     return connected;
   },
@@ -54,11 +77,7 @@ export const pay = createAsyncThunk<boolean, NetworkPayment, AppThunkAPI>(
     return app.services.localPaymentService.pay(networkPayment);
   },
   {
-    condition: (_payload, { getState }) => {
-      const currentPaymentState = getState().currentPaymentState;
-
-      return checkSendPaymentCondition(currentPaymentState) && currentPaymentState.payment.type === PaymentType.Payment;
-    },
+    condition: (networkPayment, { getState }) => canPaymentBeProcessed(getState(), networkPayment),
     dispatchConditionRejection: true
   }
 );
@@ -69,11 +88,7 @@ export const donate = createAsyncThunk<boolean, NetworkDonation, AppThunkAPI>(
     return app.services.localPaymentService.donate(networkDonation);
   },
   {
-    condition: (_payload, { getState }) => {
-      const currentPaymentState = getState().currentPaymentState;
-
-      return checkSendPaymentCondition(currentPaymentState) && currentPaymentState.payment.type === PaymentType.Donation;
-    },
+    condition: (networkDonation, { getState }) => canDonationBeProcessed(getState(), networkDonation),
     dispatchConditionRejection: true
   }
 );

@@ -4,22 +4,25 @@ import React, { useCallback } from 'react';
 import { PaymentType } from '@tezospayments/common';
 
 import { NetworkDonation, NetworkPayment, PaymentStatus } from '../models/payment';
-import { connectWallet, donate, pay } from '../store/currentPayment';
+import { connectWallet, connectWalletAndTryToPay, donate, pay } from '../store/currentPayment';
+import { selectPaymentStatus, selectUserConnected } from '../store/currentPayment/selectors';
 import { useAppDispatch, useAppSelector } from './hooks';
+
 import './PayButton.scss';
 
 interface PayButtonProps {
   networkPayment: NetworkPayment | NetworkDonation;
   text: string;
+  fastMode?: boolean;
   disabled?: boolean;
 }
 
-export const PayButton = ({ networkPayment, text, disabled }: PayButtonProps) => {
-  const currentPaymentStatus = useAppSelector(state => state.currentPaymentState && state.currentPaymentState.status);
-  const balances = useAppSelector(state => state.balancesState);
+export const PayButton = ({ networkPayment, text, disabled, fastMode }: PayButtonProps) => {
+  const status = useAppSelector(selectPaymentStatus);
+  const connected = useAppSelector(selectUserConnected);
   const dispatch = useAppDispatch();
 
-  const handleCancelButtonClick = useCallback(
+  const handleReconnectButtonClick = useCallback(
     () => {
       dispatch(connectWallet());
     }, [dispatch]
@@ -27,8 +30,11 @@ export const PayButton = ({ networkPayment, text, disabled }: PayButtonProps) =>
 
   const handlePayButtonClick = useCallback(
     () => {
-      if (currentPaymentStatus === PaymentStatus.Initial)
-        dispatch(connectWallet());
+      if (status === PaymentStatus.Initial)
+        if (fastMode)
+          dispatch(connectWalletAndTryToPay(networkPayment));
+        else
+          dispatch(connectWallet());
       else {
         if (networkPayment.type === PaymentType.Payment)
           dispatch(pay(networkPayment));
@@ -36,13 +42,13 @@ export const PayButton = ({ networkPayment, text, disabled }: PayButtonProps) =>
           dispatch(donate(networkPayment));
       }
     },
-    [currentPaymentStatus, dispatch, networkPayment]
+    [status, dispatch, fastMode, networkPayment]
   );
 
-  const disconnected = !balances;
-
-  const loading = currentPaymentStatus === PaymentStatus.UserConnecting || (currentPaymentStatus === PaymentStatus.UserConnected && !balances)
-    || currentPaymentStatus === PaymentStatus.UserProcessing || currentPaymentStatus === PaymentStatus.NetworkProcessing;
+  const buttonText = fastMode || connected ? text : 'Connect Wallet';
+  const loading = status === PaymentStatus.UserConnecting
+    || status === PaymentStatus.UserProcessing
+    || status === PaymentStatus.NetworkProcessing;
 
   return <div className="pay-button-container">
     <Button
@@ -52,14 +58,13 @@ export const PayButton = ({ networkPayment, text, disabled }: PayButtonProps) =>
       onClick={handlePayButtonClick}
       disabled={disabled}
       loading={loading}>
-      {disconnected ? 'Connect Wallet' : text}
+      {buttonText}
     </Button>
-    <Button
+    {status === PaymentStatus.UserConnected && <Button
       size="large"
-      onClick={handleCancelButtonClick}
-      hidden={disconnected}>
+      onClick={handleReconnectButtonClick}>
       Reconnect
-    </Button>
+    </Button>}
   </div>;
 };
 
