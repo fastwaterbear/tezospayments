@@ -3,7 +3,7 @@ import React, { useCallback } from 'react';
 
 import { combineClassNames } from '@tezospayments/common';
 
-import { useAppSelector } from '../hooks';
+import { useAppSelector } from '../../hooks';
 
 import './Balance.scss';
 
