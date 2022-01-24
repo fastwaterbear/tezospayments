@@ -41,7 +41,7 @@
 }
 
 :root[data-theme="dark"] {
-  --ifm-color-primary: var(--color-night-6);
+  --ifm-color-primary: var(--color-night-4);
 }
 
 .docusaurus-highlight-code-line {

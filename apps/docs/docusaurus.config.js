@@ -41,11 +41,17 @@ module.exports = {
     ({
       colorMode: {
         defaultMode: 'light',
-        disableSwitch: true
+        disableSwitch: false
       },
       navbar: {
         title: 'Tezos Payments',
         items: [
+          {
+            type: 'doc',
+            docId: 'user-guides/introduction',
+            label: 'User Guides',
+            position: 'left',
+          },
           {
             type: 'doc',
             docId: 'concepts/overview',
