@@ -98,6 +98,12 @@ jobs:
       - name: Create the "_redirects" file
         run: echo "/*   /index.html   200" > apps/docs/build/_redirects
 
+      - name: Create the robots.txt file
+        run: |
+          > apps/docs/build/robots.txt
+          echo "User-agent: *" >> apps/docs/build/robots.txt
+          echo "Disallow: /" >> apps/docs/build/robots.txt
+
       - name: Deploy to Netlify
         id: netlify_deployment
         env:
