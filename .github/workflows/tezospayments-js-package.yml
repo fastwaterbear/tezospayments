@@ -36,7 +36,6 @@ jobs:
         with:
           node-version: ${{ env.node-version }}
           cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
 
       - name: Update npm if needed
         if: ${{ env.node-version < 15 }}
@@ -86,7 +85,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
 
       - name: Update npm if needed
         if: ${{ matrix.node-version < 15 }}
@@ -118,7 +116,6 @@ jobs:
         with:
           node-version: ${{ env.node-version }}
           cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
 
       - name: Update npm if needed
         if: ${{ env.node-version < 15 }}
