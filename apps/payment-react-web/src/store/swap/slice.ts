@@ -20,9 +20,11 @@ export const loadSwapTokens = createAsyncThunk<Pick<SwapState, 'tezos' | 'tokens
     if (!balances)
       return { tezos: null, tokens: null };
 
-    const tezos = payload.assetAddress && balances.tezos.isGreaterThan(0)
+    const tokenPriceInTez = payload.assetAddress && balances.tezos.isGreaterThan(0)
       ? await app.services.tokenSwapService.getTokenPriceInTez(payload.amount, payload.assetAddress, payload.tokenId)
       : null;
+
+    const tezos = tokenPriceInTez && balances.tezos.isGreaterThan(tokenPriceInTez) ? tokenPriceInTez : null;
 
     let tokens: { [key: string]: BigNumber } | null;
 
@@ -48,7 +50,8 @@ export const loadSwapTokens = createAsyncThunk<Pick<SwapState, 'tezos' | 'tokens
       tokens = {};
       tezosPricesInTokens.forEach((b, i) => {
         const address = acceptedTokens[i]?.contractAddress;
-        if (tokens && address && b)
+        const tokenBalance = address && balances.tokens[address];
+        if (tokens && address && b && b.isPositive() && tokenBalance && tokenBalance.isGreaterThanOrEqualTo(b))
           tokens[address] = b;
       });
     }
