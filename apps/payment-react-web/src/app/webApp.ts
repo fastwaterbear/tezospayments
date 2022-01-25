@@ -9,12 +9,14 @@ import {
 } from '@tezospayments/react-web-core';
 
 import { config } from '../config';
+import { TokenSwapService } from '../services';
 import { LocalPaymentService } from '../services/localPaymentService';
 import { AppStore } from '../store';
 import { ReactAppContext } from './reactAppContext';
 
 interface AppServices {
   readonly localPaymentService: LocalPaymentService;
+  readonly tokenSwapService: TokenSwapService;
 }
 
 export class WebApp {
@@ -62,7 +64,8 @@ export class WebApp {
         tezosWallet: this.tezosWallet,
         servicesProvider,
         balancesProvider
-      })
+      }),
+      tokenSwapService: new TokenSwapService(this.network, this.tezosToolkit)
     };
   }
 
