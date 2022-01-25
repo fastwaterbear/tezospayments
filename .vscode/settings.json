@@ -52,6 +52,7 @@
     "mutez",
     "popconfirm",
     "promisify",
+    "quipuswap",
     "secp256k1",
     "serializable",
     "tezos",

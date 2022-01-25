@@ -1,4 +1,4 @@
-import { estimateSwap, Factories, findDex, FoundDex, Token } from '@quipuswap/sdk';
+import { Asset, estimateSwap, Factories, findDex, FoundDex, Token } from '@quipuswap/sdk';
 import { TezosToolkit } from '@taquito/taquito';
 import BigNumber from 'bignumber.js';
 
@@ -16,50 +16,47 @@ export class TokenSwapService {
   }
 
   async getTokenPriceInTez(outputAmount: BigNumber, assetAddress: string, tokenId: number | null): Promise<BigNumber | null> {
-    try {
-      const fromAsset = 'tez';
-      const toAsset = {
-        contract: assetAddress,
-        id: tokenId !== null ? tokenId : undefined,
-      };
-
-      const inputDex = await this.getDex(toAsset);
-
-      const estimatedInputValue = await estimateSwap(
-        this.tezosToolkit,
-        this.factories,
-        fromAsset,
-        toAsset,
-        { outputValue: outputAmount },
-        { inputDex }
-      );
-
-      return estimatedInputValue.div(10 ** tezosMeta.decimals);
-    } catch {
-      return null;
-    }
+    const fromAsset = 'tez';
+    const toAsset = {
+      contract: assetAddress,
+      id: tokenId !== null ? tokenId : undefined,
+    };
+    return await this.getEstimatedInputValue(fromAsset, toAsset, outputAmount);
   }
 
   async getTezPriceInToken(outputAmount: BigNumber, assetAddress: string, tokenId: number | null): Promise<BigNumber | null> {
-    try {
-      const fromAsset = {
-        contract: assetAddress,
-        id: tokenId !== null ? tokenId : undefined,
-      };
-      const toAsset = 'tez';
+    const fromAsset = {
+      contract: assetAddress,
+      id: tokenId !== null ? tokenId : undefined,
+    };
+    const toAsset = 'tez';
+    return await this.getEstimatedInputValue(fromAsset, toAsset, outputAmount);
+  }
 
-      const inputDex = await this.getDex(fromAsset);
+  private async getEstimatedInputValue(fromAsset: Asset, toAsset: Asset, outputAmount: BigNumber): Promise<BigNumber | null> {
+    try {
+      const toTez = toAsset === 'tez';
+
+      let token: Token;
+      if (fromAsset !== 'tez')
+        token = fromAsset;
+      else if (toAsset !== 'tez')
+        token = toAsset;
+      else
+        throw new Error('FA12 / FA20 Token should be passed as input or output');
+
+      const inputDex = await this.getDex(token);
 
       const estimatedInputValue = await estimateSwap(
         this.tezosToolkit,
         this.factories,
         fromAsset,
         toAsset,
-        { outputValue: outputAmount.multipliedBy(10 ** tezosMeta.decimals) },
+        { outputValue: toTez ? outputAmount.multipliedBy(10 ** tezosMeta.decimals) : outputAmount },
         { inputDex }
       );
 
-      return estimatedInputValue;
+      return toTez ? estimatedInputValue : estimatedInputValue.div(10 ** tezosMeta.decimals);
     }
     catch {
       return null;
