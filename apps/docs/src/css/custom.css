@@ -1,47 +1,5 @@
 :root {
-  /* colors */
-  --color-night-0: #1756d3;
-  --color-night-1: #1e61e6;
-  --color-night-2: #3571e9;
-  --color-night-3: #5d8ded;
-  --color-night-4: #7ea4f1;
-  --color-night-5: #96b5f4;
-  --color-night-6: #aec6f6;
-  --color-night-7: #bed2f8;
-  --color-night-8: #d7e3fb;
-  --color-night-9: #e7eefc;
-
-  --color-light-0: #a5adbb;
-  --color-light-1: #aeb5c1;
-  --color-light-2: #b7bdc8;
-  --color-light-3: #c0c5cf;
-  --color-light-4: #c9cdd6;
-  --color-light-5: #d2d6dd;
-  --color-light-6: #dbdee4;
-  --color-light-7: #e4e6eb;
-  --color-light-8: #f4f4f5;
-  --color-light-9: #fdfdfe;
-
-  --ifm-color-primary-darkest: #1449b5;
-  --ifm-color-primary-darker: var(--color-night-0);
-  --ifm-color-primary-dark: var(--color-night-1);
-  --ifm-color-primary: var(--color-night-2);
-  --ifm-color-primary-light: var(--color-night-3);
-  --ifm-color-primary-lighter: var(--color-night-4);
-  --ifm-color-primary-lightest: var(--color-night-5);
-
-  --ifm-color-secondary: var(-color-light-4);
-  --ifm-color-secondary-darkest: var(-color-light-2);
-  --ifm-color-secondary-lighter: var(-color-light-6);
-
-  --ifm-menu-color-active: var(--color-light-9);
-  --ifm-menu-color-background-active: var(--color-night-2);
-
   --ifm-code-font-size: 95%;
-}
-
-:root[data-theme="dark"] {
-  --ifm-color-primary: var(--color-night-4);
 }
 
 .docusaurus-highlight-code-line {
