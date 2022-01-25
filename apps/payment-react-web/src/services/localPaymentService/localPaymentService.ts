@@ -71,11 +71,18 @@ export class LocalPaymentService {
   }
 
   async connectWallet() {
-    await this.tezosWallet.client.clearActiveAccount();
-    const canceled = await this.requestPermissions({ network: { type: converters.networkToBeaconNetwork(this.network) } });
-    this.accountPKH = canceled ? null : await this.tezosWallet.getPKH();
+    try {
+      await this.tezosWallet.client.clearActiveAccount();
+      const canceled = await this.requestPermissions({ network: { type: converters.networkToBeaconNetwork(this.network) } });
+      this.accountPKH = canceled ? null : await this.tezosWallet.getPKH();
 
-    return !canceled;
+      return !canceled;
+    } catch (error: unknown) {
+      if (error instanceof AbortedBeaconError)
+        return false;
+
+      throw error;
+    }
   }
 
   async getTezosBalance(): Promise<BigNumber> {
