@@ -10,7 +10,13 @@ export const getSelectTokenBalance = (assetAddress: string | undefined) => creat
   balances => assetAddress ? balances?.tokens[assetAddress] : balances?.tezos
 );
 
-export const getSelectTokenBalanceIsEnough = (assetAddress: string | undefined, amount: BigNumber) => createSelector(
+const zeroAmount = new BigNumber(0);
+export const getSelectTokenBalanceDiff = (assetAddress: string | undefined, amount: BigNumber) => createSelector(
   getSelectTokenBalance(assetAddress),
-  tokenBalance => tokenBalance && tokenBalance.isGreaterThanOrEqualTo(amount)
+  tokenBalance => (tokenBalance || zeroAmount).minus(amount)
+);
+
+export const getSelectTokenBalanceIsEnough = (assetAddress: string | undefined, amount: BigNumber) => createSelector(
+  getSelectTokenBalanceDiff(assetAddress, amount),
+  diff => diff.isGreaterThanOrEqualTo(0)
 );

@@ -5,7 +5,8 @@ import { Service, Donation, Payment, PaymentType } from '@tezospayments/common';
 import { AppState } from '..';
 import { NetworkDonation, NetworkPayment, PaymentInfo, PaymentStatus } from '../../models/payment';
 import { clearBalances, loadBalances } from '../balances';
-import { getSelectTokenBalanceIsEnough } from '../balances/selectors';
+import { getSelectTokenBalanceDiff, getSelectTokenBalanceIsEnough } from '../balances/selectors';
+import { loadSwapTokens } from '../swap';
 import { AppThunkAPI } from '../thunk';
 
 interface CurrentPaymentState {
@@ -60,11 +61,23 @@ export const connectWalletAndTryToPay = createAsyncThunk<void, NetworkPayment | 
 
 export const connectWallet = createAsyncThunk<boolean, void, AppThunkAPI>(
   `${namespace}/connectWallet`,
-  async (_, { dispatch, extra: app }) => {
+  async (_, { dispatch, getState, extra: app }) => {
     dispatch(clearBalances());
     const connected = await app.services.localPaymentService.connectWallet();
     if (connected) {
       await dispatch(loadBalances());
+
+      const state = getState();
+      const payment = state.currentPaymentState?.payment;
+      if (payment && payment.type === PaymentType.Payment && !getSelectTokenBalanceIsEnough(payment.asset?.address, payment.amount)(state)) {
+        const diff = getSelectTokenBalanceDiff(payment.asset?.address, payment.amount)(state);
+
+        await dispatch(loadSwapTokens({
+          amount: diff.abs(),
+          assetAddress: payment.asset?.address || null,
+          tokenId: payment.asset?.id !== undefined ? payment.asset?.id : null
+        }));
+      }
     }
 
     return connected;
