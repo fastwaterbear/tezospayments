@@ -4,8 +4,6 @@
 @use '../../../styles/mixins.scss';
 
 .total-amount {
-  margin-bottom: 100px;
-
   @include mixins.compact-view() {
     margin-bottom: layout-variables.$element-spacing-medium;
   }
@@ -38,12 +36,4 @@
 
 .total-amount__currency-name {
   color: colors.$character-secondary;
-}
-
-.total-amount__balance {
-  margin-top: 4px;
-}
-
-.total-amount__balance_hidden {
-  visibility: hidden;
 }

@@ -8,10 +8,13 @@ import { selectUserConnected } from '../../../store/currentPayment/selectors';
 import { FooterPure } from '../../Footer';
 import { PayButtonPure } from '../../PayButton';
 import { ServiceInfoPure } from '../../ServiceInfo';
+import { TokenSwapperPure } from '../../common';
 import { useAppSelector } from '../../hooks';
 import { View } from '../View';
 import { PaymentDetails } from './PaymentDetails';
 import { TotalAmount } from './TotalAmount';
+
+import './Payment.scss';
 
 interface PaymentProps {
   payment: PaymentModel;
@@ -31,7 +34,7 @@ export const Payment = (props: PaymentProps) => {
     signature: props.payment.signature.contract
   };
 
-  const payButtonDisabled = connected && !enoughBalance;
+  const swapRequired = connected && !enoughBalance;
 
   return <View className="payment-view">
     <View.Side isRight={false}>
@@ -39,9 +42,12 @@ export const Payment = (props: PaymentProps) => {
       <ServiceInfoPure service={props.service} showDescription={false} />
     </View.Side>
     <View.Side isRight={true}>
-      <TotalAmount value={props.payment.amount} assetAddress={props.payment.asset?.address}
-        network={props.service.network} />
-      <PayButtonPure networkPayment={networkPayment} text="Pay" fastMode disabled={payButtonDisabled} />
+      <div className="payment">
+        <TotalAmount value={props.payment.amount} assetAddress={props.payment.asset?.address}
+          network={props.service.network} />
+        {swapRequired && <TokenSwapperPure amount={props.payment.amount} assetAddress={props.payment.asset?.address} />}
+        <PayButtonPure networkPayment={networkPayment} text="Pay" fastMode disabled={swapRequired} />
+      </div>
       <FooterPure />
     </View.Side>
   </View>;
