@@ -1,4 +1,4 @@
 ---
 sidebar_position: 2
 ---
-# .NET
+# Generate a payment link
