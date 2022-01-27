@@ -41,7 +41,7 @@ export const Payment = (props: PaymentProps) => {
   useEffect(() => setSwapAsset(defaultSwapAsset), [defaultSwapAsset]);
   const showTokenSwapper = connected && !enoughBalance;
 
-  const payButtonText = `${swapAsset !== undefined ? 'Swap and ' : ''} Pay`;
+  const payButtonText = `${connected && swapAsset !== undefined ? 'Swap and ' : ''} Pay`;
   const payButtonDisabled = showTokenSwapper && swapAsset === undefined;
 
   return <View className="payment-view">

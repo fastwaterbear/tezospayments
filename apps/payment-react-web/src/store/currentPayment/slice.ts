@@ -6,7 +6,7 @@ import { AppState } from '..';
 import { NetworkDonation, NetworkPayment, PaymentInfo, PaymentStatus } from '../../models/payment';
 import { clearBalances, loadBalances } from '../balances';
 import { getSelectTokenBalanceDiff, getSelectTokenBalanceIsEnough } from '../balances/selectors';
-import { loadSwapTokens } from '../swap';
+import { clearSwapTokens, loadSwapTokens } from '../swap';
 import { AppThunkAPI } from '../thunk';
 
 interface CurrentPaymentState {
@@ -63,6 +63,7 @@ export const connectWallet = createAsyncThunk<boolean, void, AppThunkAPI>(
   `${namespace}/connectWallet`,
   async (_, { dispatch, getState, extra: app }) => {
     dispatch(clearBalances());
+    dispatch(clearSwapTokens());
     const connected = await app.services.localPaymentService.connectWallet();
     if (connected) {
       await dispatch(loadBalances());
