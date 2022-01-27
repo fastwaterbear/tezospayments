@@ -44,18 +44,21 @@ $-icon-size: 22px;
 
 .token-swapper__currency {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+  align-items: center;
+  font-size: 14px;
+  gap: math.div(layout-variables.$element-spacing-small, 2);
 }
 
-.token-swapper__currency-name {
-  color: colors.$character-secondary;
+.token-swapper__icon {
+  height: $-icon-size;
+  width: $-icon-size;
+  margin-left: 8px;
 }
 
 .token-swapper-menu-item {
   display: flex;
   align-items: center;
+  text-align: right;
 }
 
 .token-swapper-menu-item__icon {

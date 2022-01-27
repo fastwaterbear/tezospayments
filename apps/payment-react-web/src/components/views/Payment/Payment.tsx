@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Payment as PaymentModel, Service } from '@tezospayments/common';
 
 import { NetworkPayment, } from '../../../models/payment';
 import { getSelectTokenBalanceIsEnough } from '../../../store/balances/selectors';
 import { selectUserConnected } from '../../../store/currentPayment/selectors';
+import { selectSwapState } from '../../../store/swap/selectors';
 import { FooterPure } from '../../Footer';
 import { PayButtonPure } from '../../PayButton';
 import { ServiceInfoPure } from '../../ServiceInfo';
@@ -24,6 +25,7 @@ interface PaymentProps {
 export const Payment = (props: PaymentProps) => {
   const connected = useAppSelector(selectUserConnected);
   const enoughBalance = useAppSelector(getSelectTokenBalanceIsEnough(props.payment.asset?.address, props.payment.amount));
+  const swapTokensState = useAppSelector(selectSwapState);
 
   const networkPayment: NetworkPayment = {
     type: props.payment.type,
@@ -34,7 +36,10 @@ export const Payment = (props: PaymentProps) => {
     signature: props.payment.signature.contract
   };
 
-  const swapRequired = connected && !enoughBalance;
+  const defaultSwapAsset = swapTokensState?.tezos ? '' : (swapTokensState?.tokens && Object.keys(swapTokensState.tokens)[0]) || null;
+  const [swapAsset, setSwapAsset] = useState(defaultSwapAsset);
+  useEffect(() => setSwapAsset(defaultSwapAsset), [defaultSwapAsset]);
+  const showTokenSwapper = connected && !enoughBalance;
 
   return <View className="payment-view">
     <View.Side isRight={false}>
@@ -45,8 +50,13 @@ export const Payment = (props: PaymentProps) => {
       <div className="payment">
         <TotalAmount value={props.payment.amount} assetAddress={props.payment.asset?.address}
           network={props.service.network} />
-        {swapRequired && <TokenSwapperPure amount={props.payment.amount} assetAddress={props.payment.asset?.address} />}
-        <PayButtonPure networkPayment={networkPayment} text="Pay" fastMode disabled={swapRequired} />
+        {showTokenSwapper && <TokenSwapperPure
+          amount={props.payment.amount}
+          payAsset={props.payment.asset?.address || ''}
+          swapAsset={swapAsset}
+          onSwapAssetChange={v => setSwapAsset(v)}
+        />}
+        <PayButtonPure networkPayment={networkPayment} text="Pay" fastMode disabled={showTokenSwapper} />
       </div>
       <FooterPure />
     </View.Side>
