@@ -36,10 +36,13 @@ export const Payment = (props: PaymentProps) => {
     signature: props.payment.signature.contract
   };
 
-  const defaultSwapAsset = swapTokensState?.tezos ? '' : (swapTokensState?.tokens && Object.keys(swapTokensState.tokens)[0]) || null;
+  const defaultSwapAsset = swapTokensState?.tezos ? '' : swapTokensState?.tokens ? Object.keys(swapTokensState.tokens)[0] : undefined;
   const [swapAsset, setSwapAsset] = useState(defaultSwapAsset);
   useEffect(() => setSwapAsset(defaultSwapAsset), [defaultSwapAsset]);
   const showTokenSwapper = connected && !enoughBalance;
+
+  const payButtonText = `${swapAsset !== undefined ? 'Swap and ' : ''} Pay`;
+  const payButtonDisabled = showTokenSwapper && swapAsset === undefined;
 
   return <View className="payment-view">
     <View.Side isRight={false}>
@@ -56,7 +59,7 @@ export const Payment = (props: PaymentProps) => {
           swapAsset={swapAsset}
           onSwapAssetChange={v => setSwapAsset(v)}
         />}
-        <PayButtonPure networkPayment={networkPayment} text="Pay" fastMode disabled={showTokenSwapper} />
+        <PayButtonPure networkPayment={networkPayment} text={payButtonText} fastMode disabled={payButtonDisabled} swapAsset={swapAsset} />
       </div>
       <FooterPure />
     </View.Side>

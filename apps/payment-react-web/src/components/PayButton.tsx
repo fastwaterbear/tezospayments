@@ -15,9 +15,10 @@ interface PayButtonProps {
   text: string;
   fastMode?: boolean;
   disabled?: boolean;
+  swapAsset?: string;
 }
 
-export const PayButton = ({ networkPayment, text, disabled, fastMode }: PayButtonProps) => {
+export const PayButton = (props: PayButtonProps) => {
   const status = useAppSelector(selectPaymentStatus);
   const connected = useAppSelector(selectUserConnected);
   const dispatch = useAppDispatch();
@@ -31,21 +32,21 @@ export const PayButton = ({ networkPayment, text, disabled, fastMode }: PayButto
   const handlePayButtonClick = useCallback(
     () => {
       if (status === PaymentStatus.Initial)
-        if (fastMode)
-          dispatch(connectWalletAndTryToPay(networkPayment));
+        if (props.fastMode)
+          dispatch(connectWalletAndTryToPay(props.networkPayment));
         else
           dispatch(connectWallet());
       else {
-        if (networkPayment.type === PaymentType.Payment)
-          dispatch(pay(networkPayment));
-        else if (networkPayment.type === PaymentType.Donation)
-          dispatch(donate(networkPayment));
+        if (props.networkPayment.type === PaymentType.Payment)
+          dispatch(pay(props.networkPayment));
+        else if (props.networkPayment.type === PaymentType.Donation)
+          dispatch(donate(props.networkPayment));
       }
     },
-    [status, dispatch, fastMode, networkPayment]
+    [status, dispatch, props.fastMode, props.networkPayment]
   );
 
-  const buttonText = fastMode || connected ? text : 'Connect Wallet';
+  const buttonText = props.fastMode || connected ? props.text : 'Connect Wallet';
   const loading = status === PaymentStatus.UserConnecting
     || status === PaymentStatus.UserProcessing
     || status === PaymentStatus.NetworkProcessing;
@@ -56,7 +57,7 @@ export const PayButton = ({ networkPayment, text, disabled, fastMode }: PayButto
       type="primary"
       size="large"
       onClick={handlePayButtonClick}
-      disabled={disabled}
+      disabled={props.disabled}
       loading={loading}>
       {buttonText}
     </Button>

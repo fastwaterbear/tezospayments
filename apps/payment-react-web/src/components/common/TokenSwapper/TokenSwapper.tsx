@@ -15,8 +15,8 @@ import './TokenSwapper.scss';
 interface TokenSwapperProps {
   amount: BigNumber;
   payAsset: string;
-  swapAsset: string | null;
-  onSwapAssetChange: (value: string) => void;
+  swapAsset?: string;
+  onSwapAssetChange?: (value: string) => void;
 }
 
 export const TokenSwapper = (props: TokenSwapperProps) => {
@@ -49,7 +49,7 @@ export const TokenSwapper = (props: TokenSwapperProps) => {
   const selectedAsset = assets.find(a => a.value === props.swapAsset);
 
   const menu = <Menu>
-    {assets.map(a => <Menu.Item className="token-swapper-menu-item" key={a.value} onClick={() => props.onSwapAssetChange(a.value)}>
+    {assets.map(a => <Menu.Item className="token-swapper-menu-item" key={a.value} onClick={() => props.onSwapAssetChange?.(a.value)}>
       <span className="token-swapper-menu-item__icon">{a.amount.toString()}</span>
       <img className="token-swapper-menu-item__icon" src={a.imageUrl} alt={a.ticker} />
       <span className="token-swapper-menu-item__ticker">{a.ticker}</span>
