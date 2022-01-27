@@ -1,11 +1,12 @@
-import { Asset, estimateSwap, Factories, findDex, FoundDex, Token } from '@quipuswap/sdk';
+import { Asset, estimateSwap, withSlippage, Factories, findDex, FoundDex, Token } from '@quipuswap/sdk';
 import { TezosToolkit } from '@taquito/taquito';
 import BigNumber from 'bignumber.js';
 
-import { Network, networks, tezosMeta } from '@tezospayments/common';
+import { Network, networks, tezosMeta, tokenWhitelistMap } from '@tezospayments/common';
 
 export class TokenSwapService {
   private readonly factories: Factories;
+  private readonly DEFAULT_SLIPPAGE_TOLERANCE = 0.005;
   private readonly dexByToken: Map<string, FoundDex> = new Map();
 
   constructor(
@@ -36,7 +37,6 @@ export class TokenSwapService {
   private async getEstimatedInputValue(fromAsset: Asset, toAsset: Asset, outputAmount: BigNumber): Promise<BigNumber | null> {
     try {
       const toTez = toAsset === 'tez';
-
       let token: Token;
       if (fromAsset !== 'tez')
         token = fromAsset;
@@ -45,6 +45,12 @@ export class TokenSwapService {
       else
         throw new Error('FA12 / FA20 Token should be passed as input or output');
 
+      const tokenInfo = tokenWhitelistMap.get(this.network)?.get(typeof token.contract === 'string' ? token.contract : token.contract.address);
+      if (!tokenInfo || !tokenInfo.metadata)
+        throw new Error('Token not found');
+
+      const decimals = toTez ? tezosMeta.decimals : tokenInfo.metadata.decimals;
+      const outputValue = outputAmount.multipliedBy(10 ** decimals);
       const inputDex = await this.getDex(token);
 
       const estimatedInputValue = await estimateSwap(
@@ -52,11 +58,11 @@ export class TokenSwapService {
         this.factories,
         fromAsset,
         toAsset,
-        { outputValue: toTez ? outputAmount.multipliedBy(10 ** tezosMeta.decimals) : outputAmount },
+        { outputValue },
         { inputDex }
       );
 
-      return toTez ? estimatedInputValue : estimatedInputValue.div(10 ** tezosMeta.decimals);
+      return withSlippage(estimatedInputValue, -this.DEFAULT_SLIPPAGE_TOLERANCE).div(10 ** decimals);
     }
     catch {
       return null;
