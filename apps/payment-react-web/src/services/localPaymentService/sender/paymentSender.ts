@@ -1,5 +1,5 @@
 import { BeaconWallet } from '@taquito/beacon-wallet';
-import { TezosToolkit, TransactionWalletOperation, Wallet, WalletOperation } from '@taquito/taquito';
+import { TezosToolkit, Wallet, WalletOperation, TransferParams } from '@taquito/taquito';
 import BigNumber from 'bignumber.js';
 
 import { Network, tokenWhitelistMap, TokenFA2, TokenFA12, converters } from '@tezospayments/common';
@@ -15,11 +15,11 @@ export class PaymentSender {
   ) {
   }
 
-  async send(payment: NetworkPayment): Promise<WalletOperation> {
+  async send(payment: NetworkPayment, initialTransfers?: TransferParams[]): Promise<WalletOperation> {
     const contract = await this.tezosToolkit.wallet.at<TezosPaymentsServiceContract<Wallet>>(payment.targetAddress);
 
     if (!payment.asset)
-      return this.sendNativeToken(contract, payment);
+      return this.sendNativeToken(contract, payment, initialTransfers);
 
     const token = tokenWhitelistMap.get(this.network)?.get(payment.asset.address);
     if (!token || !token.metadata)
@@ -28,18 +28,24 @@ export class PaymentSender {
     const tokenAmount = converters.tokensAmountToNat(payment.amount, token.metadata.decimals);
 
     return token.type === 'fa1.2'
-      ? this.sendFa12Token(contract, payment, tokenAmount, token)
-      : this.sendFa20Token(contract, payment, tokenAmount, token);
+      ? this.sendFa12Token(contract, payment, tokenAmount, token, initialTransfers)
+      : this.sendFa20Token(contract, payment, tokenAmount, token, initialTransfers);
   }
 
   private sendNativeToken(
     contract: TezosPaymentsServiceContract<Wallet>,
-    payment: NetworkPayment
-  ): Promise<TransactionWalletOperation> {
-    return contract.methodsObject.send_payment({
-      id: payment.id,
-      signature: payment.signature
-    }).send({ amount: payment.amount });
+    payment: NetworkPayment,
+    initialTransfers?: TransferParams[]
+  ): Promise<WalletOperation> {
+    const batch = this.tezosToolkit.wallet.batch();
+    initialTransfers?.forEach(t => batch.withTransfer(t));
+
+    return batch.withTransfer(
+      contract.methodsObject.send_payment({
+        id: payment.id,
+        signature: payment.signature
+      }).toTransferParams({ amount: payment.amount.toNumber() })
+    ).send();
   }
 
   private async sendFa12Token(
@@ -47,10 +53,13 @@ export class PaymentSender {
     payment: Omit<NetworkPayment, 'amount'>,
     tokenAmount: BigNumber,
     token: TokenFA12,
+    initialTransfers?: TransferParams[]
   ): Promise<WalletOperation> {
     const tokenContract = await this.tezosToolkit.wallet.at<Fa12Contract<Wallet>>(token.contractAddress);
+    const batch = this.tezosToolkit.wallet.batch();
+    initialTransfers?.forEach(t => batch.withTransfer(t));
 
-    return await this.tezosToolkit.wallet.batch()
+    return batch
       .withContractCall(tokenContract.methods.approve(contract.address, tokenAmount))
       .withContractCall(
         contract.methodsObject.send_payment({
@@ -69,12 +78,15 @@ export class PaymentSender {
     contract: TezosPaymentsServiceContract<Wallet>,
     payment: Omit<NetworkPayment, 'amount'>,
     tokenAmount: BigNumber,
-    token: TokenFA2
+    token: TokenFA2,
+    initialTransfers?: TransferParams[]
   ): Promise<WalletOperation> {
     const tokenContract = await this.tezosToolkit.wallet.at<Fa20Contract<Wallet>>(token.contractAddress);
     const userAddress = await this.tezosToolkit.wallet.pkh({ forceRefetch: true });
+    const batch = this.tezosToolkit.wallet.batch();
+    initialTransfers?.forEach(t => batch.withTransfer(t));
 
-    return await this.tezosToolkit.wallet.batch()
+    return batch
       .withContractCall(tokenContract.methods.update_operators([{
         add_operator: {
           owner: userAddress,

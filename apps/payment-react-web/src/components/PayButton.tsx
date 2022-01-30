@@ -38,12 +38,12 @@ export const PayButton = (props: PayButtonProps) => {
           dispatch(connectWallet());
       else {
         if (props.networkPayment.type === PaymentType.Payment)
-          dispatch(pay(props.networkPayment));
+          dispatch(pay({ payment: props.networkPayment, swapAsset: props.swapAsset }));
         else if (props.networkPayment.type === PaymentType.Donation)
-          dispatch(donate(props.networkPayment));
+          dispatch(donate({ payment: props.networkPayment }));
       }
     },
-    [status, dispatch, props.fastMode, props.networkPayment]
+    [status, props.fastMode, props.networkPayment, props.swapAsset, dispatch]
   );
 
   const buttonText = props.fastMode || connected ? props.text : 'Connect Wallet';

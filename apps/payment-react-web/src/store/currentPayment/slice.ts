@@ -1,12 +1,14 @@
+import { TransferParams } from '@quipuswap/sdk';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { Service, Donation, Payment, PaymentType } from '@tezospayments/common';
+import { Service, Donation, Payment, PaymentType, tokenWhitelistMap } from '@tezospayments/common';
 
 import { AppState } from '..';
 import { NetworkDonation, NetworkPayment, PaymentInfo, PaymentStatus } from '../../models/payment';
 import { clearBalances, loadBalances } from '../balances';
 import { getSelectTokenBalanceDiff, getSelectTokenBalanceIsEnough } from '../balances/selectors';
 import { clearSwapTokens, loadSwapTokens } from '../swap';
+import { selectSwapState } from '../swap/selectors';
 import { AppThunkAPI } from '../thunk';
 
 interface CurrentPaymentState {
@@ -26,14 +28,21 @@ interface OperationState {
 const namespace = 'currentPayment';
 const initialState: CurrentPaymentState | null = null;
 
-const canPaymentBeProcessed = (state: AppState, networkPayment: NetworkPayment) => {
+const canPaymentBeProcessedDirectly = (state: AppState, networkPayment: NetworkPayment) => {
   return state.currentPaymentState?.status === PaymentStatus.UserConnected
     && state.currentPaymentState.payment.type === PaymentType.Payment
     && networkPayment.amount.isGreaterThan(0)
     && getSelectTokenBalanceIsEnough(networkPayment.asset?.address, networkPayment.amount)(state);
 };
 
-const canDonationBeProcessed = (state: AppState, networkDonation: NetworkDonation) => {
+const canPaymentBeProcessedWithSwap = (state: AppState, networkPayment: NetworkPayment, swapAsset: string) => {
+  return state.currentPaymentState?.status === PaymentStatus.UserConnected
+    && state.currentPaymentState.payment.type === PaymentType.Payment
+    && networkPayment.amount.isGreaterThan(0)
+    && !!(swapAsset === '' ? state.swapState?.tezos : state.swapState?.tokens?.[swapAsset]);
+};
+
+const canDonationBeProcessedDirectly = (state: AppState, networkDonation: NetworkDonation) => {
   return state.currentPaymentState?.status === PaymentStatus.UserConnected
     && state.currentPaymentState.payment.type === PaymentType.Donation
     && networkDonation.amount.isGreaterThan(0)
@@ -52,10 +61,10 @@ export const connectWalletAndTryToPay = createAsyncThunk<void, NetworkPayment | 
   async (networkPayment, { dispatch, getState }) => {
     await dispatch(connectWallet());
 
-    if (networkPayment.type === PaymentType.Payment && canPaymentBeProcessed(getState(), networkPayment))
-      dispatch(pay(networkPayment));
-    else if (networkPayment.type === PaymentType.Donation && canDonationBeProcessed(getState(), networkPayment))
-      dispatch(donate(networkPayment));
+    if (networkPayment.type === PaymentType.Payment && canPaymentBeProcessedDirectly(getState(), networkPayment))
+      dispatch(pay({ payment: networkPayment }));
+    else if (networkPayment.type === PaymentType.Donation && canDonationBeProcessedDirectly(getState(), networkPayment))
+      dispatch(donate({ payment: networkPayment }));
   }
 );
 
@@ -71,10 +80,10 @@ export const connectWallet = createAsyncThunk<boolean, void, AppThunkAPI>(
       const state = getState();
       const payment = state.currentPaymentState?.payment;
       if (payment && payment.type === PaymentType.Payment && !getSelectTokenBalanceIsEnough(payment.asset?.address, payment.amount)(state)) {
-        const diff = getSelectTokenBalanceDiff(payment.asset?.address, payment.amount)(state);
+        const amount = getSelectTokenBalanceDiff(payment.asset?.address, payment.amount)(state).abs();
 
         await dispatch(loadSwapTokens({
-          amount: diff.abs(),
+          amount,
           assetAddress: payment.asset?.address || null,
           tokenId: payment.asset?.id !== undefined ? payment.asset?.id : null
         }));
@@ -85,24 +94,45 @@ export const connectWallet = createAsyncThunk<boolean, void, AppThunkAPI>(
   },
 );
 
-export const pay = createAsyncThunk<boolean, NetworkPayment, AppThunkAPI>(
+export const pay = createAsyncThunk<boolean, { payment: NetworkPayment, swapAsset?: string }, AppThunkAPI>(
   `${namespace}/pay`,
-  async (networkPayment, { extra: app }) => {
-    return app.services.localPaymentService.pay(networkPayment);
+  async (payload, { extra: app, getState }) => {
+    let initialTransfers: TransferParams[] | undefined = undefined;
+    if (payload.swapAsset !== undefined) {
+      const state = getState();
+      const swapState = selectSwapState(state);
+      const inputAmount = payload.swapAsset === '' ? swapState?.tezos : swapState?.tokens?.[payload.swapAsset];
+      const outputAmount = getSelectTokenBalanceDiff(payload.payment.asset?.address, payload.payment.amount)(state).abs();
+
+      if (inputAmount) {
+        if (payload.payment.asset)
+          initialTransfers = await app.services.tokenSwapService.swapTezToToken(inputAmount, outputAmount, payload.payment.asset.address, payload.payment.asset.id);
+        else {
+          const token = tokenWhitelistMap.get(app.network)?.get(payload.swapAsset);
+          if (token)
+            initialTransfers = await app.services.tokenSwapService.swapTokenToTez(inputAmount, outputAmount, token.contractAddress, token.type === 'fa1.2' ? null : token.id);
+        }
+      }
+    }
+    return app.services.localPaymentService.pay(payload.payment, initialTransfers);
   },
   {
-    condition: (networkPayment, { getState }) => canPaymentBeProcessed(getState(), networkPayment),
+    condition: (payload, { getState }) => {
+      const state = getState();
+      return canPaymentBeProcessedDirectly(state, payload.payment)
+        || (payload.swapAsset !== undefined && canPaymentBeProcessedWithSwap(state, payload.payment, payload.swapAsset));
+    },
     dispatchConditionRejection: true
   }
 );
 
-export const donate = createAsyncThunk<boolean, NetworkDonation, AppThunkAPI>(
+export const donate = createAsyncThunk<boolean, { payment: NetworkDonation, swapAsset?: string }, AppThunkAPI>(
   `${namespace}/donate`,
-  async (networkDonation, { extra: app }) => {
-    return app.services.localPaymentService.donate(networkDonation);
+  async (payload, { extra: app }) => {
+    return app.services.localPaymentService.donate(payload.payment);
   },
   {
-    condition: (networkDonation, { getState }) => canDonationBeProcessed(getState(), networkDonation),
+    condition: (payload, { getState }) => canDonationBeProcessedDirectly(getState(), payload.payment),
     dispatchConditionRejection: true
   }
 );
@@ -153,7 +183,7 @@ export const currentPaymentSlice = createSlice({
             ? {
               status: PaymentStatus.UserProcessing,
               payment: state.payment,
-              networkPayment: action.meta.arg,
+              networkPayment: action.meta.arg.payment,
               service: state.service
             }
             : null;

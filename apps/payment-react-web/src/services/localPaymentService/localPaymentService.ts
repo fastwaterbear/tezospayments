@@ -1,4 +1,5 @@
 import { RequestPermissionInput, AbortedBeaconError } from '@airgap/beacon-sdk';
+import { TransferParams } from '@quipuswap/sdk';
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit, WalletOperation } from '@taquito/taquito';
 import BigNumber from 'bignumber.js';
@@ -99,8 +100,8 @@ export class LocalPaymentService {
     return this.balancesProvider.getTokenBalance(this.accountPKH, token);
   }
 
-  async pay(payment: NetworkPayment): Promise<boolean> {
-    return this.send(() => this.paymentSender.send(payment));
+  async pay(payment: NetworkPayment, initialTransfers?: TransferParams[]): Promise<boolean> {
+    return this.send(() => this.paymentSender.send(payment, initialTransfers));
   }
 
   async donate(donation: NetworkDonation): Promise<boolean> {

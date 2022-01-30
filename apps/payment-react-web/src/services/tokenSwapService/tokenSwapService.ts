@@ -1,8 +1,18 @@
-import { Asset, estimateSwap, withSlippage, Factories, findDex, FoundDex, Token } from '@quipuswap/sdk';
-import { TezosToolkit } from '@taquito/taquito';
+import {
+  Asset,
+  estimateSwap,
+  withSlippage,
+  Factories,
+  findDex,
+  FoundDex,
+  Token,
+  Dex,
+  withTokenApprove
+} from '@quipuswap/sdk';
+import { TezosToolkit, TransferParams } from '@taquito/taquito';
 import BigNumber from 'bignumber.js';
 
-import { Network, networks, tezosMeta, tokenWhitelistMap } from '@tezospayments/common';
+import { converters, Network, networks, tezosMeta, tokenWhitelistMap } from '@tezospayments/common';
 
 export class TokenSwapService {
   private readonly factories: Factories;
@@ -34,23 +44,59 @@ export class TokenSwapService {
     return await this.getEstimatedInputValue(fromAsset, toAsset, outputAmount);
   }
 
+  async swapTezToToken(inputAmount: BigNumber, outputAmount: BigNumber, assetAddress: string, tokenId: number | null): Promise<TransferParams[]> {
+    const fromAsset = 'tez';
+    const toAsset = {
+      contract: assetAddress,
+      id: tokenId !== null ? tokenId : undefined,
+    };
+    return await this.swap(fromAsset, toAsset, inputAmount, outputAmount,);
+  }
+
+  async swapTokenToTez(inputAmount: BigNumber, outputAmount: BigNumber, assetAddress: string, tokenId: number | null): Promise<TransferParams[]> {
+    const fromAsset = {
+      contract: assetAddress,
+      id: tokenId !== null ? tokenId : undefined,
+    };
+    const toAsset = 'tez';
+    return await this.swap(fromAsset, toAsset, inputAmount, outputAmount);
+  }
+
+  private async swap(fromAsset: Asset, toAsset: Asset, inputAmount: BigNumber, outputAmount: BigNumber): Promise<TransferParams[]> {
+    const token = this.getToken(fromAsset, toAsset);
+
+    const dex = await this.getDex(token);
+    const account = await this.tezosToolkit.wallet.pkh({ forceRefetch: true });
+
+    const tokenInfo = this.getTokenInfo(token);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const inputDecimals = fromAsset === 'tez' ? tezosMeta.decimals : tokenInfo.metadata!.decimals;
+    const inputAmountNat = converters.tokensAmountToNat(inputAmount, inputDecimals);
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const outputDecimals = toAsset === 'tez' ? tezosMeta.decimals : tokenInfo.metadata!.decimals;
+    const outputAmountNat = converters.tokensAmountToNat(outputAmount, outputDecimals);
+
+    return toAsset === token
+      ? [Dex.tezToTokenPayment(dex.contract, inputAmountNat, outputAmountNat, account)]
+      : await withTokenApprove(
+        this.tezosToolkit,
+        token,
+        account,
+        dex.contract.address,
+        inputAmountNat,
+        [Dex.tokenToTezPayment(dex.contract, inputAmountNat, outputAmountNat, account)]
+      );
+  }
+
   private async getEstimatedInputValue(fromAsset: Asset, toAsset: Asset, outputAmount: BigNumber): Promise<BigNumber | null> {
     try {
-      const toTez = toAsset === 'tez';
-      let token: Token;
-      if (fromAsset !== 'tez')
-        token = fromAsset;
-      else if (toAsset !== 'tez')
-        token = toAsset;
-      else
-        throw new Error('FA12 / FA20 Token should be passed as input or output');
+      const token = this.getToken(fromAsset, toAsset);
+      const tokenInfo = this.getTokenInfo(token);
 
-      const tokenInfo = tokenWhitelistMap.get(this.network)?.get(typeof token.contract === 'string' ? token.contract : token.contract.address);
-      if (!tokenInfo || !tokenInfo.metadata)
-        throw new Error('Token not found');
-
-      const decimals = toTez ? tezosMeta.decimals : tokenInfo.metadata.decimals;
-      const outputValue = outputAmount.multipliedBy(10 ** decimals);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const decimals = toAsset === 'tez' ? tezosMeta.decimals : tokenInfo.metadata!.decimals;
+      const outputAmountNat = converters.tokensAmountToNat(outputAmount, decimals);
       const inputDex = await this.getDex(token);
 
       const estimatedInputValue = await estimateSwap(
@@ -58,15 +104,33 @@ export class TokenSwapService {
         this.factories,
         fromAsset,
         toAsset,
-        { outputValue },
+        { outputValue: outputAmountNat },
         { inputDex }
       );
 
-      return withSlippage(estimatedInputValue, -this.DEFAULT_SLIPPAGE_TOLERANCE).div(10 ** decimals);
+      const inputValueWithToleranceNat = withSlippage(estimatedInputValue, -this.DEFAULT_SLIPPAGE_TOLERANCE);
+      return converters.numberToTokensAmount(inputValueWithToleranceNat, decimals);
     }
     catch {
       return null;
     }
+  }
+
+  private getToken(fromAsset: Asset, toAsset: Asset): Token {
+    if (fromAsset !== 'tez')
+      return fromAsset;
+    else if (toAsset !== 'tez')
+      return toAsset;
+    else
+      throw new Error('FA12 / FA20 Token should be passed as input or output');
+  }
+
+  private getTokenInfo(token: Token) {
+    const tokenInfo = tokenWhitelistMap.get(this.network)?.get(typeof token.contract === 'string' ? token.contract : token.contract.address);
+    if (!tokenInfo || !tokenInfo.metadata)
+      throw new Error('Token not found');
+
+    return tokenInfo;
   }
 
   private createFactories(network: Network): Factories {
