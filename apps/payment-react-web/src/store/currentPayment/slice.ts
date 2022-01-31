@@ -6,7 +6,7 @@ import { Service, Donation, Payment, PaymentType, tokenWhitelistMap } from '@tez
 import { AppState } from '..';
 import { NetworkDonation, NetworkPayment, PaymentInfo, PaymentStatus } from '../../models/payment';
 import { clearBalances, loadBalances } from '../balances';
-import { getSelectTokenBalanceDiff, getSelectTokenBalanceIsEnough } from '../balances/selectors';
+import { getTokenBalanceDiff, getTokenBalanceIsEnough } from '../balances/helpers';
 import { clearSwapTokens, loadSwapTokens } from '../swap';
 import { selectSwapState } from '../swap/selectors';
 import { AppThunkAPI } from '../thunk';
@@ -32,7 +32,7 @@ const canPaymentBeProcessedDirectly = (state: AppState, networkPayment: NetworkP
   return state.currentPaymentState?.status === PaymentStatus.UserConnected
     && state.currentPaymentState.payment.type === PaymentType.Payment
     && networkPayment.amount.isGreaterThan(0)
-    && getSelectTokenBalanceIsEnough(networkPayment.asset?.address, networkPayment.amount)(state);
+    && getTokenBalanceIsEnough(networkPayment.asset?.address, networkPayment.amount, state.balancesState);
 };
 
 const canPaymentBeProcessedWithSwap = (state: AppState, networkPayment: NetworkPayment, swapAsset: string) => {
@@ -46,7 +46,7 @@ const canDonationBeProcessedDirectly = (state: AppState, networkDonation: Networ
   return state.currentPaymentState?.status === PaymentStatus.UserConnected
     && state.currentPaymentState.payment.type === PaymentType.Donation
     && networkDonation.amount.isGreaterThan(0)
-    && getSelectTokenBalanceIsEnough(networkDonation.assetAddress, networkDonation.amount)(state);
+    && getTokenBalanceIsEnough(networkDonation.assetAddress, networkDonation.amount, state.balancesState);
 };
 
 export const loadCurrentPayment = createAsyncThunk<PaymentInfo, void, AppThunkAPI>(
@@ -79,8 +79,8 @@ export const connectWallet = createAsyncThunk<boolean, void, AppThunkAPI>(
 
       const state = getState();
       const payment = state.currentPaymentState?.payment;
-      if (payment && payment.type === PaymentType.Payment && !getSelectTokenBalanceIsEnough(payment.asset?.address, payment.amount)(state)) {
-        const amount = getSelectTokenBalanceDiff(payment.asset?.address, payment.amount)(state).abs();
+      if (payment && payment.type === PaymentType.Payment && !getTokenBalanceIsEnough(payment.asset?.address, payment.amount, state.balancesState)) {
+        const amount = getTokenBalanceDiff(payment.asset?.address, payment.amount, state.balancesState).abs();
 
         await dispatch(loadSwapTokens({
           amount,
@@ -102,7 +102,7 @@ export const pay = createAsyncThunk<boolean, { payment: NetworkPayment, swapAsse
       const state = getState();
       const swapState = selectSwapState(state);
       const inputAmount = payload.swapAsset === '' ? swapState?.tezos : swapState?.tokens?.[payload.swapAsset];
-      const outputAmount = getSelectTokenBalanceDiff(payload.payment.asset?.address, payload.payment.amount)(state).abs();
+      const outputAmount = getTokenBalanceDiff(payload.payment.asset?.address, payload.payment.amount, state.balancesState,).abs();
 
       if (inputAmount) {
         if (payload.payment.asset)

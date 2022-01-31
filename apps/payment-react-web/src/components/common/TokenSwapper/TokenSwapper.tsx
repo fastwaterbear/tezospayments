@@ -5,7 +5,8 @@ import React from 'react';
 
 import { tezosMeta, unknownAssetMeta } from '@tezospayments/common';
 
-import { getSelectTokenBalanceDiff } from '../../../store/balances/selectors';
+import { getTokenBalanceDiff } from '../../../store/balances/helpers';
+import { selectBalancesState } from '../../../store/balances/selectors';
 import { selectTokensState } from '../../../store/currentPayment/selectors';
 import { selectSwapState } from '../../../store/swap/selectors';
 import { useAppSelector } from '../../hooks';
@@ -20,7 +21,8 @@ interface TokenSwapperProps {
 }
 
 export const TokenSwapper = (props: TokenSwapperProps) => {
-  const diff = useAppSelector(getSelectTokenBalanceDiff(props.payAsset, props.amount));
+  const balances = useAppSelector(selectBalancesState);
+  const diff = getTokenBalanceDiff(props.payAsset, props.amount, balances);
   const insufficientAmount = BigNumber.max(diff.multipliedBy(-1), 0);
   const tokens = useAppSelector(selectTokensState);
   const ticker = props.payAsset ? (tokens.get(props.payAsset)?.metadata || unknownAssetMeta).symbol : tezosMeta.symbol;

@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Payment as PaymentModel, Service } from '@tezospayments/common';
 
 import { NetworkPayment, } from '../../../models/payment';
-import { getSelectTokenBalanceIsEnough } from '../../../store/balances/selectors';
+import { getTokenBalanceIsEnough } from '../../../store/balances/helpers';
+import { selectBalancesState } from '../../../store/balances/selectors';
 import { selectUserConnected } from '../../../store/currentPayment/selectors';
 import { selectSwapState } from '../../../store/swap/selectors';
 import { FooterPure } from '../../Footer';
@@ -24,7 +25,8 @@ interface PaymentProps {
 
 export const Payment = (props: PaymentProps) => {
   const connected = useAppSelector(selectUserConnected);
-  const enoughBalance = useAppSelector(getSelectTokenBalanceIsEnough(props.payment.asset?.address, props.payment.amount));
+  const balances = useAppSelector(selectBalancesState);
+  const enoughBalance = getTokenBalanceIsEnough(props.payment.asset?.address, props.payment.amount, balances);
   const swapTokensState = useAppSelector(selectSwapState);
 
   const networkPayment: NetworkPayment = {

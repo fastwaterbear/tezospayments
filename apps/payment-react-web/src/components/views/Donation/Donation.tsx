@@ -4,7 +4,8 @@ import React, { useCallback, useState, useMemo } from 'react';
 import { Donation as DonationModel, Service, tezosMeta } from '@tezospayments/common';
 
 import { NetworkDonation } from '../../../models/payment';
-import { getSelectTokenBalanceIsEnough } from '../../../store/balances/selectors';
+import { getTokenBalanceIsEnough } from '../../../store/balances/helpers';
+import { selectBalancesState } from '../../../store/balances/selectors';
 import { selectTokensState, selectUserConnected } from '../../../store/currentPayment/selectors';
 import { FooterPure } from '../../Footer';
 import { PayButtonPure } from '../../PayButton';
@@ -22,6 +23,7 @@ const zeroAmount = new BigNumber(0);
 export const Donation = (props: DonationProps) => {
   const tokens = useAppSelector(selectTokensState);
   const connected = useAppSelector(selectUserConnected);
+  const balances = useAppSelector(selectBalancesState);
 
   const defaultAmount = useMemo(
     () => props.donation.desiredAmount ? new BigNumber(props.donation.desiredAmount) : zeroAmount,
@@ -53,7 +55,7 @@ export const Donation = (props: DonationProps) => {
     } as NetworkDonation));
   }, [defaultAmount]);
 
-  const enoughBalance = useAppSelector(getSelectTokenBalanceIsEnough(networkDonation.assetAddress, networkDonation.amount));
+  const enoughBalance = getTokenBalanceIsEnough(networkDonation.assetAddress, networkDonation.amount, balances);
   const payButtonDisabled = connected && (networkDonation.amount.isLessThanOrEqualTo(0) || !enoughBalance);
 
   return <View className="donation-view">
