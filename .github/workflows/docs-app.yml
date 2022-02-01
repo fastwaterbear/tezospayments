@@ -68,7 +68,7 @@ jobs:
 
       - name: Push to the ${{ env.publish-branch }} branch
         env:
-          publish-branch: build
+          publish-branch: dist
         uses: peaceiris/actions-gh-pages@068dc23d9710f1ba62e86896f84735d869951305 # v3.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
