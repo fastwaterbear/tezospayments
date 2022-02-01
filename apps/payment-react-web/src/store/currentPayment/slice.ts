@@ -3,10 +3,10 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { Service, Donation, Payment, PaymentType, tokenWhitelistMap } from '@tezospayments/common';
 
-import { AppState } from '..';
 import { NetworkDonation, NetworkPayment, PaymentInfo, PaymentStatus } from '../../models/payment';
 import { clearBalances, loadBalances } from '../balances';
 import { getTokenBalanceDiff, getTokenBalanceIsEnough } from '../balances/helpers';
+import { AppState } from '../index';
 import { clearSwapTokens, loadSwapTokens } from '../swap';
 import { selectSwapState } from '../swap/selectors';
 import { AppThunkAPI } from '../thunk';

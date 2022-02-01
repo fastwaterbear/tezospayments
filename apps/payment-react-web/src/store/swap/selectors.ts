@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
 
-import { AppState } from '..';
+import { AppState } from '../index';
 
 export const selectSwapState = (state: AppState) => state.swapState;
 

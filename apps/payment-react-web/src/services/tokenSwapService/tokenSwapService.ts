@@ -50,7 +50,7 @@ export class TokenSwapService {
       contract: assetAddress,
       id: tokenId !== null ? tokenId : undefined,
     };
-    return await this.swap(fromAsset, toAsset, inputAmount, outputAmount,);
+    return await this.swap(fromAsset, toAsset, inputAmount, outputAmount);
   }
 
   async swapTokenToTez(inputAmount: BigNumber, outputAmount: BigNumber, assetAddress: string, tokenId: number | null): Promise<TransferParams[]> {
