@@ -1,6 +1,13 @@
-@use '../styles/layout-variables.scss';
+@use "../styles/layout-variables.scss";
+
+.pay-button-container {
+  display: flex;
+  margin-bottom: layout-variables.$element-spacing-medium;
+  flex-wrap: wrap;
+  gap: layout-variables.$element-spacing-small;
+  justify-content: center;
+}
 
 .pay-button {
   width: 256px;
-  margin-bottom: layout-variables.$element-spacing-medium;
 }

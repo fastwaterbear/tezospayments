@@ -38,6 +38,7 @@
   "cSpell.words": [
     "airgap",
     "antd",
+    "batchify",
     "bignumber",
     "browserslist",
     "ecadLabs",
@@ -52,6 +53,7 @@
     "mutez",
     "popconfirm",
     "promisify",
+    "quipuswap",
     "secp256k1",
     "serializable",
     "tezos",

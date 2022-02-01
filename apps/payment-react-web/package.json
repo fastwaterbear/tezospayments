@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@quipuswap/sdk": "^3.0.0",
     "@reduxjs/toolkit": "^1.6.2",
     "@tezospayments/react-web-core": "*",
     "react-redux": "^7.2.6"

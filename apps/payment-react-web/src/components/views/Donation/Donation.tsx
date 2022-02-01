@@ -1,14 +1,16 @@
 import BigNumber from 'bignumber.js';
 import React, { useCallback, useState, useMemo } from 'react';
-import { useSelector } from 'react-redux';
 
 import { Donation as DonationModel, Service, tezosMeta } from '@tezospayments/common';
 
 import { NetworkDonation } from '../../../models/payment';
-import { selectTokensState } from '../../../store/currentPayment/selectors';
+import { getTokenBalanceIsEnough } from '../../../store/balances/helpers';
+import { selectBalancesState } from '../../../store/balances/selectors';
+import { selectTokensState, selectUserConnected } from '../../../store/currentPayment/selectors';
 import { FooterPure } from '../../Footer';
 import { PayButtonPure } from '../../PayButton';
 import { ServiceInfoPure } from '../../ServiceInfo';
+import { useAppSelector } from '../../hooks';
 import { View } from '../View';
 import { DonationAmount } from './DonationAmount';
 
@@ -19,7 +21,9 @@ interface DonationProps {
 
 const zeroAmount = new BigNumber(0);
 export const Donation = (props: DonationProps) => {
-  const tokens = useSelector(selectTokensState);
+  const tokens = useAppSelector(selectTokensState);
+  const connected = useAppSelector(selectUserConnected);
+  const balances = useAppSelector(selectBalancesState);
 
   const defaultAmount = useMemo(
     () => props.donation.desiredAmount ? new BigNumber(props.donation.desiredAmount) : zeroAmount,
@@ -51,6 +55,9 @@ export const Donation = (props: DonationProps) => {
     } as NetworkDonation));
   }, [defaultAmount]);
 
+  const enoughBalance = getTokenBalanceIsEnough(networkDonation.assetAddress, networkDonation.amount, balances);
+  const payButtonDisabled = connected && (networkDonation.amount.isLessThanOrEqualTo(0) || !enoughBalance);
+
   return <View className="donation-view">
     <View.Side isRight={false}>
       <ServiceInfoPure service={props.service} />
@@ -58,7 +65,7 @@ export const Donation = (props: DonationProps) => {
     <View.Side isRight={true}>
       <DonationAmount amount={networkDonation.amount} onAmountChange={handleDonationAmountChange}
         asset={networkDonation.assetAddress} onAssetChange={handleAssetChange} service={props.service} />
-      <PayButtonPure networkPayment={networkDonation} text="Donate" disabled={networkDonation.amount.isLessThanOrEqualTo(0)} />
+      <PayButtonPure networkPayment={networkDonation} text="Donate" disabled={payButtonDisabled} />
       <FooterPure />
     </View.Side>
   </View>;

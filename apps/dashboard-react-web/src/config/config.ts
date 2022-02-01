@@ -9,7 +9,7 @@ export const config: AppConfig = {
   ...defaultConfig,
   app: {
     publicUrl: process.env.PUBLIC_URL || '/',
-    name: 'Tezos Payments',
+    name: 'Tezos Payments Dashboard',
     title: 'Tezos Payments',
     version: {
       name: 'Dev Version',

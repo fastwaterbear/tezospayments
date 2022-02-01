@@ -12,7 +12,7 @@ export const Header = () => {
   const currentAccount = useAppSelector(selectCurrentAccount);
 
   return <header className="header">
-    <Link className="header__title" to={config.routers.overview}>{config.app.name}</Link>
+    <Link className="header__title" to={config.routers.overview}>{config.app.title}</Link>
     {currentAccount && <AccountDropDownPure />}
   </header>;
 };

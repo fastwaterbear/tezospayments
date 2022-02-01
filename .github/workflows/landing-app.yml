@@ -32,7 +32,6 @@ jobs:
         with:
           node-version: ${{ env.node-version }}
           cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
 
       - name: Update npm if needed
         if: ${{ env.node-version < 15 }}
@@ -42,9 +41,6 @@ jobs:
         run: |
           node --version
           npm --version
-
-      - name: Define required environment vars
-        run: echo "REACT_APP_COMMIT_SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
 
       - name: Install npm packages
         run: npm ci

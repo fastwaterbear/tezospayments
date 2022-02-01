@@ -1,7 +1,10 @@
 {
   "name": "tezospayments",
   "workspaces": [
-    "apps/*",
+    "apps/dashboard-react-web",
+    "apps/demo-shop-next-js",
+    "apps/landing",
+    "apps/payment-react-web",
     "packages/js/*"
   ],
   "engines": {

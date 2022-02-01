@@ -1,9 +1,11 @@
 import { RequestPermissionInput, AbortedBeaconError } from '@airgap/beacon-sdk';
+import { TransferParams } from '@quipuswap/sdk';
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit, WalletOperation } from '@taquito/taquito';
+import BigNumber from 'bignumber.js';
 
-import { Donation, Payment, Network, memoize } from '@tezospayments/common';
-import { converters, ServicesProvider } from '@tezospayments/react-web-core';
+import { Donation, Payment, Network, memoize, Token } from '@tezospayments/common';
+import { BalancesProvider, converters, ServicesProvider } from '@tezospayments/react-web-core';
 
 import { NetworkDonation, NetworkPayment } from '../../models/payment';
 import { PaymentInfo } from '../../models/payment/paymentInfo';
@@ -20,6 +22,7 @@ interface LocalPaymentServiceOptions {
   readonly tezosToolkit: TezosToolkit;
   readonly tezosWallet: BeaconWallet;
   readonly servicesProvider: ServicesProvider;
+  readonly balancesProvider: BalancesProvider;
 }
 
 export class LocalPaymentService {
@@ -28,12 +31,14 @@ export class LocalPaymentService {
   protected readonly tezosToolkit: TezosToolkit;
   protected readonly tezosWallet: BeaconWallet;
   protected readonly servicesProvider: ServicesProvider;
+  protected readonly balancesProvider: BalancesProvider;
   protected readonly urlRawPaymentInfoParser = new UrlRawPaymentInfoParser();
   protected readonly paymentProviders: readonly PaymentProvider[] = [
     new SerializedPaymentBase64Provider()
   ];
   protected readonly paymentSender;
   protected readonly donationSender;
+  protected accountPKH: string | null = null;
 
   constructor(options: LocalPaymentServiceOptions) {
     this.network = options.network;
@@ -41,6 +46,7 @@ export class LocalPaymentService {
     this.tezosToolkit = options.tezosToolkit;
     this.tezosWallet = options.tezosWallet;
     this.servicesProvider = options.servicesProvider;
+    this.balancesProvider = options.balancesProvider;
 
     this.paymentSender = new PaymentSender(this.network, this.tezosToolkit, this.tezosWallet);
     this.donationSender = new DonationSender(this.network, this.tezosToolkit, this.tezosWallet);
@@ -65,8 +71,37 @@ export class LocalPaymentService {
       : paymentProvider.getDonation(currentRawPaymentInfo);
   }
 
-  async pay(payment: NetworkPayment): Promise<boolean> {
-    return this.send(() => this.paymentSender.send(payment));
+  async connectWallet() {
+    try {
+      await this.tezosWallet.client.clearActiveAccount();
+      const canceled = await this.requestPermissions({ network: { type: converters.networkToBeaconNetwork(this.network) } });
+      this.accountPKH = canceled ? null : await this.tezosWallet.getPKH();
+
+      return !canceled;
+    } catch (error: unknown) {
+      if (error instanceof AbortedBeaconError)
+        return false;
+
+      throw error;
+    }
+  }
+
+  async getTezosBalance(): Promise<BigNumber> {
+    if (!this.accountPKH)
+      return new BigNumber(0);
+
+    return await this.balancesProvider.getTezosBalance(this.accountPKH);
+  }
+
+  async getTokenBalance(token: Token): Promise<BigNumber> {
+    if (!this.accountPKH)
+      return new BigNumber(0);
+
+    return this.balancesProvider.getTokenBalance(this.accountPKH, token);
+  }
+
+  async pay(payment: NetworkPayment, initialTransfers?: TransferParams[]): Promise<boolean> {
+    return this.send(() => this.paymentSender.send(payment, initialTransfers));
   }
 
   async donate(donation: NetworkDonation): Promise<boolean> {
@@ -86,11 +121,6 @@ export class LocalPaymentService {
 
   protected async send(getSendOperation: () => Promise<WalletOperation>): Promise<boolean> {
     try {
-      await this.tezosWallet.client.clearActiveAccount();
-      const canceled = await this.requestPermissions({ network: { type: converters.networkToBeaconNetwork(this.network) } });
-      if (canceled)
-        return false;
-
       const operation = await getSendOperation();
 
       await this.waitConfirmation(operation);
