@@ -11,7 +11,7 @@ export const selectTokensState = createSelector(
   selectPaymentState,
   paymentState => {
     const network = paymentState?.service?.network;
-    return (network && tokenWhitelistMap.get(network)) || optimization.emptyMap as Map<string, Token>;
+    return (network && tokenWhitelistMap.get(network)) || optimization.emptyMap as ReadonlyMap<string, Token>;
   }
 );
 

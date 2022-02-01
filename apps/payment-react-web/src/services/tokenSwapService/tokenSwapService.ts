@@ -1,13 +1,6 @@
 import {
-  Asset,
-  estimateSwap,
-  withSlippage,
-  Factories,
-  findDex,
-  FoundDex,
-  Token,
-  Dex,
-  withTokenApprove
+  Asset, estimateSwap, withSlippage, Factories, findDex, FoundDex,
+  Token, Dex, withTokenApprove
 } from '@quipuswap/sdk';
 import { TezosToolkit, TransferParams } from '@taquito/taquito';
 import BigNumber from 'bignumber.js';
@@ -15,8 +8,9 @@ import BigNumber from 'bignumber.js';
 import { converters, Network, networks, tezosMeta, tokenWhitelistMap } from '@tezospayments/common';
 
 export class TokenSwapService {
+  private static readonly DEFAULT_SLIPPAGE_TOLERANCE = 0.005;
+
   private readonly factories: Factories;
-  private readonly DEFAULT_SLIPPAGE_TOLERANCE = 0.005;
   private readonly dexByToken: Map<string, FoundDex> = new Map();
 
   constructor(
@@ -108,7 +102,7 @@ export class TokenSwapService {
         { inputDex }
       );
 
-      const inputValueWithToleranceNat = withSlippage(estimatedInputValue, -this.DEFAULT_SLIPPAGE_TOLERANCE);
+      const inputValueWithToleranceNat = withSlippage(estimatedInputValue, -TokenSwapService.DEFAULT_SLIPPAGE_TOLERANCE);
       return converters.numberToTokensAmount(inputValueWithToleranceNat, decimals);
     }
     catch {
