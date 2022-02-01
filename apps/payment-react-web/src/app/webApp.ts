@@ -2,19 +2,21 @@ import { ColorMode } from '@airgap/beacon-sdk';
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit } from '@taquito/taquito';
 
-import { Network, networks } from '@tezospayments/common';
+import { Network, networks, ReadOnlySigner } from '@tezospayments/common';
 import {
   BetterCallDevBlockchainUrlExplorer, BetterCallDevDataProvider, BlockchainUrlExplorer,
-  ServicesProvider, TzKTBlockchainUrlExplorer, TzKTDataProvider, TzStatsBlockchainUrlExplorer
+  ServicesProvider, TezosNodeDataProvider, TzKTBlockchainUrlExplorer, TzKTDataProvider, TzStatsBlockchainUrlExplorer
 } from '@tezospayments/react-web-core';
 
 import { config } from '../config';
+import { TokenSwapService } from '../services';
 import { LocalPaymentService } from '../services/localPaymentService';
 import { AppStore } from '../store';
 import { ReactAppContext } from './reactAppContext';
 
 interface AppServices {
   readonly localPaymentService: LocalPaymentService;
+  readonly tokenSwapService: TokenSwapService;
 }
 
 export class WebApp {
@@ -31,6 +33,7 @@ export class WebApp {
 
     const networkConfig = config.tezos.networks[this.network.name];
     this.tezosToolkit = new TezosToolkit(networkConfig.rpcUrls[networkConfig.default.rpc]);
+    this.tezosToolkit.setSignerProvider(new ReadOnlySigner());
     this.tezosToolkit.setWalletProvider(this.tezosWallet);
 
     this.services = this.createServices();
@@ -51,6 +54,7 @@ export class WebApp {
 
   private createServices(): AppServices {
     const servicesProvider = this.createServicesProvider(this.network);
+    const balancesProvider = new TezosNodeDataProvider(this.tezosToolkit);
 
     return {
       localPaymentService: new LocalPaymentService({
@@ -58,8 +62,10 @@ export class WebApp {
         store: this.store,
         tezosToolkit: this.tezosToolkit,
         tezosWallet: this.tezosWallet,
-        servicesProvider
-      })
+        servicesProvider,
+        balancesProvider
+      }),
+      tokenSwapService: new TokenSwapService(this.network, this.tezosToolkit)
     };
   }
 

@@ -2,10 +2,10 @@ import { ColorMode } from '@airgap/beacon-sdk';
 import { BeaconWallet } from '@taquito/beacon-wallet';
 import { TezosToolkit } from '@taquito/taquito';
 
-import { EventEmitter, Network, networks, PublicEventEmitter } from '@tezospayments/common';
+import { EventEmitter, Network, networks, PublicEventEmitter, ReadOnlySigner } from '@tezospayments/common';
 import {
   ServicesProvider, TzKTDataProvider, BetterCallDevDataProvider,
-  BlockchainUrlExplorer, TzStatsBlockchainUrlExplorer, BetterCallDevBlockchainUrlExplorer, TzKTBlockchainUrlExplorer
+  BlockchainUrlExplorer, TzStatsBlockchainUrlExplorer, BetterCallDevBlockchainUrlExplorer, TzKTBlockchainUrlExplorer, TezosNodeDataProvider
 } from '@tezospayments/react-web-core';
 
 import { config } from '../config';
@@ -17,7 +17,6 @@ import { selectCurrentAccount } from '../store/accounts/selectors';
 import { clearBalances, loadBalances } from '../store/balances/slice';
 import { clearServices, loadServices } from '../store/services/slice';
 import type { ReactAppContext } from './reactAppContext';
-import { ReadOnlySigner } from './readOnlySigner';
 
 interface AppServices {
   readonly accountsService: AccountsService;
@@ -117,9 +116,10 @@ export class WebApp {
   private createServices(): AppServices {
     const networkConfig = config.tezos.networks[this.network.name];
     const servicesProvider = this.createServicesProvider(this.network);
+    const balancesProvider = new TezosNodeDataProvider(this.tezosToolkit);
 
     return {
-      accountsService: new AccountsService(this.tezosToolkit, this.tezosWallet.client),
+      accountsService: new AccountsService(this.tezosWallet.client, balancesProvider),
       servicesService: new ServicesService(
         this.tezosToolkit,
         servicesProvider,

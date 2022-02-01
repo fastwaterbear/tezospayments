@@ -2,8 +2,9 @@ import React from 'react';
 
 import { combineClassNames } from '@tezospayments/common';
 
-import { CopyButtonPure } from './CopyButton';
-import { ExternalLink } from './ExternalLink';
+import { CopyButtonPure } from '../CopyButton';
+import { ExternalLink } from '../ExternalLink';
+
 import './BlockchainLink.scss';
 
 export enum BlockchainLinkOption {

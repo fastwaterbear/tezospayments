@@ -4,12 +4,13 @@
 @use '../../../styles/mixins.scss';
 
 .total-amount {
-  display: flex;
-  margin-bottom: 100px;
-
   @include mixins.compact-view() {
     margin-bottom: layout-variables.$element-spacing-medium;
   }
+}
+
+.total-amount__amount-container {
+  display: flex;
 }
 
 .total-amount__value {

@@ -1,0 +1,73 @@
+@use 'sass:math';
+@use '../../../styles/layout-variables.scss';
+@use '../../../styles/colors.scss';
+@use '../../../styles/mixins.scss';
+
+$-input-font-size: 16px;
+$-icon-size: 22px;
+
+.token-swapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.token-swapper__swap-line {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+  gap: math.div(layout-variables.$element-spacing-small, 2);
+}
+
+.token-swapper__input-container {
+  display: flex;
+  gap: math.div(layout-variables.$element-spacing-small, 2);
+  height: 32px;
+  align-items: center;
+  justify-items: center;
+}
+
+.token-swapper__container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+  align-items: center;
+  height: 100%;
+  padding: 0 math.div(layout-variables.$element-spacing-small, 2);
+  font-size: 12px;
+  line-height: 1.1;
+  border: 1px solid #d9d9d9;
+  color: colors.$character-primary !important;
+  background-color: #fafafa;
+}
+
+.token-swapper__currency {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  gap: math.div(layout-variables.$element-spacing-small, 2);
+}
+
+.token-swapper__icon {
+  height: $-icon-size;
+  width: $-icon-size;
+  margin-left: 8px;
+}
+
+.token-swapper-menu-item {
+  display: flex;
+  align-items: center;
+  text-align: right;
+}
+
+.token-swapper-menu-item__icon {
+  height: $-icon-size;
+  width: $-icon-size;
+  margin-right: 8px;
+}
+
+.token-swapper-menu-item__ticker {
+  font-weight: 500;
+  margin-right: 4px;
+}

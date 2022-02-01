@@ -72,7 +72,7 @@ export class DonationSender {
     encodedPayload: string,
   ): Promise<WalletOperation> {
     const tokenContract = await this.tezosToolkit.wallet.at<Fa20Contract<Wallet>>(token.contractAddress);
-    const userAddress = await this.tezosToolkit.wallet.pkh();
+    const userAddress = await this.tezosToolkit.wallet.pkh({ forceRefetch: true });
 
     return await this.tezosToolkit.wallet.batch()
       .withContractCall(tokenContract.methods.update_operators([{
