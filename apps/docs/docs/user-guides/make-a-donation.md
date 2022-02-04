@@ -21,6 +21,6 @@ If you already have it, you can send donations.
 3. You can enter a message for the author, but it’s optional.
 4. Click **Donate**.
 5. Choose the wallet that you are using.
-6. In your wallet, click **Connect / Approve / Confirm**.
+6. In your wallet, click **Connect** / **Approve** / **Confirm**.
 
 Once you approve the connection, the balance check will begin. After that, if you have enough amounts to donate the entered value, your wallet will prompt you to confirm an operation. Confirm the operation, and the donation will be made after a couple of minutes.

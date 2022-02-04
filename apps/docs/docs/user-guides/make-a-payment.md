@@ -19,7 +19,7 @@ If you already have it, you can pay payments.
 1. Check the payment information, check the payment sender, verify its name, links. Verify the amount and currency of the payment. If everything is good, go to the next step, otherwise close the page, and contact the payment sender.
 2. Click **Pay**.
 3. Choose the wallet that you are using.
-4. In your wallet, click **Connect / Approve / Confirm**.
+4. In your wallet, click **Connect** / **Approve** / **Confirm**.
 
 Once you approve the connection, the balance check will begin. After that, three options may occur:
 1. You have enough funds to pay the payment.

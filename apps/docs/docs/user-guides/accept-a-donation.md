@@ -16,7 +16,7 @@ You need some amount of Tezos to pay network fees while communicating with your 
 [https://dashboard.tezospayments.com](https://dashboard.tezospayments.com)
 2. Click **Connect**.
 3. Choose the wallet that you are using.
-4. In your wallet, click **Connect / Approve / Confirm**.
+4. In your wallet, click **Connect** / **Approve** / **Confirm**.
 
 Once you approve the connection, you'll be connected to the Tezos Payments Dashboard application and ready to use that.
 
