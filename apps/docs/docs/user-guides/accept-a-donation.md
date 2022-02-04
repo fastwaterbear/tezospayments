@@ -11,7 +11,7 @@ You need some amount of Tezos to pay network fees while communicating with your 
 
 :::
 
-### Step 1: Connect a Tezos account to the Dashboard application
+## Step 1: Connect a Tezos account to the Dashboard application
 1. Open the dashboard app by the following URL:  
 [https://dashboard.tezospayments.com](https://dashboard.tezospayments.com)
 2. Click **Connect**.
@@ -20,7 +20,7 @@ You need some amount of Tezos to pay network fees while communicating with your 
 
 Once you approve the connection, you'll be connected to the Tezos Payments Dashboard application and ready to use that.
 
-### Step 2: Create a service
+## Step 2: Create a service
 Service is a component that accepts funds from your contributors and sends them to you. Also, the service shows your contributors public information about you.
 
 1. Click **Create Service** or open the Create Service page by this URL:  
@@ -58,13 +58,13 @@ Service is a component that accepts funds from your contributors and sends them 
 6. Wait while the service is being created. On average, it takes a couple of minutes.
 7. Once the service has been created, you can go to the next step.
 
-### Step 3: Share a donation link with your subscribes
+## Step 3: Share a donation link with your subscribes
 1. Click **Accept Payments** or open the Accept Payments page by the following URL:  
 [https://dashboard.tezospayments.com/accept](https://dashboard.tezospayments.com/accept)
 2. Choose the service through that donations will be made.
 3. On the right area of the page, you’ll find a personal donation link.  
 Copy and share this link on your social media to start accepting donations.
 
-### View donations
+## View donations
 You can view donations on the Operations page by this link:  
 [https://dashboard.tezospayments.com/operations](https://dashboard.tezospayments.com/operations)

@@ -11,7 +11,7 @@ You need some amount of Tezos to pay network fees while communicating with your 
 
 :::
 
-### Step 1: Connect a Tezos account to the Dashboard application
+## Step 1: Connect a Tezos account to the Dashboard application
 1. Open the dashboard app by the following URL:  
 [https://dashboard.tezospayments.com](https://dashboard.tezospayments.com)
 2. Click **Connect**.
@@ -20,7 +20,7 @@ You need some amount of Tezos to pay network fees while communicating with your 
 
 Once you approve the connection, you'll be connected to the Tezos Payments Dashboard application and ready to use that.
 
-### Step 2: Create a service
+## Step 2: Create a service
 Service is a component that accepts funds from your customers and sends them to you. Also, the service keeps public information about your online shop (your site, social media account, etc.) and shows it to your customers when they make payments.
 
 1. Click **Create Service** or open the Create Service page by this URL:  
@@ -60,7 +60,7 @@ Service is a component that accepts funds from your customers and sends them to 
 6. Wait while the service is being created. Usually, it takes a couple of minutes.
 7. Once the service has been created, you can go to the next step.
 
-### Step 3: Create a payment
+## Step 3: Create a payment
 You can create a payment by two approaches:
 
 1. Manually, using the Dashboard application. It's suitable for those who sell products manually using social media and don't have their own sites.
@@ -85,7 +85,7 @@ Next, we'll look a the Manual approach. Read about the second approach in the [D
 
 After that, your customer can make the payment by your generated link.
 
-### Step 4: Track a payment
+## Step 4: Track a payment
 When your customer make a payment, you can check it on the Operations page by this link:  
 [https://dashboard.tezospayments.com/operations](https://dashboard.tezospayments.com/operations)  
 Find an operation by the payment id. Make sure that the operation has completed status.
