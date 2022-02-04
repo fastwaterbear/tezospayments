@@ -44,7 +44,7 @@ Service is a component that accepts funds from your customers and sends them to 
     Please be careful when you fill in this information.
 
     :::
-    
+
 3. Verify the filled information for correctness.
 4. Click **Create Service**.
 5. Your wallet will prompt you to confirm the operation, which is an interaction with the Tezos Payments Factory Contract.
