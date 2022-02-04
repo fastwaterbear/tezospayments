@@ -56,7 +56,7 @@ Service is a component that accepts funds from your customers and sends them to 
     :::
     
     Once you confirm, you'll launch creating the service.
-    
+
 6. Wait while the service is being created. Usually, it takes a couple of minutes.
 7. Once the service has been created, you can go to the next step.
 
