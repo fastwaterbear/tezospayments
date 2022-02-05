@@ -20,7 +20,7 @@ public class TezosPaymentsTests
     {
         // Arrange
         var options = tezosPaymentsOptionsFactory();
-        var tezosPayments = new TezosPayments(
+        var tezosPaymentsClient = new TezosPaymentsClient(
             options.ServiceContractAddress,
             options.ApiSecretKey,
             new TezosPaymentsDefaultOptions()
@@ -32,7 +32,7 @@ public class TezosPaymentsTests
         var paymentCreateParameters = paymentCreateParametersFactory();
         var expectedPayment = expectedPaymentFactory();
         // Act
-        var payment = await tezosPayments.CreatePaymentAsync(paymentCreateParameters);
+        var payment = await tezosPaymentsClient.CreatePaymentAsync(paymentCreateParameters);
         // Assert
         Assert.That(payment, Is.EqualTo(expectedPayment), caseMessage);
     }

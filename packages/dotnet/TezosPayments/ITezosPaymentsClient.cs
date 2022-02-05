@@ -2,7 +2,7 @@ using TezosPayments.Models;
 
 namespace TezosPayments;
 
-public interface ITezosPayments
+public interface ITezosPaymentsClient
 {
     string ServiceContractAddress { get; }
     Network Network { get; }

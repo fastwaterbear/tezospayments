@@ -9,7 +9,7 @@ using TezosPayments.Validation;
 
 namespace TezosPayments;
 
-public class TezosPayments : ITezosPayments
+public class TezosPaymentsClient : ITezosPaymentsClient
 {
     public string ServiceContractAddress { get; }
     public Network Network { get; }
@@ -19,7 +19,7 @@ public class TezosPayments : ITezosPayments
     protected IPaymentUrlFactoryProvider PaymentUrlFactoryProvider { get; }
     protected IPaymentValidator PaymentValidator { get; }
 
-    public TezosPayments(
+    public TezosPaymentsClient(
         string serviceContractAddress,
         string apiSecretKey,
         TezosPaymentsDefaultOptions? defaultOptions = default,
@@ -35,7 +35,7 @@ public class TezosPayments : ITezosPayments
     {
     }
 
-    public TezosPayments(
+    public TezosPaymentsClient(
         string serviceContractAddress,
         IPaymentSigner signer,
         IPaymentUrlFactoryProvider paymentUrlFactoryProvider,
@@ -44,7 +44,7 @@ public class TezosPayments : ITezosPayments
     {
     }
 
-    public TezosPayments(
+    public TezosPaymentsClient(
         string serviceContractAddress,
         TezosPaymentsDefaultOptions defaultOptions,
         IPaymentSigner signer,
@@ -54,7 +54,7 @@ public class TezosPayments : ITezosPayments
     {
     }
 
-    public TezosPayments(
+    public TezosPaymentsClient(
         string serviceContractAddress,
         DefaultPaymentParameters defaultPaymentParameters,
         IPaymentSigner signer,
@@ -64,7 +64,7 @@ public class TezosPayments : ITezosPayments
     {
     }
 
-    public TezosPayments(
+    public TezosPaymentsClient(
         string serviceContractAddress,
         TezosPaymentsDefaultOptions? defaultOptions,
         DefaultPaymentParameters? defaultPaymentParameters,

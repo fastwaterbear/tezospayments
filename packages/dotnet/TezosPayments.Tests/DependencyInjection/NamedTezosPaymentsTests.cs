@@ -47,16 +47,16 @@ public class NamedTezosPaymentsTests
         using var scope = provider.CreateScope();
         var tezosPaymentsProvider = scope.ServiceProvider.GetRequiredService<ITezosPaymentsProvider>();
 
-        var tezosPayments = new HashSet<ITezosPayments>();
+        var tezosPaymentsClients = new HashSet<ITezosPaymentsClient>();
         for (int i = 0; i < requestCount; i++)
-            tezosPayments.Add(tezosPaymentsProvider.GetTezosPayments(name));
+            tezosPaymentsClients.Add(tezosPaymentsProvider.GetClient(name));
 
-        var expectedTezosPayments = scope.ServiceProvider.GetServices<NamedTezosPaymentsServiceContainer<ITezosPayments>>()
+        var expectedTezosPaymentsClients = scope.ServiceProvider.GetServices<NamedTezosPaymentsServiceContainer<ITezosPaymentsClient>>()
            .Select(container => container.ServiceInstance);
         // Assert
-        Assert.That(tezosPayments, Is.EquivalentTo(expectedTezosPayments).And.Count.EqualTo(1));
-        Assert.That(tezosPayments.Select(tp => tp.ServiceContractAddress), Is.All.EqualTo(TezosPaymentsOptions.ServiceContractAddress));
-        Assert.That(tezosPayments.Select(tp => tp.Network), Is.All.EqualTo(Constants.DefaultNetwork));
+        Assert.That(tezosPaymentsClients, Is.EquivalentTo(expectedTezosPaymentsClients).And.Count.EqualTo(1));
+        Assert.That(tezosPaymentsClients.Select(tp => tp.ServiceContractAddress), Is.All.EqualTo(TezosPaymentsOptions.ServiceContractAddress));
+        Assert.That(tezosPaymentsClients.Select(tp => tp.Network), Is.All.EqualTo(Constants.DefaultNetwork));
     }
 
     [Test]
@@ -73,19 +73,19 @@ public class NamedTezosPaymentsTests
         using var scope = provider.CreateScope();
         var tezosPaymentsProvider = scope.ServiceProvider.GetRequiredService<ITezosPaymentsProvider>();
 
-        var tezosPayments = new HashSet<ITezosPayments>();
+        var tezosPaymentsClients = new HashSet<ITezosPaymentsClient>();
         for (int i = 0; i < names.Count; i++)
         {
             for (int j = 0; j < requestCount; j++)
-                tezosPayments.Add(tezosPaymentsProvider.GetTezosPayments(names[i]));
+                tezosPaymentsClients.Add(tezosPaymentsProvider.GetClient(names[i]));
         }
 
-        var expectedTezosPayments = scope.ServiceProvider.GetServices<NamedTezosPaymentsServiceContainer<ITezosPayments>>()
+        var expectedTezosPaymentsClients = scope.ServiceProvider.GetServices<NamedTezosPaymentsServiceContainer<ITezosPaymentsClient>>()
             .Select(container => container.ServiceInstance);
         // Assert
-        Assert.That(tezosPayments, Is.Unique.And.EquivalentTo(expectedTezosPayments).And.Count.EqualTo(names.Count));
-        Assert.That(tezosPayments.Select(tp => tp.ServiceContractAddress), Is.All.EqualTo(TezosPaymentsOptions.ServiceContractAddress));
-        Assert.That(tezosPayments.Select(tp => tp.Network), Is.All.EqualTo(Constants.DefaultNetwork));
+        Assert.That(tezosPaymentsClients, Is.Unique.And.EquivalentTo(expectedTezosPaymentsClients).And.Count.EqualTo(names.Count));
+        Assert.That(tezosPaymentsClients.Select(tp => tp.ServiceContractAddress), Is.All.EqualTo(TezosPaymentsOptions.ServiceContractAddress));
+        Assert.That(tezosPaymentsClients.Select(tp => tp.Network), Is.All.EqualTo(Constants.DefaultNetwork));
     }
 
     [Test]
@@ -98,17 +98,17 @@ public class NamedTezosPaymentsTests
         Services.AddTezosPayments(name, TezosPaymentsOptions);
         var provider = Services.BuildServiceProvider();
 
-        var tezosPayments = new HashSet<ITezosPayments>();
+        var tezosPaymentsClients = new HashSet<ITezosPaymentsClient>();
         for (int i = 0; i < requestCount; i++)
         {
             using var scope = provider.CreateScope();
             var tezosPaymentsProvider = scope.ServiceProvider.GetRequiredService<ITezosPaymentsProvider>();
-            tezosPayments.Add(tezosPaymentsProvider.GetTezosPayments(name));
+            tezosPaymentsClients.Add(tezosPaymentsProvider.GetClient(name));
         }
         // Assert
-        Assert.That(tezosPayments, Has.Count.EqualTo(requestCount));
-        Assert.That(tezosPayments.Select(tp => tp.ServiceContractAddress), Is.All.EqualTo(TezosPaymentsOptions.ServiceContractAddress));
-        Assert.That(tezosPayments.Select(tp => tp.Network), Is.All.EqualTo(Constants.DefaultNetwork));
+        Assert.That(tezosPaymentsClients, Has.Count.EqualTo(requestCount));
+        Assert.That(tezosPaymentsClients.Select(tp => tp.ServiceContractAddress), Is.All.EqualTo(TezosPaymentsOptions.ServiceContractAddress));
+        Assert.That(tezosPaymentsClients.Select(tp => tp.Network), Is.All.EqualTo(Constants.DefaultNetwork));
     }
 
     [Test]
@@ -122,16 +122,16 @@ public class NamedTezosPaymentsTests
         var provider = Services.BuildServiceProvider();
 
         using var scope = provider.CreateScope();
-        var tezosPayments = new HashSet<ITezosPayments>();
+        var tezosPaymentsClients = new HashSet<ITezosPaymentsClient>();
         for (int i = 0; i < requestCount; i++)
         {
             var tezosPaymentsProvider = scope.ServiceProvider.GetRequiredService<ITezosPaymentsProvider>();
-            tezosPayments.Add(tezosPaymentsProvider.GetTezosPayments(name));
+            tezosPaymentsClients.Add(tezosPaymentsProvider.GetClient(name));
         }
         // Assert
-        Assert.That(tezosPayments, Has.Count.EqualTo(requestCount));
-        Assert.That(tezosPayments.Select(tp => tp.ServiceContractAddress), Is.All.EqualTo(TezosPaymentsOptions.ServiceContractAddress));
-        Assert.That(tezosPayments.Select(tp => tp.Network), Is.All.EqualTo(Constants.DefaultNetwork));
+        Assert.That(tezosPaymentsClients, Has.Count.EqualTo(requestCount));
+        Assert.That(tezosPaymentsClients.Select(tp => tp.ServiceContractAddress), Is.All.EqualTo(TezosPaymentsOptions.ServiceContractAddress));
+        Assert.That(tezosPaymentsClients.Select(tp => tp.Network), Is.All.EqualTo(Constants.DefaultNetwork));
     }
 
     [Test]
@@ -144,20 +144,20 @@ public class NamedTezosPaymentsTests
         Services.AddTezosPayments(name, TezosPaymentsOptions, ServiceLifetime.Singleton);
         var provider = Services.BuildServiceProvider();
 
-        var tezosPayments = new HashSet<ITezosPayments>();
+        var tezosPaymentsClients = new HashSet<ITezosPaymentsClient>();
         for (int i = 0; i < requestCount; i++)
         {
             using var scope = provider.CreateScope();
             var tezosPaymentsProvider = scope.ServiceProvider.GetRequiredService<ITezosPaymentsProvider>();
-            tezosPayments.Add(tezosPaymentsProvider.GetTezosPayments(name));
+            tezosPaymentsClients.Add(tezosPaymentsProvider.GetClient(name));
         }
 
-        var expectedTezosPayments = provider.GetServices<NamedTezosPaymentsServiceContainer<ITezosPayments>>()
+        var expectedTezosPaymentsClients = provider.GetServices<NamedTezosPaymentsServiceContainer<ITezosPaymentsClient>>()
             .Select(container => container.ServiceInstance);
         // Assert
-        Assert.That(tezosPayments, Is.EquivalentTo(expectedTezosPayments).And.Count.EqualTo(1));
-        Assert.That(tezosPayments.Select(tp => tp.ServiceContractAddress), Is.All.EqualTo(TezosPaymentsOptions.ServiceContractAddress));
-        Assert.That(tezosPayments.Select(tp => tp.Network), Is.All.EqualTo(Constants.DefaultNetwork));
+        Assert.That(tezosPaymentsClients, Is.EquivalentTo(expectedTezosPaymentsClients).And.Count.EqualTo(1));
+        Assert.That(tezosPaymentsClients.Select(tp => tp.ServiceContractAddress), Is.All.EqualTo(TezosPaymentsOptions.ServiceContractAddress));
+        Assert.That(tezosPaymentsClients.Select(tp => tp.Network), Is.All.EqualTo(Constants.DefaultNetwork));
     }
 
     [Test]
@@ -176,9 +176,9 @@ public class NamedTezosPaymentsTests
         var provider = Services.BuildServiceProvider();
 
         using var scope = provider.CreateScope();
-        var defaultTezosPayments = scope.ServiceProvider.GetService<ITezosPayments>();
+        var defaultTezosPaymentsClient = scope.ServiceProvider.GetService<ITezosPaymentsClient>();
         // Assert
-        Assert.That(defaultTezosPayments, Is.Null);
+        Assert.That(defaultTezosPaymentsClient, Is.Null);
     }
     [Test]
     public void GetDefaultAndNamedTezosPayments_ExpectDifferentInstances()
@@ -195,24 +195,24 @@ public class NamedTezosPaymentsTests
         using var scope = provider.CreateScope();
         var tezosPaymentsProvider = scope.ServiceProvider.GetRequiredService<ITezosPaymentsProvider>();
 
-        var tezosPayments = new HashSet<ITezosPayments>();
+        var tezosPaymentsClients = new HashSet<ITezosPaymentsClient>();
         for (int i = 0; i < names.Count; i++)
         {
             for (int j = 0; j < requestCount; j++)
             {
-                tezosPayments.Add(scope.ServiceProvider.GetRequiredService<ITezosPayments>());
-                tezosPayments.Add(tezosPaymentsProvider.GetTezosPayments(names[i]));
+                tezosPaymentsClients.Add(scope.ServiceProvider.GetRequiredService<ITezosPaymentsClient>());
+                tezosPaymentsClients.Add(tezosPaymentsProvider.GetClient(names[i]));
             }
         }
 
-        var expectedTezosPayments = scope.ServiceProvider.GetServices<ITezosPayments>()
-            .Concat(scope.ServiceProvider.GetServices<NamedTezosPaymentsServiceContainer<ITezosPayments>>()
+        var expectedTezosPaymentsClients = scope.ServiceProvider.GetServices<ITezosPaymentsClient>()
+            .Concat(scope.ServiceProvider.GetServices<NamedTezosPaymentsServiceContainer<ITezosPaymentsClient>>()
                 .Select(container => container.ServiceInstance)
             );
         // Assert
-        Assert.That(tezosPayments, Is.Unique.And.EquivalentTo(expectedTezosPayments).And.Count.EqualTo(names.Count + 1));
-        Assert.That(tezosPayments.Select(tp => tp.ServiceContractAddress), Is.All.EqualTo(TezosPaymentsOptions.ServiceContractAddress));
-        Assert.That(tezosPayments.Select(tp => tp.Network), Is.All.EqualTo(Constants.DefaultNetwork));
+        Assert.That(tezosPaymentsClients, Is.Unique.And.EquivalentTo(expectedTezosPaymentsClients).And.Count.EqualTo(names.Count + 1));
+        Assert.That(tezosPaymentsClients.Select(tp => tp.ServiceContractAddress), Is.All.EqualTo(TezosPaymentsOptions.ServiceContractAddress));
+        Assert.That(tezosPaymentsClients.Select(tp => tp.Network), Is.All.EqualTo(Constants.DefaultNetwork));
     }
 
     [Test]
@@ -262,23 +262,23 @@ public class NamedTezosPaymentsTests
         using var scope = provider.CreateScope();
         var tezosPaymentsProvider = scope.ServiceProvider.GetRequiredService<ITezosPaymentsProvider>();
 
-        var tezosPayments = new HashSet<ITezosPayments>();
+        var tezosPaymentsClients = new HashSet<ITezosPaymentsClient>();
         for (int i = 0; i < nameOptionsTuples.Count; i++)
         {
             for (int j = 0; j < requestCount; j++)
-                tezosPayments.Add(tezosPaymentsProvider.GetTezosPayments(nameOptionsTuples[i].name));
+                tezosPaymentsClients.Add(tezosPaymentsProvider.GetClient(nameOptionsTuples[i].name));
         }
 
-        var expectedTezosPayments = scope.ServiceProvider.GetServices<NamedTezosPaymentsServiceContainer<ITezosPayments>>()
+        var expectedTezosPaymentsClients = scope.ServiceProvider.GetServices<NamedTezosPaymentsServiceContainer<ITezosPaymentsClient>>()
             .Select(container => container.ServiceInstance);
         // Assert
-        Assert.That(tezosPayments, Is.Unique.And.EquivalentTo(expectedTezosPayments).And.Count.EqualTo(nameOptionsTuples.Count));
+        Assert.That(tezosPaymentsClients, Is.Unique.And.EquivalentTo(expectedTezosPaymentsClients).And.Count.EqualTo(nameOptionsTuples.Count));
         Assert.That(
-            tezosPayments.Select(tp => tp.ServiceContractAddress),
+            tezosPaymentsClients.Select(tp => tp.ServiceContractAddress),
             Is.Unique.And.EquivalentTo(nameOptionsTuples.Select(tuple => tuple.options.ServiceContractAddress))
         );
         Assert.That(
-            tezosPayments.Select(tp => tp.Network),
+            tezosPaymentsClients.Select(tp => tp.Network),
             Is.EquivalentTo(nameOptionsTuples.Select(tuple => tuple.options.Network?.Name != null
                 ? Network.CreateOrGetNetwork(tuple.options.Network.Name)
                 : Constants.DefaultNetwork
@@ -301,7 +301,7 @@ public class NamedTezosPaymentsTests
 
         // Act & Assert
         Assert.That(
-            () => tezosPaymentsProvider.GetTezosPayments(requestedName),
+            () => tezosPaymentsProvider.GetClient(requestedName),
             Throws.Exception.With.Message.Contains(requestedName)
         );
     }

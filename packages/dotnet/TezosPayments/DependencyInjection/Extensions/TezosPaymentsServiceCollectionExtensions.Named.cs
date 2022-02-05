@@ -57,8 +57,8 @@ public static partial class TezosPaymentsServiceCollectionExtensions
     )
     {
         builder.Services.Add(new ServiceDescriptor(
-            typeof(NamedTezosPaymentsServiceContainer<ITezosPayments>),
-            provider => WrapInContainer<ITezosPayments>(CreateTezosPayments(provider, builder, options), builder),
+            typeof(NamedTezosPaymentsServiceContainer<ITezosPaymentsClient>),
+            provider => WrapInContainer<ITezosPaymentsClient>(CreateTezosPaymentsClient(provider, builder, options), builder),
             builder.ServiceLifetime
         ));
 

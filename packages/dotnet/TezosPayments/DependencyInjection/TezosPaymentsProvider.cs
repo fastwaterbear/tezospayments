@@ -11,10 +11,10 @@ public class TezosPaymentsProvider : ITezosPaymentsProvider
         ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
     }
 
-    public ITezosPayments GetTezosPayments(string name)
+    public ITezosPaymentsClient GetClient(string clientName)
     {
-        GuardUtils.EnsureStringArgumentIsValid(name, nameof(name));
+        GuardUtils.EnsureStringArgumentIsValid(clientName, nameof(clientName));
 
-        return ServiceProvider.GetRequiredTezosPaymentsService<ITezosPayments>(name);
+        return ServiceProvider.GetRequiredTezosPaymentsService<ITezosPaymentsClient>(clientName);
     }
 }

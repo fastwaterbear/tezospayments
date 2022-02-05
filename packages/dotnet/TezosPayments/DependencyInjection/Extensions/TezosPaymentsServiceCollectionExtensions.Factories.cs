@@ -9,7 +9,7 @@ namespace TezosPayments.DependencyInjection.Extensions;
 
 public static partial class TezosPaymentsServiceCollectionExtensions
 {
-    private static TezosPayments CreateTezosPayments(
+    private static TezosPaymentsClient CreateTezosPaymentsClient(
          IServiceProvider provider,
          ITezosPaymentsBuilder builder,
          TezosPaymentsOptions options
@@ -21,7 +21,7 @@ public static partial class TezosPaymentsServiceCollectionExtensions
         var urlFactoryProvider = provider.GetRequiredTezosPaymentsService<IPaymentUrlFactoryProvider>(builder);
         var paymentValidator = provider.GetRequiredTezosPaymentsService<IPaymentValidator>(builder);
 
-        return new TezosPayments(
+        return new TezosPaymentsClient(
             options.ServiceContractAddress,
             defaultOptions,
             defaultPaymentParameters,

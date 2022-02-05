@@ -2,5 +2,5 @@ namespace TezosPayments.DependencyInjection;
 
 public interface ITezosPaymentsProvider
 {
-    ITezosPayments GetTezosPayments(string name);
+    ITezosPaymentsClient GetClient(string clientName);
 }

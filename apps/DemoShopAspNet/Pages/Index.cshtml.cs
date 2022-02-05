@@ -1,4 +1,4 @@
-﻿using DemoShopAspNet.Configuration;
+using DemoShopAspNet.Configuration;
 using DemoShopAspNet.Models;
 using DemoShopAspNet.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -18,17 +18,17 @@ public class IndexModel : PageModel
     public int? RequestedToBuyProductId { get; set; } = null;
 
     private IProductsService ProductsService { get; }
-    private ITezosPayments TezosPayments { get; }
+    private ITezosPaymentsClient TezosPaymentsClient { get; }
 
     public IndexModel(
         IOptions<AppConfiguration> appConfiguration,
         IProductsService productsService,
-        ITezosPayments tezosPayments
+        ITezosPaymentsClient tezosPaymentsClient
     )
     {
         AppConfiguration = appConfiguration?.Value ?? throw new ArgumentNullException(nameof(appConfiguration));
         ProductsService = productsService ?? throw new ArgumentNullException(nameof(productsService));
-        TezosPayments = tezosPayments ?? throw new ArgumentNullException(nameof(tezosPayments));
+        TezosPaymentsClient = tezosPaymentsClient ?? throw new ArgumentNullException(nameof(tezosPaymentsClient));
     }
 
     public async Task OnGetAsync()
@@ -45,7 +45,7 @@ public class IndexModel : PageModel
         if (product == null)
             return NotFound($"Product not found by ${RequestedToBuyProductId}");
 
-        var payment = await TezosPayments.CreatePaymentAsync(new(product.Price.Value.ToString())
+        var payment = await TezosPaymentsClient.CreatePaymentAsync(new(product.Price.Value.ToString())
         {
             Data = new
             {
