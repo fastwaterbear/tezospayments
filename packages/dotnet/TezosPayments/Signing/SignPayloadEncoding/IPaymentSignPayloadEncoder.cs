@@ -1,5 +1,3 @@
-using TezosPayments.Models;
-
 namespace TezosPayments.Signing.SignPayloadEncoding;
 
 public interface IPaymentSignPayloadEncoder

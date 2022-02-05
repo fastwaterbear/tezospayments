@@ -1,4 +1,4 @@
-namespace TezosPayments.Models;
+namespace TezosPayments;
 
 public readonly record struct Network
 {

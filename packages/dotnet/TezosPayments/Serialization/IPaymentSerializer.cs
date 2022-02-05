@@ -1,6 +1,4 @@
-﻿using TezosPayments.Models;
-
-namespace TezosPayments.Serialization;
+﻿namespace TezosPayments.Serialization;
 
 public interface IPaymentSerializer<TResult> where TResult : class
 {

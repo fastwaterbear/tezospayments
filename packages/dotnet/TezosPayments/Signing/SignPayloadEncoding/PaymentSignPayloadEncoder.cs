@@ -3,7 +3,6 @@ using System.Text;
 using System.Text.Json;
 using Netezos.Encoding;
 using Netezos.Forging;
-using TezosPayments.Models;
 
 namespace TezosPayments.Signing.SignPayloadEncoding;
 

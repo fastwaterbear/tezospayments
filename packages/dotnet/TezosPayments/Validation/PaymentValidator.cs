@@ -1,5 +1,3 @@
-using TezosPayments.Models;
-
 namespace TezosPayments.Validation;
 
 public class PaymentValidator : IPaymentValidator

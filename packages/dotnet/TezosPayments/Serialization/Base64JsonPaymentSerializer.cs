@@ -1,5 +1,3 @@
-using TezosPayments.Models;
-
 namespace TezosPayments.Serialization;
 
 public class Base64JsonPaymentSerializer : JsonPaymentSerializer, IBase64JsonPaymentSerializer

@@ -1,6 +1,5 @@
 using System;
 using System.Text.Json;
-using TezosPayments.Models;
 
 namespace TezosPayments.Tests.TestHelpers;
 

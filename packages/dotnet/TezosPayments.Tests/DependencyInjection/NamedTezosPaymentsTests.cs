@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
 using TezosPayments.DependencyInjection.Extensions;
-using TezosPayments.Models;
 
 namespace TezosPayments.DependencyInjection.Tests;
 

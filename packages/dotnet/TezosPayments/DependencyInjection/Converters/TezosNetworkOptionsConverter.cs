@@ -1,5 +1,3 @@
-using TezosPayments.Models;
-
 namespace TezosPayments.DependencyInjection.Converters;
 
 public class TezosNetworkOptionsConverter : ITezosNetworkOptionsConverter

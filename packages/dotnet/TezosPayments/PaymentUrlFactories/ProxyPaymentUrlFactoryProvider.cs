@@ -1,5 +1,3 @@
-using TezosPayments.Models;
-
 namespace TezosPayments.PaymentUrlFactories;
 
 public class ProxyPaymentUrlFactoryProvider : IPaymentUrlFactoryProvider

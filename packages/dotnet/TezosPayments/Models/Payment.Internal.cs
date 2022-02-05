@@ -2,7 +2,7 @@ using TezosPayments.PaymentUrlFactories;
 using TezosPayments.Signing.Signers;
 using TezosPayments.Validation;
 
-namespace TezosPayments.Models;
+namespace TezosPayments;
 
 public partial class Payment
 {
