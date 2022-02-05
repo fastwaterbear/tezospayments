@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using TezosPayments.DependencyInjection;
 using TezosPayments.Models;
-using TezosPayments.Options;
 
 namespace TezosPayments.Tests;
 

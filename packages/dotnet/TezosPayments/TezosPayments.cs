@@ -1,7 +1,6 @@
 global using TezosPayments.Utils;
 using System.Text;
 using TezosPayments.Models;
-using TezosPayments.Options;
 using TezosPayments.PaymentUrlFactories;
 using TezosPayments.Serialization;
 using TezosPayments.Signing.Signers;

@@ -1,5 +1,4 @@
 using TezosPayments.DependencyInjection.Converters;
-using TezosPayments.Options;
 using TezosPayments.PaymentUrlFactories;
 using TezosPayments.Serialization;
 using TezosPayments.Signing.Signers;
