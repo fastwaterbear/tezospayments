@@ -2,7 +2,7 @@ using TezosPayments.Models;
 
 namespace TezosPayments;
 
-public record TezosPaymentDefaultOptions
+public record TezosPaymentsDefaultOptions
 {
     public Network Network { get; set; } = Constants.DefaultNetwork;
     public string? ServiceContractDomain { get; set; }

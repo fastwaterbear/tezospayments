@@ -23,7 +23,7 @@ public class TezosPaymentsTests
         var tezosPayments = new TezosPayments(
             options.ServiceContractAddress,
             options.ApiSecretKey,
-            new TezosPaymentDefaultOptions()
+            new TezosPaymentsDefaultOptions()
             {
                 Network = TezosNetworkOptionsConverter.Convert(options.Network) ?? Constants.DefaultNetwork,
                 ServiceContractDomain = options.ServiceContractDomain

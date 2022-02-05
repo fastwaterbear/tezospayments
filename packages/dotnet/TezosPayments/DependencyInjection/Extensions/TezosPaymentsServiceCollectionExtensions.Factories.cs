@@ -15,7 +15,7 @@ public static partial class TezosPaymentsServiceCollectionExtensions
          TezosPaymentsOptions options
      )
     {
-        var defaultOptions = provider.GetRequiredTezosPaymentsService<TezosPaymentDefaultOptions>(builder);
+        var defaultOptions = provider.GetRequiredTezosPaymentsService<TezosPaymentsDefaultOptions>(builder);
         var defaultPaymentParameters = provider.GetRequiredTezosPaymentsService<DefaultPaymentParameters>(builder);
         var signer = provider.GetRequiredTezosPaymentsService<IPaymentSigner>(builder);
         var urlFactoryProvider = provider.GetRequiredTezosPaymentsService<IPaymentUrlFactoryProvider>(builder);
@@ -31,7 +31,7 @@ public static partial class TezosPaymentsServiceCollectionExtensions
         );
     }
 
-    private static TezosPaymentDefaultOptions CreateTezosPaymentDefaultOptions(
+    private static TezosPaymentsDefaultOptions CreateTezosPaymentDefaultOptions(
         IServiceProvider provider,
         ITezosPaymentsBuilder builder,
         TezosPaymentsOptions options
@@ -40,7 +40,7 @@ public static partial class TezosPaymentsServiceCollectionExtensions
         var tezosNetworkOptionsConverter = provider.GetRequiredTezosPaymentsService<ITezosNetworkOptionsConverter>(builder);
         var network = tezosNetworkOptionsConverter.Convert(options.Network);
 
-        var defaultOptions = new TezosPaymentDefaultOptions()
+        var defaultOptions = new TezosPaymentsDefaultOptions()
         {
             ServiceContractDomain = options.ServiceContractDomain
         };

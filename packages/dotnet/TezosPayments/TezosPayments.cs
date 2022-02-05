@@ -22,7 +22,7 @@ public class TezosPayments : ITezosPayments
     public TezosPayments(
         string serviceContractAddress,
         string apiSecretKey,
-        TezosPaymentDefaultOptions? defaultOptions = default,
+        TezosPaymentsDefaultOptions? defaultOptions = default,
         DefaultPaymentParameters? defaultPaymentParameters = default
      ) : this(
             serviceContractAddress,
@@ -46,7 +46,7 @@ public class TezosPayments : ITezosPayments
 
     public TezosPayments(
         string serviceContractAddress,
-        TezosPaymentDefaultOptions defaultOptions,
+        TezosPaymentsDefaultOptions defaultOptions,
         IPaymentSigner signer,
         IPaymentUrlFactoryProvider paymentUrlFactoryProvider,
         IPaymentValidator paymentValidator
@@ -66,7 +66,7 @@ public class TezosPayments : ITezosPayments
 
     public TezosPayments(
         string serviceContractAddress,
-        TezosPaymentDefaultOptions? defaultOptions,
+        TezosPaymentsDefaultOptions? defaultOptions,
         DefaultPaymentParameters? defaultPaymentParameters,
         IPaymentSigner signer,
         IPaymentUrlFactoryProvider paymentUrlFactoryProvider,

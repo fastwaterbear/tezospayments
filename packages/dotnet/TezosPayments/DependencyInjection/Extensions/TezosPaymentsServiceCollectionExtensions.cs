@@ -56,7 +56,7 @@ public static partial class TezosPaymentsServiceCollectionExtensions
         ));
 
         builder.Services.TryAdd(new ServiceDescriptor(
-            typeof(TezosPaymentDefaultOptions),
+            typeof(TezosPaymentsDefaultOptions),
             provider => CreateTezosPaymentDefaultOptions(provider, builder, options),
             builder.ServiceLifetime
         ));
