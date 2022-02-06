@@ -4,7 +4,7 @@
   "private": "true",
   "scripts": {
     "build": "cross-env WEBPACK_PACKAGE='../../../apps/landing/node_modules/webpack' webpack",
-    "watch": "webpack watch"
+    "watch": "cross-env WEBPACK_PACKAGE='../../../apps/landing/node_modules/webpack' webpack watch"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",

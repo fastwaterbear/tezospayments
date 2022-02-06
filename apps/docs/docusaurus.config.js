@@ -54,12 +54,6 @@ module.exports = {
           },
           {
             type: 'doc',
-            docId: 'concepts/overview',
-            label: 'Concepts',
-            position: 'left',
-          },
-          {
-            type: 'doc',
             docId: 'developers/getting-started',
             label: 'Developers',
             position: 'left',
@@ -78,6 +72,7 @@ module.exports = {
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
+        additionalLanguages: ['powershell', 'csharp']
       },
     }),
 };

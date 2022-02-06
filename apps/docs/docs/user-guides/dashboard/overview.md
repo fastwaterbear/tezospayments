@@ -12,7 +12,7 @@ The Tezos Payments dashboard is a user interface for you to:
 3. Monitor operations and make refunds. Use the [Operations page](https://dashboard.tezospayments.com/operations) for this.  
 [Read more about working with operations](user-guides/dashboard/working-with-operations.md).
 
-4. Analyze services and the connected account. Use the [Analytics page](https://dashboard.tezospayments.com/analytics) for this.  
+4. Analyze transactions processed by your services. Use the [Analytics page](https://dashboard.tezospayments.com/analytics) for this.  
 [Read more about working with the Analytics page](user-guides/dashboard/analytics.md).
 
 5. Check the last activities of your services. Use the [Overview page](https://dashboard.tezospayments.com) for this.  
