@@ -17,7 +17,7 @@ var payment = await tezosPaymentsClient.CreatePaymentAsync(new PaymentCreatePara
 Console.WriteLine(payment.Url);
 ```
 
-Where `"30"` is an amount of tez tokens. The amount should be represented by a string.  
+Where `"10"` is an amount of tez tokens. The amount should be represented by a string.  
 If you pass a decimal amount, you need to control the floating point. Native tokens of Tezos have **6** decimals. The TezosPayments package adds trailing zeros or removes excess digits automatically:
 
 ```cs
