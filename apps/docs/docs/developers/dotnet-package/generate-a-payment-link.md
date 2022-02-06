@@ -136,12 +136,6 @@ The data will only be displayed in the payment form and **won’t be stored** in
 ## Create a payment with the custom ID
 By default, the TezosPayments package generates a payment ID automatically. But if you want to use the custom ID, you need to pass this ID with `PaymentCreateParameters`:
 
-:::info
-
-Payment ID - it's a unique identifier that helps you match the completed operation (payment) with your customer's order, purchase, and so forth.
-
-:::
-
 ```cs {7}
 using TezosPayments;
 
@@ -154,3 +148,9 @@ var payment = await tezosPaymentsClient.CreatePaymentAsync(new("11")
 // Your customers can use this link to make the payment
 Console.WriteLine(payment.Url);
 ```
+
+:::info
+
+Payment ID - it's a unique identifier that helps you match the completed operation (payment) with your customer's order, purchase, and so forth.
+
+:::
