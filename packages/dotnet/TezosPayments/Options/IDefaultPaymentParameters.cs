@@ -1,6 +1,4 @@
-using TezosPayments.Models;
-
-namespace TezosPayments.Options;
+namespace TezosPayments;
 
 public interface IDefaultPaymentParameters
 {

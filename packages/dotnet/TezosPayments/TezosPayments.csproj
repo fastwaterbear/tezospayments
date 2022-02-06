@@ -9,7 +9,7 @@
   <PropertyGroup>
     <PackageId>TezosPayments</PackageId>
     <Product>TezosPayments</Product>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Authors>Fast Water Bear</Authors>
     <Description>Package for payment generation in the Tezos Payments system</Description>
     

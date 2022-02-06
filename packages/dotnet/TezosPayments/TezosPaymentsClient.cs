@@ -1,7 +1,5 @@
 global using TezosPayments.Utils;
 using System.Text;
-using TezosPayments.Models;
-using TezosPayments.Options;
 using TezosPayments.PaymentUrlFactories;
 using TezosPayments.Serialization;
 using TezosPayments.Signing.Signers;
@@ -10,7 +8,7 @@ using TezosPayments.Validation;
 
 namespace TezosPayments;
 
-public class TezosPayments : ITezosPayments
+public class TezosPaymentsClient : ITezosPaymentsClient
 {
     public string ServiceContractAddress { get; }
     public Network Network { get; }
@@ -20,10 +18,10 @@ public class TezosPayments : ITezosPayments
     protected IPaymentUrlFactoryProvider PaymentUrlFactoryProvider { get; }
     protected IPaymentValidator PaymentValidator { get; }
 
-    public TezosPayments(
+    public TezosPaymentsClient(
         string serviceContractAddress,
         string apiSecretKey,
-        TezosPaymentDefaultOptions? defaultOptions = default,
+        TezosPaymentsDefaultOptions? defaultOptions = default,
         DefaultPaymentParameters? defaultPaymentParameters = default
      ) : this(
             serviceContractAddress,
@@ -36,7 +34,7 @@ public class TezosPayments : ITezosPayments
     {
     }
 
-    public TezosPayments(
+    public TezosPaymentsClient(
         string serviceContractAddress,
         IPaymentSigner signer,
         IPaymentUrlFactoryProvider paymentUrlFactoryProvider,
@@ -45,9 +43,9 @@ public class TezosPayments : ITezosPayments
     {
     }
 
-    public TezosPayments(
+    public TezosPaymentsClient(
         string serviceContractAddress,
-        TezosPaymentDefaultOptions defaultOptions,
+        TezosPaymentsDefaultOptions defaultOptions,
         IPaymentSigner signer,
         IPaymentUrlFactoryProvider paymentUrlFactoryProvider,
         IPaymentValidator paymentValidator
@@ -55,7 +53,7 @@ public class TezosPayments : ITezosPayments
     {
     }
 
-    public TezosPayments(
+    public TezosPaymentsClient(
         string serviceContractAddress,
         DefaultPaymentParameters defaultPaymentParameters,
         IPaymentSigner signer,
@@ -65,9 +63,9 @@ public class TezosPayments : ITezosPayments
     {
     }
 
-    public TezosPayments(
+    public TezosPaymentsClient(
         string serviceContractAddress,
-        TezosPaymentDefaultOptions? defaultOptions,
+        TezosPaymentsDefaultOptions? defaultOptions,
         DefaultPaymentParameters? defaultPaymentParameters,
         IPaymentSigner signer,
         IPaymentUrlFactoryProvider paymentUrlFactoryProvider,

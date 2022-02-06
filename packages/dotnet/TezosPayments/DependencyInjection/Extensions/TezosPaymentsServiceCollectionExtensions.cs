@@ -1,7 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using TezosPayments.DependencyInjection.Converters;
-using TezosPayments.Options;
 using TezosPayments.PaymentUrlFactories;
 using TezosPayments.Serialization;
 using TezosPayments.Signing.Signers;
@@ -51,13 +50,13 @@ public static partial class TezosPaymentsServiceCollectionExtensions
     )
     {
         builder.Services.TryAdd(new ServiceDescriptor(
-            typeof(ITezosPayments),
-            provider => CreateTezosPayments(provider, builder, options),
+            typeof(ITezosPaymentsClient),
+            provider => CreateTezosPaymentsClient(provider, builder, options),
             builder.ServiceLifetime
         ));
 
         builder.Services.TryAdd(new ServiceDescriptor(
-            typeof(TezosPaymentDefaultOptions),
+            typeof(TezosPaymentsDefaultOptions),
             provider => CreateTezosPaymentDefaultOptions(provider, builder, options),
             builder.ServiceLifetime
         ));

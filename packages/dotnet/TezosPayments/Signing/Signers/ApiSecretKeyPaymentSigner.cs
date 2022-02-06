@@ -1,6 +1,5 @@
 using Netezos.Encoding;
 using Netezos.Keys;
-using TezosPayments.Models;
 using TezosPayments.Signing.SignPayloadEncoding;
 using TezosPayments.Tezos.Constants;
 

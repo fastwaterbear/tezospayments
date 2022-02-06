@@ -2,8 +2,6 @@ using System;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using TezosPayments.DependencyInjection;
-using TezosPayments.Models;
-using TezosPayments.Options;
 
 namespace TezosPayments.Tests;
 
@@ -21,10 +19,10 @@ public class TezosPaymentsTests
     {
         // Arrange
         var options = tezosPaymentsOptionsFactory();
-        var tezosPayments = new TezosPayments(
+        var tezosPaymentsClient = new TezosPaymentsClient(
             options.ServiceContractAddress,
             options.ApiSecretKey,
-            new TezosPaymentDefaultOptions()
+            new TezosPaymentsDefaultOptions()
             {
                 Network = TezosNetworkOptionsConverter.Convert(options.Network) ?? Constants.DefaultNetwork,
                 ServiceContractDomain = options.ServiceContractDomain
@@ -33,7 +31,7 @@ public class TezosPaymentsTests
         var paymentCreateParameters = paymentCreateParametersFactory();
         var expectedPayment = expectedPaymentFactory();
         // Act
-        var payment = await tezosPayments.CreatePaymentAsync(paymentCreateParameters);
+        var payment = await tezosPaymentsClient.CreatePaymentAsync(paymentCreateParameters);
         // Assert
         Assert.That(payment, Is.EqualTo(expectedPayment), caseMessage);
     }

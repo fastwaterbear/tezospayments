@@ -1,4 +1,3 @@
-using TezosPayments.Models;
 using TezosPayments.Serialization;
 
 namespace TezosPayments.PaymentUrlFactories;
