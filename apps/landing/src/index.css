@@ -20,6 +20,15 @@ header {
   font-weight: 500;
 }
 
+.main-menu__list {
+  display: flex;
+  flex-direction: row;
+}
+
+.main-menu-item {
+  margin: 0 8px;
+}
+
 main {
   grid-area: main;
   align-self: center;
@@ -169,6 +178,10 @@ button,
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
+.docs-link_mobile {
+  display: none;
+}
+
 @media (max-width: 1140px) {
   main {
     text-align: center;
@@ -203,5 +216,13 @@ button,
 
   .footer-content {
     flex-direction: column-reverse;
+  }
+
+  .docs-link_desktop {
+    display: none;
+  }
+
+  .docs-link_mobile {
+    display: inline;
   }
 }
