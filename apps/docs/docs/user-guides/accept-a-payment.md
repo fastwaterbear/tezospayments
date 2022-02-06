@@ -64,7 +64,7 @@ Service is a component that accepts funds from your customers and sends them to 
 You can create a payment by two approaches:
 
 1. Manually, using the Dashboard application. It's suitable for those who sell products manually using social media and don't have their own sites.
-2. Automatically, on your server using the API provided by the Tezos Payments packages. It's suitable for those who have their own sites.
+2. Automatically, using the API provided by the Tezos Payments packages on your server. It's suitable for those who have their own sites.
 
 Next, we'll look a the Manual approach. Read about the second approach in the [Developers guide](developers/getting-started.md).
 
