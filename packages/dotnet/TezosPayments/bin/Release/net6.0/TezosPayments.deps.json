@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v6.0": {
-      "TezosPayments/0.1.0": {
+      "TezosPayments/0.2.0": {
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "6.0.0",
           "Netezos": "2.4.7"
@@ -58,7 +58,7 @@
     }
   },
   "libraries": {
-    "TezosPayments/0.1.0": {
+    "TezosPayments/0.2.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
