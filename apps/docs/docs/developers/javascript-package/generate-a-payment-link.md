@@ -44,7 +44,7 @@ To create a payment, you need to call the `createPayment` method of the `TezosPa
 <Tabs>
 <TabItem value="typescript" label="TypeScript">
 
-```ts
+```ts {3-7}
 const payment = await tezospayments.createPayment({
   amount: '50.17',
   asset: {
@@ -61,7 +61,7 @@ console.log(payment.url);
 
 <TabItem value="javascript" label="JavaScript">
 
-```js
+```js {3-7}
 const payment = await tezospayments.createPayment({
   amount: '50.17',
   asset: {
@@ -90,7 +90,7 @@ If you want to pass some data to the payment form, you need to set the `data` fi
 <Tabs>
 <TabItem value="typescript" label="TypeScript">
 
-```ts
+```ts {3-6}
 const payment = await tezospayments.createPayment({
   amount: '100',
   data: {
@@ -106,7 +106,7 @@ console.log(payment.url);
 
 <TabItem value="javascript" label="JavaScript">
 
-```js
+```js {3-6}
 const payment = await tezospayments.createPayment({
   amount: '100',
   data: {
@@ -135,7 +135,7 @@ By default, the TezosPayments package generates a payment ID automatically. But 
 <Tabs>
 <TabItem value="typescript" label="TypeScript">
 
-```ts
+```ts  {3}
 const payment = await tezospayments.createPayment({
   amount: '11',
   id: 'customId'
@@ -148,7 +148,7 @@ console.log(payment.url);
 
 <TabItem value="javascript" label="JavaScript">
 
-```js
+```js  {3}
 const payment = await tezospayments.createPayment({
   amount: '11',
   id: 'customId'
