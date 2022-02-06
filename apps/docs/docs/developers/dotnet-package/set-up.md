@@ -77,7 +77,7 @@ using TezosPayments.DependencyInjection.Extensions;
 builder.Services.AddTezosPayments("client1", new TezosPaymentsOptions()
 {
     ServiceContractAddress = "<contract address of your service 1>",
-    ApiSecretKey = "<API secret key of this service>"
+    ApiSecretKey = "<API secret key of this service 1>"
 });
 builder.Services.AddTezosPayments("client2", new TezosPaymentsOptions()
 {

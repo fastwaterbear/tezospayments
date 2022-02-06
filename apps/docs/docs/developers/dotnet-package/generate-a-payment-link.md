@@ -148,3 +148,9 @@ var payment = await tezosPaymentsClient.CreatePaymentAsync(new("11")
 // Your customers can use this link to make the payment
 Console.WriteLine(payment.Url);
 ```
+
+:::info
+
+Payment ID - it's a unique identifier that helps you match the completed operation (payment) with your customer's order, purchase, and so forth.
+
+:::

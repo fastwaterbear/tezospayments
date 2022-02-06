@@ -159,3 +159,9 @@ console.log(payment.url);
 
 </TabItem>
 </Tabs>
+
+:::info
+
+Payment ID - it's a unique identifier that helps you match the completed operation (payment) with your customer's order, purchase, and so forth.
+
+:::

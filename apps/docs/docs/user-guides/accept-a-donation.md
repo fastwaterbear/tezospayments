@@ -7,7 +7,7 @@ If you have it, you’re ready to move on.
 
 :::info
 
-You need some amount of Tezos to pay network fees while communicating with your services, through which payments will be made.
+You need some amount of Tezos to pay network fees while communicating with your services, through which donations will be made.
 
 :::
 
