@@ -106,7 +106,7 @@ Console.WriteLine(payment.Amount);
 ```
 
 ## Create a payment with a client data
-If you want to pass some data to the payment form, you need to set the `Data` property of `PaymentCreateParameters`.
+If you want to pass some data to the payment form, you need to set the `Data` property of `PaymentCreateParameters`:
 
 ```cs {7-11}
 using TezosPayments;
