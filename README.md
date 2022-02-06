@@ -29,6 +29,7 @@ tezospayments/
     ├── dashboard-react-web
     ├── demo-shop-next-js
     ├── DemoShopAspNet
+    ├── docs
     ├── landing
     └── payment-react-web
 packages/
@@ -54,6 +55,9 @@ packages/
     Usage: ASP.NET Core 6, Razor Pages, C#;  
 
   * `landing`. Simple landing page for the [tezospayments.com](https://tezospayments.com) site;  
+
+  * `docs`. Site of the documentation;  
+    Usage: Docusaurus;  
 
   * `payment-react-web`. Web application.  
     Usage: React, Ant Design, Redux Toolkit, Taquito, Beacon SDK, TypeScript;  
@@ -116,7 +120,8 @@ npm run start -w @tezospayments/payment-react-web
 Prod  
 [![apps/dashboard-react-web](https://github.com/fastwaterbear/tezospayments/actions/workflows/dashboard-react-web-app.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/dashboard-react-web-app.yml?query=branch%3Amaster)
 [![apps/payment-react-web](https://github.com/fastwaterbear/tezospayments/actions/workflows/payment-react-web-app.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/payment-react-web-app.yml?query=branch%3Amaster)
-[![apps/landing](https://github.com/fastwaterbear/tezospayments/actions/workflows/landing-app.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/landing-app.yml?query=branch%3Amaster)   
+[![apps/landing](https://github.com/fastwaterbear/tezospayments/actions/workflows/landing-app.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/landing-app.yml?query=branch%3Amaster)
+[![apps/docs](https://github.com/fastwaterbear/tezospayments/actions/workflows/docs-app.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/docs-app.yml?query=branch%3Amaster)   
 [![packages/dotnet/tezospayments](https://github.com/fastwaterbear/tezospayments/actions/workflows/tezospayments-dotnet-package.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/tezospayments-dotnet-package.yml?query=branch%3Amaster)
 [![packages/js/tezospayments](https://github.com/fastwaterbear/tezospayments/actions/workflows/tezospayments-js-package.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/tezospayments-js-package.yml?query=branch%3Amaster)
 [![packages/js/common](https://github.com/fastwaterbear/tezospayments/actions/workflows/common-js-package.yml/badge.svg?branch=master)](https://github.com/fastwaterbear/tezospayments/actions/workflows/common-js-package.yml?query=branch%3Amaster)  
@@ -126,7 +131,8 @@ Prod
 Dev  
 [![apps/dashboard-react-web](https://github.com/fastwaterbear/tezospayments/actions/workflows/dashboard-react-web-app.yml/badge.svg?branch=dev)](https://github.com/fastwaterbear/tezospayments/actions/workflows/dashboard-react-web-app.yml?query=branch%3Adev)
 [![apps/payment-react-web](https://github.com/fastwaterbear/tezospayments/actions/workflows/payment-react-web-app.yml/badge.svg?branch=dev)](https://github.com/fastwaterbear/tezospayments/actions/workflows/payment-react-web-app.yml?query=branch%3Adev)
-[![apps/landing](https://github.com/fastwaterbear/tezospayments/actions/workflows/landing-app.yml/badge.svg?branch=dev)](https://github.com/fastwaterbear/tezospayments/actions/workflows/landing-app.yml?query=branch%3Adev)   
+[![apps/landing](https://github.com/fastwaterbear/tezospayments/actions/workflows/landing-app.yml/badge.svg?branch=dev)](https://github.com/fastwaterbear/tezospayments/actions/workflows/landing-app.yml?query=branch%3Adev)
+[![apps/docs](https://github.com/fastwaterbear/tezospayments/actions/workflows/docs-app.yml/badge.svg?branch=dev)](https://github.com/fastwaterbear/tezospayments/actions/workflows/docs-app.yml?query=branch%3Adev)     
 [![packages/dotnet/tezospayments](https://github.com/fastwaterbear/tezospayments/actions/workflows/tezospayments-dotnet-package.yml/badge.svg?branch=dev)](https://github.com/fastwaterbear/tezospayments/actions/workflows/tezospayments-dotnet-package.yml?query=branch%3dev)
 [![packages/js/tezospayments](https://github.com/fastwaterbear/tezospayments/actions/workflows/tezospayments-js-package.yml/badge.svg?branch=dev)](https://github.com/fastwaterbear/tezospayments/actions/workflows/tezospayments-js-package.yml?query=branch%3Adev)
 [![packages/js/common](https://github.com/fastwaterbear/tezospayments/actions/workflows/common-js-package.yml/badge.svg?branch=dev)](https://github.com/fastwaterbear/tezospayments/actions/workflows/common-js-package.yml?query=branch%3Adev)  
