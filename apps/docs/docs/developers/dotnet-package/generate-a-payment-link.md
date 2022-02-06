@@ -127,6 +127,12 @@ Console.WriteLine(payment.Url);
 
 The type of the `Data` property should be any object that can be serialized as JSON.
 
+:::info
+
+The data will only be displayed in the payment form and **won’t be stored** in the blockchain.
+
+:::
+
 ## Create a payment with the custom ID
 By default, the TezosPayments package generates a payment ID automatically. But if you want to use the custom ID, you need to pass this ID with `PaymentCreateParameters`:
 
