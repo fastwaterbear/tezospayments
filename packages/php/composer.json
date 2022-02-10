@@ -1,0 +1,20 @@
+{
+    "name": "tezospayments/tezospayments",
+    "description": "Package for payment generation in the Tezos Payments system",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "TezosPayments\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Fast Water Bear",
+            "email": "packages@fastwaterbear.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.1"
+    }
+}
