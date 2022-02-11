@@ -16,7 +16,7 @@ export const externalPackageNames = [
 ];
 
 export const defaultESBabelTargets = {
-  node: '14.0.0',
+  node: '16.0.0',
   browsers: [
     '>0.35%',
     'not dead',
