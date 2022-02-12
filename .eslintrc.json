@@ -2,8 +2,6 @@
   "root": true,
   "extends": [
     "eslint:recommended",
-    "react-app",
-    "react-app/jest",
     "plugin:@typescript-eslint/recommended"
   ],
   "parser": "@typescript-eslint/parser",
