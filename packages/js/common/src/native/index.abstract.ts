@@ -1,7 +1,5 @@
+export { URL } from 'url';
 
-import { URL as NodeURL } from 'node:url';
+if (process?.env?.NODE_ENV !== 'test')
+  throw new Error('This module should\'t be included to the final bundle');
 
-export type URL = NodeURL;
-export const URL = NodeURL;
-
-throw new Error('This module should\'t be included to the final bundle');
