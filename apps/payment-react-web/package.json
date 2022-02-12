@@ -4,18 +4,18 @@
   "private": true,
   "dependencies": {
     "@quipuswap/sdk": "^3.0.0",
-    "@reduxjs/toolkit": "^1.6.2",
+    "@reduxjs/toolkit": "^1.7.2",
     "@tezospayments/react-web-core": "*",
     "react-redux": "^7.2.6"
   },
   "devDependencies": {
-    "@types/react-redux": "^7.1.20"
+    "@types/react-redux": "^7.1.22"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "craco eject",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
   },
