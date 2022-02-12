@@ -9,7 +9,7 @@
   ],
   "engines": {
     "node": ">=16.7.0",
-    "npm": ">=8.3.1"
+    "npm": ">=7.20.3"
   },
   "devDependencies": {
     "@babel/core": "^7.17.2",
