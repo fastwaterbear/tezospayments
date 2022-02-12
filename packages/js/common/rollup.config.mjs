@@ -29,11 +29,11 @@ const getWatchConfigs = () => {
 
   const browserConfigs = (
     platform => [
-      getDefaultES('es', `${platform}/index.esm.js`, true),
+      getDefaultES('es', `${platform}/index.esm.js`, true, true),
     ].map(applyReplaceNativeModulePlugin(platform))
   )('browser');
 
-  return nodeJsConfigs.concat(browserConfigs);
+  return browserConfigs.concat(nodeJsConfigs);
 };
 
 const getCommonBuildConfigs = platform => {
