@@ -3,4 +3,4 @@
 // @ts-ignore
 export type URL = globalThis.URL;
 // @ts-ignore
-export const URL: globalThis.URL = globalThis.URL;
+export const URL: typeof globalThis.URL = globalThis.URL;
