@@ -1,26 +1,16 @@
 {
   "files": {
-    "main.css": "/static/css/main.fdb25220.chunk.css",
-    "main.js": "/static/js/main.2b49b726.chunk.js",
-    "main.js.map": "/static/js/main.2b49b726.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.b9ac7cca.js",
-    "runtime-main.js.map": "/static/js/runtime-main.b9ac7cca.js.map",
-    "static/css/2.ecb5d605.chunk.css": "/static/css/2.ecb5d605.chunk.css",
-    "static/js/2.8afc1d69.chunk.js": "/static/js/2.8afc1d69.chunk.js",
-    "static/js/2.8afc1d69.chunk.js.map": "/static/js/2.8afc1d69.chunk.js.map",
-    "static/js/3.033f7574.chunk.js": "/static/js/3.033f7574.chunk.js",
-    "static/js/3.033f7574.chunk.js.map": "/static/js/3.033f7574.chunk.js.map",
+    "main.css": "/static/css/main.49980203.css",
+    "main.js": "/static/js/main.aa0a9ca7.js",
+    "static/js/415.020f6149.chunk.js": "/static/js/415.020f6149.chunk.js",
+    "static/media/telegram.svg": "/static/media/telegram.fee81c9477f83f6f4ed1a788e26d1ab5.svg",
     "index.html": "/index.html",
-    "static/css/2.ecb5d605.chunk.css.map": "/static/css/2.ecb5d605.chunk.css.map",
-    "static/css/main.fdb25220.chunk.css.map": "/static/css/main.fdb25220.chunk.css.map",
-    "static/js/2.8afc1d69.chunk.js.LICENSE.txt": "/static/js/2.8afc1d69.chunk.js.LICENSE.txt",
-    "static/media/telegram.fee81c94.svg": "/static/media/telegram.fee81c94.svg"
+    "main.49980203.css.map": "/static/css/main.49980203.css.map",
+    "main.aa0a9ca7.js.map": "/static/js/main.aa0a9ca7.js.map",
+    "415.020f6149.chunk.js.map": "/static/js/415.020f6149.chunk.js.map"
   },
   "entrypoints": [
-    "static/js/runtime-main.b9ac7cca.js",
-    "static/css/2.ecb5d605.chunk.css",
-    "static/js/2.8afc1d69.chunk.js",
-    "static/css/main.fdb25220.chunk.css",
-    "static/js/main.2b49b726.chunk.js"
+    "static/css/main.49980203.css",
+    "static/js/main.aa0a9ca7.js"
   ]
 }
