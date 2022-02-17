@@ -1,5 +1,5 @@
 import { b58cencode, prefix } from '@taquito/utils';
-import { ec } from 'elliptic';
+import elliptic from 'elliptic';
 
 import { EncodedKeyPair, KeyPair, KeyPairGeneratorResult, KeyType } from '../../models';
 import type { KeyPairGenerator } from './keyPairGenerator';
@@ -20,11 +20,11 @@ export class EllipticCurveKeyGenerator implements KeyPairGenerator {
     },
   } as const;
 
-  protected readonly ec: ec;
+  protected readonly ec: elliptic.ec;
   protected readonly curveInfo: typeof EllipticCurveKeyGenerator.curveInfo[keyof typeof EllipticCurveKeyGenerator.curveInfo];
 
   constructor(curveName: keyof typeof EllipticCurveKeyGenerator.curveInfo) {
-    this.ec = new ec(curveName);
+    this.ec = new elliptic.ec(curveName);
     this.curveInfo = EllipticCurveKeyGenerator.curveInfo[curveName];
   }
 

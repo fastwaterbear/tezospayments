@@ -1,7 +1,9 @@
 const path = require('path');
+
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+
 const InlineChunkHtmlPlugin = require('./webpack/inline-chunk-html-plugin');
 
 module.exports = {
@@ -54,4 +56,4 @@ module.exports = {
       new CssMinimizerPlugin(),
     ],
   },
-}
+};
