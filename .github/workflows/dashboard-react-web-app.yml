@@ -113,6 +113,12 @@ jobs:
           name: dashboard-react-web
           path: apps/dashboard-react-web/build
 
+      - name: Print environment info
+        run: netlify version
+
+      - name: Create the "_redirects" file
+        run: echo "/*   /index.html   200" > apps/dashboard-react-web/build/_redirects
+
       - name: Push to the ${{ env.publish-branch }} branch
         env:
           publish-branch: dist
@@ -123,6 +129,16 @@ jobs:
           destination_dir: apps/dashboard-react-web
           exclude_assets: '**/*.LICENSE,**/*.LICENSE.txt'
           publish_branch: ${{ env.publish-branch }}
+      
+      - name: Deploy to Netlify
+        env:
+          NETLIFY_SITE_ID: ${{ secrets.DASHBOARD_APP_NETLIFY_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.TEZOS_PAYMENTS_DEVELOPMENT_NETLIFY_ACCESS_TOKEN }}
+        run: |
+          netlify deploy \
+            --prod \
+            --dir=apps/dashboard-react-web/build \
+            --message='${GITHUB_SHA::7}'
 
   deploy-preview:
     name: Deploy the preview
