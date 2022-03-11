@@ -138,7 +138,7 @@ jobs:
           netlify deploy \
             --prod \
             --dir=apps/dashboard-react-web/build \
-            --message='${GITHUB_SHA::7}'
+            --message='${{ github.sha }}'
 
   deploy-preview:
     name: Deploy the preview
