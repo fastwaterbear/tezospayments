@@ -3,7 +3,7 @@ sidebar_position: 3
 ---
 # Create a payment
 1. Click **Accept Payments** or open the Accept Payments page by the following URL:  
-[https://dashboard.tezospayments.com/accept](https://dashboard.tezospayments.com/accept).
+[https://business.tezospayments.com/accept](https://business.tezospayments.com/accept).
 2. Choose the service through that payments will be made.
 3. Choose the currency and enter the amount of payment.
 4. Fill in the payment data:

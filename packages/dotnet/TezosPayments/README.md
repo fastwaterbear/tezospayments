@@ -1,7 +1,7 @@
 ﻿# Tezos Payments
 
 [Homepage](https://tezospayments.com) &nbsp;&nbsp;•&nbsp;&nbsp;
-[Dashboard](https://dashboard.tezospayments.com)  
+[Business](https://business.tezospayments.com)  
 
 > ⚠️ Tezos Payments is in active development so any component (application, contract, package, API) is subject to change ⚠️
 

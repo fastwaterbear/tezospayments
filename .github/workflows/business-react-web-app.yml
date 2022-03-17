@@ -1,14 +1,14 @@
-name: apps/dashboard-react-web
+name: apps/business-react-web
 on:
   push:
     paths:
       - 'packages/js/common/**'
       - 'packages/js/react-web-core/**'
       - 'packages/js/tezospayments/**'
-      - 'apps/dashboard-react-web/**'
+      - 'apps/business-react-web/**'
       - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/dashboard-react-web-app.yml'
+      - '.github/workflows/business-react-web-app.yml'
     branches:
       - master
       - dev
@@ -17,10 +17,10 @@ on:
       - 'packages/js/common/**'
       - 'packages/js/react-web-core/**'
       - 'packages/js/tezospayments/**'
-      - 'apps/dashboard-react-web/**'
+      - 'apps/business-react-web/**'
       - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/dashboard-react-web-app.yml'
+      - '.github/workflows/business-react-web-app.yml'
       - 'scripts/netlify-pr-notifications.js'
 env:
   node-version: 16
@@ -63,14 +63,14 @@ jobs:
       - name: Build the @tezospayments/react-web-core package
         run: npm run build -w @tezospayments/react-web-core
 
-      - name: Build the Dashboard app
-        run: npm run build -w @tezospayments/dashboard-react-web
+      - name: Build the Business app
+        run: npm run build -w @tezospayments/business-react-web
 
-      - name: Upload the Dashboard app build as an artifact
+      - name: Upload the Business app build as an artifact
         uses: actions/upload-artifact@v2
         with:
-          name: dashboard-react-web
-          path: apps/dashboard-react-web/build
+          name: business-react-web
+          path: apps/business-react-web/build
           retention-days: 10
 
   lint:
@@ -99,7 +99,7 @@ jobs:
         run: npm ci
 
       - name: Lint
-        run: npm run lint -w @tezospayments/dashboard-react-web # -- --max-warnings -1
+        run: npm run lint -w @tezospayments/business-react-web # -- --max-warnings -1
 
   deploy-production:
     name: Deploy to Production
@@ -107,17 +107,17 @@ jobs:
     needs: [build, lint]
     if: github.ref == 'refs/heads/master'
     steps:
-      - name: Download the Dashboard app build from the artifacts storage
+      - name: Download the Business app build from the artifacts storage
         uses: actions/download-artifact@v2
         with:
-          name: dashboard-react-web
-          path: apps/dashboard-react-web/build
+          name: business-react-web
+          path: apps/business-react-web/build
 
       - name: Print environment info
         run: netlify version
 
       - name: Create the "_redirects" file
-        run: echo "/*   /index.html   200" > apps/dashboard-react-web/build/_redirects
+        run: echo "/*   /index.html   200" > apps/business-react-web/build/_redirects
 
       - name: Push to the ${{ env.publish-branch }} branch
         env:
@@ -125,19 +125,19 @@ jobs:
         uses: peaceiris/actions-gh-pages@068dc23d9710f1ba62e86896f84735d869951305 # v3.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: apps/dashboard-react-web/build
-          destination_dir: apps/dashboard-react-web
+          publish_dir: apps/business-react-web/build
+          destination_dir: apps/business-react-web
           exclude_assets: '**/*.LICENSE,**/*.LICENSE.txt'
           publish_branch: ${{ env.publish-branch }}
       
       - name: Deploy to Netlify
         env:
-          NETLIFY_SITE_ID: ${{ secrets.DASHBOARD_APP_NETLIFY_SITE_ID }}
+          NETLIFY_SITE_ID: ${{ secrets.BUSINESS_APP_NETLIFY_SITE_ID }}
           NETLIFY_AUTH_TOKEN: ${{ secrets.TEZOS_PAYMENTS_DEVELOPMENT_NETLIFY_ACCESS_TOKEN }}
         run: |
           netlify deploy \
             --prod \
-            --dir=apps/dashboard-react-web/build \
+            --dir=apps/business-react-web/build \
             --message='${{ github.sha }}'
 
   deploy-preview:
@@ -149,32 +149,32 @@ jobs:
       - name: Clone repository
         uses: actions/checkout@master
 
-      - name: Download the Dashboard app build from the artifacts storage
+      - name: Download the Business app build from the artifacts storage
         uses: actions/download-artifact@v2
         with:
-          name: dashboard-react-web
-          path: apps/dashboard-react-web/build
+          name: business-react-web
+          path: apps/business-react-web/build
 
       - name: Print environment info
         run: netlify version
 
       - name: Create the "_redirects" file
-        run: echo "/*   /index.html   200" > apps/dashboard-react-web/build/_redirects
+        run: echo "/*   /index.html   200" > apps/business-react-web/build/_redirects
 
       - name: Create the robots.txt file
         run: |
-          > apps/dashboard-react-web/build/robots.txt
-          echo "User-agent: *" >> apps/dashboard-react-web/build/robots.txt
-          echo "Disallow: /" >> apps/dashboard-react-web/build/robots.txt
+          > apps/business-react-web/build/robots.txt
+          echo "User-agent: *" >> apps/business-react-web/build/robots.txt
+          echo "Disallow: /" >> apps/business-react-web/build/robots.txt
 
       - name: Deploy to Netlify
         id: netlify_deployment
         env:
-          NETLIFY_SITE_ID: ${{ secrets.DASHBOARD_APP_NETLIFY_SITE_ID }}
+          NETLIFY_SITE_ID: ${{ secrets.BUSINESS_APP_NETLIFY_SITE_ID }}
           NETLIFY_AUTH_TOKEN: ${{ secrets.TEZOS_PAYMENTS_DEVELOPMENT_NETLIFY_ACCESS_TOKEN }}
         run: |
           netlify_deploy_result="$(netlify deploy \
-            --dir=apps/dashboard-react-web/build \
+            --dir=apps/business-react-web/build \
             --alias='dev${{ github.event.pull_request.number }}' \
             --message='${{ github.event.pull_request.title }}' \
             --json \
@@ -194,6 +194,6 @@ jobs:
               github, 
               context,
               commitSha: '${{ github.event.pull_request.head.sha }}',
-              currentAppName: 'Dashboard', 
+              currentAppName: 'Business', 
               netlifyDeployResult: ${{ steps.netlify_deployment.outputs.netlify_deploy_result }}
             })
