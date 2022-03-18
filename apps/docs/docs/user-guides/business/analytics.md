@@ -2,7 +2,7 @@
 sidebar_position: 5
 ---
 # Analytics
-The Analytics page is available through the [https://dashboard.tezospayments.com/analytics](https://dashboard.tezospayments.com/analytics) link.  
+The Analytics page is available through the [https://business.tezospayments.com/analytics](https://business.tezospayments.com/analytics) link.  
 The page allows you to estimate your profit, find in which period there was the biggest volume, define how often donations are performed, etc. 
 The Information can be filtered:
 * by periods (All time, Last year, Last month, Last week).

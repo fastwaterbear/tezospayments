@@ -1,7 +1,7 @@
 {
   "name": "tezospayments",
   "workspaces": [
-    "apps/dashboard-react-web",
+    "apps/business-react-web",
     "apps/demo-shop-next-js",
     "apps/landing",
     "apps/payment-react-web",

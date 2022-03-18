@@ -12,7 +12,7 @@ A service is a smart contract in the Tezos blockchain, so it’ll always exist. 
 
 ## Create a service
 1. Click **Create Service** or open the Create Service page by this URL:  
-[https://dashboard.tezospayments.com/services/create](https://dashboard.tezospayments.com/services/create)
+[https://business.tezospayments.com/services/create](https://business.tezospayments.com/services/create)
 2. Fill in public information that your customers will be seen when paying:
 
     * **Service Name** - it can be the name of your online shop or any identifier helping the customers make sure they're making the right payment.  
@@ -48,7 +48,7 @@ A service is a smart contract in the Tezos blockchain, so it’ll always exist. 
 6. Wait while the service is being created. Usually, it takes a couple of minutes.
 
 ## Update a service
-1. Open the service page navigating in the Dashboard application.
+1. Open the service page navigating in the Business application.
 Click **Services**, then click on the service which you want to update.
 2. Update the service information. Verify the filled information for correctness.
 3. Click **Update Service**.
@@ -67,7 +67,7 @@ Click **Services**, then click on the service which you want to update.
 ## Pause a service
 If you temporarily want to pause accepting payments through a particular service, you may pause this service.
 
-1. Open the service page navigating in the Dashboard application.
+1. Open the service page navigating in the Business application.
 Click **Services**, then click on the service which you want to pause.
 2. Click **Pause Service**
 3. Your wallet will prompt you to confirm the operation, interaction with the service contract.
@@ -85,7 +85,7 @@ Click **Services**, then click on the service which you want to pause.
 ## Resume a service
 If you want to start accepting payments through a paused service, you must resume this service.
 
-1. Open the service page navigating in the Dashboard application.
+1. Open the service page navigating in the Business application.
 Click **Services**, then click on paused service, which you want to resume.
 2. Click **Unpause Service**
 3. Your wallet will prompt you to confirm the operation, interaction with the service contract.
@@ -103,7 +103,7 @@ Click **Services**, then click on paused service, which you want to resume.
 ## Archive a service
 If you want to stop accepting payments through a particular service and mark it as deleted.
 
-1. Open the service page navigating in the Dashboard application.
+1. Open the service page navigating in the Business application.
 Click **Services**, then click on the service which you want to archive.
 2. Click **Delete Service**
 3. Your wallet will prompt you to confirm the operation, interaction with the service contract.
@@ -121,7 +121,7 @@ Click **Services**, then click on the service which you want to archive.
 ## Restore a service
 If you want to restore a deleted service, you need to: 
 
-1. Open the service page navigating in the Dashboard application.
+1. Open the service page navigating in the Business application.
 Click **Services**, then click on archived service, which you want to restore.
 2. Click **Restore Service**
 3. Your wallet will prompt you to confirm the operation, interaction with the service contract.

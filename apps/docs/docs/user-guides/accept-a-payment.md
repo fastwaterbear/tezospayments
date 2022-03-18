@@ -11,20 +11,20 @@ You need some amount of Tezos to pay network fees while communicating with your 
 
 :::
 
-## Step 1: Connect a Tezos account to the Dashboard application
-1. Open the dashboard app by the following URL:  
-[https://dashboard.tezospayments.com](https://dashboard.tezospayments.com)
+## Step 1: Connect a Tezos account to the Business application
+1. Open the business app by the following URL:  
+[https://business.tezospayments.com](https://business.tezospayments.com)
 2. Click **Connect**.
 3. Choose the wallet that you are using.
 4. In your wallet, click **Connect** / **Approve** / **Confirm**.
 
-Once you approve the connection, you'll be connected to the Tezos Payments Dashboard application and ready to use that.
+Once you approve the connection, you'll be connected to the Tezos Payments Business application and ready to use that.
 
 ## Step 2: Create a service
 Service is a component that accepts funds from your customers and sends them to you. Also, the service keeps public information about your online shop (your site, social media account, etc.) and shows it to your customers when they make payments.
 
 1. Click **Create Service** or open the Create Service page by this URL:  
-[https://dashboard.tezospayments.com/services/create](https://dashboard.tezospayments.com/services/create)
+[https://business.tezospayments.com/services/create](https://business.tezospayments.com/services/create)
 2. Fill in public information that your customers will be seen when paying:
 
     * **Service Name** - it can be the name of your online shop or any identifier helping the customers make sure they're making the right payment.  
@@ -63,13 +63,13 @@ Service is a component that accepts funds from your customers and sends them to 
 ## Step 3: Create a payment
 You can create a payment by two approaches:
 
-1. Manually, using the Dashboard application. It's suitable for those who sell products manually using social media and don't have their own sites.
+1. Manually, using the Business application. It's suitable for those who sell products manually using social media and don't have their own sites.
 2. Automatically, using the API provided by the Tezos Payments packages on your server. It's suitable for those who have their own sites.
 
 Next, we'll look a the Manual approach. Read about the second approach in the [Developers guide](developers/getting-started.md).
 
 1. Click **Accept Payments** or open the Accept Payments page by the following URL:  
-[https://dashboard.tezospayments.com/accept](https://dashboard.tezospayments.com/accept).
+[https://business.tezospayments.com/accept](https://business.tezospayments.com/accept).
 2. Choose the service through that payments will be made.
 3. Choose the currency and enter the amount of payment.
 4. Fill in the payment data:
@@ -87,5 +87,5 @@ After that, your customer can make the payment by your generated link.
 
 ## Step 4: Track a payment
 When your customer make a payment, you can check it on the Operations page by this link:  
-[https://dashboard.tezospayments.com/operations](https://dashboard.tezospayments.com/operations)  
+[https://business.tezospayments.com/operations](https://business.tezospayments.com/operations)  
 Find an operation by the payment id. Make sure that the operation has completed status.

@@ -1,5 +1,5 @@
 {
-  "name": "@tezospayments/dashboard-react-web",
+  "name": "@tezospayments/business-react-web",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

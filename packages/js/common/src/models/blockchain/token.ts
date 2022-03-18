@@ -28,14 +28,14 @@ export const tezosMeta: TokenMetadata = {
   symbol: 'XTZ',
   name: 'Tezos',
   decimals: 6,
-  thumbnailUri: 'https://dashboard.tezospayments.com/tokens/tezos.png'
+  thumbnailUri: 'https://business.tezospayments.com/tokens/tezos.png'
 };
 
 export const unknownAssetMeta: TokenMetadata = {
   name: 'Unknown',
   symbol: 'Unknown',
   decimals: 0,
-  thumbnailUri: 'https://dashboard.tezospayments.com/tokens/unknown.png'
+  thumbnailUri: 'https://business.tezospayments.com/tokens/unknown.png'
 };
 
 export const tokenWhitelist: readonly Token[] = [
@@ -70,7 +70,7 @@ export const tokenWhitelist: readonly Token[] = [
       decimals: 6,
       symbol: 'FA12',
       name: 'Test FA 1.2',
-      thumbnailUri: 'https://dashboard.tezospayments.com/tokens/unknown.png',
+      thumbnailUri: 'https://business.tezospayments.com/tokens/unknown.png',
     },
   },
   {
@@ -82,7 +82,7 @@ export const tokenWhitelist: readonly Token[] = [
       decimals: 6,
       symbol: 'FA20',
       name: 'Test FA 2.0',
-      thumbnailUri: 'https://dashboard.tezospayments.com/tokens/unknown.png',
+      thumbnailUri: 'https://business.tezospayments.com/tokens/unknown.png',
     },
   },
 ];
